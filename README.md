@@ -6,7 +6,7 @@ The Visual Studio Code extension for the Red Hat Application Migraiton Toolkit.
 
 ## Features
 
-This extension provides support performing application migrations using RHAMT.
+This extension provides support for performing application migrations using RHAMT.
 
 ## Requirements
 
