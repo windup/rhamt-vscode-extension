@@ -6,14 +6,14 @@ import { Server } from './server';
 export function activate(context: vscode.ExtensionContext) {
 
     let startDisposable = vscode.commands.registerCommand('rhamt.startServer', () => {
-        vscode.window.showInformationMessage('RHAMT server starting...');
+        vscode.window.showInformationMessage('Starting RHAMT server...');
         Server.start();
     });
 
     context.subscriptions.push(startDisposable);
 
     let stopDisposable = vscode.commands.registerCommand('rhamt.stopServer', () => {
-        vscode.window.showInformationMessage('RHAMT server stopping...');
+        vscode.window.showInformationMessage('Stopping RHAMT server ...');
         Server.stop();
     });
 
