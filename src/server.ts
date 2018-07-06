@@ -1,4 +1,6 @@
 
+import * as vscode from "vscode";
+
 export class Server {
 
     public static start() {
@@ -13,7 +15,14 @@ export class Server {
         return false;
     }
 
-    public static analyze(input: string) {
+    public static analyzeWorkspace() {
+        if (vscode.workspace.workspaceFolders) {
+            let locations = vscode.workspace.workspaceFolders.map(folder => folder.uri.fsPath);
+            this.analyze(locations);
+        }
+    }
 
+    public static analyze(input: string[]) {
+        console.log('RHAMT analyzing input: ' + input);
     }
 }

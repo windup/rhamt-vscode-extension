@@ -11,7 +11,8 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:rhamt.startServer"
+        "onCommand:rhamt.startServer",
+        "onCommand:rhamt.analyzeWorkspace"
     ],
     "main": "./out/extension",
     "contributes": {
@@ -23,6 +24,10 @@
             {
                 "command": "rhamt.stopServer",
                 "title": "Stop RHAMT Server"
+            },
+            {
+                "command": "rhamt.analyzeWorkspace",
+                "title": "RHAMT analyze workspace"
             }
         ]
     },

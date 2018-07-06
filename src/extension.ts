@@ -18,6 +18,13 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(stopDisposable);
+
+    let analyzeDisposable = vscode.commands.registerCommand('rhamt.analyzeWorkspace', () => {
+        vscode.window.showInformationMessage('RHAMT analyzing workspace ...');
+        Server.analyzeWorkspace();
+    });
+
+    context.subscriptions.push(analyzeDisposable);
 }
 
 export function deactivate() {
