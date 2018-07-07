@@ -1,5 +1,6 @@
 
 import * as vscode from "vscode";
+import { Utils } from "./Utils";
 
 export class Server {
 
@@ -24,5 +25,8 @@ export class Server {
 
     public static analyze(input: string[]) {
         console.log('RHAMT analyzing input: ' + input);
+        let cli = Utils.getRhamtExecutable();
+        console.log('Using rhamt-cli at: ' + cli);
+
     }
 }

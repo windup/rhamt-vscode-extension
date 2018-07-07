@@ -29,6 +29,19 @@
                 "command": "rhamt.analyzeWorkspace",
                 "title": "RHAMT analyze workspace"
             }
+        ],
+        "configuration": [
+            {
+                "title": "Red Hat Application Migration Toolkit (RHAMT)",
+                "properties": {
+                    "rhamt.executable.path": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Specifies absolute path of rhamt-cli executable",
+                        "scope": "window"
+                    }
+                }
+            }
         ]
     },
     "scripts": {
