@@ -23,6 +23,8 @@ This extension contributes the following settings:
 
 * `rhamt.home`: The location of the rhamt-cli. 
 
------------------------------------------------------------------------------------------------------------
+License
+===============
+EPL 1.0, See [LICENSE](LICENSE) for more information.
 
 **Enjoy!**
