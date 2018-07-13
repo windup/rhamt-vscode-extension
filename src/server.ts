@@ -1,6 +1,7 @@
 
 import * as vscode from "vscode";
 import { Utils } from "./Utils";
+import {  } from 'rhamt-client';
 
 export class Server {
 
