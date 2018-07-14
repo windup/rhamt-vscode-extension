@@ -2,7 +2,7 @@
 
 import * as vscode from "vscode";
 import { Utils } from "./Utils";
-import { RhamtClient, RhamtConfiguration } from 'rhamt-client';
+import { RhamtClient, RhamtRunConfiguration, ServerMonitor } from 'rhamt-client';
 
 export class RhamtService {
 
@@ -19,7 +19,8 @@ export class RhamtService {
                 vscode.window.showInformationMessage('Starting RHAMT server...');
                 console.log('attempting to start the rhamt-client');
                 let executable = Utils.getRhamtExecutable();
-                let config = new RhamtConfiguration(executable, javaHome);
+                let serverMonitor = new ServerMonitor();
+                let config = new RhamtRunConfiguration(executable, 8080, javaHome, serverMonitor);
                 this.rhamtClient.start(config);
             }).catch((error) => {
                 console.log('Java Home could not be resolved: ' + error);

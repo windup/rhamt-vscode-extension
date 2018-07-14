@@ -40,7 +40,7 @@ export namespace Utils {
 
     export function findJavaHome(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            findJava((err: string, home: string) => {
+            findJava.findJava((err: string, home: string) => {
                 if (err) {
                     let javaHome = workspace.getConfiguration("java").get<string>("home");
                     if (javaHome) {
