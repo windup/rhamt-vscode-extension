@@ -1,8 +1,10 @@
+
 import * as vscode from "vscode";
 import { ExtensionContext, workspace, extensions } from 'vscode';
 import * as fse from "fs-extra";
 import * as child_process from "child_process";
 import * as path from "path";
+const findJava = require('find-java-home');
 
 export namespace Utils {
 
@@ -17,29 +19,40 @@ export namespace Utils {
 
     export function getRhamtVersion(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const env: {} = getJavaHome();
-            const execOptions: child_process.ExecOptions = {
-                env: Object.assign({}, process.env, env)
-            };
-            child_process.exec(
-                `${getRhamtExecutable()} --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve();
-                    }
-                });
+            findJavaHome().then(javaHome => {
+                let env = {'JAVA_HOME' : javaHome};
+                const execOptions: child_process.ExecOptions = {
+                    env: Object.assign({}, process.env, env)
+                };
+                child_process.exec(
+                    `${getRhamtExecutable()} --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve();
+                        }
+                    });
+            }).catch((error) => {
+                reject(error);
+            });
         });
     }
 
-    export function getJavaHome(): {} {
-        let javaHome = workspace.getConfiguration("java").get<string>("home");
-        if (javaHome) {
-            return { JAVA_HOME: javaHome };
-        } else if (process.env['JAVA_HOME']) {
-            return { JAVA_HOME: process.env['JAVA_HOME'] };
-        }
-        return {};
+    export function findJavaHome(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            findJava((err: string, home: string) => {
+                if (err) {
+                    let javaHome = workspace.getConfiguration("java").get<string>("home");
+                    if (javaHome) {
+                        resolve(javaHome);
+                    } else {
+                        reject(err);
+                    }
+                } else {
+                    resolve(home);
+                }
+            });
+        });
     }
 
     export function getRhamtExecutable(): string {
@@ -70,25 +83,26 @@ export namespace Utils {
         try {
             await getRhamtVersion();
         } catch (error) {
-            console.error("Unable to execute the rhamt-cli.");
-            showRhamtExecutionError(error.message);
+            console.error('Unable to start the rhamt-cli.');
+            const OPTION_SHOW_FAQS: string = "Show FAQs";
+            const MESSAGE_ERROR = "Unable to execute rhamt-cli."
+            const OPTION_OPEN_SETTINGS: string = "Open Settings";
+            //const OPTION_GUIDE: string = "Guidance";
+            const choiceForDetails = await vscode.window.showErrorMessage(`${MESSAGE_ERROR}\nError:\n${error.message}`, OPTION_OPEN_SETTINGS, OPTION_SHOW_FAQS);
+            if (choiceForDetails === OPTION_SHOW_FAQS) {
+                const faqPath: string = Utils.getPathToExtensionRoot("FAQ.md");
+                vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(faqPath));
+            }
+            else if (choiceForDetails === OPTION_OPEN_SETTINGS) {
+                vscode.commands.executeCommand("workbench.action.openSettings");
+            }
             return false;
         }
         return true;
     }
 
     export async function showRhamtExecutionError(message: string) {
-        const OPTION_SHOW_DETAILS: string = "Show details";
-        const OPTION_GUIDE: string = "Guidance";
-        const choiceForDetails = await vscode.window.showErrorMessage("Unable to execute rhamt-cli commands. Please make sure that 'rhamt.executable.path' is pointed to its installed location. Also make sure JAVA_HOME is specified either in environment variables or settings.", OPTION_SHOW_DETAILS);
-        if (choiceForDetails === OPTION_SHOW_DETAILS) {
-            const choiceForGuide = await vscode.window.showErrorMessage(message, OPTION_GUIDE);
-            if (choiceForGuide === OPTION_GUIDE) {
-                // open FAQ
-                const faqPath: string = Utils.getPathToExtensionRoot("FAQ.md");
-                vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(faqPath));
-            }
-        }
+        
     }
 
     export function getExtensionId(): string {

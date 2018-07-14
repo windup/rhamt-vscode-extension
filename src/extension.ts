@@ -1,36 +1,35 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { Server } from './server';
 import { Utils } from './Utils';
+import { RhamtService } from './rhamtService';
 
 export async function activate(context: vscode.ExtensionContext) {
 
     await Utils.loadPackageInfo(context);
 
-    let startDisposable = vscode.commands.registerCommand('rhamt.startServer', () => {
-        (async () => {
-            if (await Utils.checkRhamtAvailablility()) {
-                vscode.window.showInformationMessage('Starting RHAMT server...');
-                Server.start();
-            }
-        })();
+    let rhamtService = new RhamtService();
+        
+    let startDisposable = vscode.commands.registerCommand('rhamt.startServer', async () => {
+        rhamtService.startServer();
     });
 
     context.subscriptions.push(startDisposable);
 
     let stopDisposable = vscode.commands.registerCommand('rhamt.stopServer', () => {
-        vscode.window.showInformationMessage('Stopping RHAMT server ...');
-        Server.stop();
+        rhamtService.stopServer();
     });
 
     context.subscriptions.push(stopDisposable);
+
+    const shutdown: vscode.Disposable = { dispose: () => {rhamtService.stopServer()}};
+    context.subscriptions.push(shutdown);
 
     let analyzeWorkspaceDisposable = vscode.commands.registerCommand('rhamt.analyzeWorkspace', () => {
         (async () => {
             if (await Utils.checkRhamtAvailablility()) {
                 vscode.window.showInformationMessage('RHAMT analyzing workspace ...');
-                Server.analyzeWorkspace();
+                rhamtService.analyzeWorkspace();
             }
         })();
     });
@@ -39,5 +38,4 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-    Server.stop();
 }

@@ -1,4 +1,4 @@
-# FAQ
+# RHAMT Extension - FAQ
 
 ## Requirements
 

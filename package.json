@@ -12,6 +12,7 @@
     ],
     "activationEvents": [
         "onCommand:rhamt.startServer",
+        "onCommand:rhamt.stopServer",
         "onCommand:rhamt.analyzeWorkspace"
     ],
     "main": "./out/extension",
@@ -61,6 +62,8 @@
     "dependencies": {
         "@types/fs-extra": "^5.0.4",
         "fs-extra": "^6.0.1",
-        "rhamt-client": "1.0.1"
+        "vscode-extension-telemetry-wrapper": "^0.2.2",
+        "rhamt-client": "1.0.1",
+        "find-java-home": "^0.2.0"
     }
 }
