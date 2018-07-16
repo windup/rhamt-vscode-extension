@@ -40,7 +40,7 @@ export namespace Utils {
 
     export function findJavaHome(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            findJava.findJava((err: string, home: string) => {
+            findJava((err: string, home: string) => {
                 if (err) {
                     let javaHome = workspace.getConfiguration("java").get<string>("home");
                     if (javaHome) {
@@ -58,7 +58,7 @@ export namespace Utils {
     export function getRhamtExecutable(): string {
         let rhamtPath = workspace.getConfiguration("rhamt.executable").get<string>("path");
         if (rhamtPath) {
-            return `"${rhamtPath}"`;
+            return rhamtPath;
         }
 
         let isWindows = process.platform == "win32";
@@ -87,7 +87,6 @@ export namespace Utils {
             const OPTION_SHOW_FAQS: string = "Show FAQs";
             const MESSAGE_ERROR = "Unable to execute rhamt-cli."
             const OPTION_OPEN_SETTINGS: string = "Open Settings";
-            //const OPTION_GUIDE: string = "Guidance";
             const choiceForDetails = await vscode.window.showErrorMessage(`${MESSAGE_ERROR}\nError:\n${error.message}`, OPTION_OPEN_SETTINGS, OPTION_SHOW_FAQS);
             if (choiceForDetails === OPTION_SHOW_FAQS) {
                 const faqPath: string = Utils.getPathToExtensionRoot("FAQ.md");
@@ -99,10 +98,6 @@ export namespace Utils {
             return false;
         }
         return true;
-    }
-
-    export async function showRhamtExecutionError(message: string) {
-        
     }
 
     export function getExtensionId(): string {

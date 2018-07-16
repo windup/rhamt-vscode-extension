@@ -21,7 +21,11 @@ export class RhamtService {
                 let executable = Utils.getRhamtExecutable();
                 let serverMonitor = new ServerMonitor();
                 let config = new RhamtRunConfiguration(executable, 8080, javaHome, serverMonitor);
-                this.rhamtClient.start(config);
+                this.rhamtClient.start(config).then(() => {
+                    console.log('rhamtService: rhamt-client started.');
+                }).catch((error) => {
+                    console.log('rhamt-client error: ' + error);
+                });
             }).catch((error) => {
                 console.log('Java Home could not be resolved: ' + error);
             });
