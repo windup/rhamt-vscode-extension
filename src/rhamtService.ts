@@ -1,9 +1,11 @@
 'use strict';
 
 import * as vscode from "vscode";
+import { window, ProgressLocation } from 'vscode';
 import { Utils } from "./Utils";
 import { RhamtClient } from "./rhamtService/rhamtClient";
 import { ServerConfiguration, RunConfiguration } from "./rhamtService/main";
+import { ProgressMonitor } from "./progressMonitor";
 
 export class RhamtService {
 
@@ -12,56 +14,55 @@ export class RhamtService {
     public async startServer() {
         Utils.createConfiguration()
             .then(config => {
-                vscode.window.showInformationMessage('config is: ' + JSON.stringify(config));
                 this.rhamtClient = new RhamtClient(config);
                 this.initServerListeners(config);
                 this.rhamtClient.start().then(() => {
                     console.log('vscode started the rhamt server!!!');
+                    vscode.window.showInformationMessage('Analysis engine started');
                 })
                 .catch(() => {
                     console.log('vscode error while starting server.');
+                    vscode.window.showErrorMessage('Failed to start analysis engine');
                 });
             })
             .catch(() => {
                 console.log('unable to create run configuration.');
             });
-
-        //let javaHome: string = await Utils.getJavaHome();
-        //console.log('Using JAVA_HOME: ' + javaHome);
-        /*if (await Utils.checkRhamtAvailablility()) {
-            Utils
-            Utils.findJavaHome().then(javaHome => {
-                vscode.window.showInformationMessage('Starting RHAMT server...');
-                console.log('attempting to start the rhamt-client');
-                let executable = Utils.getRhamtExecutable();
-                let serverMonitor = new ServerMonitor();
-                let config = new RhamtRunConfiguration(executable, 8080, javaHome, serverMonitor);
-                this.rhamtClient.start(config).then(() => {
-                    console.log('rhamtService: rhamt-client started.');
-                }).catch((error) => {
-                    console.log('rhamt-client error: ' + error);
-                });
-            }).catch((error) => {
-                console.log('Java Home could not be resolved: ' + error);
-            });
-        }
-        */
     }
 
     private initServerListeners(config: ServerConfiguration): void {
-        config.startedCallback = () => {};
         config.stoppedCallback = () => {
-            console.log("WEEERE ROLLING!!!!");
+            vscode.window.showInformationMessage('analysis engine stopped');
         };
-        config.timeoutCallback = () => {};
+        config.timeoutCallback = () => {
+            vscode.window.showErrorMessage('analysis engine start timeout');
+        };
     }
 
     public stopServer() {
-        vscode.window.showInformationMessage('Stopping RHAMT server ...');
         console.log('attempting to stop the rhamt-client');
-        if (this.rhamtClient!.isRunning()) {
-            console.log('vscode rhamt-client server is running. attempting to terminate...');
-            this.rhamtClient!.stop();
+        if (this.rhamtClient && this.rhamtClient.isRunning()) {
+            window.withProgress({
+                location: ProgressLocation.Notification,
+                title: "Stopping analysis engine",
+                cancellable: true
+            }, (progress, token) => {
+                console.log('vscode rhamt-client server is running. attempting to terminate...');
+                return new Promise((resolve, reject) => {
+                    this.rhamtClient!.stop()
+                    .then(() => {
+                        progress.report({ increment: 100, message: 'stopped' });
+                        resolve();
+                    })
+                    .catch(err => { 
+                        reject();
+                        vscode.window.showErrorMessage(err);
+                    });
+                });
+            });
+        }
+        else {
+            vscode.window.showInformationMessage('Analysis engine not running');
         }
     }
 
@@ -79,16 +80,32 @@ export class RhamtService {
     public analyze(input: string[]) {
         console.log('attempting to start rhamt-client analysis');
         console.log('input: ' + input);
-        this.rhamtClient!.analyze(new RunConfiguration('mytester'))
-            .then(() => {
-                console.log('###ANALYZING!!!!');
-            })
-            .catch((err) => {
-                console.log('vscode cannot run analysis: ' + err);
+
+        window.withProgress({
+			location: ProgressLocation.Notification,
+			title: "Analyzing",
+			cancellable: true
+		}, (progress, token) => {
+
+			token.onCancellationRequested(() => {
+				console.log("User canceled the analysis.");
             });
-        console.log('sent the analyze request...');
-        //let cli = Utils.getRhamtExecutable();
-        //console.log('rhamt-cli: ' + cli);
-        //let config = new RhamtConfiguration(Utils.getRhamtExecutable(), Utils.getJavaHome());
+            
+			const p = new Promise(resolve => {
+
+                const config = new RunConfiguration('mytester', 
+                    new ProgressMonitor(() => setTimeout(() => resolve(), 3000), progress));
+
+                this.rhamtClient!.analyze(config)
+                .then(() => {
+                    progress.report({ message: 'analysis has began' });
+                })
+                .catch((err) => {
+                    console.log('vscode cannot run analysis: ' + err);
+                });
+            });
+            
+            return p;
+        });
     }
 }

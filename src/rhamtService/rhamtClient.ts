@@ -3,7 +3,6 @@
 import * as cp from 'child_process';
 import { IRhamtClient, IRunConfiguration, ServerConfiguration, IProgressMonitor } from './main';
 import * as os from 'os';
-import { ProgressMonitor } from './progressMonitor';
 import * as EventBus from 'vertx3-eventbus-client';
 
 const SERVER_STARTED_REGEX = /.*rhamt server listening on (.*)/;
@@ -27,8 +26,8 @@ export class RhamtClient implements IRhamtClient {
         return this.startRhamtServer();
     }
 
-    public stop() {
-        this.terminate();
+    public stop(): Promise<string> {
+        return this.terminate();
     }
 
     public analyze(config: IRunConfiguration): Promise<String> {
@@ -50,6 +49,7 @@ export class RhamtClient implements IRhamtClient {
                     console.log('message after sending: ' + JSON.stringify(message));
                     console.log('error after sending: ' + JSON.stringify(error));
                     if (!error) {
+                        this.runConfiguration = config;
                         resolve();
                     }
                     else {
@@ -65,17 +65,23 @@ export class RhamtClient implements IRhamtClient {
         return this.isServerRunnig;
     }
     
-    public terminate() {
-        console.log('attemting to terminate server process...');
-        if (this.serverProcess && !this.serverProcess!.killed && this.isServerRunnig) {
-            console.log('terminating server process...');
-            this.serverProcess.kill();
-            //this.monitor!.stop();
-            this.serverConfiguration!.stoppedCallback();
-            this.bus!.unregisterHandler('rhamt.client', {}, this.handleMessage);
-            this.bus!.close();
-        }
-        this.isServerRunnig = false;
+    public terminate(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            console.log('attemting to terminate server process...');
+            if (this.serverProcess && !this.serverProcess!.killed && this.isServerRunnig) {
+                console.log('terminating server process...');
+                this.serverProcess.kill();
+                //this.monitor!.stop();
+                this.runConfiguration!.monitor.stop();
+                this.bus!.close();
+                this.serverConfiguration!.stoppedCallback();
+                resolve();
+            }
+            else {
+                reject('RHAMT server not running.');
+            }
+            this.isServerRunnig = false;
+        });
     }
 
     private startRhamtServer(): Promise<any> {
@@ -86,8 +92,6 @@ export class RhamtClient implements IRhamtClient {
             let connected = false;
             this.serverProcess = this.spawn();
 
-            this.serverProcess.stdout.on('data', (data: any) => console.log('receved stdout: ' + data.toString()));
-            this.serverProcess.stderr.on('data', (data: any) => console.log('receved stderr: ' + data.toString()));
             this.serverProcess.once('error', err => this.terminate());
             this.serverProcess.on('exit', () => this.terminate());
             
@@ -104,7 +108,7 @@ export class RhamtClient implements IRhamtClient {
                     this.bus.onopen = () => {
                         console.log('rhamt-client sockets connected.');
                         console.log('attemtping to setup progress monitor...');
-                        this.bus!.registerHandler('rhamt.client', {}, this.handleMessage);
+                        this.bus!.registerHandler('rhamt.client', {}, this.handleMessage.bind(this));
                         connected = true;
                         this.isServerRunnig = true;
                         resolve();
@@ -130,7 +134,8 @@ export class RhamtClient implements IRhamtClient {
             ["--startServer", String(this.serverConfiguration.port)], {cwd: os.homedir()});
     }
 
-    private handleMessage(err: Error, msg: any): void {
-        console.log('rhamt-client recieved message: ' + JSON.stringify(msg.body));
+    public handleMessage (err: Error, msg: any): void {
+        console.log('client recieved message: ' + JSON.stringify(msg.body));
+        this.runConfiguration!.monitor.handleMessage(err, msg);
     }
 }

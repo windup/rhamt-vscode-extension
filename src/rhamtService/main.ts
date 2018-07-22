@@ -2,7 +2,6 @@
 
 export * from './model';
 export * from './rhamtClient';
-export * from './progressMonitor';
 
 export enum METHOD {
     start,
@@ -10,6 +9,7 @@ export enum METHOD {
 }
 
 export interface IProgressMonitor {
+    handleMessage (err: Error, msg: any): void;
     stop(): void;
     logMessage(message: string): void;
     beginTask(task: string, total: number): void;
@@ -22,16 +22,15 @@ export interface IProgressMonitor {
 
 export interface IRunConfiguration {
     id: string;
-    monitor?: IProgressMonitor;
+    monitor: IProgressMonitor;
 }
 
 export class RunConfiguration implements IRunConfiguration {
-    constructor(public id: string) {
+    constructor(public id: string, public monitor: IProgressMonitor) {
     }
 }
 
 export class ServerConfiguration {
-    public startedCallback: () => void = () => {};
     public stoppedCallback: () => void = () => {};
     public timeoutCallback: () => void = () => {};
     
