@@ -6,9 +6,10 @@ export class ProgressMonitor implements IProgressMonitor {
 
     private workCompleted: number = 0;
     private tasks: Array<string> = [];
+    private started: boolean = false;
 
-    constructor(private completed: () => void, private delegate: 
-        vscode.Progress<{message?: string | undefined;increment?: number | undefined;}>) {
+    constructor(private delegate: vscode.Progress<any>, private closeHandler: any) {
+
     }
 
     public handleMessage (err: Error, msg: any): void {
@@ -45,13 +46,19 @@ export class ProgressMonitor implements IProgressMonitor {
                 break;
         }
 
-        if (msg.state) {
-            this.delegate.report({ message: value });
+        if (!this.started) {
+            this.started = true;
+            this.delegate.report({ message: 'Starting Analysis...' });
         }
     }
 
+    private doClose(): void {
+        this.closeHandler();
+    }
+
     public stop(): void {
-        this.completed();   
+        this.doClose();
+        
     }
 
     public logMessage(message: string) {
@@ -59,17 +66,19 @@ export class ProgressMonitor implements IProgressMonitor {
     }
 
     public beginTask(task: string, total: number) {
-        this.report({msg:task, work:total});
+        this.report({msg:task});
+        //this.report({msg:task, work:total});
     }
     
     public done() {
-        this.report({msg:'finsished', work: 100});
-        this.completed();
+        this.report({msg:'finished'});
+        this.doClose();
         console.log('tasks: ' + this.tasks);
     }
 
     public setCancelled() {
-
+        this.report({msg: 'Cancelled'});
+        this.doClose();
     }
 
     public setTaskName(task: string) {
@@ -84,12 +93,14 @@ export class ProgressMonitor implements IProgressMonitor {
         this.report({work:worked});
     }
 
-    private report(data: {msg?: string, work?: number}): void {
+    public report(data: {msg?: string, work?: number}): void {
         console.log('work: ' + data.work + ' msg: ' + data.msg);
         if (data.work) {
             this.workCompleted+=data.work;
             console.log('completed ' + this.workCompleted);
         }
-        this.delegate.report({message: data.msg});
+        if (data.msg) {
+            this.delegate.report({message: data.msg});
+        }
     }
 }

@@ -26,13 +26,11 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(shutdown);
 
     let analyzeWorkspaceDisposable = vscode.commands.registerCommand('rhamt.analyzeWorkspace', () => {
-        (async () => {
             /*if (await Utils.checkRhamtAvailablility()) {
                 vscode.window.showInformationMessage('RHAMT analyzing workspace ...');
                 rhamtService.analyzeWorkspace();
             }*/
             rhamtService.analyzeWorkspace();
-        })();
     });
 
     context.subscriptions.push(analyzeWorkspaceDisposable);

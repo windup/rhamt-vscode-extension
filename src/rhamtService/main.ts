@@ -21,12 +21,15 @@ export interface IProgressMonitor {
 }
 
 export interface IRunConfiguration {
+    handleMessage: (err: Error, msg: any) => void;
     id: string;
-    monitor: IProgressMonitor;
+    input: string;
+    output: string;
 }
 
 export class RunConfiguration implements IRunConfiguration {
-    constructor(public id: string, public monitor: IProgressMonitor) {
+    public handleMessage: (err: Error, msg: any) => void = () => {};
+    constructor(public id: string, public input: string, public output: string) {
     }
 }
 

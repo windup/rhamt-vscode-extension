@@ -12,17 +12,38 @@ export class RhamtService {
     private rhamtClient?: RhamtClient;
 
     public async startServer() {
+
         Utils.createConfiguration()
             .then(config => {
+
                 this.rhamtClient = new RhamtClient(config);
-                this.initServerListeners(config);
-                this.rhamtClient.start().then(() => {
-                    console.log('vscode started the rhamt server!!!');
-                    vscode.window.showInformationMessage('Analysis engine started');
-                })
-                .catch(() => {
-                    console.log('vscode error while starting server.');
-                    vscode.window.showErrorMessage('Failed to start analysis engine');
+
+                let options = {
+                    location: ProgressLocation.Notification,
+                    cancellable: false,
+                    title: 'Starting analysis engine'
+                };
+        
+                window.withProgress(options, async (progress, token) => {
+        
+                    token.onCancellationRequested(() => {
+                        console.log('cancelled');
+                    });
+                    
+                    progress.report({message: 'executing startup scripts'});
+        
+                    this.initServerListeners(config);
+                    
+                    var p = new Promise(resolve  => {
+                        this.rhamtClient!.start().then(() => {
+                            progress.report({message: 'started'});
+                            setTimeout(() => { 
+                                resolve();
+                            }, 3000);
+                            
+                        });
+                    });
+                    return p;
                 });
             })
             .catch(() => {
@@ -71,40 +92,47 @@ export class RhamtService {
     }
 
     public analyzeWorkspace() {
-       // if (vscode.workspace.workspaceFolders) {
-           // let locations = vscode.workspace.workspaceFolders.map(folder => folder.uri.fsPath);
-            this.analyze([]);
-        //}
+        if (vscode.workspace.workspaceFolders) {
+            let locations = vscode.workspace.workspaceFolders.map(folder => folder.uri.fsPath);
+            this.analyze(locations);
+        }
     }
 
     public analyze(input: string[]) {
         console.log('attempting to start rhamt-client analysis');
         console.log('input: ' + input);
 
-        window.withProgress({
-			location: ProgressLocation.Notification,
-			title: "Analyzing",
-			cancellable: true
-		}, (progress, token) => {
+        let source = input[0];
+        let out = source + '/rhamt';
 
-			token.onCancellationRequested(() => {
-				console.log("User canceled the analysis.");
+        const config = new RunConfiguration('mytester', source, out);
+
+        this.rhamtClient!.analyze(config).then(() => {
+            this.startProgress(config);
+        })
+        .catch(() => vscode.window.showInformationMessage('Unable to prepare analysis configuration'));
+    }
+
+    private startProgress(config: RunConfiguration): void {
+
+        let options = {
+            location: ProgressLocation.Notification,
+            cancellable: true
+        };
+
+        window.withProgress(options, (progress, token) => {
+
+            token.onCancellationRequested(() => {
+                console.log('cancelled');
             });
             
-			const p = new Promise(resolve => {
+            progress.report({message: 'Preparing analysis configuration'});
 
-                const config = new RunConfiguration('mytester', 
-                    new ProgressMonitor(() => setTimeout(() => resolve(), 3000), progress));
-
-                this.rhamtClient!.analyze(config)
-                .then(() => {
-                    progress.report({ message: 'analysis has began' });
-                })
-                .catch((err) => {
-                    console.log('vscode cannot run analysis: ' + err);
-                });
+            var p = new Promise<any>((resolve, reject) => {
+                let monitor = new ProgressMonitor(progress, () => resolve());
+                config.handleMessage = monitor.handleMessage.bind(monitor);
             });
-            
+
             return p;
         });
     }

@@ -17,7 +17,6 @@ export class RhamtClient implements IRhamtClient {
     private isServerRunnig: boolean = false;
 
     private runConfiguration?: IRunConfiguration;
-    private monitor?: IProgressMonitor;
 
     constructor(private serverConfiguration: ServerConfiguration) {
     }
@@ -28,6 +27,22 @@ export class RhamtClient implements IRhamtClient {
 
     public stop(): Promise<string> {
         return this.terminate();
+    }
+
+    public cancel(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            this.bus!.send('rhamt.server', {'stop': true}, (error: Error, message: any) => {
+                console.log('message after stopping: ' + JSON.stringify(message));
+                console.log('error after stopping: ' + JSON.stringify(error));
+                if (!error) {
+                    //this.runConfiguration!.monitor.setCancelled();
+                    resolve();
+                }
+                else {
+                    reject('error occurred while trying to stop analysis: ' + JSON.stringify(error));
+                }
+            });
+        });
     }
 
     public analyze(config: IRunConfiguration): Promise<String> {
@@ -41,8 +56,8 @@ export class RhamtClient implements IRhamtClient {
             }
             else {
                 const load = {
-                    'input': [{'location' : '/Users/johnsteele/Desktop/demos/demo'}],
-                    'output': '/Users/johnsteele/Desktop/demos/demo/out',
+                    'input': [{'location' : config.input}],
+                    'output': config.output,
                     'start': true
                 };
                 this.bus!.send('rhamt.server', load, (error: Error, message: any) => {
@@ -72,7 +87,7 @@ export class RhamtClient implements IRhamtClient {
                 console.log('terminating server process...');
                 this.serverProcess.kill();
                 //this.monitor!.stop();
-                this.runConfiguration!.monitor.stop();
+                //this.runConfiguration!.monitor.stop();
                 this.bus!.close();
                 this.serverConfiguration!.stoppedCallback();
                 resolve();
@@ -135,7 +150,6 @@ export class RhamtClient implements IRhamtClient {
     }
 
     public handleMessage (err: Error, msg: any): void {
-        console.log('client recieved message: ' + JSON.stringify(msg.body));
-        this.runConfiguration!.monitor.handleMessage(err, msg);
+        this.runConfiguration!.handleMessage(err, msg);
     }
 }
