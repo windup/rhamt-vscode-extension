@@ -19,9 +19,8 @@ export class RhamtService {
                 this.rhamtClient = new RhamtClient(config);
 
                 let options = {
-                    location: ProgressLocation.Notification,
-                    cancellable: false,
-                    title: 'Starting analysis engine'
+                    location: ProgressLocation.Window,
+                    cancellable: false
                 };
         
                 window.withProgress(options, async (progress, token) => {
@@ -29,17 +28,17 @@ export class RhamtService {
                     token.onCancellationRequested(() => {
                         console.log('cancelled');
                     });
-                    
-                    progress.report({message: 'executing startup scripts'});
-        
+
+                    progress.report({message: 'Starting analysis engine'});
+                            
                     this.initServerListeners(config);
                     
                     var p = new Promise(resolve  => {
                         this.rhamtClient!.start().then(() => {
-                            progress.report({message: 'started'});
+                            progress.report({message: 'Started'});
                             setTimeout(() => { 
                                 resolve();
-                            }, 3000);
+                            }, 1500);
                             
                         });
                     });
@@ -49,7 +48,7 @@ export class RhamtService {
             .catch(() => {
                 console.log('unable to create run configuration.');
             });
-    }
+    }    
 
     private initServerListeners(config: ServerConfiguration): void {
         config.stoppedCallback = () => {
@@ -116,7 +115,7 @@ export class RhamtService {
     private startProgress(config: RunConfiguration): void {
 
         let options = {
-            location: ProgressLocation.Notification,
+            location: ProgressLocation.Window,
             cancellable: true
         };
 
@@ -126,7 +125,7 @@ export class RhamtService {
                 console.log('cancelled');
             });
             
-            progress.report({message: 'Preparing analysis configuration'});
+            progress.report({message: 'Preparing analysis configuration...'});
 
             var p = new Promise<any>((resolve, reject) => {
                 let monitor = new ProgressMonitor(progress, () => resolve());

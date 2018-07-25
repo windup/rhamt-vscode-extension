@@ -1,7 +1,7 @@
 'use strict';
 
 import * as cp from 'child_process';
-import { IRhamtClient, IRunConfiguration, ServerConfiguration, IProgressMonitor } from './main';
+import { IRhamtClient, IRunConfiguration, ServerConfiguration } from './main';
 import * as os from 'os';
 import * as EventBus from 'vertx3-eventbus-client';
 
@@ -83,7 +83,7 @@ export class RhamtClient implements IRhamtClient {
     public terminate(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             console.log('attemting to terminate server process...');
-            if (this.serverProcess && !this.serverProcess!.killed && this.isServerRunnig) {
+            if (this.serverProcess && !this.serverProcess.killed) {
                 console.log('terminating server process...');
                 this.serverProcess.kill();
                 //this.monitor!.stop();
@@ -107,7 +107,7 @@ export class RhamtClient implements IRhamtClient {
             let connected = false;
             this.serverProcess = this.spawn();
 
-            this.serverProcess.once('error', err => this.terminate());
+            this.serverProcess.once('error', () => this.terminate());
             this.serverProcess.on('exit', () => this.terminate());
             
             const outputListener = (data: string | Buffer) => {
