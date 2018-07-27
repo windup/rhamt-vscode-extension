@@ -3,10 +3,30 @@
 import * as vscode from 'vscode';
 import { Utils } from './Utils';
 import { RhamtService } from './rhamtService';
+import { RhamtView } from './explorer/rhamtView';
+import { RhamtModel } from './rhamtService/main';
+import { RhamtModelService } from './rhamtService/modelService';
+
+let rhamtView: RhamtView;
+let modelService: RhamtModelService;
 
 export async function activate(context: vscode.ExtensionContext) {
 
     await Utils.loadPackageInfo(context);
+
+    modelService = new RhamtModelService(new RhamtModel());
+    modelService.createConfiguration();
+    modelService.createConfiguration();
+    modelService.createConfiguration();
+    modelService.createConfiguration();
+    modelService.createConfiguration();
+
+    rhamtView = new RhamtView(context, modelService);
+
+    context.subscriptions.push(vscode.commands.registerCommand('rhamt.showRhamtExplorer', () => {
+       
+    }));
+
 
     let rhamtService = new RhamtService();
         
@@ -22,7 +42,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(stopDisposable);
 
-    const shutdown: vscode.Disposable = { dispose: () => {rhamtService.stopServer()}};
+    const shutdown: vscode.Disposable = { dispose: () => rhamtService.stopServer()};
     context.subscriptions.push(shutdown);
 
     class BrowserContentProvider implements vscode.TextDocumentContentProvider {
@@ -65,7 +85,6 @@ export async function activate(context: vscode.ExtensionContext) {
     });
 
 
-
     // vscode.commands.executeCommand('vscode.previewHtml', '/Users/johnsteele/Desktop/devstudio/4_1_test/ws/demo/out/index.html', vscode.ViewColumn.Two, 'CSS Property Preview').then((success) => {
     // }, (reason) => {
     //     vscode.window.showErrorMessage(reason);
@@ -75,4 +94,5 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
+    rhamtView.dispose();
 }

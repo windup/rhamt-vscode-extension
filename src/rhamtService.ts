@@ -102,7 +102,7 @@ export class RhamtService {
         console.log('input: ' + input);
 
         let source = input[0];
-        let out = source + '/rhamt';
+        let out = source + '/../rhamt';
 
         const config = new RunConfiguration('mytester', source, out);
 

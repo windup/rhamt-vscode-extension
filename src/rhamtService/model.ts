@@ -1,19 +1,29 @@
-export interface IRhamtConfiguration {
-    name: string;
-    input: string[];
-    rhamtExecutable: string;
-    sourceMode: boolean;
-    outputLocation: string;
-    packages: string[];
-    timestamp: string;
-    migrationPath: IMigrationPath;
-    userRules: string[];
-    options: IOption[];
-    javaHome: string;
-    ignorePatterns: IIgnorePattern[];
+'user strict';
 
-    executionResult: IExecutionResult;
-    reports: IReport[];
+export class  RhamtModel {
+    configurations: Map<string, RhamtConfiguration> = new Map<string, RhamtConfiguration>();
+
+    public getConfigurations(): RhamtConfiguration[] {
+        return Array.from(this.configurations.values());
+    }
+}
+
+export class RhamtConfiguration {
+    name?: string;
+    input?: string[];
+    rhamtExecutable?: string;
+    sourceMode?: boolean;
+    outputLocation?: string;
+    packages?: string[];
+    timestamp?: string;
+    migrationPath?: IMigrationPath;
+    userRules?: string[];
+    options?: IOption[];
+    javaHome?: string;
+    rhamtCli?: string;
+    ignorePatterns?: IIgnorePattern[];
+    executionResult?: IExecutionResult;
+    reports?: IReport[];
 }
 
 export interface IExecutionResult {

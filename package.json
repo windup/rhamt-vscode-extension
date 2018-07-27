@@ -10,10 +10,19 @@
     "categories": [
         "Other"
     ],
+    "keywords": [
+        "Migration",
+        "RHAMT",
+        "Windup",
+        "JBoss",
+        "Analyze"
+    ],
     "activationEvents": [
         "onCommand:rhamt.startServer",
         "onCommand:rhamt.stopServer",
-        "onCommand:rhamt.analyzeWorkspace"
+        "onCommand:rhamt.analyzeWorkspace",
+        "onCommand:rhamt.showRhamtExplorer",
+        "onView:rhamtExplorerView"
     ],
     "main": "./out/extension",
     "contributes": {
@@ -29,6 +38,14 @@
             {
                 "command": "rhamt.analyzeWorkspace",
                 "title": "RHAMT analyze workspace"
+            },
+            {
+                "command": "rhamt.showRhamtExplorer",
+                "title": "Show RHAMT Explorer"
+            },
+            {
+                "command": "rhamt.openRhamtConfiguration",
+                "title": "Open RHAMT Configuration"
             }
         ],
         "configuration": [
@@ -43,7 +60,24 @@
                     }
                 }
             }
-        ]
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "rhamt-explorer",
+                    "title": "RHAMT Configuration Explorer",
+                    "icon": "resources/dep.svg"
+                }
+            ]
+        },
+        "views": {
+            "rhamt-explorer": [
+                {
+                    "id": "rhamtExplorerView",
+                    "name": "RHAMT Explorer"
+                }
+            ]
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
