@@ -4,6 +4,10 @@
     "description": "RHAMT VSCode extension",
     "version": "0.0.1",
     "publisher": "johnsteele",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/windup/rhamt-vscode-extension"
+      },
     "engines": {
         "vscode": "^1.25.0"
     },
