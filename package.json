@@ -7,7 +7,7 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/windup/rhamt-vscode-extension"
-      },
+    },
     "engines": {
         "vscode": "^1.25.0"
     },
@@ -101,7 +101,6 @@
         "@types/fs-extra": "^5.0.4",
         "find-java-home": "^0.2.0",
         "fs-extra": "^6.0.1",
-        "rhamt-client": "1.0.3",
-        "rhamt-core": "^2.3.5"
+        "raas-core": "0.3.26"
     }
 }

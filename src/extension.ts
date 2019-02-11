@@ -4,8 +4,8 @@ import * as vscode from 'vscode';
 import { Utils } from './Utils';
 import { RhamtService } from './rhamtService';
 import { RhamtView } from './explorer/rhamtView';
-import { RhamtModel } from './rhamtService/main';
-import { RhamtModelService } from './rhamtService/modelService';
+import { RhamtModelService, RhamtModel } from 'raas-core';
+import * as path from 'path';
 
 let rhamtView: RhamtView;
 let modelService: RhamtModelService;
@@ -14,7 +14,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
     await Utils.loadPackageInfo(context);
 
-    modelService = new RhamtModelService(new RhamtModel());
+    modelService = new RhamtModelService(new RhamtModel(), path.join(__dirname, '..', 'data'));
+
     modelService.createConfiguration();
     modelService.createConfiguration();
     modelService.createConfiguration();
