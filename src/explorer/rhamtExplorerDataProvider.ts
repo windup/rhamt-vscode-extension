@@ -2,10 +2,7 @@
 
 import * as vscode from 'vscode';
 import { TreeDataProvider, TreeItem, EventEmitter, Event } from "vscode";
-import { RhamtModelService } from "../rhamtService/modelService";
-import { RhamtConfiguration } from '../rhamtService/main';
-import { RhamtConfigurationNode } from './rhamtNode';
-
+import { RhamtModelService } from "raas-core";
 
 export class RhamtTreeDataProvider implements TreeDataProvider<any>, vscode.Disposable {
 
@@ -15,6 +12,7 @@ export class RhamtTreeDataProvider implements TreeDataProvider<any>, vscode.Disp
     constructor(private context: vscode.ExtensionContext,
         private modelService: RhamtModelService) {
         this.context.subscriptions.push(this);
+        console.log('modelService config count: ' + this.modelService.getConfiguration);
     }
 
     public refresh(): any {
@@ -25,24 +23,25 @@ export class RhamtTreeDataProvider implements TreeDataProvider<any>, vscode.Disp
     }
 
     public getTreeItem(element: any): TreeItem {
-		if (element instanceof RhamtConfiguration) {
-            return new RhamtConfigurationNode(element);
-        }
-        return {
-            label: 'unknown'
-        };
+        return new TreeItem('');
     }
 
-    public getChildren(element?: any): Thenable<any[]> {
+    public async getChildren(element?: any): Promise<any[]> {
+
+        let result: any[];
+
         if (!element) {
-            return new Promise<RhamtConfiguration[]>(resolve => {
-                resolve(this.modelService.model.getConfigurations());
-            });
+            result = await this.populateRoots();
         }
         else {
             return new Promise<any>(resolve => {
                 resolve([]);
             });
         }
+        return result;
+    }
+
+    private async populateRoots(): Promise<any[]> {
+        return Promise.resolve([]);
     }
 }

@@ -5,8 +5,8 @@ import { ExtensionContext, workspace, extensions } from 'vscode';
 import * as fse from "fs-extra";
 import * as child_process from "child_process";
 import * as path from "path";
-import { ServerConfiguration } from "./rhamtService/main";
 import * as net from "net";
+import { RhamtConfiguration, RhamtModelService } from "raas-core";
 
 const RHAMT_VERSION_REGEX = /^version /;
 
@@ -23,7 +23,7 @@ export namespace Utils {
         EXTENSION_NAME = name;
     }
 
-    export async function createConfiguration(): Promise<ServerConfiguration> {
+    export async function initConfiguration(config: RhamtConfiguration): Promise<any> {
         let javaHome: string;
         let rhamtCli: string;
         let port: number = 8080;
@@ -60,7 +60,10 @@ export namespace Utils {
             return Promise.reject();
         }
 
-        return new ServerConfiguration(rhamtCli, port, javaHome);
+        config.cli = rhamtCli;
+        config.runtime.port = port;
+        config.jvm = {id: RhamtModelService.generateUniqueId(), location: javaHome, name: '', version: '' }; 
+        return config;
     }
 
     export function findRhamtVersion(rhamtCli: string, javaHome: string): Promise<string> {

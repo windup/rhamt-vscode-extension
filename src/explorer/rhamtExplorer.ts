@@ -1,30 +1,41 @@
-'use strict';
-
 import * as vscode from 'vscode';
-import { RhamtNode } from './rhamtNode';
-import { RhamtModelService } from '../rhamtService/modelService';
-import { RhamtTreeDataProvider } from './rhamtExplorerDataProvider';
+import { RhamtModelService } from 'raas-core';
+import { DataProvider } from '../tree/DataProvider';
+import { ITreeNode } from '../tree';
 
 export class RhamtExplorer {
 
-    private rhamtViewer: vscode.TreeView<RhamtNode>;
-    private dataProvider: RhamtTreeDataProvider;
+    private dataProvider: DataProvider;
 
     constructor(private context: vscode.ExtensionContext,
         private modelService: RhamtModelService) {
         this.dataProvider = this.createDataProvider();
-        this.rhamtViewer = this.createViewer();
+        this.createViewer();
+        this.createCommands();
     }
 
-    private createViewer(): vscode.TreeView<RhamtNode> {
-        let treeDataProvider = this.dataProvider;
+    private createCommands(): void {
+        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.createConfiguration', () => {
+            this.modelService.createConfiguration();
+            this.dataProvider.refresh();
+        }));
+        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', item => {
+            const config = item.config;
+            this.modelService.deleteConfiguration(undefined, config);
+            this.dataProvider.refresh();
+        }));
+    }
+
+    private createViewer(): vscode.TreeView<ITreeNode> {
+        const treeDataProvider = this.dataProvider;
         const viewer = vscode.window.createTreeView('rhamtExplorerView', { treeDataProvider });
         this.context.subscriptions.push(viewer);
         return viewer;
     }
 
-    private createDataProvider(): RhamtTreeDataProvider {
-        const dataProvider = new RhamtTreeDataProvider(this.context, this.modelService);
-        return dataProvider;
+    private createDataProvider(): DataProvider {
+        const provider: DataProvider = new DataProvider(this.modelService);
+        this.context.subscriptions.push(provider);
+        return provider;
     }
 }

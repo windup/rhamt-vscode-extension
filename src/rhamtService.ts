@@ -4,18 +4,18 @@ import * as vscode from "vscode";
 import { window, ProgressLocation } from 'vscode';
 import { Utils } from "./Utils";
 import { RhamtClient } from "./rhamtService/rhamtClient";
-import { ServerConfiguration, RunConfiguration } from "./rhamtService/main";
-import { ProgressMonitor } from "./progressMonitor";
+import { RhamtConfiguration } from "raas-core";
 
 export class RhamtService {
 
     private rhamtClient?: RhamtClient;
 
-    public async startServer() {
+    constructor() {
+    }
 
-        Utils.createConfiguration()
-            .then(config => {
+    public async startServer(config: RhamtConfiguration) {
 
+        Utils.initConfiguration(config).then(() => {
                 this.rhamtClient = new RhamtClient(config);
 
                 let options = {
@@ -30,8 +30,6 @@ export class RhamtService {
                     });
 
                     progress.report({message: 'Starting analysis engine'});
-                            
-                    this.initServerListeners(config);
                     
                     var p = new Promise(resolve  => {
                         this.rhamtClient!.start().then(() => {
@@ -48,15 +46,6 @@ export class RhamtService {
             .catch(() => {
                 console.log('unable to create run configuration.');
             });
-    }    
-
-    private initServerListeners(config: ServerConfiguration): void {
-        config.stoppedCallback = () => {
-            vscode.window.showInformationMessage('analysis engine stopped');
-        };
-        config.timeoutCallback = () => {
-            vscode.window.showErrorMessage('analysis engine start timeout');
-        };
     }
 
     public stopServer() {
@@ -90,29 +79,24 @@ export class RhamtService {
         return this.rhamtClient!.isRunning();
     }
 
-    public analyzeWorkspace() {
+    public analyzeWorkspace(config: RhamtConfiguration) {
         if (vscode.workspace.workspaceFolders) {
             let locations = vscode.workspace.workspaceFolders.map(folder => folder.uri.fsPath);
-            this.analyze(locations);
+            this.analyze(config, locations);
         }
     }
 
-    public analyze(input: string[]) {
-        console.log('attempting to start rhamt-client analysis');
-        console.log('input: ' + input);
+    public analyze(config: RhamtConfiguration, input: string[]) {
+        config.options['input'] = input;
+        config.options['output'] = input[0] + '/../rhamt';
 
-        let source = input[0];
-        let out = source + '/../rhamt';
-
-        const config = new RunConfiguration('mytester', source, out);
-
-        this.rhamtClient!.analyze(config).then(() => {
+        this.rhamtClient!.analyze().then(() => {
             this.startProgress(config);
         })
         .catch(() => vscode.window.showInformationMessage('Unable to prepare analysis configuration'));
     }
 
-    private startProgress(config: RunConfiguration): void {
+    private startProgress(config: RhamtConfiguration): void {
 
         let options = {
             location: ProgressLocation.Window,
@@ -127,12 +111,7 @@ export class RhamtService {
             
             progress.report({message: 'Preparing analysis configuration...'});
 
-            var p = new Promise<any>((resolve, reject) => {
-                let monitor = new ProgressMonitor(progress, () => resolve());
-                config.handleMessage = monitor.handleMessage.bind(monitor);
-            });
-
-            return p;
+            return Promise.resolve();
         });
     }
 }

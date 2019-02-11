@@ -101,6 +101,7 @@
         "@types/fs-extra": "^5.0.4",
         "find-java-home": "^0.2.0",
         "fs-extra": "^6.0.1",
-        "raas-core": "0.3.26"
+        "raas-core": "0.3.26",
+        "vscode-nls": "^2.0.2"
     }
 }

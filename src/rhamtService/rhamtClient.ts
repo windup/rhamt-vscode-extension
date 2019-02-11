@@ -1,19 +1,20 @@
 'use strict';
 
 import * as cp from 'child_process';
-import { IRhamtClient, IRunConfiguration, ServerConfiguration } from './main';
 import * as os from 'os';
+import { RhamtConfiguration } from 'raas-core';
 
 const SERVER_START_TIMEOUT_MS = 15000;
 
-export class RhamtClient implements IRhamtClient {
+export class RhamtClient {
 
     private serverProcess?: cp.ChildProcess;
     private isServerRunnig: boolean = false;
 
-    private runConfiguration?: IRunConfiguration;
+    private config: RhamtConfiguration
 
-    constructor(private serverConfiguration: ServerConfiguration) {
+    constructor(config: RhamtConfiguration) {
+        this.config = config;
     }
 
     public async start(): Promise<any> {
@@ -30,16 +31,13 @@ export class RhamtClient implements IRhamtClient {
         });
     }
 
-    public analyze(config: IRunConfiguration): Promise<String> {      
+    public analyze(): Promise<String> {      
         return new Promise<String>((resolve, reject) => {
             if (!this.isRunning()) {
                 reject();
             }
             else {
-                const payload = {
-                    'input': [{'location' : config.input}],
-                    'output': config.output
-                };
+                const payload = { config: this.config };
                 console.log(`rhamt-client sent the analyze request - ${payload}`);
             }      
         });
@@ -53,7 +51,6 @@ export class RhamtClient implements IRhamtClient {
         return new Promise<string>((resolve, reject) => {
             if (this.serverProcess && !this.serverProcess.killed) {
                 this.serverProcess.kill();
-                this.serverConfiguration!.stoppedCallback();
                 resolve();
             }
             else {
@@ -89,12 +86,11 @@ export class RhamtClient implements IRhamtClient {
     }
 
     private spawn(): cp.ChildProcess {
-        console.log('rhamt-client using ' + JSON.stringify(this.serverConfiguration));
-        return cp.spawn(this.serverConfiguration.rhamtCli, 
-            ["--startServer", String(this.serverConfiguration.port)], {cwd: os.homedir()});
+        console.log('rhamt-client using ' + JSON.stringify(this.config));
+        return cp.spawn(this.config.cli, 
+            ["--startServer", String(this.config.runtime.port)], {cwd: os.homedir()});
     }
 
     public handleMessage (err: Error, msg: any): void {
-        this.runConfiguration!.handleMessage(err, msg);
     }
 }
