@@ -1,20 +1,20 @@
 import { AbstractNode } from './abstractNode';
-import { RhamtConfiguration, RhamtModelService, IClassification } from 'raas-core';
+import { RhamtConfiguration, RhamtModelService, IHint } from 'raas-core';
 import { ITreeNode } from '.';
 import { DataProvider } from './dataProvider';
-import { ClassificationItem } from './classificationItem';
+import { HintItem } from './hintItem';
 
-export class ClassificationNode extends AbstractNode {
+export class HintNode extends AbstractNode {
 
-    private classification: IClassification;
+    private hint: IHint;
 
     constructor(
-        classification: IClassification,
+        hint: IHint,
         config: RhamtConfiguration,
         modelService: RhamtModelService,
         dataProvider: DataProvider) {
         super(config, modelService, dataProvider);
-        this.classification = classification;
+        this.hint = hint;
         this.treeItem = this.createItem();
     }
 
@@ -26,8 +26,8 @@ export class ClassificationNode extends AbstractNode {
         return Promise.resolve();
     }
 
-    createItem(): ClassificationItem {
-        const item = new ClassificationItem(this.config, this.classification);
+    createItem(): HintItem {
+        const item = new HintItem(this.config, this.hint);
         return item;
     }
 }

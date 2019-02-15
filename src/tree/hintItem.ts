@@ -1,24 +1,24 @@
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
-import { RhamtModelService, RhamtConfiguration, IClassification } from 'raas-core';
+import { RhamtModelService, RhamtConfiguration, IHint } from 'raas-core';
 
-export class ClassificationItem extends TreeItem {
+export class HintItem extends TreeItem {
 
     private _id: string = RhamtModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
     private config: RhamtConfiguration;
-    private classification: IClassification;
+    private hint: IHint;
 
-    constructor(config: RhamtConfiguration, classification: IClassification) {
+    constructor(config: RhamtConfiguration, hint: IHint) {
         super(config.options['name']);
         this.config = config;
-        this.classification = classification;
+        this.hint = hint;
         this.refresh();
     }
 
     delete(): void {
         if (this.config.results) {
-            this.config.results.getClassifications().find(i => true);
+            this.config.results.getHints().find(i => true);
         }
     }
 
@@ -31,22 +31,22 @@ export class ClassificationItem extends TreeItem {
     }
 
     public get commandId(): string {
-        return 'rhamt.openClassification';
+        return 'rhamt.openHint';
     }
 
     public get command(): Command {
         return {
-            command: 'rhamt.openClassification',
+            command: 'rhamt.openHint',
             title: '',
-            arguments: [this.classification.file]
+            arguments: [this.hint.file]
         };
     }
 
     public get contextValue(): string {
-        return 'rhamt.openClassification';
+        return 'rhamt.openHint';
     }
 
     public refresh(): void {
-        this.label = this.classification.title;
+        this.label = `${this.hint.messageOrDescription}`;
     }
 }

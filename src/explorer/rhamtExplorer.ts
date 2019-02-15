@@ -17,12 +17,10 @@ export class RhamtExplorer {
     private createCommands(): void {
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.createConfiguration', () => {
             this.modelService.createConfiguration();
-            this.dataProvider.refresh();
         }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', item => {
             const config = item.config;
             this.modelService.deleteConfiguration(undefined, config);
-            this.dataProvider.refresh();
         }));
     }
 

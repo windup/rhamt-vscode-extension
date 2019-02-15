@@ -8,8 +8,6 @@ import * as path from "path";
 import * as net from "net";
 import { RhamtConfiguration, RhamtModelService } from "raas-core";
 
-const RHAMT_VERSION_REGEX = /^version /;
-
 const findJava = require('find-java-home');
 
 export namespace Utils {
@@ -77,14 +75,10 @@ export namespace Utils {
                     if (error) {
                         reject(error);
                     } else {
-                        resolve(parseVersion(_stdout));
+                        resolve();
                     }
                 });
         });
-    }
-
-    function parseVersion(raw: string): string {
-        return raw.replace(RHAMT_VERSION_REGEX, '');
     }
 
     export function findJavaHome(): Promise<string> {
