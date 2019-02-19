@@ -25,7 +25,11 @@ This extension contributes the following settings:
 
 ## Building From Source
 
-* A TypeScript compiler is required to build from source. See this [docoument](https://www.typescriptlang.org/index.html#download-links) on how to install and usages.
+* A TypeScript compiler is required to build from source. 
+* See this [docoument](https://www.typescriptlang.org/index.html#download-links) on how to install and usages.
+* See this [docoument](https://www.typescriptlang.org/docs/handbook/compiler-options.html) for the different compiler options.
+
+Once Typescript is installed, the extension can be compiled by running `tsc`.
 
 ===============
 
