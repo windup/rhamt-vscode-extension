@@ -1,21 +1,16 @@
 'use strict';
 
 import * as cp from 'child_process';
-import * as os from 'os';
-import { RhamtConfiguration } from 'raas-core';
+import { RhamtConfiguration } from './model/model';
 
-export class RhamtClient {
+export class RhamtRunner {
 
-    private serverProcess?: cp.ChildProcess;
+    private serverProcess: cp.ChildProcess;
 
-    private config: RhamtConfiguration
+    private config: RhamtConfiguration;
 
     constructor(config: RhamtConfiguration) {
         this.config = config;
-    }
-
-    public async start(): Promise<any> {
-        return this.startRhamtServer();
     }
 
     public stop(): Promise<string> {
@@ -29,6 +24,8 @@ export class RhamtClient {
     }
 
     public analyze(): void {
+        console.log(this.config);
+        
         // TODO: start analysis
     }
 
@@ -42,14 +39,5 @@ export class RhamtClient {
                 reject('RHAMT server not running.');
             }
         });
-    }
-
-    private startRhamtServer(): void {
-        this.serverProcess = this.spawn();
-    }
-
-    private spawn(): cp.ChildProcess {
-        return cp.spawn(this.config.cli, 
-            ["--startServer", String(this.config.runtime.port)], {cwd: os.homedir()});
     }
 }

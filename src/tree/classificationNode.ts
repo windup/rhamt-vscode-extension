@@ -1,18 +1,18 @@
-import { AbstractNode } from './abstractNode';
-import { RhamtConfiguration, RhamtModelService, IClassification } from 'raas-core';
-import { ITreeNode } from '.';
-import { DataProvider } from './dataProvider';
+import { AbstractNode, ITreeNode } from './abstractNode';
 import { ClassificationItem } from './classificationItem';
+import { Classification, RhamtConfiguration } from '../model/model';
+import { ModelService } from '../model/modelService';
+import { RhamtTreeDataProvider } from './rhamtTreeDataProvider';
 
 export class ClassificationNode extends AbstractNode {
 
-    private classification: IClassification;
+    private classification: Classification;
 
     constructor(
-        classification: IClassification,
+        classification: Classification,
         config: RhamtConfiguration,
-        modelService: RhamtModelService,
-        dataProvider: DataProvider) {
+        modelService: ModelService,
+        dataProvider: RhamtTreeDataProvider) {
         super(config, modelService, dataProvider);
         this.classification = classification;
         this.treeItem = this.createItem();
@@ -27,7 +27,7 @@ export class ClassificationNode extends AbstractNode {
     }
 
     createItem(): ClassificationItem {
-        const item = new ClassificationItem(this.config, this.classification);
+        const item = new ClassificationItem(this.classification);
         return item;
     }
 }

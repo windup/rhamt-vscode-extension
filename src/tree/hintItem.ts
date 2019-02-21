@@ -1,33 +1,20 @@
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
-import { RhamtModelService, RhamtConfiguration, IHint } from 'raas-core';
+import { Hint } from '../model/model';
 
 export class HintItem extends TreeItem {
 
-    private _id: string = RhamtModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
-    private config: RhamtConfiguration;
-    private hint: IHint;
+    private hint: Hint;
 
-    constructor(config: RhamtConfiguration, hint: IHint) {
-        super(config.options['name']);
-        this.config = config;
+    constructor(hint: Hint) {
+        super(hint.text);
         this.hint = hint;
         this.refresh();
     }
 
-    delete(): void {
-        if (this.config.results) {
-            this.config.results.getHints().find(i => true);
-        }
-    }
-
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
         return undefined;
-    }
-
-    public get id(): string {
-        return this._id;
     }
 
     public get commandId(): string {
@@ -47,6 +34,6 @@ export class HintItem extends TreeItem {
     }
 
     public refresh(): void {
-        this.label = `${this.hint.messageOrDescription}`;
+        this.label = `${this.hint.text}`;
     }
 }

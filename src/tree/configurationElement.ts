@@ -1,16 +1,15 @@
-import { RhamtConfiguration, RhamtModelService } from 'raas-core';
 import { Command, TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
+import { RhamtConfiguration } from '../model/model';
 
-export class ConfigurationItem extends TreeItem {
+export class ConfigurationElement extends TreeItem {
 
-    id: string = RhamtModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
     private config: RhamtConfiguration;
 
     constructor(config: RhamtConfiguration) {
-        super(config.options['name']);
+        super(config.options.get('name'));
         this.config = config;
         this.refresh();
     }
@@ -32,11 +31,6 @@ export class ConfigurationItem extends TreeItem {
     }
 
     public refresh(): void {
-        this.label = this.config.options['name'];
-        if (this.config.results) {
-            if (this.config.results.getClassifications().length > 0) {
-                this.collapsibleState = TreeItemCollapsibleState.Collapsed;
-            }
-        }
+        this.label = this.config.options.get('name');
     }
 }

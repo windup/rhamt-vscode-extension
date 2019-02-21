@@ -6,7 +6,7 @@ import * as fse from "fs-extra";
 import * as child_process from "child_process";
 import * as path from "path";
 import * as net from "net";
-import { RhamtConfiguration, RhamtModelService } from "raas-core";
+import { RhamtConfiguration } from "./model/model";
 
 const findJava = require('find-java-home');
 
@@ -58,9 +58,9 @@ export namespace Utils {
             return Promise.reject();
         }
 
-        config.cli = rhamtCli;
-        config.runtime.port = port;
-        config.jvm = {id: RhamtModelService.generateUniqueId(), location: javaHome, name: '', version: '' }; 
+        config.options.set('cli', rhamtCli);
+        config.options.set('port', port);
+        config.options.set('jvm', javaHome); 
         return config;
     }
 

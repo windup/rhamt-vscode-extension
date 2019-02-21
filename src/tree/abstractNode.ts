@@ -1,32 +1,34 @@
-import { ITreeNode } from '.';
 import * as vscode from 'vscode';
-import { RhamtConfiguration, RhamtModelService } from 'raas-core';
-import { DataProvider } from './dataProvider';
+import { RhamtConfiguration } from '../model/model';
+import { ModelService } from '../model/modelService';
+import { RhamtTreeDataProvider } from './rhamtTreeDataProvider';
 
 export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> implements ITreeNode {
-    private _id: string = RhamtModelService.generateUniqueId();
 
     protected config: RhamtConfiguration;
-    protected modelService: RhamtModelService;
-    protected dataProvider: DataProvider;
+    protected modelService: ModelService;
+    protected dataProvider: RhamtTreeDataProvider;
 
     treeItem: T;
     parent?: vscode.TreeItem;
 
     constructor(
         config: RhamtConfiguration,
-        modelService: RhamtModelService,
-        dataProvider: DataProvider) {
+        modelService: ModelService,
+        dataProvider: RhamtTreeDataProvider) {
             this.config = config;
             this.modelService = modelService;
             this.dataProvider = dataProvider;
     }
 
-    public get id(): string {
-        return this._id;
-    }
-
     abstract getChildren(): Promise<ITreeNode[]>;
     abstract delete(): Promise<void>;
     abstract createItem(): T;
+}
+
+export interface ITreeNode<T extends vscode.TreeItem = vscode.TreeItem> {
+    readonly treeItem: T;
+    readonly parent?: vscode.TreeItem;
+    getChildren(): Promise<ITreeNode[]>;
+    delete(): Promise<void>;
 }

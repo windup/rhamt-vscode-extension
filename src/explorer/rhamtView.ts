@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 import { RhamtExplorer } from './rhamtExplorer';
-import { RhamtModelService } from 'raas-core';
+import { ModelService } from '../model/modelService';
 
 export class RhamtView implements vscode.Disposable {
 
     constructor(private context: vscode.ExtensionContext,
-        private modelService: RhamtModelService) {
+        private modelService: ModelService) {
         this.createExplorer();
         this.context.subscriptions.push(this);
     }

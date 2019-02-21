@@ -1,33 +1,33 @@
 import { AbstractNode, ITreeNode } from './abstractNode';
-import { HintItem } from './hintItem';
-import { Hint, RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../model/model';
 import { ModelService } from '../model/modelService';
+import { ConfigurationElement } from './configurationElement';
 import { RhamtTreeDataProvider } from './rhamtTreeDataProvider';
 
-export class HintNode extends AbstractNode {
-
-    private hint: Hint;
+export class ConfigurationTreeNode extends AbstractNode<ConfigurationElement> {
 
     constructor(
-        hint: Hint,
         config: RhamtConfiguration,
         modelService: ModelService,
         dataProvider: RhamtTreeDataProvider) {
         super(config, modelService, dataProvider);
-        this.hint = hint;
         this.treeItem = this.createItem();
     }
 
-    getChildren(): Promise<ITreeNode[]> {
-        return Promise.resolve([]);
+    createItem(): ConfigurationElement {
+        const item = new ConfigurationElement(this.config);
+        return item;
     }
 
     delete(): Promise<void> {
         return Promise.resolve();
     }
 
-    createItem(): HintItem {
-        const item = new HintItem(this.hint);
-        return item;
+    protected refresh(): void {
+        this.treeItem.refresh();
+    }
+
+    getChildren(): Promise<ITreeNode[]> {
+        return Promise.resolve([]);
     }
 }

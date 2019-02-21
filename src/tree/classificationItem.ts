@@ -1,35 +1,22 @@
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
-import { RhamtModelService, RhamtConfiguration, IClassification } from 'raas-core';
+import { Classification } from '../model/model';
 
 export class ClassificationItem extends TreeItem {
-
-    private _id: string = RhamtModelService.generateUniqueId();
+    
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
-    private config: RhamtConfiguration;
-    private classification: IClassification;
+    private classification: Classification;
 
-    constructor(config: RhamtConfiguration, classification: IClassification) {
-        super(config.options['name']);
-        this.config = config;
+    constructor(classification: Classification) {
+        super(classification.text);
         this.classification = classification;
         this.refresh();
-    }
-
-    delete(): void {
-        if (this.config.results) {
-            this.config.results.getClassifications().find(i => true);
-        }
     }
 
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
         return undefined;
     }
-
-    public get id(): string {
-        return this._id;
-    }
-
+    
     public get commandId(): string {
         return 'rhamt.openClassification';
     }
@@ -47,6 +34,6 @@ export class ClassificationItem extends TreeItem {
     }
 
     public refresh(): void {
-        this.label = this.classification.title;
+        this.label = this.classification.text;
     }
 }
