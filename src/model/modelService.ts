@@ -11,6 +11,7 @@ export class ModelService {
 
     public createConfigurationWithName(name: string): RhamtConfiguration {
         const config: RhamtConfiguration = new RhamtConfiguration();
+        config.options.set('name', name);
         this.model.configurations.set(name, config);
         return config;
     }

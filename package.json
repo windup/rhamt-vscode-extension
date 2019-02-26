@@ -26,12 +26,15 @@
         "onCommand:rhamt.showRhamtExplorer",
         "onView:rhamtExplorerView"
     ],
+    "scripts": {
+        "unit-test": "mocha --require ts-node/register test/**/*.ts"
+    },
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
                 "command": "rhamt.analyzeWorkspace",
-                "title": "RHAMT analyze"
+                "title": "Create RHAMT configuration"
             },
             {
                 "command": "rhamt.showRhamtExplorer",
@@ -59,7 +62,7 @@
             "activitybar": [
                 {
                     "id": "rhamt-explorer",
-                    "title": "RHAMT Configuration Explorer",
+                    "title": "RHAMT",
                     "icon": "resources/dep.svg"
                 }
             ]
@@ -68,17 +71,21 @@
             "rhamt-explorer": [
                 {
                     "id": "rhamtExplorerView",
-                    "name": "RHAMT Explorer"
+                    "name": "Issue Explorer"
                 }
             ]
         }
     },
     "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.6",
-        "tslint": "^5.8.0",
+        "@types/chai": "^4.1.7",
+        "@types/mocha": "^2.2.48",
         "@types/node": "^7.0.43",
-        "@types/mocha": "^2.2.42"
+        "chai": "^4.2.0",
+        "mocha": "^6.0.2",
+        "ts-node": "^8.0.2",
+        "tslint": "^5.8.0",
+        "typescript": "^2.9.2",
+        "vscode": "^1.1.6"
     },
     "dependencies": {
         "@types/fs-extra": "^5.0.4",
