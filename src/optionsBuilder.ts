@@ -55,7 +55,7 @@ export class OptionsBuilder {
     static async build(config: RhamtConfiguration): Promise<any> {
 
         const name = await vscode.window.showInputBox({
-            prompt: "Configuration Name",
+            prompt: "configuration name",
             validateInput: (value: string) => {
                 if (value.trim().length === 0) {
                     return 'Configuration name required';

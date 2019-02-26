@@ -5,7 +5,6 @@ import { ExtensionContext, workspace, extensions } from 'vscode';
 import * as fse from "fs-extra";
 import * as child_process from "child_process";
 import * as path from "path";
-import * as net from "net";
 import { RhamtConfiguration } from "./model/model";
 
 const findJava = require('find-java-home');
@@ -21,47 +20,50 @@ export namespace Utils {
         EXTENSION_NAME = name;
     }
 
-    export async function initConfiguration(config: RhamtConfiguration): Promise<any> {
-        let javaHome: string;
-        let rhamtCli: string;
-        let port: number = 8080;
+    export async function initConfiguration(config: RhamtConfiguration) {
 
-        try {
-            javaHome = await findJavaHome();
-        }
-        catch (error) {
-            promptForFAQs('Unable to resolve Java Home');
-            return Promise.reject();
-        }
+        await vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                cancellable: false
+            }, async progress => {
 
-        try {
-            rhamtCli = await findRhamtCli();
-        }
-        catch (error) {
-            promptForFAQs('Unable to find rhamt-cli executable');
-            return Promise.reject();
-        }
+                progress.report({message: 'Verifying JAVA_HOME'});
+                let javaHome: string;
+                let rhamtCli: string;
 
-        try {
-            await findRhamtVersion(rhamtCli, javaHome);
-        }
-        catch (error) {
-            promptForFAQs('Unable to determine rhamt-cli version: \n' + error.message);
-            return Promise.reject();
-        }
+                try {
+                    javaHome = await findJavaHome();
+                }
+                catch (error) {
+                    promptForFAQs('Unable to resolve Java Home');
+                    progress.report({message: 'Unable to verify JAVA_HOME'});
+                    return Promise.reject();
+                }
 
-        try {
-            await validatePort(port);
-        }
-        catch (error) {
-            promptForFAQs(error.message);
-            return Promise.reject();
-        }
+                progress.report({message: 'Verifying rhamt-cli'});
 
-        config.options.set('cli', rhamtCli);
-        config.options.set('port', port);
-        config.options.set('jvm', javaHome); 
-        return config;
+                try {
+                    rhamtCli = await findRhamtCli();
+                }
+                catch (error) {
+                    promptForFAQs('Unable to find rhamt-cli executable');
+                    progress.report({message: 'Unable to find rhamt-cli executable'});
+                    return Promise.reject();
+                }
+
+                try {
+                    await findRhamtVersion(rhamtCli, javaHome);
+                }
+                catch (error) {
+                    promptForFAQs('Unable to determine rhamt-cli version: \n' + error.message);
+                    progress.report({message: 'Unable to verify rhamt-cli executable'});
+                    return Promise.reject();
+                }
+
+                config.options.set('cli', rhamtCli);
+                config.options.set('jvm', javaHome); 
+                return config;
+        });
     }
 
     export function findRhamtVersion(rhamtCli: string, javaHome: string): Promise<string> {
@@ -135,29 +137,5 @@ export namespace Utils {
 
     export function getPathToExtensionRoot(...args: string[]): string {
         return path.join(extensions.getExtension(getExtensionId())!.extensionPath, ...args);
-    }
-
-    export async function validatePort(port: number): Promise<void> {
-        if (port < 1 || port > 65535) {
-            throw new Error('Port value is incorrect.');
-        }
-
-        if (! await isPortFree(port)) {
-            throw new Error('Port ' + port + ' is already in use.');
-        }
-    }
-
-    export function isPortFree(port: number): Promise<boolean> {
-        return new Promise(resolve => {
-            const server = net.createServer();
-            server.listen(port, '0.0.0.0');
-            server.on('error', () => {
-                resolve(false);
-            });
-            server.on('listening', () => {
-                server.close();
-                resolve(true);
-            });
-        });
     }
 }
