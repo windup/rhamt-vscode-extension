@@ -88,7 +88,7 @@ export class OptionsBuilder {
 
         const source = await vscode.window.showQuickPick(SOURCE, {
             canPickMany: true,
-            placeHolder: 'source - The source server/technology/framework to migrate from'
+            placeHolder: 'source (the source server/technology/framework to migrate from)'
         });
 
         if (!source) return;
@@ -96,7 +96,7 @@ export class OptionsBuilder {
 
         const target = await vscode.window.showQuickPick(TARGET, {
             canPickMany: true,
-            placeHolder: 'target - The target server/technology/framework to migrate to.'
+            placeHolder: 'target (the target server/technology/framework to migrate to)'
         });
 
         if (!target) return;
