@@ -1,9 +1,9 @@
 {
     "name": "rhamt-vscode-extension",
     "displayName": "rhamt-vscode-extension",
-    "description": "RHAMT VSCode extension",
+    "description": "Red Hat Application Migration Toolkit",
     "version": "0.0.1",
-    "publisher": "johnsteele",
+    "author": "Red Hat Developers",
     "repository": {
         "type": "git",
         "url": "https://github.com/windup/rhamt-vscode-extension"
@@ -27,6 +27,7 @@
         "onView:rhamtExplorerView"
     ],
     "scripts": {
+        "prepare": "npm install && tsc",
         "unit-test": "mocha --require ts-node/register test/**/*.ts"
     },
     "main": "./out/extension",

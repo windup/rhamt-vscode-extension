@@ -23,14 +23,11 @@ This extension contributes the following settings:
 
 * `rhamt.home`: The location of the rhamt-cli. 
 
-## Building From Source
+## Build
 
-* A TypeScript compiler is required to build from source. 
-* See this [docoument](https://www.typescriptlang.org/index.html#download-links) on how to install and usages.
-* See this [docoument](https://www.typescriptlang.org/docs/handbook/compiler-options.html) for the different compiler options.
-
-Once Typescript is installed, the extension can be compiled by running `tsc`.
-
+```bash
+$ npm run prepare
+```
 ===============
 
 **Enjoy!**
