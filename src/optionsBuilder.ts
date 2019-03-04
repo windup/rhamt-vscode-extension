@@ -52,7 +52,9 @@ const TARGET = [
 
 export class OptionsBuilder {
 
-    static async build(config: RhamtConfiguration): Promise<any> {
+    static async build(): Promise<any> {
+
+        const config = new RhamtConfiguration();
 
         const name = await vscode.window.showInputBox({
             prompt: "Configuration name",

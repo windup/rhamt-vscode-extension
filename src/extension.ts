@@ -5,7 +5,7 @@ import { Utils } from './Utils';
 import { RhamtView } from './explorer/rhamtView';
 import { OptionsBuilder } from './optionsBuilder';
 import { ModelService } from './model/modelService';
-import { RhamtModel, RhamtConfiguration } from './model/model';
+import { RhamtModel } from './model/model';
 
 let rhamtView: RhamtView;
 let modelService: ModelService;
@@ -20,15 +20,13 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(rhamtView);
 
     let analyzeWorkspaceDisposable = vscode.commands.registerCommand('rhamt.createConfiguration', async () => {
-        const config = new RhamtConfiguration();
+        
+        const config = await OptionsBuilder.build();
 
-        const result = await OptionsBuilder.build(config);
-
-        if (result) {
-            // prompt save or save and run
-            const run = false;
-            
-            if (run) {
+        if (config) {
+            modelService.addConfiguration(config);
+            const results = await vscode.window.showInformationMessage(`Successfully Create Configuration`, 'Run Analysis');
+            if (results === 'Run Analysis') {
                 try {
                     await Utils.initConfiguration(config);
                 } catch (e) {

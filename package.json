@@ -22,7 +22,7 @@
         "Analyze"
     ],
     "activationEvents": [
-        "onCommand:rhamt.analyzeWorkspace",
+        "onCommand:rhamt.createConfiguration",
         "onCommand:rhamt.showRhamtExplorer",
         "onView:rhamtExplorerView"
     ],
