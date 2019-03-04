@@ -5,6 +5,10 @@ export class ModelService {
     constructor(public model: RhamtModel) {
     }
 
+    public addConfiguration(config: RhamtConfiguration): void {
+        this.model.configurations.set(config.options.get('name'), config);
+    }
+
     public getConfiguration(id: string): RhamtConfiguration | undefined {
         return this.model.configurations.get(id);
     }
@@ -12,7 +16,7 @@ export class ModelService {
     public createConfigurationWithName(name: string): RhamtConfiguration {
         const config: RhamtConfiguration = new RhamtConfiguration();
         config.options.set('name', name);
-        this.model.configurations.set(name, config);
+        this.addConfiguration(config);
         return config;
     }
 

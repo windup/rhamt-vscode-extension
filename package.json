@@ -27,15 +27,16 @@
         "onView:rhamtExplorerView"
     ],
     "scripts": {
-        "prepare": "npm install && tsc",
+        "prepare": "npm run build",
+        "build": "tsc",
         "unit-test": "mocha --require ts-node/register test/**/*.ts"
     },
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "rhamt.analyzeWorkspace",
-                "title": "Create RHAMT configuration"
+                "command": "rhamt.createConfiguration",
+                "title": "Create configuration"
             },
             {
                 "command": "rhamt.showRhamtExplorer",
@@ -79,17 +80,13 @@
     },
     "devDependencies": {
         "@types/chai": "^4.1.7",
-        "@types/mocha": "^2.2.48",
+        "@types/mocha": "^5.2.6",
+        "@types/fs-extra": "^5.0.4",
         "@types/node": "^7.0.43",
-        "chai": "^4.2.0",
-        "mocha": "^6.0.2",
-        "ts-node": "^8.0.2",
-        "tslint": "^5.8.0",
-        "typescript": "^2.9.2",
-        "vscode": "^1.1.6"
+        "vscode": "^1.1.6",
+        "typescript": "^3.3.3333"
     },
     "dependencies": {
-        "@types/fs-extra": "^5.0.4",
         "find-java-home": "^0.2.0",
         "fs-extra": "^6.0.1",
         "vscode-nls": "^2.0.2"

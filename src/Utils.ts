@@ -1,7 +1,6 @@
 'use strict';
 
-import * as vscode from "vscode";
-import { ExtensionContext, workspace, extensions } from 'vscode';
+import { ExtensionContext, workspace, extensions, window, Uri, commands, ProgressLocation } from 'vscode';
 import * as fse from "fs-extra";
 import * as child_process from "child_process";
 import * as path from "path";
@@ -22,10 +21,10 @@ export namespace Utils {
 
     export async function initConfiguration(config: RhamtConfiguration) {
 
-        await vscode.window.withProgress({
-                location: vscode.ProgressLocation.Notification,
+        await window.withProgress({
+                location: ProgressLocation.Notification,
                 cancellable: false
-            }, async progress => {
+            }, async (progress: any) => {
 
                 progress.report({message: 'Verifying JAVA_HOME'});
                 let javaHome: string;
@@ -121,13 +120,13 @@ export namespace Utils {
     export async function promptForFAQs(message: string): Promise<any> {
         const OPTION_SHOW_FAQS: string = "Show FAQs";
         const OPTION_OPEN_SETTINGS: string = "Open Settings";
-        const choiceForDetails = await vscode.window.showErrorMessage(message, OPTION_OPEN_SETTINGS, OPTION_SHOW_FAQS);
+        const choiceForDetails = await window.showErrorMessage(message, OPTION_OPEN_SETTINGS, OPTION_SHOW_FAQS);
         if (choiceForDetails === OPTION_SHOW_FAQS) {
             const faqPath: string = Utils.getPathToExtensionRoot("FAQ.md");
-            vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(faqPath));
+            commands.executeCommand("markdown.showPreview", Uri.file(faqPath));
         }
         else if (choiceForDetails === OPTION_OPEN_SETTINGS) {
-            vscode.commands.executeCommand("workbench.action.openSettings");
+            commands.executeCommand("workbench.action.openSettings");
         }
     }
 
