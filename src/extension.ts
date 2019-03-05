@@ -21,18 +21,18 @@ export async function activate(context: vscode.ExtensionContext) {
 
     let analyzeWorkspaceDisposable = vscode.commands.registerCommand('rhamt.createConfiguration', async () => {
         
-        const config = await OptionsBuilder.build();
+        const config = await OptionsBuilder.build(modelService);
 
         if (config) {
-            modelService.addConfiguration(config);
-            const results = await vscode.window.showInformationMessage(`Successfully Create Configuration`, 'Run Analysis');
-            if (results === 'Run Analysis') {
-                try {
-                    await Utils.initConfiguration(config);
-                } catch (e) {
-                    console.log(e);
-                    return;
-                }
+            const run = await vscode.window.showQuickPick(['Yes', 'No'], {placeHolder: 'Run the analysis?'});
+            if (!run || run === 'No') {
+                return;
+            }
+            try {
+                await Utils.initConfiguration(config);
+            } catch (e) {
+                console.log(e);
+                return;
             }
         }
     });

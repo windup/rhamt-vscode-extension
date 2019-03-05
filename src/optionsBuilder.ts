@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { RhamtConfiguration } from './model/model';
+import { ModelService } from './model/modelService';
 
 const SOURCE = [
     "websphere",
@@ -52,7 +53,7 @@ const TARGET = [
 
 export class OptionsBuilder {
 
-    static async build(): Promise<any> {
+    static async build(modelService: ModelService): Promise<any> {
 
         const config = new RhamtConfiguration();
 
@@ -67,6 +68,7 @@ export class OptionsBuilder {
 
         if (!name) return;
         config.options.set('name', name);
+        modelService.addConfiguration(config);
 
         const input = await vscode.window.showWorkspaceFolderPick({
             placeHolder: 'input folder'
