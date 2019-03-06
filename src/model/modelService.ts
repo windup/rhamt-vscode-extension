@@ -23,4 +23,8 @@ export class ModelService {
     public deleteConfiguration(configuration: RhamtConfiguration): boolean {
         return this.model.configurations.delete(configuration.options.get('name'));
     }
+
+    public nameEsists(name: string): boolean {
+        return this.model.exists(name);
+    }
 }

@@ -55,18 +55,10 @@ export class OptionsBuilder {
 
     static async build(modelService: ModelService): Promise<any> {
 
-        const config = new RhamtConfiguration();
-
-        const name = await vscode.window.showInputBox({
-            prompt: "Configuration name",
-            validateInput: (value: string) => {
-                if (value.trim().length === 0) {
-                    return 'Configuration name required';
-                }
-            }
-        });
-
+        const name = await OptionsBuilder.getName(modelService);
         if (!name) return;
+
+        const config = new RhamtConfiguration();
         config.options.set('name', name);
         modelService.addConfiguration(config);
 
@@ -90,14 +82,6 @@ export class OptionsBuilder {
         if (!output) return;
         config.options.set('output', input.uri.fsPath);
 
-        const source = await vscode.window.showQuickPick(SOURCE, {
-            canPickMany: true,
-            placeHolder: 'source (the source server/technology/framework to migrate from)'
-        });
-
-        if (!source) return;
-        config.options.set('source', source);
-
         const target = await vscode.window.showQuickPick(TARGET, {
             canPickMany: true,
             placeHolder: 'target (the target server/technology/framework to migrate to)'
@@ -106,6 +90,28 @@ export class OptionsBuilder {
         if (!target) return;
         config.options.set('target', target);
 
+        const source = await vscode.window.showQuickPick(SOURCE, {
+            canPickMany: true,
+            placeHolder: 'source (the source server/technology/framework to migrate from)'
+        });
+
+        if (!source) return;
+        config.options.set('source', source);
+
         return config;
+    }
+
+    static async getName(modelService: ModelService): Promise<any> {
+        return await vscode.window.showInputBox({
+            prompt: "Configuration name",
+            validateInput: (value: string) => {
+                if (value.trim().length === 0) {
+                    return 'Configuration name required';
+                }
+                else if (modelService.nameEsists(value)) {
+                    return 'Configuration name already exists'
+                }
+            }
+        });        
     }
 }

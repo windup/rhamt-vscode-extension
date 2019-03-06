@@ -40,8 +40,8 @@
         "update-deps": "node_modules/.bin/ncu --upgrade --loglevel verbose --packageFile package.json && npm update",
         "coverage:upload": "codecov -f coverage/coverage-final.json",
         "build": "npm run clean && tslint -p tslint.json && npm run compile"
-      },
-    "main": "./out/extension",
+    },
+    "main": "./out/src/extension",
     "contributes": {
         "commands": [
             {
@@ -98,7 +98,8 @@
         "vscode": "^1.1.6",
         "typescript": "^3.3.3333",
         "sinon": "^7.2.7",
-        "sinon-chai": "^3.3.0"
+        "sinon-chai": "^3.3.0",
+        "chai": "^4.2.0"
     },
     "dependencies": {
         "find-java-home": "^0.2.0",
