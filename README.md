@@ -26,7 +26,7 @@ This extension contributes the following settings:
 ## Build
 
 ```bash
-$ npm run prepare
+$ npm run compile
 ```
 ===============
 
