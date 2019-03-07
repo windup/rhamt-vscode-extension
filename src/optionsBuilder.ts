@@ -55,7 +55,17 @@ export class OptionsBuilder {
 
     static async build(modelService: ModelService): Promise<any> {
 
-        const name = await OptionsBuilder.getName(modelService);
+        const name = await vscode.window.showInputBox({
+            prompt: "Configuration name",
+            validateInput: (value: string) => {
+                if (value.trim().length === 0) {
+                    return 'Configuration name required';
+                }
+                else if (modelService.nameEsists(value)) {
+                    return 'Configuration name already exists'
+                }
+            }
+        });
         if (!name) return;
 
         const config = new RhamtConfiguration();
@@ -99,19 +109,5 @@ export class OptionsBuilder {
         config.options.set('source', source);
 
         return config;
-    }
-
-    static async getName(modelService: ModelService): Promise<any> {
-        return await vscode.window.showInputBox({
-            prompt: "Configuration name",
-            validateInput: (value: string) => {
-                if (value.trim().length === 0) {
-                    return 'Configuration name required';
-                }
-                else if (modelService.nameEsists(value)) {
-                    return 'Configuration name already exists'
-                }
-            }
-        });        
     }
 }

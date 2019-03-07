@@ -12,6 +12,7 @@ chai.use(sinonChai);
 suite('RHAMT / Wizard', () => {
     let sandbox: sinon.SinonSandbox;
     let inputStub: sinon.SinonStub;
+    const name = 'val';
     const modelService = new ModelService(new RhamtModel());
 
     setup(() => {
@@ -28,18 +29,18 @@ suite('RHAMT / Wizard', () => {
             setup(() => {
                 inputStub.restore();
             });
-            test('returns undefinded for valid configuration name', async () => {
+            test('valid configuration name', async () => {
                 let result: string | Thenable<string>;
                 inputStub = sandbox.stub(vscode.window, 'showInputBox').onFirstCall().callsFake((options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string> => {
-                    result = options.validateInput('val');
-                    return Promise.resolve('val');
+                    result = options.validateInput(name);
+                    return Promise.resolve(name);
                 });
 
                 OptionsBuilder.build(modelService);
 
                 expect(result).is.undefined;
             });
-            test('returns error message for empty configuration name', async () => {
+            test('empty configuration name', async () => {
                 let result: string | Thenable<string>;
                 inputStub = sandbox.stub(vscode.window, 'showInputBox').onFirstCall().callsFake((options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string> => {
                     result = options.validateInput('');
@@ -47,6 +48,13 @@ suite('RHAMT / Wizard', () => {
                 });
                 OptionsBuilder.build(modelService);
                 expect(result).is.equals('Configuration name required');
+            });
+            test('configuration creation', async () => {
+                inputStub = sandbox.stub(vscode.window, 'showInputBox').onFirstCall().callsFake((options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string> => {
+                    return Promise.resolve(name);
+                });
+                OptionsBuilder.build(modelService);
+                expect(modelService.getConfiguration(name)).exist
             });
         });
     });
