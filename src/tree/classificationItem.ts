@@ -2,7 +2,7 @@ import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { Classification } from '../model/model';
 
 export class ClassificationItem extends TreeItem {
-    
+
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
     private classification: Classification;
@@ -16,7 +16,7 @@ export class ClassificationItem extends TreeItem {
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
         return undefined;
     }
-    
+
     public get commandId(): string {
         return 'rhamt.openClassification';
     }

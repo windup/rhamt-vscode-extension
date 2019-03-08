@@ -3,51 +3,51 @@ import { RhamtConfiguration } from './model/model';
 import { ModelService } from './model/modelService';
 
 const SOURCE = [
-    "websphere",
-    "jbpm",
-    "soa",
-    "seam",
-    "eap7",
-    "hibernate",
-    "oraclejdk",
-    "eap6",
-    "rmi",
-    "jrun",
-    "glassfish",
-    "java",
-    "orion",
-    "eap",
-    "hibernate-search",
-    "log4j",
-    "soa-p",
-    "rpc",
-    "sonic",
-    "weblogic",
-    "drools",
-    "java-ee",
-    "javaee",
-    "sonicesb",
-    "jonas",
-    "resin",
-    "resteasy"
+    'websphere',
+    'jbpm',
+    'soa',
+    'seam',
+    'eap7',
+    'hibernate',
+    'oraclejdk',
+    'eap6',
+    'rmi',
+    'jrun',
+    'glassfish',
+    'java',
+    'orion',
+    'eap',
+    'hibernate-search',
+    'log4j',
+    'soa-p',
+    'rpc',
+    'sonic',
+    'weblogic',
+    'drools',
+    'java-ee',
+    'javaee',
+    'sonicesb',
+    'jonas',
+    'resin',
+    'resteasy'
 ];
 
 const TARGET = [
-    "cloud-readiness",
-    "jbpm",
-    "drools",
-    "fsw",
-    "eap7",
-    "hibernate",
-    "java-ee",
-    "eap6",
-    "fuse",
-    "openjdk",
-    "eap",
-    "camel",
-    "linux",
-    "hibernate-search",
-    "resteasy"
+    'cloud-readiness',
+    'jbpm',
+    'drools',
+    'fsw',
+    'eap7',
+    'hibernate',
+    'java-ee',
+    'eap6',
+    'fuse',
+    'openjdk',
+    'eap',
+    'camel',
+    'linux',
+    'hibernate-search',
+    'resteasy'
 ];
 
 
@@ -56,13 +56,13 @@ export class OptionsBuilder {
     static async build(modelService: ModelService): Promise<any> {
 
         const name = await vscode.window.showInputBox({
-            prompt: "Configuration name",
+            prompt: 'Configuration name',
             validateInput: (value: string) => {
                 if (value.trim().length === 0) {
                     return 'Configuration name required';
                 }
-                else if (modelService.nameEsists(value)) {
-                    return 'Configuration name already exists'
+                else if (modelService.model.exists(value)) {
+                    return 'Configuration name already exists';
                 }
             }
         });
@@ -94,7 +94,7 @@ export class OptionsBuilder {
 
         const target = await vscode.window.showQuickPick(TARGET, {
             canPickMany: true,
-            placeHolder: 'target (the target server/technology/framework to migrate to)'
+            placeHolder: 'target (technology to migrate to. defaults to eap7)'
         });
 
         if (!target) return;
@@ -102,7 +102,7 @@ export class OptionsBuilder {
 
         const source = await vscode.window.showQuickPick(SOURCE, {
             canPickMany: true,
-            placeHolder: 'source (the source server/technology/framework to migrate from)'
+            placeHolder: 'source (technology to migrate from)'
         });
 
         if (!source) return;

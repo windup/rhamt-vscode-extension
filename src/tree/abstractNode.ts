@@ -16,9 +16,9 @@ export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> 
         config: RhamtConfiguration,
         modelService: ModelService,
         dataProvider: RhamtTreeDataProvider) {
-            this.config = config;
-            this.modelService = modelService;
-            this.dataProvider = dataProvider;
+        this.config = config;
+        this.modelService = modelService;
+        this.dataProvider = dataProvider;
     }
 
     abstract getChildren(): Promise<ITreeNode[]>;

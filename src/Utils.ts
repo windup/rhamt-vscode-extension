@@ -1,10 +1,10 @@
 'use strict';
 
 import { ExtensionContext, workspace, extensions, window, Uri, commands, ProgressLocation } from 'vscode';
-import * as fse from "fs-extra";
-import * as child_process from "child_process";
-import * as path from "path";
-import { RhamtConfiguration } from "./model/model";
+import * as fse from 'fs-extra';
+import * as child_process from 'child_process';
+import * as path from 'path';
+import { RhamtConfiguration } from './model/model';
 
 const findJava = require('find-java-home');
 
@@ -14,7 +14,7 @@ export namespace Utils {
     let EXTENSION_NAME: string;
 
     export async function loadPackageInfo(context: ExtensionContext): Promise<void> {
-        const { publisher, name } = await fse.readJSON(context.asAbsolutePath("./package.json"));
+        const { publisher, name } = await fse.readJSON(context.asAbsolutePath('./package.json'));
         EXTENSION_PUBLISHER = publisher;
         EXTENSION_NAME = name;
     }
@@ -22,52 +22,52 @@ export namespace Utils {
     export async function initConfiguration(config: RhamtConfiguration) {
 
         await window.withProgress({
-                location: ProgressLocation.Notification,
-                cancellable: false
-            }, async (progress: any) => {
+            location: ProgressLocation.Notification,
+            cancellable: false
+        }, async (progress: any) => {
 
-                progress.report({message: 'Verifying JAVA_HOME'});
-                let javaHome: string;
-                let rhamtCli: string;
+            progress.report({message: 'Verifying JAVA_HOME'});
+            let javaHome: string;
+            let rhamtCli: string;
 
-                try {
-                    javaHome = await findJavaHome();
-                }
-                catch (error) {
-                    promptForFAQs('Unable to resolve Java Home');
-                    progress.report({message: 'Unable to verify JAVA_HOME'});
-                    return Promise.reject();
-                }
+            try {
+                javaHome = await findJavaHome();
+            }
+            catch (error) {
+                promptForFAQs('Unable to resolve Java Home');
+                progress.report({message: 'Unable to verify JAVA_HOME'});
+                return Promise.reject();
+            }
 
-                progress.report({message: 'Verifying rhamt-cli'});
+            progress.report({message: 'Verifying rhamt-cli'});
 
-                try {
-                    rhamtCli = await findRhamtCli();
-                }
-                catch (error) {
-                    promptForFAQs('Unable to find rhamt-cli executable');
-                    progress.report({message: 'Unable to find rhamt-cli executable'});
-                    return Promise.reject();
-                }
+            try {
+                rhamtCli = await findRhamtCli();
+            }
+            catch (error) {
+                promptForFAQs('Unable to find rhamt-cli executable');
+                progress.report({message: 'Unable to find rhamt-cli executable'});
+                return Promise.reject();
+            }
 
-                try {
-                    await findRhamtVersion(rhamtCli, javaHome);
-                }
-                catch (error) {
-                    promptForFAQs('Unable to determine rhamt-cli version: \n' + error.message);
-                    progress.report({message: 'Unable to verify rhamt-cli executable'});
-                    return Promise.reject();
-                }
+            try {
+                await findRhamtVersion(rhamtCli, javaHome);
+            }
+            catch (error) {
+                promptForFAQs('Unable to determine rhamt-cli version: \n' + error.message);
+                progress.report({message: 'Unable to verify rhamt-cli executable'});
+                return Promise.reject();
+            }
 
-                config.options.set('cli', rhamtCli);
-                config.options.set('jvm', javaHome); 
-                return config;
+            config.options.set('cli', rhamtCli);
+            config.options.set('jvm', javaHome);
+            return config;
         });
     }
 
     export function findRhamtVersion(rhamtCli: string, javaHome: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            let env = {'JAVA_HOME' : javaHome};
+            const env = {JAVA_HOME : javaHome};
             const execOptions: child_process.ExecOptions = {
                 env: Object.assign({}, process.env, env)
             };
@@ -86,7 +86,7 @@ export namespace Utils {
         return new Promise<string>((resolve, reject) => {
             findJava((err: string, home: string) => {
                 if (err) {
-                    let javaHome = workspace.getConfiguration("java").get<string>("home");
+                    const javaHome = workspace.getConfiguration('java').get<string>('home');
                     if (javaHome) {
                         resolve(javaHome);
                     }
@@ -102,31 +102,29 @@ export namespace Utils {
 
     export function findRhamtCli(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            let rhamtPath = workspace.getConfiguration("rhamt.executable").get<string>("path");
+            const rhamtPath = workspace.getConfiguration('rhamt.executable').get<string>('path');
             if (rhamtPath) {
                 resolve(rhamtPath);
             }
-    
-            let rhamtHome = process.env['RHAMT_HOME'];
+            const rhamtHome = process.env['RHAMT_HOME'];
             if (rhamtHome) {
-                let isWindows = process.platform === 'win32';
-                resolve(path.join(rhamtHome, "bin", "rhamt-cli" +  isWindows ? ".bat" : ""));
-            }       
-            
-            reject(new Error(""));
+                const isWindows = process.platform === 'win32';
+                resolve(path.join(rhamtHome, 'bin', 'rhamt-cli' +  isWindows ? '.bat' : ''));
+            }
+            reject(new Error(''));
         });
     }
 
     export async function promptForFAQs(message: string): Promise<any> {
-        const OPTION_SHOW_FAQS: string = "Show FAQs";
-        const OPTION_OPEN_SETTINGS: string = "Open Settings";
+        const OPTION_SHOW_FAQS = 'Show FAQs';
+        const OPTION_OPEN_SETTINGS = 'Open Settings';
         const choiceForDetails = await window.showErrorMessage(message, OPTION_OPEN_SETTINGS, OPTION_SHOW_FAQS);
         if (choiceForDetails === OPTION_SHOW_FAQS) {
-            const faqPath: string = Utils.getPathToExtensionRoot("FAQ.md");
-            commands.executeCommand("markdown.showPreview", Uri.file(faqPath));
+            const faqPath: string = Utils.getPathToExtensionRoot('FAQ.md');
+            commands.executeCommand('markdown.showPreview', Uri.file(faqPath));
         }
         else if (choiceForDetails === OPTION_OPEN_SETTINGS) {
-            commands.executeCommand("workbench.action.openSettings");
+            commands.executeCommand('workbench.action.openSettings');
         }
     }
 

@@ -1,7 +1,5 @@
-'use strict';
-
-import { RhamtConfiguration } from "./model/model";
-import { RhamtRunner } from "./rhamtRunner";
+import { RhamtConfiguration } from './model/model';
+import { RhamtRunner } from './rhamtRunner';
 
 export class RhamtController {
 

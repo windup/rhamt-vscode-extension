@@ -31,30 +31,34 @@ suite('RHAMT / Wizard', () => {
             });
             test('valid configuration name', async () => {
                 let result: string | Thenable<string>;
-                inputStub = sandbox.stub(vscode.window, 'showInputBox').onFirstCall().callsFake((options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string> => {
-                    result = options.validateInput(name);
-                    return Promise.resolve(name);
-                });
-
+                inputStub = sandbox.stub(vscode.window, 'showInputBox').onFirstCall().callsFake(
+                    (options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string> => {
+                        result = options.validateInput(name);
+                        return Promise.resolve(name);
+                    }
+                );
                 OptionsBuilder.build(modelService);
-
                 expect(result).is.undefined;
             });
             test('empty configuration name', async () => {
                 let result: string | Thenable<string>;
-                inputStub = sandbox.stub(vscode.window, 'showInputBox').onFirstCall().callsFake((options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string> => {
-                    result = options.validateInput('');
-                    return Promise.resolve('');
-                });
+                inputStub = sandbox.stub(vscode.window, 'showInputBox').onFirstCall().callsFake(
+                    (options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string> => {
+                        result = options.validateInput('');
+                        return Promise.resolve('');
+                    }
+                );
                 OptionsBuilder.build(modelService);
                 expect(result).is.equals('Configuration name required');
             });
             test('configuration creation', async () => {
-                inputStub = sandbox.stub(vscode.window, 'showInputBox').onFirstCall().callsFake((options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string> => {
-                    return Promise.resolve(name);
-                });
+                inputStub = sandbox.stub(vscode.window, 'showInputBox').onFirstCall().callsFake(
+                    (options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string> => {
+                        return Promise.resolve(name);
+                    }
+                );
                 OptionsBuilder.build(modelService);
-                expect(modelService.getConfiguration(name)).exist
+                expect(modelService.getConfiguration(name)).exist;
             });
         });
     });

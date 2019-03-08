@@ -20,9 +20,9 @@ export class ConfigurationElement extends TreeItem {
 
     public get command(): Command {
         return {
-        command: 'rhamt.openConfiguration',
-        title: '',
-        arguments: [this.config]
+            command: 'rhamt.openConfiguration',
+            title: '',
+            arguments: [this.config]
         };
     }
 

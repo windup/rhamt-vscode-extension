@@ -25,7 +25,6 @@ export class RhamtRunner {
 
     public analyze(): void {
         console.log(this.config);
-        
         // TODO: start analysis
     }
 
