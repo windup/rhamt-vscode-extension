@@ -28,6 +28,8 @@
     "activationEvents": [
         "onCommand:rhamt.createConfiguration",
         "onCommand:rhamt.showRhamtExplorer",
+        "onCommand:rhamt.runConfiguration",
+        "onCommand:rhamt.deleteConfiguration",
         "onView:rhamtExplorerView"
     ],
     "scripts": {
@@ -35,11 +37,7 @@
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install",
-        "clean": "rm -rf out || rmdir out /s /q",
-        "test": "npm run clean && npm run compile && node ./node_modules/vscode/bin/test",
-        "update-deps": "node_modules/.bin/ncu --upgrade --loglevel verbose --packageFile package.json && npm update",
-        "coverage:upload": "codecov -f coverage/coverage-final.json",
-        "build": "npm run clean && tslint -p tslint.json && npm run compile"
+        "test": "npm run compile && node ./node_modules/vscode/bin/test"
     },
     "main": "./out/src/extension",
     "contributes": {
@@ -50,11 +48,15 @@
             },
             {
                 "command": "rhamt.showRhamtExplorer",
-                "title": "Show RHAMT Explorer"
+                "title": "Show Explorer"
             },
             {
-                "command": "rhamt.openRhamtConfiguration",
-                "title": "Open RHAMT Configuration"
+                "command": "rhamt.runConfiguration",
+                "title": "Run configuration"
+            },
+            {
+                "command": "rhamt.deleteConfiguration",
+                "title": "Delete configuration"
             }
         ],
         "configuration": [
@@ -99,7 +101,9 @@
         "typescript": "^3.3.3333",
         "sinon": "^7.2.7",
         "sinon-chai": "^3.3.0",
-        "chai": "^4.2.0"
+        "chai": "^4.2.0",
+        "tslint": "^5.11.0",
+        "tslint-eslint-rules": "^5.4.0"
     },
     "dependencies": {
         "find-java-home": "^0.2.0",
