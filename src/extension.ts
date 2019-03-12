@@ -43,14 +43,18 @@ export async function activate(context: vscode.ExtensionContext) {
         }
 
         const id = await vscode.window.showQuickPick(configs, {placeHolder: 'Choose the Configuration'});
+        if (!id) {
+            return;
+        }
         const config = modelService.getConfiguration(id);
-        if (config) {
-            try {
-                await Utils.initConfiguration(config);
-            } catch (e) {
-                console.log(e);
-                return;
-            }
+        if (!config) {
+            return;
+        }
+        try {
+            await Utils.initConfiguration(config);
+        } catch (e) {
+            console.log(e);
+            return;
         }
     });
     context.subscriptions.push(runConfigurationDisposable);
@@ -62,10 +66,11 @@ export async function activate(context: vscode.ExtensionContext) {
             return;
         }
         const selection = await vscode.window.showQuickPick(configs, {placeHolder: 'Choose the Configuration(s) to Delete', canPickMany: true});
-        if (selection) {
-            selection.forEach(config => {
-                modelService.deleteConfigurationWithName(config);
-            });
+        if (!selection) {
+            return;
         }
+        selection.forEach(config => {
+            modelService.deleteConfigurationWithName(config);
+        });
     }));
 }
