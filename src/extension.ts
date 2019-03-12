@@ -62,8 +62,10 @@ export async function activate(context: vscode.ExtensionContext) {
             return;
         }
         const selection = await vscode.window.showQuickPick(configs, {placeHolder: 'Choose the Configuration(s) to Delete', canPickMany: true});
-        selection.forEach(config => {
-            modelService.deleteConfigurationWithName(config);
-        });
+        if (selection) {
+            selection.forEach(config => {
+                modelService.deleteConfigurationWithName(config);
+            });
+        }
     }));
 }
