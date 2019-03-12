@@ -23,4 +23,8 @@ export class ModelService {
     public deleteConfiguration(configuration: RhamtConfiguration): boolean {
         return this.model.configurations.delete(configuration.options.get('name'));
     }
+
+    public deleteConfigurationWithName(id: string): void {
+        this.model.configurations.delete(id);
+    }
 }

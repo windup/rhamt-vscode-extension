@@ -15,6 +15,15 @@ export class RhamtModel {
         }
         return false;
     }
+
+    public getConfiguration(name: string): RhamtConfiguration | undefined {
+        for (const config of this.getConfigurations()) {
+            if (config.options.get('name') === name) {
+                return config;
+            }
+        }
+        return undefined;
+    }
 }
 
 export namespace AnalysisState {

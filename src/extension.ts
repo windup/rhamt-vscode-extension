@@ -55,8 +55,15 @@ export async function activate(context: vscode.ExtensionContext) {
     });
     context.subscriptions.push(runConfigurationDisposable);
 
-    context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', item => {
-        const config = item.config;
-        modelService.deleteConfiguration(config);
+    context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', async () => {
+        const configs = modelService.model.getConfigurations().map(item => item.options.get('name'));
+        if (configs.length === 0) {
+            vscode.window.showInformationMessage('No configurations available.');
+            return;
+        }
+        const selection = await vscode.window.showQuickPick(configs, {placeHolder: 'Choose the Configuration(s) to Delete', canPickMany: true});
+        selection.forEach(config => {
+            modelService.deleteConfigurationWithName(config);
+        });
     }));
 }
