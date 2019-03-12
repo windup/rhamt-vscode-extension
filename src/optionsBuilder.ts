@@ -50,7 +50,6 @@ const TARGET = [
     'resteasy'
 ];
 
-
 export class OptionsBuilder {
 
     static async build(modelService: ModelService): Promise<any> {
@@ -70,7 +69,6 @@ export class OptionsBuilder {
 
         const config = new RhamtConfiguration();
         config.options.set('name', name);
-        modelService.addConfiguration(config);
 
         const input = await vscode.window.showWorkspaceFolderPick({
             placeHolder: 'input folder'

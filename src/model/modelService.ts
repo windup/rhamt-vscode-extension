@@ -24,7 +24,7 @@ export class ModelService {
         return this.model.configurations.delete(configuration.options.get('name'));
     }
 
-    public deleteConfigurationWithName(id: string): void {
-        this.model.configurations.delete(id);
+    public deleteConfigurationWithName(id: string): boolean {
+        return this.model.configurations.delete(id);
     }
 }

@@ -20,6 +20,8 @@ export async function activate(context: vscode.ExtensionContext) {
     const createConfigurationDisposable = vscode.commands.registerCommand('rhamt.createConfiguration', async () => {
         const config = await OptionsBuilder.build(modelService);
         if (config) {
+            modelService.addConfiguration(config);
+            vscode.window.showInformationMessage(`Successfully Created: ${config.options.get('name')}`);
             const run = await vscode.window.showQuickPick(['Yes', 'No'], {placeHolder: 'Run the analysis?'});
             if (!run || run === 'No') {
                 return;
@@ -69,8 +71,14 @@ export async function activate(context: vscode.ExtensionContext) {
         if (!selection) {
             return;
         }
+        const deleted = [];
         selection.forEach(config => {
-            modelService.deleteConfigurationWithName(config);
+            if (modelService.deleteConfigurationWithName(config)) {
+                deleted.push(config);
+            }
         });
+        if (deleted.length > 0) {
+            vscode.window.showInformationMessage(`Successfully Deleted: ${deleted}`);
+        }
     }));
 }
