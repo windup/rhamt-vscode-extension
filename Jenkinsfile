@@ -14,7 +14,7 @@ node('rhel7'){
 
 	stage('Build') {
 		sh "npm install"
-		sh "npm run build"
+		sh "npm run vscode:prepublish"
 	}
 
 	withEnv(['JUNIT_REPORT_PATH=report.xml', 'CODE_TESTS_WORKSPACE=c:/unknown']) {
@@ -38,7 +38,7 @@ node('rhel7'){
 	if(params.UPLOAD_LOCATION) {
 		stage('Snapshot') {
 			def filesToPush = findFiles(glob: '**.vsix')
-			sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${filesToPush[0].path} ${UPLOAD_LOCATION}/snapshots/vscode-middleware-tools/"
+			sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${filesToPush[0].path} ${UPLOAD_LOCATION}/snapshots/"
 			stash name:'vsix', includes:filesToPush[0].path
 		}
 	}
