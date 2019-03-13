@@ -51,15 +51,6 @@ suite('RHAMT / Wizard', () => {
                 OptionsBuilder.build(modelService);
                 expect(result).is.equals('Configuration name required');
             });
-            test('configuration creation', async () => {
-                inputStub = sandbox.stub(vscode.window, 'showInputBox').onFirstCall().callsFake(
-                    (options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string> => {
-                        return Promise.resolve(name);
-                    }
-                );
-                OptionsBuilder.build(modelService);
-                expect(modelService.getConfiguration(name)).exist;
-            });
         });
     });
 });
