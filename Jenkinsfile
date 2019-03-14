@@ -20,7 +20,7 @@ node('rhel7'){
 	stage('Package') {
 		try {
 			def packageJson = readJSON file: 'package.json'
-			sh "vsce package -o adapters-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
+			sh "vsce package -o rhamt-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
 		}
 		finally {
 			archiveArtifacts artifacts: '*.vsix'
