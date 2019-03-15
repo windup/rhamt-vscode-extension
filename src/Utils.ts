@@ -59,8 +59,8 @@ export namespace Utils {
                 return Promise.reject();
             }
 
-            config.options.set('cli', rhamtCli);
-            config.options.set('jvm', javaHome);
+            config.options['cli'] = rhamtCli;
+            config.options['jvm'] = javaHome;
             return config;
         });
     }

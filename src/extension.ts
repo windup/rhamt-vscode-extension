@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { Utils } from './Utils';
+import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
 import { OptionsBuilder } from './optionsBuilder';
 import { ModelService } from './model/modelService';
@@ -7,12 +8,14 @@ import { RhamtModel } from './model/model';
 
 let rhamtView: RhamtView;
 let modelService: ModelService;
+let stateLocation: string;
 
 export async function activate(context: vscode.ExtensionContext) {
-
+    stateLocation = context.extensionPath;
     await Utils.loadPackageInfo(context);
 
     modelService = new ModelService(new RhamtModel());
+    modelService.load(path.join(stateLocation, 'data', 'model.json'));
 
     rhamtView = new RhamtView(context, modelService);
     context.subscriptions.push(rhamtView);
@@ -21,7 +24,7 @@ export async function activate(context: vscode.ExtensionContext) {
         const config = await OptionsBuilder.build(modelService);
         if (config) {
             modelService.addConfiguration(config);
-            vscode.window.showInformationMessage(`Successfully Created: ${config.options.get('name')}`);
+            vscode.window.showInformationMessage(`Successfully Created: ${config.name}`);
             const run = await vscode.window.showQuickPick(['Yes', 'No'], {placeHolder: 'Run the analysis?'});
             if (!run || run === 'No') {
                 return;
@@ -38,17 +41,17 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', async () => {
 
-        const configs = modelService.model.getConfigurations().map(item => item.options.get('name'));
+        const configs = modelService.model.getConfigurations().map(item => item.name);
         if (configs.length === 0) {
             vscode.window.showInformationMessage('No configurations available.');
             return;
         }
 
-        const id = await vscode.window.showQuickPick(configs, {placeHolder: 'Choose the Configuration'});
-        if (!id) {
+        const name = await vscode.window.showQuickPick(configs, {placeHolder: 'Choose the Configuration'});
+        if (!name) {
             return;
         }
-        const config = modelService.getConfiguration(id);
+        const config = modelService.getConfigurationWithName(name);
         if (!config) {
             return;
         }
@@ -62,7 +65,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(runConfigurationDisposable);
 
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', async () => {
-        const configs = modelService.model.getConfigurations().map(item => item.options.get('name'));
+        const configs = modelService.model.getConfigurations().map(item => item.name);
         if (configs.length === 0) {
             vscode.window.showInformationMessage('No configurations available.');
             return;
@@ -81,4 +84,8 @@ export async function activate(context: vscode.ExtensionContext) {
             vscode.window.showInformationMessage(`Successfully Deleted: ${deleted}`);
         }
     }));
+}
+
+export function deactivate() {
+    modelService.save(path.join(stateLocation, 'data', 'model.json'));
 }

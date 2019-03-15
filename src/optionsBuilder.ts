@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { RhamtConfiguration } from './model/model';
 import { ModelService } from './model/modelService';
 
 const SOURCE = [
@@ -67,15 +66,14 @@ export class OptionsBuilder {
         });
         if (!name) return;
 
-        const config = new RhamtConfiguration();
-        config.options.set('name', name);
+        const config = modelService.createConfigurationWithName(name);
 
         const input = await vscode.window.showWorkspaceFolderPick({
             placeHolder: 'input folder'
         });
 
         if (!input) return;
-        config.options.set('input', input.uri.fsPath);
+        config.options['input'] = input.uri.fsPath;
 
         const output = await vscode.window.showInputBox({
             prompt: 'output folder',
@@ -88,7 +86,7 @@ export class OptionsBuilder {
         });
 
         if (!output) return;
-        config.options.set('output', input.uri.fsPath);
+        config.options['output'] = output;
 
         const target = await vscode.window.showQuickPick(TARGET, {
             canPickMany: true,
@@ -96,7 +94,7 @@ export class OptionsBuilder {
         });
 
         if (!target) return;
-        config.options.set('target', target);
+        config.options['target'] = target;
 
         const source = await vscode.window.showQuickPick(SOURCE, {
             canPickMany: true,
@@ -104,7 +102,7 @@ export class OptionsBuilder {
         });
 
         if (!source) return;
-        config.options.set('source', source);
+        config.options['source'] = source;
 
         return config;
     }

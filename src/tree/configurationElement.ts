@@ -9,7 +9,7 @@ export class ConfigurationElement extends TreeItem {
     private config: RhamtConfiguration;
 
     constructor(config: RhamtConfiguration) {
-        super(config.options.get('name'));
+        super(config.name);
         this.config = config;
         this.refresh();
     }
@@ -31,6 +31,6 @@ export class ConfigurationElement extends TreeItem {
     }
 
     public refresh(): void {
-        this.label = this.config.options.get('name');
+        this.label = this.config.name;
     }
 }

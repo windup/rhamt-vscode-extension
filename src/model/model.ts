@@ -9,20 +9,11 @@ export class RhamtModel {
 
     public exists(name: string): boolean {
         for (const config of this.getConfigurations()) {
-            if (config.options.get('name') === name) {
+            if (config.name === name) {
                 return true;
             }
         }
         return false;
-    }
-
-    public getConfiguration(name: string): RhamtConfiguration | undefined {
-        for (const config of this.getConfigurations()) {
-            if (config.options.get('name') === name) {
-                return config;
-            }
-        }
-        return undefined;
     }
 }
 
@@ -65,7 +56,9 @@ export interface Clone extends Input {
 }
 
 export class RhamtConfiguration {
-    options: Map<string, any> = new Map<string, any>();
+    id: string;
+    name: string;
+    options: { [index: string]: any } = {};
     results: any[] = [];
 }
 

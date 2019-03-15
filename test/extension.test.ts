@@ -4,7 +4,7 @@ import { RhamtModel, Hint } from '../src/model/model';
 import { ModelService } from '../src/model/modelService';
 import { RhamtTreeDataProvider } from '../src/tree/rhamtTreeDataProvider';
 
-suite("RHAMT / Issue Explorer", () => {
+suite('RHAMT / Issue Explorer', () => {
 
     let modelService: ModelService;
 
@@ -12,13 +12,13 @@ suite("RHAMT / Issue Explorer", () => {
         modelService = new ModelService(new RhamtModel());
     });
 
-    test("model service", () => {
+    test('model service', () => {
         const name = 'rhamtConfiguration';
         const config = modelService.createConfigurationWithName(name);
-        assert.equal(config.options.get('name'), name);
+        assert.equal(config.name, name);
     });
 
-    test("ananalysis results", async () => {
+    test('ananalysis results', async () => {
         const config = modelService.createConfigurationWithName('rhamtConfiguration');
         const hint: Hint = {
             text: 'text', file: 'file'
