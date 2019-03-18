@@ -49,6 +49,9 @@ const TARGET = [
     'resteasy'
 ];
 
+TARGET.sort();
+SOURCE.sort();
+
 export class OptionsBuilder {
 
     static async build(modelService: ModelService): Promise<any> {
