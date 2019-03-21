@@ -5,6 +5,7 @@ import { RhamtView } from './explorer/rhamtView';
 import { OptionsBuilder } from './optionsBuilder';
 import { ModelService } from './model/modelService';
 import { RhamtModel } from './model/model';
+import * as open from 'opn';
 
 let rhamtView: RhamtView;
 let modelService: ModelService;
@@ -83,6 +84,10 @@ export async function activate(context: vscode.ExtensionContext) {
         if (deleted.length > 0) {
             vscode.window.showInformationMessage(`Successfully Deleted: ${deleted}`);
         }
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openReport', (report: any) => {
+        open(report);
     }));
 }
 
