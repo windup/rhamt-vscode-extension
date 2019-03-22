@@ -58,8 +58,9 @@ export interface Clone extends Input {
 export class RhamtConfiguration {
     id: string;
     name: string;
+    report: string;
     options: { [index: string]: any } = {};
-    results: any[] = [];
+    results: any;
 }
 
 export interface Hint {
