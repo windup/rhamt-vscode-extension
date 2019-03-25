@@ -1,4 +1,4 @@
-'use strict';
+import { commands, Uri, window } from 'vscode';
 
 import * as cp from 'child_process';
 import { RhamtConfiguration } from './model/model';
@@ -24,8 +24,15 @@ export class RhamtRunner {
     }
 
     public analyze(): void {
-        console.log(this.config);
         // TODO: start analysis
+        this.notifyAnalysisComplete();
+    }
+
+    private async notifyAnalysisComplete(): Promise<any> {
+        const result = await window.showInformationMessage('Analysis complete', 'Open Report');
+        if (result === 'Open Report') {
+            commands.executeCommand('rhamt.openReport', this.config.report);
+        }
     }
 
     public terminate(): Promise<string> {
