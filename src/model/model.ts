@@ -59,6 +59,7 @@ export class RhamtConfiguration {
     id: string;
     name: string;
     report: string;
+    rhamtExecutable: string;
     options: { [index: string]: any } = {};
     results: any;
 }
