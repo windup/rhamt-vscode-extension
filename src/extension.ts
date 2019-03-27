@@ -6,7 +6,6 @@ import { OptionsBuilder } from './optionsBuilder';
 import { ModelService } from './model/modelService';
 import { RhamtModel } from './model/model';
 import * as open from 'opn';
-import { RhamtRunner } from './rhamtRunner';
 
 let rhamtView: RhamtView;
 let modelService: ModelService;
@@ -63,8 +62,6 @@ export async function activate(context: vscode.ExtensionContext) {
             console.log(e);
             return;
         }
-        const runner = new RhamtRunner(config);
-        runner.analyze();
     });
     context.subscriptions.push(runConfigurationDisposable);
 
