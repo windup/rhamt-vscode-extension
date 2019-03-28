@@ -30,6 +30,7 @@
         "onCommand:rhamt.showRhamtExplorer",
         "onCommand:rhamt.runConfiguration",
         "onCommand:rhamt.deleteConfiguration",
+        "onCommand:rhamt.startServer",
         "onView:rhamtExplorerView"
     ],
     "scripts": {
@@ -57,6 +58,10 @@
             {
                 "command": "rhamt.deleteConfiguration",
                 "title": "Delete configuration"
+            },
+            {
+                "command": "rhamt.startServer",
+                "title": "Start windup-web server"
             }
         ],
         "configuration": [
@@ -66,7 +71,7 @@
                     "rhamt.executable.path": {
                         "type": "string",
                         "default": "",
-                        "description": "Specifies absolute path of windup-web directory",
+                        "description": "Specifies absolute path of windup-web executable",
                         "scope": "window"
                     }
                 }

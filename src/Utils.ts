@@ -18,7 +18,7 @@ export namespace Utils {
         EXTENSION_NAME = name;
     }
 
-    export async function initConfiguration(config: RhamtConfiguration) {
+    export async function initConfiguration(config: RhamtConfiguration): Promise<void> {
 
         await window.withProgress({
             location: ProgressLocation.Notification,

@@ -1,6 +1,6 @@
 import * as cp from 'child_process';
 import * as os from 'os';
-const SERVER_STARTED_REGEX = /.*(.*)/;
+const SERVER_STARTED_REGEX = /.*Admin console listening on (.*)/;
 
 export class ServerRunnerDelegate {
     static run(executable: string, startTimeout: number,
