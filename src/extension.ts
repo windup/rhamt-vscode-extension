@@ -48,7 +48,6 @@ export async function activate(context: vscode.ExtensionContext) {
         } catch (e) {
         }
         if (serverManager) {
-            console.log();
             vscode.window.showInformationMessage(`Successfully started windup-web`);
         }
     });

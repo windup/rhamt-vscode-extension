@@ -2,6 +2,7 @@ import { ServerRunnerDelegate } from './serverRunnerDelegate';
 import { ServerController } from './serverController';
 import * as vscode from 'vscode';
 import { Utils } from '../Utils';
+import * as fs from 'fs';
 
 const START_TIMEOUT = 120000;
 
@@ -42,7 +43,6 @@ export class ServerStarterUtil {
         try {
             rhamtExecutable = await ServerStarterUtil.findServerExecutable();
         } catch (e) {
-            console.log(e);
             return Promise.reject();
         }
 
@@ -82,8 +82,8 @@ export class ServerStarterUtil {
     private static async findServerExecutable(): Promise<string> {
         return vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
-            cancellable: false
-        }, async (progress: any) => {
+            cancellable: true
+        }, async (progress, token) => {
 
             progress.report({message: 'Verifying JAVA_HOME'});
 
@@ -104,6 +104,12 @@ export class ServerStarterUtil {
             catch (error) {
                 Utils.promptForFAQs('Unable to find windup-web executable');
                 progress.report({message: 'Unable to find windup-web executable'});
+                return Promise.reject();
+            }
+
+            if (!fs.existsSync(rhamtExecutable)) {
+                progress.report({message: 'windup-web executable does not exist.'});
+                vscode.window.showErrorMessage(`windup-web executable does not exist`);
                 return Promise.reject();
             }
 
