@@ -6,7 +6,7 @@ import { OptionsBuilder } from './optionsBuilder';
 import { ModelService } from './model/modelService';
 import { RhamtModel } from './model/model';
 import * as open from 'opn';
-import { ServerStarterUtil, ServerManager } from './server/serverManager';
+import { RhamtUtil } from './server/rhamtUtil';
 
 let rhamtView: RhamtView;
 let modelService: ModelService;
@@ -41,18 +41,6 @@ export async function activate(context: vscode.ExtensionContext) {
     });
     context.subscriptions.push(createConfigurationDisposable);
 
-    const startServerDisposable = vscode.commands.registerCommand('rhamt.startServer', async () => {
-        let serverManager: ServerManager;
-        try {
-            serverManager = await ServerStarterUtil.startServer();
-        } catch (e) {
-        }
-        if (serverManager) {
-            vscode.window.showInformationMessage(`Successfully started windup-web`);
-        }
-    });
-    context.subscriptions.push(startServerDisposable);
-
     const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', async () => {
 
         const configs = modelService.model.getConfigurations().map(item => item.name);
@@ -71,6 +59,7 @@ export async function activate(context: vscode.ExtensionContext) {
         }
         try {
             await Utils.initConfiguration(config);
+            RhamtUtil.analyze(config);
         } catch (e) {
             console.log(e);
             return;

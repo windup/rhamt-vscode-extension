@@ -1,6 +1,6 @@
 import * as cp from 'child_process';
 
-export class ServerController {
+export class RhamtProcessController {
 
     executable: string;
     private server: cp.ChildProcess;

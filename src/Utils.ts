@@ -3,7 +3,10 @@
 import { ExtensionContext, workspace, extensions, window, Uri, commands, ProgressLocation } from 'vscode';
 import * as fse from 'fs-extra';
 import * as path from 'path';
+import * as child_process from 'child_process';
 import { RhamtConfiguration } from './model/model';
+
+const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
 
@@ -27,7 +30,7 @@ export namespace Utils {
 
             progress.report({message: 'Verifying JAVA_HOME'});
             let javaHome: string;
-            let rhamtExecutable: string;
+            let rhamtCli: string;
 
             try {
                 javaHome = await findJavaHome();
@@ -38,17 +41,25 @@ export namespace Utils {
                 return Promise.reject();
             }
 
-            progress.report({message: 'Verifying windup-web'});
+            progress.report({message: 'Verifying rhamt-cli'});
 
             try {
-                rhamtExecutable = await findRhamtExecutable();
+                rhamtCli = await findRhamtCli();
             }
             catch (error) {
-                promptForFAQs('Unable to find windup-web executable');
-                progress.report({message: 'Unable to find windup-web executable'});
+                promptForFAQs('Unable to find rhamt-cli executable');
                 return Promise.reject();
             }
-            config.rhamtExecutable = rhamtExecutable;
+
+            try {
+                await findRhamtVersion(rhamtCli, javaHome);
+            }
+            catch (error) {
+                promptForFAQs('Unable to determine rhamt-cli version: \n' + error.message);
+                return Promise.reject();
+            }
+
+            config.rhamtExecutable = rhamtCli;
             config.options['jvm'] = javaHome;
             return config;
         });
@@ -72,14 +83,41 @@ export namespace Utils {
         });
     }
 
-    export function findRhamtExecutable(): Promise<string> {
+    export function findRhamtCli(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             const rhamtPath = workspace.getConfiguration('rhamt.executable').get<string>('path');
             if (rhamtPath) {
                 resolve(rhamtPath);
             }
+
+            const rhamtHome = process.env['RHAMT_HOME'];
+            if (rhamtHome) {
+                const isWindows = process.platform === 'win32';
+                resolve(path.join(rhamtHome, 'bin', 'rhamt-cli' +  isWindows ? '.bat' : ''));
+            }
             reject(new Error(''));
         });
+    }
+
+    export function findRhamtVersion(rhamtCli: string, javaHome: string): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            const env = {JAVA_HOME : javaHome};
+            const execOptions: child_process.ExecOptions = {
+                env: Object.assign({}, process.env, env)
+            };
+            child_process.exec(
+                `${rhamtCli} --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(parseVersion(_stdout));
+                    }
+                });
+        });
+    }
+
+    function parseVersion(raw: string): string {
+        return raw.replace(RHAMT_VERSION_REGEX, '');
     }
 
     export async function promptForFAQs(message: string): Promise<any> {
