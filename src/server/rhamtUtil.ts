@@ -54,7 +54,8 @@ export class RhamtUtil {
                     serverManager.shutdown();
                     const result = await vscode.window.showInformationMessage('Analysis complete', 'Open Report');
                     if (result === 'Open Report') {
-                        vscode.commands.executeCommand('rhamt.openReport', config.report);
+                        const report = path.resolve(config.options['output'], 'index.html');
+                        vscode.commands.executeCommand('rhamt.openReport', report);
                     }
                     if (!resolved) {
                         resolve();
