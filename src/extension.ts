@@ -58,7 +58,6 @@ export async function activate(context: vscode.ExtensionContext) {
             return;
         }
         try {
-            await Utils.initConfiguration(config);
             RhamtUtil.analyze(config);
         } catch (e) {
             console.log(e);
