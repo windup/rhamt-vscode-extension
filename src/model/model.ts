@@ -1,3 +1,5 @@
+import { rhamtEvents } from '../events';
+import { AnalysisResults } from './analysisResults';
 
 export class RhamtModel {
 
@@ -56,20 +58,66 @@ export interface Clone extends Input {
 }
 
 export class RhamtConfiguration {
+    onChanged = new rhamtEvents.TypedEvent<{type: number, name: string, value: any}>();
+    onResultsLoaded = new rhamtEvents.TypedEvent<void>();
     id: string;
     name: string;
     report: string;
+    private _results: AnalysisResults | undefined;
     rhamtExecutable: string;
     options: { [index: string]: any } = {};
-    results: any;
+
+    set results(results: AnalysisResults | undefined) {
+        this._results = results;
+        this.onResultsLoaded.emit(undefined);
+    }
+
+    get results(): AnalysisResults | undefined {
+        return this._results;
+    }
 }
 
-export interface Hint {
-    text: string;
+export interface IUniqueElement {
+    id: string;
+}
+
+export interface ILink extends IUniqueElement {
+    description: string;
+    url: string;
+}
+
+export interface IIssue extends IUniqueElement {
+    quickfixes: IQuickFix[];
+    file: string;
+    severity: string;
+    ruleId: string;
+    effort: string;
+    title: string;
+    messageOrDescription: string;
+    links: ILink[];
+    report: string;
+}
+
+export type IQuickFixType = 'REPLACE' | 'DELETE_LINE' | 'INSERT_LINE' | 'TRANSFORMATION';
+
+export interface IQuickFix extends IUniqueElement {
+    type: IQuickFixType;
+    searchString: string;
+    replacementString: string;
+    newLine: string;
+    transformationId: string;
+    name: string;
     file: string;
 }
 
-export interface Classification {
-    text: string;
-    file: string;
+export interface IHint extends IIssue {
+    originalLineSource: string;
+    lineNumber: number;
+    column: number;
+    length: number;
+    sourceSnippet: string;
+}
+
+export interface IClassification extends IIssue {
+    description: string;
 }

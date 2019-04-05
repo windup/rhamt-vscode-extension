@@ -1,19 +1,21 @@
 import { AbstractNode, ITreeNode } from './abstractNode';
+import * as vscode from 'vscode';
+import { DataProvider } from './dataProvider';
 import { HintItem } from './hintItem';
-import { Hint, RhamtConfiguration } from '../model/model';
+import { IHint, RhamtConfiguration } from '../model/model';
 import { ModelService } from '../model/modelService';
-import { RhamtTreeDataProvider } from './rhamtTreeDataProvider';
 
 export class HintNode extends AbstractNode {
 
-    private hint: Hint;
+    private hint: IHint;
 
     constructor(
-        hint: Hint,
+        hint: IHint,
         config: RhamtConfiguration,
         modelService: ModelService,
-        dataProvider: RhamtTreeDataProvider) {
-        super(config, modelService, dataProvider);
+        onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>,
+        dataProvider: DataProvider) {
+        super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.hint = hint;
         this.treeItem = this.createItem();
     }
@@ -27,7 +29,7 @@ export class HintNode extends AbstractNode {
     }
 
     createItem(): HintItem {
-        const item = new HintItem(this.hint);
+        const item = new HintItem(this.config, this.hint);
         return item;
     }
 }

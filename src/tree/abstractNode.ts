@@ -1,13 +1,15 @@
 import * as vscode from 'vscode';
 import { RhamtConfiguration } from '../model/model';
 import { ModelService } from '../model/modelService';
-import { RhamtTreeDataProvider } from './rhamtTreeDataProvider';
+import { DataProvider } from './dataProvider';
 
 export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> implements ITreeNode {
+    private _id: string = ModelService.generateUniqueId();
 
+    protected onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>;
     protected config: RhamtConfiguration;
     protected modelService: ModelService;
-    protected dataProvider: RhamtTreeDataProvider;
+    protected dataProvider: DataProvider;
 
     treeItem: T;
     parent?: vscode.TreeItem;
@@ -15,10 +17,20 @@ export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> 
     constructor(
         config: RhamtConfiguration,
         modelService: ModelService,
-        dataProvider: RhamtTreeDataProvider) {
+        onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>,
+        dataProvider: DataProvider) {
         this.config = config;
         this.modelService = modelService;
+        this.onNodeCreateEmitter = onNodeCreateEmitter;
         this.dataProvider = dataProvider;
+    }
+
+    public get id(): string {
+        return this._id;
+    }
+
+    protected refresh(node?: ITreeNode): void {
+        this.dataProvider.refresh(node);
     }
 
     abstract getChildren(): Promise<ITreeNode[]>;

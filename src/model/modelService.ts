@@ -1,9 +1,15 @@
 import { RhamtModel, RhamtConfiguration } from './model';
 import * as fs from 'fs';
+import { rhamtEvents } from '../events';
+import * as path from 'path';
+import { AnaysisResultsUtil, AnalysisResults } from './analysisResults';
 
 export class ModelService {
 
-    constructor(public model: RhamtModel) {
+    public loaded: boolean = false;
+    public onLoaded = new rhamtEvents.TypedEvent<RhamtModel>();
+
+    constructor(public model: RhamtModel, public outDir: string) {
     }
 
     public addConfiguration(config: RhamtConfiguration): void {
@@ -18,10 +24,15 @@ export class ModelService {
         return this.model.getConfigurations().find(item => item.name === name);
     }
 
+    public createConfiguration(): RhamtConfiguration {
+        return this.createConfigurationWithName(this.generateConfigurationName());
+    }
+
     public createConfigurationWithName(name: string): RhamtConfiguration {
         const config: RhamtConfiguration = new RhamtConfiguration();
         config.id = ModelService.generateUniqueId();
         config.name = name;
+        config.options['output'] = path.resolve(this.outDir, config.id);
         this.addConfiguration(config);
         return config;
     }
@@ -38,8 +49,9 @@ export class ModelService {
         return false;
     }
 
-    public load(location: string): Promise<RhamtModel> {
+    public load(): Promise<RhamtModel> {
         return new Promise<any>((resolve, reject) => {
+            const location = path.join(this.outDir, 'model.json');
             fs.exists(location, exists => {
                 if (exists) {
                     fs.readFile(location, (e, data) => {
@@ -53,16 +65,39 @@ export class ModelService {
     }
 
     private parse(data: any): Promise<any> {
-        return new Promise<any>(async resolve => {
+        return new Promise<any>(async (resolve, reject) => {
             if (data.byteLength > 0) {
                 const configs = JSON.parse(data).configurations;
                 for (const entry of configs) {
                     const config: RhamtConfiguration = new RhamtConfiguration();
                     ModelService.copy(entry, config);
+                    await ModelService.loadResults(entry, config, this.outDir);
                     this.model.configurations.set(config.id, config);
                 }
             }
+            this.loaded = true;
+            this.onLoaded.emit(this.model);
             resolve();
+        });
+    }
+
+    static async loadResults(source: any, target: RhamtConfiguration, outDir: string): Promise<void> {
+        if (!source.results) {
+            return Promise.resolve();
+        }
+        return new Promise<void>(resolve => {
+            const results = path.join(outDir, 'output', source._id, 'results.xml');
+            fs.exists(results, async exists => {
+                if (exists) {
+                    try {
+                        const dom = await AnaysisResultsUtil.loadFromLocation(results);
+                        target.results = new AnalysisResults(target, dom, source.results.summary);
+                    } catch (e) {
+                        console.log(`Error loading analysis results for configuration at ${results} - ${e}`);
+                    }
+                }
+                resolve();
+            });
         });
     }
 
@@ -88,7 +123,27 @@ export class ModelService {
         });
     }
 
+    private generateConfigurationName(): string {
+        let newName = 'rhamtConfiguration';
+        if (this.model.exists(newName)) {
+            for (let i = 0; i < 1000; i++) {
+                if (!this.model.exists(`${newName}-${i}`)) {
+                    newName = `${newName}-${i}`;
+                    break;
+                }
+            }
+        }
+        return newName;
+    }
+
     static generateUniqueId(): string {
         return `-${Math.random().toString(36).substr(2, 9)}-${Math.random().toString(36).substr(2, 9)}`;
+    }
+
+    public onModelLoaded(listen: (m: RhamtModel) => void): rhamtEvents.Disposable {
+        if (this.loaded) {
+            listen(this.model);
+        }
+        return this.onLoaded.on(listen);
     }
 }

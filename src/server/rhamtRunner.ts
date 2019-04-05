@@ -13,14 +13,12 @@ export class RhamtRunner {
                 out(line);
                 if (STARTED_REGEX.exec(line) && !started) {
                     started = true;
-                    console.log('started....');
                     resolve(process);
                 }
             };
             process.stdout.addListener('data', outputListener);
             setTimeout(() => {
                 if (!started) {
-                    console.log('Timeout...');
                     process.kill();
                     reject(`rhamt-cli startup time exceeded ${startTimeout}ms.`);
                 }

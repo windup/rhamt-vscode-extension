@@ -1,19 +1,21 @@
 import { AbstractNode, ITreeNode } from './abstractNode';
+import * as vscode from 'vscode';
+import { DataProvider } from './dataProvider';
 import { ClassificationItem } from './classificationItem';
-import { Classification, RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration, IClassification } from '../model/model';
 import { ModelService } from '../model/modelService';
-import { RhamtTreeDataProvider } from './rhamtTreeDataProvider';
 
 export class ClassificationNode extends AbstractNode {
 
-    private classification: Classification;
+    private classification: IClassification;
 
     constructor(
-        classification: Classification,
+        classification: IClassification,
         config: RhamtConfiguration,
         modelService: ModelService,
-        dataProvider: RhamtTreeDataProvider) {
-        super(config, modelService, dataProvider);
+        onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>,
+        dataProvider: DataProvider) {
+        super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.classification = classification;
         this.treeItem = this.createItem();
     }
@@ -27,7 +29,7 @@ export class ClassificationNode extends AbstractNode {
     }
 
     createItem(): ClassificationItem {
-        const item = new ClassificationItem(this.classification);
+        const item = new ClassificationItem(this.config, this.classification);
         return item;
     }
 }

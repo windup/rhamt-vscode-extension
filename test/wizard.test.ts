@@ -13,7 +13,7 @@ suite('RHAMT / Wizard', () => {
     let sandbox: sinon.SinonSandbox;
     let inputStub: sinon.SinonStub;
     const name = 'val';
-    const modelService = new ModelService(new RhamtModel());
+    const modelService = new ModelService(new RhamtModel(), __dirname);
 
     setup(() => {
         sandbox = sinon.createSandbox();

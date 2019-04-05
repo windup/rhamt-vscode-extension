@@ -93,7 +93,6 @@ export class ProgressMonitor {
         if (done > 0) {
             label += ` (${done} % done)`;
         }
-        console.log(label);
         return label;
     }
 
@@ -116,6 +115,7 @@ export class ProgressMonitor {
     }
 
     private finalize(): void {
+        console.log('analysis complete...');
         this.finalizing = true;
         setTimeout(() => null, 500);
         this.onComplete();

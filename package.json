@@ -47,6 +47,15 @@
                 "title": "Create configuration"
             },
             {
+                "category": "RHAMT",
+                "command": "rhamt.explorerCreateConfiguration",
+                "title": "New Configuration",
+                "icon": {
+                    "light": "resources/light/add.svg",
+                    "dark": "resources/dark/add-inverse.svg"
+                }
+            },
+            {
                 "command": "rhamt.showRhamtExplorer",
                 "title": "Show Explorer"
             },
@@ -56,7 +65,7 @@
             },
             {
                 "command": "rhamt.deleteConfiguration",
-                "title": "Delete configuration"
+                "title": "Delete"
             }
         ],
         "configuration": [
@@ -86,6 +95,21 @@
                 {
                     "id": "rhamtExplorerView",
                     "name": "Issue Explorer"
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "command": "rhamt.explorerCreateConfiguration",
+                    "when": "view == rhamtExplorerView",
+                    "group": "navigation"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "rhamt.deleteConfiguration",
+                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
                 }
             ]
         }

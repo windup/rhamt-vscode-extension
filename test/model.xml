@@ -1,0 +1,40 @@
+<execution-results>
+    <classifications>
+        <classification>
+            <classification>Maven POM (pom.xml)</classification>
+            <description>Maven Project Object Model (POM) File</description>
+            <effort>0</effort>
+            <file>/Users/johnsteele/Desktop/git/windup-sample-apps/sample/jee-example-weblogic/jee-example-services/pom.xml</file>
+            <issue-category/>
+            <links/>
+            <quickfixes/>
+            <rule-id>DiscoverMavenProjectsRuleProvider_1</rule-id>
+        </classification>
+    </classifications>
+    <hints>
+        <hint>
+            <column>7</column>
+            <effort>3</effort>
+            <file>
+            /Users/johnsteele/Desktop/git/windup-sample-apps/sample/jee-example-weblogic/jee-example-services/src/main/java/com/acme/anvil/listener/AnvilWebStartupListener.java
+            </file>
+            <hint>
+            `T3ServicesDef` provides access to core services of the container, such as Timers and Logging facilities. Replace the services provided by this with a Singleton EJB (using the `@Singleton` annotation) that provides access to the equivalent services from JBoss EAP.
+            </hint>
+            <issue-category/>
+            <length>29</length>
+            <line-number>11</line-number>
+            <links>
+                <link>
+                    <description>Java EE Tutorial - @Singleton Session Bean</description>
+                    <url>
+                    https://docs.oracle.com/javaee/7/tutorial/ejb-intro002.htm#GIPIM
+                    </url>
+                </link>
+            </links>
+            <quickfixes/>
+            <rule-id>weblogic-services-eap7-02000</rule-id>
+            <title>WebLogic T3ServicesDef usage</title>
+        </hint>
+    </hints>
+</execution-results>

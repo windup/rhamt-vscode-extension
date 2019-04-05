@@ -15,10 +15,7 @@ let stateLocation: string;
 export async function activate(context: vscode.ExtensionContext) {
     stateLocation = context.extensionPath;
     await Utils.loadPackageInfo(context);
-
-    modelService = new ModelService(new RhamtModel());
-    modelService.load(path.join(stateLocation, 'data', 'model.json'));
-
+    modelService = new ModelService(new RhamtModel(), path.join(stateLocation, 'data'));
     rhamtView = new RhamtView(context, modelService);
     context.subscriptions.push(rhamtView);
 
@@ -32,10 +29,9 @@ export async function activate(context: vscode.ExtensionContext) {
                 return;
             }
             try {
-                await Utils.initConfiguration(config);
+                RhamtUtil.analyze(config);
             } catch (e) {
                 console.log(e);
-                return;
             }
         }
     });
@@ -61,31 +57,9 @@ export async function activate(context: vscode.ExtensionContext) {
             RhamtUtil.analyze(config);
         } catch (e) {
             console.log(e);
-            return;
         }
     });
     context.subscriptions.push(runConfigurationDisposable);
-
-    context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', async () => {
-        const configs = modelService.model.getConfigurations().map(item => item.name);
-        if (configs.length === 0) {
-            vscode.window.showInformationMessage('No configurations available.');
-            return;
-        }
-        const selection = await vscode.window.showQuickPick(configs, {placeHolder: 'Choose the Configuration(s) to Delete', canPickMany: true});
-        if (!selection) {
-            return;
-        }
-        const deleted = [];
-        selection.forEach(config => {
-            if (modelService.deleteConfigurationWithName(config)) {
-                deleted.push(config);
-            }
-        });
-        if (deleted.length > 0) {
-            vscode.window.showInformationMessage(`Successfully Deleted: ${deleted}`);
-        }
-    }));
 
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openReport', (report: any) => {
         open(report);

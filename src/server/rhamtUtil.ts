@@ -5,6 +5,8 @@ import { RhamtRunner } from './rhamtRunner';
 import { RhamtProcessController } from './RhamtProcessController';
 import { ProgressMonitor } from './progressMonitor';
 import * as path from 'path';
+import { AnaysisResultsUtil, AnalysisResultsSummary, AnalysisResults } from '../model/analysisResults';
+import { ModelService } from '../model/modelService';
 const PROGRESS_REGEX = /^:progress: /;
 const START_TIMEOUT = 60000;
 
@@ -52,11 +54,14 @@ export class RhamtUtil {
                 let serverManager: RhamtProcessController;
                 const onComplete = async () => {
                     serverManager.shutdown();
-                    const result = await vscode.window.showInformationMessage('Analysis complete', 'Open Report');
-                    if (result === 'Open Report') {
-                        const report = path.resolve(config.options['output'], 'index.html');
-                        vscode.commands.executeCommand('rhamt.openReport', report);
-                    }
+                    vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
+                        if (result === 'Open Report') {
+                            const report = path.resolve(config.options['output'], 'index.html');
+                            vscode.commands.executeCommand('rhamt.openReport', report);
+                        }
+                    });
+                    await this.loadResults(config);
+                    vscode.commands.executeCommand('rhamt.loadResults', config);
                     if (!resolved) {
                         resolve();
                     }
@@ -142,5 +147,16 @@ export class RhamtUtil {
         params.push('--target');
         params.push(target.join(' '));
         return Promise.resolve(params);
+    }
+
+    private static async loadResults(config: RhamtConfiguration): Promise<any> {
+        return AnaysisResultsUtil.loadFromLocation(path.resolve(config.options['output'], 'results.xml')).then(dom => {
+            const summary: AnalysisResultsSummary = {
+                id: ModelService.generateUniqueId(),
+                outputLocation: config.options['output'],
+                reportLocation: path.resolve(config.options['output'], 'index.html')
+            };
+            config.results = new AnalysisResults(config, dom, summary);
+        });
     }
 }
