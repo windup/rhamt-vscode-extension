@@ -61,7 +61,6 @@ export class RhamtUtil {
                         }
                     });
                     await this.loadResults(config);
-                    vscode.commands.executeCommand('rhamt.loadResults', config);
                     if (!resolved) {
                         resolve();
                     }

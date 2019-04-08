@@ -86,7 +86,7 @@ export class ModelService {
             return Promise.resolve();
         }
         return new Promise<void>(resolve => {
-            const results = path.join(outDir, 'output', source._id, 'results.xml');
+            const results = path.join(source.options['output'], 'results.xml');
             fs.exists(results, async exists => {
                 if (exists) {
                     try {
