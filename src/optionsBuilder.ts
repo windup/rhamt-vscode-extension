@@ -69,27 +69,11 @@ export class OptionsBuilder {
         });
         if (!name) return;
 
-        const config = modelService.createConfigurationWithName(name);
-
         const input = await vscode.window.showWorkspaceFolderPick({
             placeHolder: 'input folder'
         });
 
         if (!input) return;
-        config.options['input'] = input.uri.fsPath;
-
-        const output = await vscode.window.showInputBox({
-            prompt: 'output folder',
-            placeHolder: 'output',
-            validateInput: (value: string) => {
-                if (value.trim().length === 0) {
-                    return 'Output folder is required';
-                }
-            }
-        });
-
-        if (!output) return;
-        config.options['output'] = output;
 
         const target = await vscode.window.showQuickPick(TARGET, {
             canPickMany: true,
@@ -97,15 +81,18 @@ export class OptionsBuilder {
         });
 
         if (!target) return;
-        config.options['target'] = target;
 
         const source = await vscode.window.showQuickPick(SOURCE, {
             canPickMany: true,
             placeHolder: 'source (technology to migrate from)'
         });
 
-        if (!source) return;
-        config.options['source'] = source;
+        const config = modelService.createConfigurationWithName(name);
+        config.options['input'] = input.uri.fsPath;
+        config.options['target'] = target;
+        if (source) {
+            config.options['source'] = source;
+        }
 
         return config;
     }

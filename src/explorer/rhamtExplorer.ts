@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { DataProvider } from '../tree/DataProvider';
 import { ModelService } from '../model/modelService';
 import { ITreeNode } from '../tree/abstractNode';
+import { OptionsBuilder } from '../optionsBuilder';
+import { RhamtUtil } from '../server/rhamtUtil';
 
 export class RhamtExplorer {
 
@@ -15,9 +17,22 @@ export class RhamtExplorer {
     }
 
     private createCommands(): void {
-        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.explorerCreateConfiguration', () => {
-            this.modelService.createConfiguration();
-            this.dataProvider.refresh();
+        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.createConfiguration', async () => {
+            const config = await OptionsBuilder.build(this.modelService);
+            if (config) {
+                this.dataProvider.refresh();
+                this.modelService.addConfiguration(config);
+                vscode.window.showInformationMessage(`Successfully Created: ${config.name}`);
+                const run = await vscode.window.showQuickPick(['Yes', 'No'], {placeHolder: 'Run the analysis?'});
+                if (!run || run === 'No') {
+                    return;
+                }
+                try {
+                    RhamtUtil.analyze(config);
+                } catch (e) {
+                    console.log(e);
+                }
+            }
         }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', item => {
             const config = item.config;

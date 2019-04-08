@@ -72,8 +72,11 @@ export class RhamtUtil {
                         const raw = data.replace(PROGRESS_REGEX, '');
                         monitor.handleMessage(JSON.parse(raw));
                     }
-                    else if (data && data.length > 1) {
-                        rhamtChannel.print(data);
+                    else {
+                        data = data.trim();
+                        if (data && data.length > 1) {
+                            rhamtChannel.print(data);
+                        }
                     }
                 };
                 const onShutdown = () => {

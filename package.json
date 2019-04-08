@@ -43,12 +43,8 @@
     "contributes": {
         "commands": [
             {
-                "command": "rhamt.createConfiguration",
-                "title": "Create configuration"
-            },
-            {
                 "category": "RHAMT",
-                "command": "rhamt.explorerCreateConfiguration",
+                "command": "rhamt.createConfiguration",
                 "title": "New Configuration",
                 "icon": {
                     "light": "resources/light/add.svg",
@@ -101,7 +97,7 @@
         "menus": {
             "view/title": [
                 {
-                    "command": "rhamt.explorerCreateConfiguration",
+                    "command": "rhamt.createConfiguration",
                     "when": "view == rhamtExplorerView",
                     "group": "navigation"
                 }
