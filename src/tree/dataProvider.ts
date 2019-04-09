@@ -33,6 +33,9 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
     }
 
     public getTreeItem(node: ITreeNode): TreeItem {
+        if (node instanceof TreeItem && !node.treeItem) {
+            return node;
+        }
         return node.treeItem;
     }
 
@@ -80,8 +83,8 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         else {
             const item = new TreeItem(localize('loadingNode', 'Loading...'));
             item.iconPath = {
-                light: path.join(__filename, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
-                dark: path.join(__filename, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
+                light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
+                dark:  path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
             };
             nodes = [item];
             (async () => setTimeout(() => {

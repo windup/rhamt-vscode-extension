@@ -87,6 +87,7 @@ export class RhamtUtil {
                 };
                 try {
                     serverManager = await RhamtRunner.run(config.rhamtExecutable, params, START_TIMEOUT, onMessage).then(cp => {
+                        config.results = undefined;
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
                     });
                     if (cancelled) {

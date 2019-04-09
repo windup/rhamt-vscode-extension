@@ -23,8 +23,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> {
     }
 
     createItem(): ConfigurationItem {
-        const item = new ConfigurationItem(this.config);
-        return item;
+        return new ConfigurationItem(this.config);
     }
 
     delete(): Promise<void> {
@@ -101,8 +100,8 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> {
         this.config.onResultsLoaded.on(() => {
             this.loading = true;
             this.treeItem.iconPath = {
-                light: path.join(__filename, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
-                dark: path.join(__filename, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
+                light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
+                dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
             };
             this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
             super.refresh(this);

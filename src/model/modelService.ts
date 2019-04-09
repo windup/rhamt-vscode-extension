@@ -2,6 +2,7 @@ import { RhamtModel, RhamtConfiguration } from './model';
 import * as fs from 'fs';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
+import * as fse from 'fs-extra';
 import { AnaysisResultsUtil, AnalysisResults } from './analysisResults';
 
 export class ModelService {
@@ -38,7 +39,16 @@ export class ModelService {
     }
 
     public deleteConfiguration(configuration: RhamtConfiguration): boolean {
-        return this.model.configurations.delete(configuration.id);
+        const deleted = this.model.configurations.delete(configuration.id);
+        if (deleted) {
+            const out = configuration.options['output'];
+            fs.exists(out, exists => {
+                if (exists) {
+                    fse.remove(out);
+                }
+            });
+        }
+        return deleted;
     }
 
     public deleteConfigurationWithName(name: string): boolean {
