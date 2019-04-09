@@ -35,7 +35,7 @@ export async function activate(context: vscode.ExtensionContext) {
             return;
         }
         try {
-            RhamtUtil.analyze(config);
+            RhamtUtil.analyze(config, modelService);
         } catch (e) {
             console.log(e);
         }
@@ -45,8 +45,4 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openReport', (report: any) => {
         open(report);
     }));
-}
-
-export function deactivate() {
-    modelService.save(path.join(stateLocation, 'data', 'model.json'));
 }

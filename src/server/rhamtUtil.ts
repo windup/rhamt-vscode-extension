@@ -25,7 +25,7 @@ export const rhamtChannel = new RhamtChannelImpl();
 
 export class RhamtUtil {
 
-    static async analyze(config: RhamtConfiguration): Promise<RhamtProcessController> {
+    static async analyze(config: RhamtConfiguration, modelService: ModelService): Promise<RhamtProcessController> {
         try {
             await Utils.initConfiguration(config);
         } catch (e) {
@@ -60,7 +60,7 @@ export class RhamtUtil {
                             vscode.commands.executeCommand('rhamt.openReport', report);
                         }
                     });
-                    await this.loadResults(config);
+                    await this.loadResults(config, modelService);
                     if (!resolved) {
                         resolve();
                     }
@@ -152,14 +152,14 @@ export class RhamtUtil {
         return Promise.resolve(params);
     }
 
-    private static async loadResults(config: RhamtConfiguration): Promise<any> {
+    private static async loadResults(config: RhamtConfiguration, modelService: ModelService): Promise<any> {
         return AnaysisResultsUtil.loadFromLocation(path.resolve(config.options['output'], 'results.xml')).then(dom => {
             const summary: AnalysisResultsSummary = {
-                id: ModelService.generateUniqueId(),
-                outputLocation: config.options['output'],
-                reportLocation: path.resolve(config.options['output'], 'index.html')
+                outputLocation: config.options['output']
             };
-            config.results = new AnalysisResults(config, dom, summary);
+            config.summary = summary;
+            config.results = new AnalysisResults(config, dom);
+            modelService.save();
         });
     }
 }

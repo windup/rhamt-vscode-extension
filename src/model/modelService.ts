@@ -15,6 +15,7 @@ export class ModelService {
 
     public addConfiguration(config: RhamtConfiguration): void {
         this.model.configurations.set(config.id, config);
+        this.save();
     }
 
     public getConfiguration(id: string): RhamtConfiguration | undefined {
@@ -47,6 +48,7 @@ export class ModelService {
                     fse.remove(out);
                 }
             });
+            this.save();
         }
         return deleted;
     }
@@ -92,16 +94,13 @@ export class ModelService {
     }
 
     static async loadResults(source: any, target: RhamtConfiguration, outDir: string): Promise<void> {
-        if (!source.results) {
-            return Promise.resolve();
-        }
         return new Promise<void>(resolve => {
             const results = path.join(source.options['output'], 'results.xml');
             fs.exists(results, async exists => {
                 if (exists) {
                     try {
                         const dom = await AnaysisResultsUtil.loadFromLocation(results);
-                        target.results = new AnalysisResults(target, dom, source.results.summary);
+                        target.results = new AnalysisResults(target, dom);
                     } catch (e) {
                         console.log(`Error loading analysis results for configuration at ${results} - ${e}`);
                     }
@@ -114,14 +113,28 @@ export class ModelService {
     static copy(source: any, target: RhamtConfiguration): void {
         target.id = source.id;
         target.name = source.name;
-        Object.keys(source.options).forEach(function(key) {
+        Object.keys(source.options).forEach(key => {
             target.options[key] = source.options[key];
         });
+        if (source.summary) {
+            target.summary = source.summary;
+        }
     }
 
-    public save(outDir: string): void {
-        const data = {configurations: this.model.getConfigurations()};
-        this.doSave(outDir, data);
+    public save(): void {
+        const configurations = [];
+        this.model.getConfigurations().forEach(config => {
+            const data: any = {
+                id: config.id,
+                name: config.name,
+                options: config.options
+            };
+            if (config.summary) {
+                data.summary = config.summary;
+            }
+            configurations.push(data);
+        });
+        this.doSave(path.join(this.outDir, 'model.json'), {configurations});
     }
 
     public doSave(out: string, data: any): Promise<void> {

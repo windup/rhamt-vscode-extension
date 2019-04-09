@@ -28,7 +28,7 @@ export class RhamtExplorer {
                     return;
                 }
                 try {
-                    RhamtUtil.analyze(config);
+                    RhamtUtil.analyze(config, this.modelService);
                 } catch (e) {
                     console.log(e);
                 }

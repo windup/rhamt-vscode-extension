@@ -4,11 +4,9 @@ import { ModelService } from './modelService';
 import { IHint, IQuickFix, IClassification, RhamtConfiguration } from './model';
 
 export interface AnalysisResultsSummary {
-    id: string;
     executedTimestamp?: string;
     executionDuration?: string;
     outputLocation?: string;
-    reportLocation?: string;
 
     hintCount?: number;
     classificationCount?: number;
@@ -17,19 +15,12 @@ export interface AnalysisResultsSummary {
 export class AnaysisResultsUtil {
     static loadFromLocation(location: string): Promise<CheerioStatic> {
         return new Promise<CheerioStatic>((resolve, reject) => {
-            fs.exists(location, exists => {
-                if (exists) {
-                    fs.readFile(location, (err, data: any) => {
-                        if (err) {
-                            reject(err);
-                        }
-                        else {
-                            resolve(cheerio.load(data));
-                        }
-                    });
+            fs.readFile(location, (err, data: any) => {
+                if (err) {
+                    reject(err);
                 }
                 else {
-                    reject();
+                    resolve(cheerio.load(data));
                 }
             });
         });
@@ -53,12 +44,10 @@ export class AnalysisResults {
 
     config: RhamtConfiguration;
     dom: CheerioStatic;
-    summary: AnalysisResultsSummary;
 
-    constructor(config: RhamtConfiguration, dom: CheerioStatic, summary: AnalysisResultsSummary) {
+    constructor(config: RhamtConfiguration, dom: CheerioStatic) {
         this.config = config;
         this.dom = dom;
-        this.summary = summary;
     }
 
     getHints(): IHint[] {

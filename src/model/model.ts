@@ -1,5 +1,5 @@
 import { rhamtEvents } from '../events';
-import { AnalysisResults } from './analysisResults';
+import { AnalysisResults, AnalysisResultsSummary } from './analysisResults';
 
 export class RhamtModel {
 
@@ -62,7 +62,7 @@ export class RhamtConfiguration {
     onResultsLoaded = new rhamtEvents.TypedEvent<void>();
     id: string;
     name: string;
-    report: string;
+    summary: AnalysisResultsSummary | undefined;
     private _results: AnalysisResults | undefined;
     rhamtExecutable: string;
     options: { [index: string]: any } = {};
