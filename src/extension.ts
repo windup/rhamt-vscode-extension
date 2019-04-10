@@ -45,4 +45,18 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openReport', (report: any) => {
         open(report);
     }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openClassification', async (uri: string) => {
+        const openPath = vscode.Uri.file(uri);
+        vscode.workspace.openTextDocument(openPath).then(doc => {
+            vscode.window.showTextDocument(doc);
+        });
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openHint', async (uri: string) => {
+        const openPath = vscode.Uri.file(uri);
+        vscode.workspace.openTextDocument(openPath).then(doc => {
+            vscode.window.showTextDocument(doc);
+        });
+    }));
 }
