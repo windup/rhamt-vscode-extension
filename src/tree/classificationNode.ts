@@ -2,10 +2,11 @@ import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
 import { ClassificationItem } from './classificationItem';
-import { RhamtConfiguration, IClassification } from '../model/model';
+import { RhamtConfiguration, IClassification, MigrationIssue } from '../model/model';
 import { ModelService } from '../model/modelService';
+import { AnalysisResultsUtil } from '../model/analysisResults';
 
-export class ClassificationNode extends AbstractNode {
+export class ClassificationNode extends AbstractNode implements MigrationIssue {
 
     private classification: IClassification;
 
@@ -31,5 +32,9 @@ export class ClassificationNode extends AbstractNode {
     createItem(): ClassificationItem {
         const item = new ClassificationItem(this.config, this.classification);
         return item;
+    }
+
+    getReport(): string {
+        return this.config.getReport();
     }
 }

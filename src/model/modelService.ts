@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
 import * as fse from 'fs-extra';
-import { AnaysisResultsUtil, AnalysisResults } from './analysisResults';
+import { AnalysisResults, AnalysisResultsUtil } from './analysisResults';
 
 export class ModelService {
 
@@ -83,7 +83,7 @@ export class ModelService {
                 for (const entry of configs) {
                     const config: RhamtConfiguration = new RhamtConfiguration();
                     ModelService.copy(entry, config);
-                    await ModelService.loadResults(entry, config, this.outDir);
+                    await ModelService.loadResults(config);
                     this.model.configurations.set(config.id, config);
                 }
             }
@@ -93,16 +93,16 @@ export class ModelService {
         });
     }
 
-    static async loadResults(source: any, target: RhamtConfiguration, outDir: string): Promise<void> {
+    static async loadResults(target: RhamtConfiguration): Promise<void> {
         return new Promise<void>(resolve => {
-            const results = path.join(source.options['output'], 'results.xml');
-            fs.exists(results, async exists => {
+            const location = target.getResultsLocation();
+            fs.exists(location, async exists => {
                 if (exists) {
                     try {
-                        const dom = await AnaysisResultsUtil.loadFromLocation(results);
+                        const dom = await AnalysisResultsUtil.loadFromLocation(location);
                         target.results = new AnalysisResults(target, dom);
                     } catch (e) {
-                        console.log(`Error loading analysis results for configuration at ${results} - ${e}`);
+                        console.log(`Error loading analysis results for configuration at ${location} - ${e}`);
                     }
                 }
                 resolve();

@@ -44,7 +44,7 @@ export class ClassificationItem extends TreeItem {
     }
 
     public get contextValue(): string {
-        return 'rhamt.openClassification';
+        return 'issue';
     }
 
     public refresh(): void {

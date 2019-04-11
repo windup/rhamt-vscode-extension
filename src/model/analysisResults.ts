@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as cheerio from 'cheerio';
 import { ModelService } from './modelService';
+import * as open from 'opn';
 import { IHint, IQuickFix, IClassification, RhamtConfiguration } from './model';
 
 export interface AnalysisResultsSummary {
@@ -12,7 +13,7 @@ export interface AnalysisResultsSummary {
     classificationCount?: number;
 }
 
-export class AnaysisResultsUtil {
+export class AnalysisResultsUtil {
     static loadFromLocation(location: string): Promise<CheerioStatic> {
         return new Promise<CheerioStatic>((resolve, reject) => {
             fs.readFile(location, (err, data: any) => {
@@ -37,6 +38,10 @@ export class AnaysisResultsUtil {
                 else resolve();
             });
         });
+    }
+
+    static openReport(report: string): void {
+        open(report);
     }
 }
 

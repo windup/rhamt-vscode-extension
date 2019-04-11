@@ -1,5 +1,6 @@
 import { rhamtEvents } from '../events';
 import { AnalysisResults, AnalysisResultsSummary } from './analysisResults';
+import * as path from 'path';
 
 export class RhamtModel {
 
@@ -75,6 +76,14 @@ export class RhamtConfiguration {
     get results(): AnalysisResults | undefined {
         return this._results;
     }
+
+    getReport(): string {
+        return path.resolve(this.options['output'], 'index.html');
+    }
+
+    getResultsLocation(): string {
+        return path.resolve(this.options['output'], 'results.xml');
+    }
 }
 
 export interface IUniqueElement {
@@ -108,6 +117,10 @@ export interface IQuickFix extends IUniqueElement {
     transformationId: string;
     name: string;
     file: string;
+}
+
+export interface MigrationIssue {
+    getReport: () => string;
 }
 
 export interface IHint extends IIssue {

@@ -5,7 +5,7 @@ import { RhamtRunner } from './rhamtRunner';
 import { RhamtProcessController } from './RhamtProcessController';
 import { ProgressMonitor } from './progressMonitor';
 import * as path from 'path';
-import { AnaysisResultsUtil, AnalysisResultsSummary, AnalysisResults } from '../model/analysisResults';
+import { AnalysisResultsUtil, AnalysisResultsSummary, AnalysisResults } from '../model/analysisResults';
 import { ModelService } from '../model/modelService';
 const PROGRESS_REGEX = /^:progress: /;
 const START_TIMEOUT = 60000;
@@ -56,8 +56,7 @@ export class RhamtUtil {
                     serverManager.shutdown();
                     vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
                         if (result === 'Open Report') {
-                            const report = path.resolve(config.options['output'], 'index.html');
-                            vscode.commands.executeCommand('rhamt.openReport', report);
+                            AnalysisResultsUtil.openReport(result);
                         }
                     });
                     await this.loadResults(config, modelService);
@@ -153,7 +152,7 @@ export class RhamtUtil {
     }
 
     private static async loadResults(config: RhamtConfiguration, modelService: ModelService): Promise<any> {
-        return AnaysisResultsUtil.loadFromLocation(path.resolve(config.options['output'], 'results.xml')).then(dom => {
+        return AnalysisResultsUtil.loadFromLocation(config.getResultsLocation()).then(dom => {
             const summary: AnalysisResultsSummary = {
                 outputLocation: config.options['output']
             };

@@ -29,7 +29,6 @@
         "onCommand:rhamt.createConfiguration",
         "onCommand:rhamt.showRhamtExplorer",
         "onCommand:rhamt.runConfiguration",
-        "onCommand:rhamt.deleteConfiguration",
         "onView:rhamtExplorerView"
     ],
     "scripts": {
@@ -62,6 +61,10 @@
             {
                 "command": "rhamt.deleteConfiguration",
                 "title": "Delete"
+            },
+            {
+                "command": "rhamt.openReport",
+                "title": "Open Report"
             }
         ],
         "configuration": [
@@ -106,6 +109,10 @@
                 {
                     "command": "rhamt.deleteConfiguration",
                     "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
+                },
+                {
+                    "command": "rhamt.openReport",
+                    "when": "view == rhamtExplorerView && viewItem == issue"
                 }
             ]
         }

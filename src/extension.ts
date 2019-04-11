@@ -4,7 +4,6 @@ import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
 import { ModelService } from './model/modelService';
 import { RhamtModel } from './model/model';
-import * as open from 'opn';
 import { RhamtUtil } from './server/rhamtUtil';
 
 let rhamtView: RhamtView;
@@ -41,10 +40,6 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     });
     context.subscriptions.push(runConfigurationDisposable);
-
-    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openReport', (report: any) => {
-        open(report);
-    }));
 
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openClassification', async (uri: string) => {
         const openPath = vscode.Uri.file(uri);

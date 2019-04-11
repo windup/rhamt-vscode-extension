@@ -11,7 +11,7 @@ export class HintItem extends TreeItem {
     private hint: IHint;
 
     constructor(config: RhamtConfiguration, hint: IHint) {
-        super(config.options['name']);
+        super(hint.id);
         this.config = config;
         this.hint = hint;
         this.refresh();
@@ -44,7 +44,7 @@ export class HintItem extends TreeItem {
     }
 
     public get contextValue(): string {
-        return 'rhamt.openHint';
+        return 'issue';
     }
 
     public refresh(): void {

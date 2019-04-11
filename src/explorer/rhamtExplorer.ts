@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
 import { DataProvider } from '../tree/DataProvider';
 import { ModelService } from '../model/modelService';
+import { MigrationIssue } from '../model/model';
 import { ITreeNode } from '../tree/abstractNode';
 import { OptionsBuilder } from '../optionsBuilder';
 import { RhamtUtil } from '../server/rhamtUtil';
+import { AnalysisResultsUtil } from '../model/analysisResults';
 
 export class RhamtExplorer {
 
@@ -39,6 +41,12 @@ export class RhamtExplorer {
             this.modelService.deleteConfiguration(config);
             this.dataProvider.refresh();
         }));
+        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.openReport', item => {
+            if (this.isIssueNode(item)) {
+                const issue = item as MigrationIssue;
+                AnalysisResultsUtil.openReport(issue.getReport());
+            }
+        }));
     }
 
     private createViewer(): vscode.TreeView<ITreeNode> {
@@ -52,5 +60,9 @@ export class RhamtExplorer {
         const provider: DataProvider = new DataProvider(this.modelService);
         this.context.subscriptions.push(provider);
         return provider;
+    }
+
+    private isIssueNode(object: any): object is MigrationIssue {
+        return 'getReport' in object;
     }
 }
