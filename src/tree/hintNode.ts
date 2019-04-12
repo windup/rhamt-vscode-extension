@@ -34,6 +34,6 @@ export class HintNode extends AbstractNode implements ReportHolder {
     }
 
     getReport(): string {
-        return this.config.getReport();
+        return this.hint.report;
     }
 }

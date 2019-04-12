@@ -47,12 +47,33 @@ export class AnalysisResultsUtil {
 
 export class AnalysisResults {
 
+    reports: Map<string, string> = new Map<string, string>();
     config: RhamtConfiguration;
     dom: CheerioStatic;
 
     constructor(config: RhamtConfiguration, dom: CheerioStatic) {
         this.config = config;
         this.dom = dom;
+        this.loadReports();
+    }
+
+    loadReports(): void {
+        this.dom('report-links').children().each((i, ele) => {
+            const link: any = {};
+            ele.children.forEach((child, i) => {
+                switch (child.name) {
+                case 'input-file': {
+                    link.input = child.children[0].nodeValue;
+                    break;
+                }
+                case 'report-file': {
+                    link.report = child.children[0].nodeValue;
+                    break;
+                }
+                }
+            });
+            this.reports.set(link.input, link.report);
+        });
     }
 
     getHints(): IHint[] {
@@ -75,6 +96,7 @@ export class AnalysisResults {
                 column: 0,
                 length: 0,
                 sourceSnippet: ''
+
             };
             ele.children.forEach((child, i) => {
                 switch (child.name) {
@@ -96,6 +118,10 @@ export class AnalysisResults {
                 }
                 case 'file': {
                     hint.file = child.children[0].nodeValue;
+                    const report = this.reports.get(hint.file);
+                    if (report) {
+                        hint.report = report;
+                    }
                     break;
                 }
                 case 'hint': {
@@ -160,6 +186,10 @@ export class AnalysisResults {
                 }
                 case 'file': {
                     classification.file = child.children[0].nodeValue;
+                    const report = this.reports.get(classification.file);
+                    if (report) {
+                        classification.report = report;
+                    }
                     break;
                 }
                 case 'issue-category': {

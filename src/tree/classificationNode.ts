@@ -34,6 +34,6 @@ export class ClassificationNode extends AbstractNode implements ReportHolder {
     }
 
     getReport(): string {
-        return this.config.getReport();
+        return this.classification.report;
     }
 }
