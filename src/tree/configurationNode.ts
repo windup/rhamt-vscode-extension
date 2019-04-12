@@ -5,10 +5,10 @@ import { ClassificationNode } from './classificationNode';
 import { DataProvider } from './dataProvider';
 import * as path from 'path';
 import { HintNode } from './hintNode';
-import { RhamtConfiguration, ChangeType, IClassification, IHint } from '../model/model';
+import { RhamtConfiguration, ChangeType, IClassification, IHint, ReportHolder } from '../model/model';
 import { ModelService } from '../model/modelService';
 
-export class ConfigurationNode extends AbstractNode<ConfigurationItem> {
+export class ConfigurationNode extends AbstractNode<ConfigurationItem> implements ReportHolder {
 
     private loading: boolean = false;
 
@@ -116,5 +116,9 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> {
     protected refresh(node?: ITreeNode): void {
         this.treeItem.refresh();
         super.refresh(node);
+    }
+
+    getReport(): string {
+        return this.config.getReport();
     }
 }

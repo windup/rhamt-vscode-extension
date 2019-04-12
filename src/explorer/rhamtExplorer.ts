@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { DataProvider } from '../tree/DataProvider';
 import { ModelService } from '../model/modelService';
-import { MigrationIssue } from '../model/model';
+import { ReportHolder } from '../model/model';
 import { ITreeNode } from '../tree/abstractNode';
 import { OptionsBuilder } from '../optionsBuilder';
 import { RhamtUtil } from '../server/rhamtUtil';
@@ -42,9 +42,8 @@ export class RhamtExplorer {
             this.dataProvider.refresh();
         }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.openReport', item => {
-            if (this.isIssueNode(item)) {
-                const issue = item as MigrationIssue;
-                AnalysisResultsUtil.openReport(issue.getReport());
+            if (this.isReportHolder(item)) {
+                AnalysisResultsUtil.openReport((item as ReportHolder).getReport());
             }
         }));
     }
@@ -62,7 +61,7 @@ export class RhamtExplorer {
         return provider;
     }
 
-    private isIssueNode(object: any): object is MigrationIssue {
+    private isReportHolder(object: any): object is ReportHolder {
         return 'getReport' in object;
     }
 }

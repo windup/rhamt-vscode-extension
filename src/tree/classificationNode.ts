@@ -2,11 +2,10 @@ import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
 import { ClassificationItem } from './classificationItem';
-import { RhamtConfiguration, IClassification, MigrationIssue } from '../model/model';
+import { RhamtConfiguration, IClassification, ReportHolder } from '../model/model';
 import { ModelService } from '../model/modelService';
-import { AnalysisResultsUtil } from '../model/analysisResults';
 
-export class ClassificationNode extends AbstractNode implements MigrationIssue {
+export class ClassificationNode extends AbstractNode implements ReportHolder {
 
     private classification: IClassification;
 

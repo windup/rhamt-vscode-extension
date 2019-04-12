@@ -119,7 +119,7 @@ export interface IQuickFix extends IUniqueElement {
     file: string;
 }
 
-export interface MigrationIssue {
+export interface ReportHolder {
     getReport: () => string;
 }
 

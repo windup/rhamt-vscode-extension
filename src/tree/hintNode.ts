@@ -2,11 +2,10 @@ import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
 import { HintItem } from './hintItem';
-import { IHint, RhamtConfiguration, MigrationIssue } from '../model/model';
+import { IHint, RhamtConfiguration, ReportHolder } from '../model/model';
 import { ModelService } from '../model/modelService';
-import { AnalysisResultsUtil } from '../model/analysisResults';
 
-export class HintNode extends AbstractNode implements MigrationIssue {
+export class HintNode extends AbstractNode implements ReportHolder {
 
     private hint: IHint;
 
