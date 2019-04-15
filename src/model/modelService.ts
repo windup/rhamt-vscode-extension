@@ -71,7 +71,11 @@ export class ModelService {
                         else this.parse(data).then(() => resolve(this.model)).catch(reject);
                     });
                 }
-                else resolve();
+                else {
+                    this.loaded = true;
+                    this.onLoaded.emit(this.model);
+                    resolve();
+                }
             });
         });
     }
