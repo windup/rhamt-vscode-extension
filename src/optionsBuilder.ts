@@ -73,7 +73,12 @@ export class OptionsBuilder {
             placeHolder: 'input folder'
         });
 
-        if (!input) return;
+        if (!input) {
+            if (!vscode.workspace.getWorkspaceFolder(undefined)) {
+                vscode.window.showErrorMessage('No workspace folders found for specifying RHAMT input.');
+            }
+            return;
+        }
 
         const target = await vscode.window.showQuickPick(TARGET, {
             canPickMany: true,
