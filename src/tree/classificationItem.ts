@@ -32,12 +32,12 @@ export class ClassificationItem extends TreeItem {
     }
 
     public get commandId(): string {
-        return 'rhamt.openClassification';
+        return 'rhamt.openDoc';
     }
 
     public get command(): Command {
         return {
-            command: 'rhamt.openClassification',
+            command: 'rhamt.openDoc',
             title: '',
             arguments: [this.classification.file]
         };

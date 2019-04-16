@@ -32,12 +32,12 @@ export class HintItem extends TreeItem {
     }
 
     public get commandId(): string {
-        return 'rhamt.openHint';
+        return 'rhamt.openDoc';
     }
 
     public get command(): Command {
         return {
-            command: 'rhamt.openHint',
+            command: 'rhamt.openDoc',
             title: '',
             arguments: [this.hint.file]
         };

@@ -24,6 +24,7 @@ export class RhamtExplorer {
             if (config) {
                 this.dataProvider.refresh();
                 this.modelService.addConfiguration(config);
+                this.modelService.save();
                 vscode.window.showInformationMessage(`Successfully Created: ${config.name}`);
                 const run = await vscode.window.showQuickPick(['Yes', 'No'], {placeHolder: 'Run the analysis?'});
                 if (!run || run === 'No') {

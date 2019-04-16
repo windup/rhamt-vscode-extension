@@ -3,8 +3,10 @@ import { Utils } from './Utils';
 import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
 import { ModelService } from './model/modelService';
-import { RhamtModel } from './model/model';
+import { RhamtModel, RhamtConfiguration } from './model/model';
+import * as json from 'jsonc-parser';
 import { RhamtUtil } from './server/rhamtUtil';
+import * as fs from 'fs-extra';
 
 let rhamtView: RhamtView;
 let modelService: ModelService;
@@ -41,17 +43,53 @@ export async function activate(context: vscode.ExtensionContext) {
     });
     context.subscriptions.push(runConfigurationDisposable);
 
-    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openClassification', async (uri: string) => {
-        const openPath = vscode.Uri.file(uri);
-        vscode.workspace.openTextDocument(openPath).then(doc => {
+    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', (uri: string) => {
+        vscode.workspace.openTextDocument(vscode.Uri.file(uri)).then(doc => {
             vscode.window.showTextDocument(doc);
         });
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openHint', async (uri: string) => {
-        const openPath = vscode.Uri.file(uri);
-        vscode.workspace.openTextDocument(openPath).then(doc => {
-            vscode.window.showTextDocument(doc);
+    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openConfiguration', (config: RhamtConfiguration) => {
+        const location = modelService.getModelPersistanceLocation();
+        fs.exists(location, exists => {
+            if (exists) {
+                vscode.workspace.openTextDocument(vscode.Uri.file(location)).then(async doc => {
+                    const editor = await vscode.window.showTextDocument(doc);
+                    const node = getNode(json.parseTree(doc.getText()), doc.getText(), config);
+                    if (node) {
+                        const range = new vscode.Range(doc.positionAt(node.offset), doc.positionAt(node.offset + node.length));
+                        editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
+                        editor.selection = new vscode.Selection(range.start, range.end);
+                    }
+                });
+            }
+            else {
+                vscode.window.showErrorMessage('Unable to find configuration persistance file.');
+            }
         });
     }));
+
+    vscode.workspace.onDidSaveTextDocument(doc => {
+       if (doc.fileName === modelService.getModelPersistanceLocation()) {
+            vscode.commands.executeCommand('rhamt.refreshExplorer');
+       }
+    });
+}
+
+function getNode(node: json.Node, text: string, config: RhamtConfiguration): json.Node {
+    let found = false;
+    let container: any = undefined;
+    json.visit(text, {
+        onObjectProperty: (property: string, offset: number, length: number, startLine: number, startCharacter: number) => {
+            if (!found && property === 'name') {
+                const childPath = json.getLocation(text, offset).path
+                const childNode = json.findNodeAtLocation(node, childPath);
+                if (childNode && childNode.value === config.name) {
+                    found = true;
+                    container = childNode.parent.parent;
+                }
+            }
+        }
+    });
+    return container;
 }

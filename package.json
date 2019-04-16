@@ -40,8 +40,7 @@
     },
     "main": "./out/src/extension",
     "contributes": {
-        "commands": [
-            {
+        "commands": [{
                 "category": "RHAMT",
                 "command": "rhamt.createConfiguration",
                 "title": "New Configuration",
@@ -67,46 +66,37 @@
                 "title": "Open Report"
             }
         ],
-        "configuration": [
-            {
-                "title": "Red Hat Application Migration Toolkit (RHAMT)",
-                "properties": {
-                    "rhamt.executable.path": {
-                        "type": "string",
-                        "default": "",
-                        "description": "Specifies absolute path of rhamt-cli executable",
-                        "scope": "window"
-                    }
+        "configuration": [{
+            "title": "Red Hat Application Migration Toolkit (RHAMT)",
+            "properties": {
+                "rhamt.executable.path": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Specifies absolute path of rhamt-cli executable",
+                    "scope": "window"
                 }
             }
-        ],
+        }],
         "viewsContainers": {
-            "activitybar": [
-                {
-                    "id": "rhamt-explorer",
-                    "title": "RHAMT",
-                    "icon": "resources/dep.svg"
-                }
-            ]
+            "activitybar": [{
+                "id": "rhamt-explorer",
+                "title": "RHAMT",
+                "icon": "resources/dep.svg"
+            }]
         },
         "views": {
-            "rhamt-explorer": [
-                {
-                    "id": "rhamtExplorerView",
-                    "name": "Issue Explorer"
-                }
-            ]
+            "rhamt-explorer": [{
+                "id": "rhamtExplorerView",
+                "name": "Explorer"
+            }]
         },
         "menus": {
-            "view/title": [
-                {
-                    "command": "rhamt.createConfiguration",
-                    "when": "view == rhamtExplorerView",
-                    "group": "navigation"
-                }
-            ],
-            "view/item/context": [
-                {
+            "view/title": [{
+                "command": "rhamt.createConfiguration",
+                "when": "view == rhamtExplorerView",
+                "group": "navigation"
+            }],
+            "view/item/context": [{
                     "command": "rhamt.deleteConfiguration",
                     "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
                 },
@@ -138,9 +128,11 @@
         "tslint-eslint-rules": "^5.4.0"
     },
     "dependencies": {
-        "find-java-home": "^0.2.0",
         "cheerio": "^1.0.0-rc.2",
+        "find-java-home": "^0.2.0",
         "fs-extra": "^6.0.1",
+        "jsonc-parser": "^2.1.0",
+        "mkdirp": "^0.5.1",
         "opn": "^5.5.0",
         "vscode-nls": "^2.0.2"
     }

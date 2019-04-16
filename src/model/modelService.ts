@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
 import * as fse from 'fs-extra';
+import * as mkdirp from 'mkdirp';
 import { AnalysisResults, AnalysisResultsUtil } from './analysisResults';
 
 export class ModelService {
@@ -63,7 +64,7 @@ export class ModelService {
 
     public load(): Promise<RhamtModel> {
         return new Promise<any>((resolve, reject) => {
-            const location = path.join(this.outDir, 'model.json');
+            const location = this.getModelPersistanceLocation();
             fs.exists(location, exists => {
                 if (exists) {
                     fs.readFile(location, (e, data) => {
@@ -138,15 +139,18 @@ export class ModelService {
             }
             configurations.push(data);
         });
-        this.doSave(path.join(this.outDir, 'model.json'), {configurations});
+        this.doSave(this.getModelPersistanceLocation(), {configurations});
     }
 
     public doSave(out: string, data: any): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
-            fs.writeFile(out, JSON.stringify(data, null, 4), null, e => {
+            mkdirp(require('path').dirname(out), (e: any) => {
                 if (e) reject(e);
-                else resolve();
-            });
+                fs.writeFile(out, JSON.stringify(data, null, 4), null, e => {
+                    if (e) reject(e);
+                    else resolve();
+                });
+              });
         });
     }
 
@@ -172,5 +176,9 @@ export class ModelService {
             listen(this.model);
         }
         return this.onLoaded.on(listen);
+    }
+
+    public getModelPersistanceLocation(): string {
+        return path.join(this.outDir, 'model.json');
     }
 }

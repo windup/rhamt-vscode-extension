@@ -1,4 +1,4 @@
-import { TreeDataProvider, Disposable, EventEmitter, Event, TreeItem } from 'vscode';
+import { TreeDataProvider, Disposable, EventEmitter, Event, TreeItem, commands } from 'vscode';
 import { localize } from './localize';
 import * as path from 'path';
 import { ConfigurationNode } from './configurationNode';
@@ -16,6 +16,9 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         this._disposables.push(this.modelService.onModelLoaded(m => {
             this.refresh(undefined);
         }));
+        commands.registerCommand('rhamt.refreshExplorer', () => {
+            this.refresh(undefined);
+        });
     }
 
     public dispose(): void {

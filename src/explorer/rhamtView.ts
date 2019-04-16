@@ -15,6 +15,5 @@ export class RhamtView implements vscode.Disposable {
     }
 
     public dispose(): void {
-
     }
 }
