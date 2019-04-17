@@ -15,16 +15,16 @@ export class ModelService {
     }
 
     public addConfiguration(config: RhamtConfiguration): void {
-        this.model.configurations.set(config.id, config);
+        this.model.configurations.push(config);
         this.save();
     }
 
     public getConfiguration(id: string): RhamtConfiguration | undefined {
-        return this.model.configurations.get(id);
+        return this.model.configurations.find(config => config.id === id);
     }
 
     public getConfigurationWithName(name: string): RhamtConfiguration | undefined {
-        return this.model.getConfigurations().find(item => item.name === name);
+        return this.model.configurations.find(item => item.name === name);
     }
 
     public createConfiguration(): RhamtConfiguration {
@@ -41,21 +41,29 @@ export class ModelService {
     }
 
     public deleteConfiguration(configuration: RhamtConfiguration): boolean {
-        const deleted = this.model.configurations.delete(configuration.id);
-        if (deleted) {
-            const out = configuration.options['output'];
-            fs.exists(out, exists => {
-                if (exists) {
-                    fse.remove(out);
-                }
-            });
+        const index = this.model.configurations.indexOf(configuration, 0);
+        if (index > -1) {
+            this.model.configurations.splice(index, 1);
+            const output = configuration.options['output'];
+            if (output) {
+                this.deleteOuputLocation(output);
+            }
             this.save();
+            return true;
         }
-        return deleted;
+        return false;
+    }
+
+    private deleteOuputLocation(location: string) {
+        fs.exists(location, exists => {
+            if (exists) {
+                fse.remove(location);
+            }
+        });
     }
 
     public deleteConfigurationWithName(name: string): boolean {
-        const config = this.model.getConfigurations().find(item => item.name === name);
+        const config = this.model.configurations.find(item => item.name === name);
         if (config) {
             return this.deleteConfiguration(config);
         }
@@ -81,15 +89,72 @@ export class ModelService {
         });
     }
 
+    public reload(): Promise<any> {
+        return new Promise<any> ((resolve, reject) => {
+            const parse = async data => {
+                if (data.byteLength > 0) {
+                    const newConfigs = [];
+                    const configs = JSON.parse(data).configurations;
+                    for (const entry of configs) {
+                        const config: RhamtConfiguration = new RhamtConfiguration();
+                        ModelService.copy(entry, config);
+                        if (!config.id) {
+                            continue;
+                        }
+                        const existing = this.getConfiguration(config.id);
+                        if (existing) {
+                            existing.name = config.name;
+                            existing.options = config.options;
+                            existing.rhamtExecutable = config.rhamtExecutable;
+                            existing.summary = config.summary;
+                            existing.results = undefined;
+                            newConfigs.push(existing);
+                        }
+                        else {
+                            newConfigs.push(config);
+                        }
+                    }
+                    this.model.configurations.forEach(config => {
+                        const output = config.options['output'];
+                        if (output) {
+                            const found = newConfigs.find(item => {
+                                const out = item.options['output'];
+                                return out && out === output;
+                            });
+                            if (!found) {
+                                this.deleteOuputLocation(output);
+                            }
+                        }
+                    });
+                    newConfigs.forEach(async config => await ModelService.loadResults(config));
+                    this.model.configurations = newConfigs;
+                }
+                else {
+                    this.model.configurations = [];
+                }
+                resolve();
+            };
+            const location = this.getModelPersistanceLocation();
+            fs.exists(location, exists => {
+                if (exists) {
+                    fs.readFile(location, (e, data) => {
+                        if (e) reject(e);
+                        else parse(data);
+                    });
+                }
+            });
+        });
+    }
+
     private parse(data: any): Promise<any> {
-        return new Promise<any>(async (resolve, reject) => {
+        return new Promise<any>(async resolve => {
             if (data.byteLength > 0) {
                 const configs = JSON.parse(data).configurations;
                 for (const entry of configs) {
                     const config: RhamtConfiguration = new RhamtConfiguration();
                     ModelService.copy(entry, config);
                     await ModelService.loadResults(config);
-                    this.model.configurations.set(config.id, config);
+                    this.model.configurations.push(config);
                 }
             }
             this.loaded = true;
@@ -128,7 +193,7 @@ export class ModelService {
 
     public save(): void {
         const configurations = [];
-        this.model.getConfigurations().forEach(config => {
+        this.model.configurations.forEach(config => {
             const data: any = {
                 id: config.id,
                 name: config.name,
@@ -150,7 +215,7 @@ export class ModelService {
                     if (e) reject(e);
                     else resolve();
                 });
-              });
+            });
         });
     }
 

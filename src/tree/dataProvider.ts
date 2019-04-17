@@ -74,7 +74,7 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         let nodes: any[];
 
         if (this.modelService.loaded) {
-            nodes = this.modelService.model.getConfigurations().map(config => {
+            nodes = this.modelService.model.configurations.map(config => {
                 return new ConfigurationNode(
                     config,
                     this.modelService,

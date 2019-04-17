@@ -21,7 +21,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', async () => {
 
-        const configs = modelService.model.getConfigurations().map(item => item.name);
+        const configs = modelService.model.configurations.map(item => item.name);
         if (configs.length === 0) {
             vscode.window.showInformationMessage('No configurations available.');
             return;
@@ -70,9 +70,13 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
 
     vscode.workspace.onDidSaveTextDocument(doc => {
-       if (doc.fileName === modelService.getModelPersistanceLocation()) {
-            vscode.commands.executeCommand('rhamt.refreshExplorer');
-       }
+        if (doc.fileName === modelService.getModelPersistanceLocation()) {
+            modelService.reload().then(() => {
+                vscode.commands.executeCommand('rhamt.refreshExplorer');
+            }).catch(e => {
+                vscode.window.showErrorMessage(`Error reloading configurations - ${e}`);
+            });
+        }
     });
 }
 
@@ -82,7 +86,7 @@ function getNode(node: json.Node, text: string, config: RhamtConfiguration): jso
     json.visit(text, {
         onObjectProperty: (property: string, offset: number, length: number, startLine: number, startCharacter: number) => {
             if (!found && property === 'name') {
-                const childPath = json.getLocation(text, offset).path
+                const childPath = json.getLocation(text, offset).path;
                 const childNode = json.findNodeAtLocation(node, childPath);
                 if (childNode && childNode.value === config.name) {
                     found = true;

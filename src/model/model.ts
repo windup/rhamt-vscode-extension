@@ -4,14 +4,10 @@ import * as path from 'path';
 
 export class RhamtModel {
 
-    public configurations: Map<string, RhamtConfiguration> = new Map<string, RhamtConfiguration>();
-
-    public getConfigurations(): RhamtConfiguration[] {
-        return Array.from(this.configurations.values());
-    }
+    public configurations: RhamtConfiguration[] = [];
 
     public exists(name: string): boolean {
-        for (const config of this.getConfigurations()) {
+        for (const config of this.configurations) {
             if (config.name === name) {
                 return true;
             }
