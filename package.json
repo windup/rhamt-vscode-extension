@@ -28,7 +28,6 @@
     "activationEvents": [
         "onCommand:rhamt.createConfiguration",
         "onCommand:rhamt.showRhamtExplorer",
-        "onCommand:rhamt.runConfiguration",
         "onView:rhamtExplorerView"
     ],
     "scripts": {
@@ -56,7 +55,7 @@
             },
             {
                 "command": "rhamt.runConfiguration",
-                "title": "Run configuration"
+                "title": "Run Configuration"
             },
             {
                 "command": "rhamt.deleteConfiguration",
@@ -106,6 +105,10 @@
                 }
             ],
             "view/item/context": [
+                {
+                    "command": "rhamt.runConfiguration",
+                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
+                },
                 {
                     "command": "rhamt.deleteConfiguration",
                     "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"

@@ -56,7 +56,7 @@ export class RhamtUtil {
                     serverManager.shutdown();
                     vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
                         if (result === 'Open Report') {
-                            AnalysisResultsUtil.openReport(result);
+                            AnalysisResultsUtil.openReport(config.getReport());
                         }
                     });
                     await this.loadResults(config, modelService);

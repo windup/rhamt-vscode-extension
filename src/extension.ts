@@ -19,22 +19,8 @@ export async function activate(context: vscode.ExtensionContext) {
     rhamtView = new RhamtView(context, modelService);
     context.subscriptions.push(rhamtView);
 
-    const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', async () => {
-
-        const configs = modelService.model.configurations.map(item => item.name);
-        if (configs.length === 0) {
-            vscode.window.showInformationMessage('No configurations available.');
-            return;
-        }
-
-        const name = await vscode.window.showQuickPick(configs, {placeHolder: 'Choose the Configuration'});
-        if (!name) {
-            return;
-        }
-        const config = modelService.getConfigurationWithName(name);
-        if (!config) {
-            return;
-        }
+    const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', item => {
+        const config = item.config;
         try {
             RhamtUtil.analyze(config, modelService);
         } catch (e) {
@@ -69,15 +55,15 @@ export async function activate(context: vscode.ExtensionContext) {
         });
     }));
 
-    vscode.workspace.onDidSaveTextDocument(doc => {
+    context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(doc => {
         if (doc.fileName === modelService.getModelPersistanceLocation()) {
             modelService.reload().then(() => {
-                vscode.commands.executeCommand('rhamt.refreshExplorer');
+                vscode.commands.executeCommand('rhamt.modelReload');
             }).catch(e => {
                 vscode.window.showErrorMessage(`Error reloading configurations - ${e}`);
             });
         }
-    });
+    }));
 }
 
 function getNode(node: json.Node, text: string, config: RhamtConfiguration): json.Node {

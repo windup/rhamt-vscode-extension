@@ -16,7 +16,7 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         this._disposables.push(this.modelService.onModelLoaded(m => {
             this.refresh(undefined);
         }));
-        commands.registerCommand('rhamt.refreshExplorer', () => {
+        commands.registerCommand('rhamt.modelReload', () => {
             this.refresh(undefined);
         });
     }

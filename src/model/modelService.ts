@@ -36,7 +36,6 @@ export class ModelService {
         config.id = ModelService.generateUniqueId();
         config.name = name;
         config.options['output'] = path.resolve(this.outDir, config.id);
-        this.addConfiguration(config);
         return config;
     }
 
