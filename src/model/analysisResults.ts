@@ -212,6 +212,26 @@ export class AnalysisResults {
         return classifications;
     }
 
+    getClassificationsFor(file: string): IClassification[] {
+        const classifications = [];
+        this.getClassifications().forEach(classification => {
+            if (classification.file === file) {
+                classifications.push(classification);
+            }
+        });
+        return classifications;
+    }
+
+    getHintsFor(file: string): IHint[] {
+        const hints = [];
+        this.getHints().forEach(hint => {
+            if (hint.file === file) {
+                hints.push(hint);
+            }
+        });
+        return hints;
+    }
+
     deleteIssue(name: string): boolean {
         return false;
     }

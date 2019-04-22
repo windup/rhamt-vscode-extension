@@ -6,10 +6,15 @@ import { ITreeNode } from '../tree/abstractNode';
 import { OptionsBuilder } from '../optionsBuilder';
 import { RhamtUtil } from '../server/rhamtUtil';
 import { AnalysisResultsUtil } from '../model/analysisResults';
+import { Grouping } from '../tree/configurationNode';
 
 export class RhamtExplorer {
 
     private dataProvider: DataProvider;
+    private grouping: Grouping = {
+        groupByFile: true,
+        groupBySeverity: false
+    };
 
     constructor(private context: vscode.ExtensionContext,
         private modelService: ModelService) {
@@ -56,7 +61,7 @@ export class RhamtExplorer {
     }
 
     private createDataProvider(): DataProvider {
-        const provider: DataProvider = new DataProvider(this.modelService);
+        const provider: DataProvider = new DataProvider(this.grouping, this.modelService);
         this.context.subscriptions.push(provider);
         return provider;
     }

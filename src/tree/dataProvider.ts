@@ -1,7 +1,7 @@
 import { TreeDataProvider, Disposable, EventEmitter, Event, TreeItem, commands } from 'vscode';
 import { localize } from './localize';
 import * as path from 'path';
-import { ConfigurationNode } from './configurationNode';
+import { ConfigurationNode, Grouping } from './configurationNode';
 import { ITreeNode } from './abstractNode';
 import { ModelService } from '../model/modelService';
 
@@ -12,7 +12,7 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
     private _disposables: Disposable[] = [];
 
-    constructor(private modelService: ModelService) {
+    constructor(private grouping: Grouping, private modelService: ModelService) {
         this._disposables.push(this.modelService.onModelLoaded(m => {
             this.refresh(undefined);
         }));
@@ -77,6 +77,7 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
             nodes = this.modelService.model.configurations.map(config => {
                 return new ConfigurationNode(
                     config,
+                    this.grouping,
                     this.modelService,
                     this._onNodeCreateEmitter,
                     this);

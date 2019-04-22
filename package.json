@@ -55,7 +55,7 @@
             },
             {
                 "command": "rhamt.runConfiguration",
-                "title": "Run Configuration"
+                "title": "Run"
             },
             {
                 "command": "rhamt.deleteConfiguration",
