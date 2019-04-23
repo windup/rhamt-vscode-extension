@@ -116,10 +116,6 @@
                 {
                     "command": "rhamt.openReport",
                     "when": "view == rhamtExplorerView && viewItem == issue"
-                },
-                {
-                    "command": "rhamt.openReport",
-                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
                 }
             ]
         }

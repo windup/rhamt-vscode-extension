@@ -1,5 +1,6 @@
-import { TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
+import { TreeItem, TreeItemCollapsibleState, Uri, workspace } from 'vscode';
 import { ModelService } from '../model/modelService';
+import * as path from 'path';
 
 export class FileItem extends TreeItem {
 
@@ -16,7 +17,12 @@ export class FileItem extends TreeItem {
     }
 
     public refresh(): void {
-        this.label = this.file;
+        let label = this.file;
+        const root = workspace.getWorkspaceFolder(Uri.file(this.file));
+        if (!root) {
+            label = path.relative(root.uri.fsPath, this.file);
+        }
+        this.label = label;
         this.collapsibleState = TreeItemCollapsibleState.Collapsed;
     }
 }
