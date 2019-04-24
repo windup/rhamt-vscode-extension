@@ -1,13 +1,14 @@
 import { ConfigurationItem } from './configurationItem';
-import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
+import { EventEmitter, TreeItemCollapsibleState, Uri, workspace } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { ClassificationNode } from './classificationNode';
 import { DataProvider } from './dataProvider';
 import * as path from 'path';
 import { HintNode } from './hintNode';
-import { RhamtConfiguration, ChangeType, IClassification, IHint, ReportHolder } from '../model/model';
+import { RhamtConfiguration, ChangeType, IClassification, IHint, ReportHolder, IIssue } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { FileNode } from './fileNode';
+import { FolderNode } from './folderNode';
 
 export interface Grouping {
     groupByFile: boolean;
@@ -19,8 +20,12 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     private grouping: Grouping;
     private loading: boolean = false;
 
-    private issues = [];
-    private files = [];
+    private classifications: IClassification[] = [];
+    private hints: IHint[] = [];
+    private issueFiles = new Map<string, IIssue[]>();
+    private issueNodes = new Map<IIssue, ITreeNode>();
+    private resourceNodes = new Map<string, ITreeNode>();
+    private childNodes = new Map<string, ITreeNode>();
 
     constructor(
         config: RhamtConfiguration,
@@ -47,17 +52,17 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             return Promise.resolve([]);
         }
         if (this.grouping.groupByFile) {
-            return Promise.resolve(this.files);
+            return Promise.resolve(Array.from(this.childNodes.values()));
         }
-        return Promise.resolve(this.issues);
+        return Promise.resolve(Array.from(this.issueNodes.values()));
     }
 
     public hasMoreChildren(): boolean {
         if (this.config.results) {
             if (this.grouping.groupByFile) {
-                return this.files.length > 0;
+                return Array.from(this.childNodes.values()).length > 0;
             }
-            return this.issues.length > 0;
+            return Array.from(this.issueNodes.values()).length > 0;
         }
         return false;
     }
@@ -89,37 +94,113 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         });
     }
 
-    protected refresh(node?: ITreeNode): void {
-        this.issues = [];
-        this.files = [];
+    private clearModel(): void {
+        this.classifications = [];
+        this.hints = [];
+        this.issueFiles.clear();
+        this.issueNodes.clear();
+        this.resourceNodes.clear();
+        this.childNodes.clear();
+    }
+
+    private computeIssues(): void {
+        this.clearModel();
         if (this.config.results) {
-            const fileMap = new Map<string, ITreeNode>();
             this.config.results.getClassifications().forEach(classification => {
-                this.issues.push(this.createClassificationNode(classification));
-                const file = fileMap.get(classification.file);
-                if (!file) {
-                    fileMap.set(classification.file, new FileNode(
-                        this.config,
-                        classification.file,
-                        this.modelService,
-                        this.onNodeCreateEmitter,
-                        this.dataProvider));
-                }
+                this.classifications.push(classification);
+                this.initIssue(classification, this.createClassificationNode(classification));
             });
             this.config.results.getHints().forEach(hint => {
-                this.issues.push(this.createHintNode(hint));
-                const file = fileMap.get(hint.file);
-                if (!file) {
-                    fileMap.set(hint.file, new FileNode(
-                        this.config,
-                        hint.file,
-                        this.modelService,
-                        this.onNodeCreateEmitter,
-                        this.dataProvider));
-                }
+                this.hints.push(hint);
+                this.initIssue(hint, this.createHintNode(hint));
             });
-            this.files = Array.from(fileMap.values());
         }
+    }
+
+    private initIssue(issue: IIssue, node: ITreeNode): void {
+        let nodes = this.issueFiles.get(issue.file);
+        if (!nodes) {
+            nodes = [];
+            this.issueFiles.set(issue.file, nodes);
+        }
+        nodes.push(issue);
+        this.issueNodes.set(issue, node);
+        this.buildResourceNodes(issue.file);
+    }
+
+    private buildResourceNodes(file: string): void {
+        if (!this.resourceNodes.has(file)) {
+            this.resourceNodes.set(file, new FileNode(
+                this.config,
+                file,
+                this.modelService,
+                this.onNodeCreateEmitter,
+                this.dataProvider,
+                this));
+
+            const root = workspace.getWorkspaceFolder(Uri.file(file));
+
+            if (!this.childNodes.has(root.uri.fsPath)) {
+                this.childNodes.set(root.uri.fsPath, new FolderNode(
+                    this.config,
+                    root.uri.fsPath,
+                    this.modelService,
+                    this.onNodeCreateEmitter,
+                    this.dataProvider,
+                    this));
+            }
+
+            const getParent = location => path.resolve(location, '..');
+            let parent = getParent(file);
+
+            while (parent) {
+                if (this.resourceNodes.has(parent)) {
+                    break;
+                }
+                this.resourceNodes.set(parent, new FolderNode(
+                    this.config,
+                    parent,
+                    this.modelService,
+                    this.onNodeCreateEmitter,
+                    this.dataProvider,
+                    this));
+                if (root.uri.fsPath === parent) {
+                    break;
+                }
+                parent = getParent(parent);
+            }
+        }
+    }
+
+    getChildNodes(node: ITreeNode): ITreeNode[] {
+        const children = [];
+        if (node instanceof FileNode) {
+            const issues = this.issueFiles.get((node as FileNode).file);
+            if (issues) {
+                issues.forEach(issue => children.push(this.issueNodes.get(issue)));
+            }
+        }
+        else {
+            const segments = this.getChildSegments((node as FolderNode).folder);
+            segments.forEach(segment => children.push(this.resourceNodes.get(segment)));
+        }
+        return children;
+    }
+
+    private getChildSegments(segment: string): string[] {
+        const children = [];
+        this.resourceNodes.forEach((value, key) => {
+            if (key !== segment && key.includes(segment)) {
+                if (path.resolve(key, '..') === segment) {
+                    children.push(key);
+                }
+            }
+        });
+        return children;
+    }
+
+    protected refresh(node?: ITreeNode): void {
+        this.computeIssues();
         this.treeItem.refresh();
         super.refresh(node);
     }

@@ -1,6 +1,7 @@
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { ModelService } from '../model/modelService';
 import { RhamtConfiguration, IClassification } from '../model/model';
+import * as path from 'path';
 
 export class ClassificationItem extends TreeItem {
 
@@ -24,7 +25,10 @@ export class ClassificationItem extends TreeItem {
     }
 
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
-        return undefined;
+        return {
+            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'error.svg'),
+            dark: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'error.svg')
+        };
     }
 
     public get id(): string {

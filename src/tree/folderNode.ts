@@ -4,32 +4,32 @@ import { DataProvider } from './dataProvider';
 import { RhamtConfiguration } from '../model/model';
 import { ModelService } from '../model/modelService';
 import * as path from 'path';
+import { FolderItem } from './folderItem';
 import { ConfigurationNode } from './configurationNode';
-import { FileItem } from './fileItem';
 
-export class FileNode extends AbstractNode<FileItem> {
+export class FolderNode extends AbstractNode<FolderItem> {
 
     private loading: boolean = false;
 
-    file: string;
+    folder: string;
     private children = [];
 
     constructor(
         config: RhamtConfiguration,
-        file: string,
+        folder: string,
         modelService: ModelService,
         onNodeCreateEmitter: EventEmitter<ITreeNode>,
         dataProvider: DataProvider,
         root: ConfigurationNode) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
-        this.file = file;
+        this.folder = folder;
         this.root = root;
         this.treeItem = this.createItem();
         this.listen();
     }
 
-    createItem(): FileItem {
-        return new FileItem(this.file);
+    createItem(): FolderItem {
+        return new FolderItem(this.folder);
     }
 
     delete(): Promise<void> {
