@@ -19,9 +19,6 @@ export class ClassificationItem extends TreeItem {
     }
 
     delete(): void {
-        if (this.config.results) {
-            this.config.results.getClassifications().find(i => true);
-        }
     }
 
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
