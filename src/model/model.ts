@@ -97,10 +97,9 @@ export interface IIssue extends IUniqueElement {
     severity: string;
     ruleId: string;
     effort: string;
-    title: string;
-    messageOrDescription: string;
     links: ILink[];
     report: string;
+    category: string;
 }
 
 export type IQuickFixType = 'REPLACE' | 'DELETE_LINE' | 'INSERT_LINE' | 'TRANSFORMATION';
@@ -125,6 +124,8 @@ export interface IHint extends IIssue {
     column: number;
     length: number;
     sourceSnippet: string;
+    hint: string;
+    title: string;
 }
 
 export interface IClassification extends IIssue {

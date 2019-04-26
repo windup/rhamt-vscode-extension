@@ -1,6 +1,6 @@
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { ModelService } from '../model/modelService';
-import { RhamtConfiguration, IClassification } from '../model/model';
+import { IClassification } from '../model/model';
 import * as path from 'path';
 
 export class ClassificationItem extends TreeItem {
@@ -8,12 +8,10 @@ export class ClassificationItem extends TreeItem {
     private _id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
-    private config: RhamtConfiguration;
     private classification: IClassification;
 
-    constructor(config: RhamtConfiguration, classification: IClassification) {
-        super(config.options['name']);
-        this.config = config;
+    constructor(classification: IClassification) {
+        super(classification.description);
         this.classification = classification;
         this.refresh();
     }
@@ -30,6 +28,10 @@ export class ClassificationItem extends TreeItem {
 
     public get id(): string {
         return this._id;
+    }
+
+    public get tooltip(): string {
+        return this.classification.description;
     }
 
     public get commandId(): string {
@@ -49,6 +51,6 @@ export class ClassificationItem extends TreeItem {
     }
 
     public refresh(): void {
-        this.label = this.classification.title;
+        this.label = this.classification.description;
     }
 }

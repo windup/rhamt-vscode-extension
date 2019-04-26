@@ -21,14 +21,14 @@ export class AnalysisResultsUtil {
                     reject(err);
                 }
                 else {
-                    resolve(cheerio.load(data));
+                    resolve(cheerio.load(data, {xmlMode: true, recognizeSelfClosing: true}));
                 }
             });
         });
     }
 
     static loadFomData(data: any): CheerioStatic {
-        return cheerio.load(data);
+        return cheerio.load(data, {xmlMode: true, recognizeSelfClosing: true});
     }
 
     static save(dom: CheerioStatic, location: string): Promise<void> {
@@ -63,11 +63,17 @@ export class AnalysisResults {
             ele.children.forEach((child, i) => {
                 switch (child.name) {
                 case 'input-file': {
-                    link.input = child.children[0].nodeValue;
+                    const node = child.children[0];
+                    if (node) {
+                        link.input = node.nodeValue;
+                    }
                     break;
                 }
                 case 'report-file': {
-                    link.report = child.children[0].nodeValue;
+                    const node = child.children[0];
+                    if (node) {
+                        link.report = node.nodeValue;
+                    }
                     break;
                 }
                 }
@@ -78,6 +84,7 @@ export class AnalysisResults {
 
     getHints(): IHint[] {
         const hints: IHint[] = [];
+
         this.dom('hints').children().each((i, ele) => {
             const id = ModelService.generateUniqueId();
             const hint: IHint = {
@@ -88,47 +95,56 @@ export class AnalysisResults {
                 ruleId: '',
                 effort: '',
                 title: '',
-                messageOrDescription: '',
                 links: [],
                 report: '',
                 originalLineSource: '',
                 lineNumber: 0,
                 column: 0,
                 length: 0,
-                sourceSnippet: ''
-
+                sourceSnippet: '',
+                category: '',
+                hint: ''
             };
+
             ele.children.forEach((child, i) => {
                 switch (child.name) {
-                case 'column': {
-                    hint.column = Number(child.children[0].nodeValue);
-                    break;
-                }
                 case 'title': {
-                    hint.title = child.children[0].nodeValue;
-                    break;
-                }
-                case 'message': {
-                    hint.messageOrDescription = child.children[0].nodeValue;
+                    const node = child.children[0];
+                    if (node) {
+                        hint.title = node.nodeValue;
+                    }
                     break;
                 }
                 case 'effort': {
-                    hint.effort = child.children[0].nodeValue;
+                    const node = child.children[0];
+                    if (node) {
+                        hint.effort = node.nodeValue;
+                    }
                     break;
                 }
                 case 'file': {
-                    hint.file = child.children[0].nodeValue;
-                    const report = this.reports.get(hint.file);
-                    if (report) {
-                        hint.report = report;
+                    const node = child.children[0];
+                    if (node) {
+                        hint.file = node.nodeValue;
+                        const report = this.reports.get(hint.file);
+                        if (report) {
+                            hint.report = report;
+                        }
                     }
                     break;
                 }
                 case 'hint': {
-                    hint.messageOrDescription = child.children[0].nodeValue;
+                    const node = child.children[0];
+                    if (node) {
+                        hint.hint = node.nodeValue;
+                    }
                     break;
                 }
                 case 'issue-category': {
+                    const node = child.children[0];
+                    if (node) {
+                        hint.category = node.nodeValue;
+                    }
                     break;
                 }
                 case 'links': {
@@ -138,7 +154,31 @@ export class AnalysisResults {
                     break;
                 }
                 case 'rule-id': {
-                    hint.ruleId = child.children[0].nodeValue;
+                    const node = child.children[0];
+                    if (node) {
+                        hint.ruleId = node.nodeValue;
+                    }
+                    break;
+                }
+                case 'length': {
+                    const node = child.children[0];
+                    if (node) {
+                        hint.length = Number(node.nodeValue);
+                    }
+                    break;
+                }
+                case 'line-number': {
+                    const node = child.children[0];
+                    if (node) {
+                        hint.lineNumber = Number(node.nodeValue);
+                    }
+                    break;
+                }
+                case 'column': {
+                    const node = child.children[0];
+                    if (node) {
+                        hint.column = Number(node.nodeValue);
+                    }
                     break;
                 }
                 }
@@ -168,31 +208,48 @@ export class AnalysisResults {
                 messageOrDescription: '',
                 links: [],
                 report: '',
-                description: ''
+                description: '',
+                category: ''
             };
             ele.children.forEach((child, i) => {
                 switch (child.name) {
                 case 'classification': {
-                    classification.title = child.children[0].nodeValue;
+                    const node = child.children[0];
+                    if (node) {
+                        classification.title = node.nodeValue;
+                    }
                     break;
                 }
                 case 'description': {
-                    classification.description = child.children[0].nodeValue;
+                    const node = child.children[0];
+                    if (node) {
+                        classification.description = node.nodeValue;
+                    }
                     break;
                 }
                 case 'effort': {
-                    classification.effort = child.children[0].nodeValue;
+                    const node = child.children[0];
+                    if (node) {
+                        classification.effort = node.nodeValue;
+                    }
                     break;
                 }
                 case 'file': {
-                    classification.file = child.children[0].nodeValue;
-                    const report = this.reports.get(classification.file);
-                    if (report) {
-                        classification.report = report;
+                    const node = child.children[0];
+                    if (node) {
+                        classification.file = node.nodeValue;
+                        const report = this.reports.get(classification.file);
+                        if (report) {
+                            classification.report = report;
+                        }
                     }
                     break;
                 }
                 case 'issue-category': {
+                    const node = child.children[0];
+                    if (node) {
+                        classification.category = node.nodeValue;
+                    }
                     break;
                 }
                 case 'links': {
@@ -202,7 +259,10 @@ export class AnalysisResults {
                     break;
                 }
                 case 'rule-id': {
-                    classification.ruleId = child.children[0].nodeValue;
+                    const node = child.children[0];
+                    if (node) {
+                        classification.ruleId = node.nodeValue;
+                    }
                     break;
                 }
                 }

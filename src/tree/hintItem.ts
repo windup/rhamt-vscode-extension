@@ -1,6 +1,6 @@
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { ModelService } from '../model/modelService';
-import { RhamtConfiguration, IHint } from '../model/model';
+import { IHint } from '../model/model';
 import * as path from 'path';
 
 export class HintItem extends TreeItem {
@@ -8,12 +8,10 @@ export class HintItem extends TreeItem {
     private _id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
-    private config: RhamtConfiguration;
     private hint: IHint;
 
-    constructor(config: RhamtConfiguration, hint: IHint) {
-        super(hint.id);
-        this.config = config;
+    constructor(hint: IHint) {
+        super(hint.title);
         this.hint = hint;
         this.refresh();
     }
@@ -30,6 +28,10 @@ export class HintItem extends TreeItem {
 
     public get id(): string {
         return this._id;
+    }
+
+    public get tooltip(): string {
+        return this.hint.hint;
     }
 
     public get commandId(): string {
@@ -49,6 +51,6 @@ export class HintItem extends TreeItem {
     }
 
     public refresh(): void {
-        this.label = `hint - ${this.hint.messageOrDescription}`;
+        this.label = `hint - ${this.hint.title}`;
     }
 }

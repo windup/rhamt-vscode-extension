@@ -29,7 +29,7 @@ export class ClassificationNode extends AbstractNode implements ReportHolder {
     }
 
     createItem(): ClassificationItem {
-        const item = new ClassificationItem(this.config, this.classification);
+        const item = new ClassificationItem(this.classification);
         return item;
     }
 

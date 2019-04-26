@@ -29,7 +29,7 @@ export class HintNode extends AbstractNode implements ReportHolder {
     }
 
     createItem(): HintItem {
-        const item = new HintItem(this.config, this.hint);
+        const item = new HintItem(this.hint);
         return item;
     }
 
