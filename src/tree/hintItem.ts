@@ -20,9 +20,22 @@ export class HintItem extends TreeItem {
     }
 
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
+        const base = [__dirname, '..', '..', '..', 'resources'];
+        if (!this.hint.category || this.hint.category.includes('error') || this.hint.category.includes('mandatory')) {
+            return {
+                light: path.join(...base, 'status-error.svg'),
+                dark: path.join(...base, 'dark', 'status-error-inverse.svg')
+            };
+        }
+        else if (this.hint.category.includes('potential')) {
+            return {
+                light: path.join(...base, 'light', 'status-warning.svg'),
+                dark: path.join(...base, 'dark', 'status-warning-inverse.svg')
+            };
+        }
         return {
-            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'error.svg'),
-            dark: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'error.svg')
+            light: path.join(...base, 'light', 'status-info.svg'),
+            dark: path.join(...base, 'dark', 'status-info-inverse.svg')
         };
     }
 
@@ -51,6 +64,6 @@ export class HintItem extends TreeItem {
     }
 
     public refresh(): void {
-        this.label = `hint - ${this.hint.title}`;
+        this.label = this.hint.title;
     }
 }

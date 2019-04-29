@@ -1,23 +1,19 @@
 import { TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
 import { ModelService } from '../model/modelService';
-import * as path from 'path';
 
-export class FolderItem extends TreeItem {
+export class ClassificationsItem extends TreeItem {
 
     id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
-    private folder: string;
-
-    constructor(folder: string) {
-        super(folder);
-        this.folder = folder;
+    constructor(file: string) {
+        super(file);
         this.refresh();
     }
 
     public refresh(): void {
-        this.label = path.basename(this.folder);
+        this.label = 'Classifications';
         this.collapsibleState = TreeItemCollapsibleState.Collapsed;
     }
 }

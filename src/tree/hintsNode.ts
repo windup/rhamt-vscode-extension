@@ -3,33 +3,33 @@ import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
 import { RhamtConfiguration } from '../model/model';
 import { ModelService } from '../model/modelService';
-import { FolderItem } from './folderItem';
-import { ConfigurationNode } from './configurationNode';
 import * as path from 'path';
+import { ConfigurationNode } from './configurationNode';
+import { HintsItem } from './hintsItem';
 
-export class FolderNode extends AbstractNode<FolderItem> {
+export class HintsNode extends AbstractNode<HintsItem> {
 
     private loading: boolean = false;
 
-    folder: string;
+    file: string;
     private children = [];
 
     constructor(
         config: RhamtConfiguration,
-        folder: string,
+        file: string,
         modelService: ModelService,
         onNodeCreateEmitter: EventEmitter<ITreeNode>,
         dataProvider: DataProvider,
         root: ConfigurationNode) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
-        this.folder = folder;
+        this.file = file;
         this.root = root;
         this.treeItem = this.createItem();
         this.listen();
     }
 
-    createItem(): FolderItem {
-        return new FolderItem(this.folder);
+    createItem(): HintsItem {
+        return new HintsItem(this.file);
     }
 
     delete(): Promise<void> {
@@ -54,18 +54,14 @@ export class FolderNode extends AbstractNode<FolderItem> {
             dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
         };
         this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
-        super.refresh(this);
         setTimeout(() => {
+            this.treeItem.iconPath = undefined;
             this.loading = false;
             this.refresh(this);
         }, 1000);
     }
 
     protected refresh(node?: ITreeNode): void {
-        this.treeItem.iconPath = {
-            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'default_folder.svg'),
-            dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'default_folder.svg')
-        };
         this.children = this.root.getChildNodes(this);
         this.treeItem.refresh();
         super.refresh(node);

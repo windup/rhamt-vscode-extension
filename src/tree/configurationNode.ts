@@ -9,6 +9,8 @@ import { RhamtConfiguration, ChangeType, IClassification, IHint, ReportHolder, I
 import { ModelService } from '../model/modelService';
 import { FileNode } from './fileNode';
 import { FolderNode } from './folderNode';
+import { HintsNode } from './hintsNode';
+import { ClassificationsNode } from './classificationsNode';
 
 export interface Grouping {
     groupByFile: boolean;
@@ -176,6 +178,18 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         const children = [];
         if (node instanceof FileNode) {
             const issues = this.issueFiles.get((node as FileNode).file);
+            if (issues) {
+                issues.forEach(issue => children.push(this.issueNodes.get(issue)));
+            }
+        }
+        else if (node instanceof HintsNode) {
+            const issues = this.issueFiles.get((node as HintsNode).file);
+            if (issues) {
+                issues.forEach(issue => children.push(this.issueNodes.get(issue)));
+            }
+        }
+        else if (node instanceof ClassificationsNode) {
+            const issues = this.issueFiles.get((node as ClassificationsNode).file);
             if (issues) {
                 issues.forEach(issue => children.push(this.issueNodes.get(issue)));
             }
