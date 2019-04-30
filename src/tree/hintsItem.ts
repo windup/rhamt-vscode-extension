@@ -9,11 +9,10 @@ export class HintsItem extends TreeItem {
 
     constructor(file: string) {
         super(file);
-        this.refresh();
     }
 
-    public refresh(): void {
-        this.label = 'Hints';
+    public refresh(count: number): void {
+        this.label = `Hints (${count})`;
         this.collapsibleState = TreeItemCollapsibleState.Collapsed;
     }
 }

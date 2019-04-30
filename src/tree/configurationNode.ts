@@ -11,6 +11,7 @@ import { FileNode } from './fileNode';
 import { FolderNode } from './folderNode';
 import { HintsNode } from './hintsNode';
 import { ClassificationsNode } from './classificationsNode';
+import { SortUtil } from './sortUtil';
 
 export interface Grouping {
     groupByFile: boolean;
@@ -54,7 +55,8 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             return Promise.resolve([]);
         }
         if (this.grouping.groupByFile) {
-            return Promise.resolve(Array.from(this.childNodes.values()));
+            const children = Array.from(this.childNodes.values());
+            return Promise.resolve(children.sort(SortUtil.sort));
         }
         return Promise.resolve(Array.from(this.issueNodes.values()));
     }
@@ -67,10 +69,6 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             return Array.from(this.issueNodes.values()).length > 0;
         }
         return false;
-    }
-
-    public compareChildren?(node1: ITreeNode, node2: ITreeNode): number {
-        return -1;
     }
 
     private listen(): void {

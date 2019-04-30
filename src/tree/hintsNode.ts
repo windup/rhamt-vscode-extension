@@ -6,6 +6,7 @@ import { ModelService } from '../model/modelService';
 import * as path from 'path';
 import { ConfigurationNode } from './configurationNode';
 import { HintsItem } from './hintsItem';
+import { HintNode } from './hintNode';
 
 export class HintsNode extends AbstractNode<HintsItem> {
 
@@ -62,8 +63,20 @@ export class HintsNode extends AbstractNode<HintsItem> {
     }
 
     protected refresh(node?: ITreeNode): void {
-        this.children = this.root.getChildNodes(this);
-        this.treeItem.refresh();
+        const unsorted = this.root.getChildNodes(this);
+        this.children = unsorted.sort(HintsNode.compareHint);
+        this.treeItem.refresh(this.children.length);
         super.refresh(node);
+    }
+
+    static compareHint(node1: ITreeNode, node2: ITreeNode): number {
+        const one = (node1 as HintNode).hint.lineNumber;
+        const other = (node2 as HintNode).hint.lineNumber;
+        const a = one || 0;
+        const b = other || 0;
+        if (a !== b) {
+            return a < b ? -1 : 1;
+        }
+        return 0;
     }
 }

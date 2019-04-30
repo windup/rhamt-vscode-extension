@@ -7,7 +7,7 @@ import { ModelService } from '../model/modelService';
 
 export class HintNode extends AbstractNode implements ReportHolder {
 
-    private hint: IHint;
+    hint: IHint;
 
     constructor(
         hint: IHint,

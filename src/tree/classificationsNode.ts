@@ -6,6 +6,7 @@ import { ModelService } from '../model/modelService';
 import { ConfigurationNode } from './configurationNode';
 import { ClassificationsItem } from './classificationsItem';
 import * as path from 'path';
+import { SortUtil } from './sortUtil';
 
 export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
 
@@ -62,8 +63,9 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
     }
 
     protected refresh(node?: ITreeNode): void {
-        this.children = this.root.getChildNodes(this);
-        this.treeItem.refresh();
+        const unsorted = this.root.getChildNodes(this);
+        this.children = unsorted.sort(SortUtil.sort);
+        this.treeItem.refresh(this.children.length);
         super.refresh(node);
     }
 }

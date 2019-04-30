@@ -20,9 +20,22 @@ export class ClassificationItem extends TreeItem {
     }
 
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
+        const base = [__dirname, '..', '..', '..', 'resources'];
+        if (!this.classification.category || this.classification.category.includes('error') || this.classification.category.includes('mandatory')) {
+            return {
+                light: path.join(...base, 'status-error.svg'),
+                dark: path.join(...base, 'dark', 'status-error-inverse.svg')
+            };
+        }
+        else if (this.classification.category.includes('potential')) {
+            return {
+                light: path.join(...base, 'light', 'status-warning.svg'),
+                dark: path.join(...base, 'dark', 'status-warning-inverse.svg')
+            };
+        }
         return {
-            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'error.svg'),
-            dark: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'error.svg')
+            light: path.join(...base, 'light', 'status-info.svg'),
+            dark: path.join(...base, 'dark', 'status-info-inverse.svg')
         };
     }
 

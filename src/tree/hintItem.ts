@@ -64,6 +64,6 @@ export class HintItem extends TreeItem {
     }
 
     public refresh(): void {
-        this.label = this.hint.title;
+        this.label = `${this.hint.title} [${this.hint.lineNumber}]`;
     }
 }

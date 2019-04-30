@@ -6,6 +6,7 @@ import { ModelService } from '../model/modelService';
 import { FolderItem } from './folderItem';
 import { ConfigurationNode } from './configurationNode';
 import * as path from 'path';
+import { SortUtil } from './sortUtil';
 
 export class FolderNode extends AbstractNode<FolderItem> {
 
@@ -66,7 +67,8 @@ export class FolderNode extends AbstractNode<FolderItem> {
             light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'default_folder.svg'),
             dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'default_folder.svg')
         };
-        this.children = this.root.getChildNodes(this);
+        const unsorted = this.root.getChildNodes(this);
+        this.children = unsorted.sort(SortUtil.sort);
         this.treeItem.refresh();
         super.refresh(node);
     }
