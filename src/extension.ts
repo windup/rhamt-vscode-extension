@@ -29,9 +29,16 @@ export async function activate(context: vscode.ExtensionContext) {
     });
     context.subscriptions.push(runConfigurationDisposable);
 
-    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', (uri: string) => {
-        vscode.workspace.openTextDocument(vscode.Uri.file(uri)).then(doc => {
-            vscode.window.showTextDocument(doc);
+    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
+        vscode.workspace.openTextDocument(vscode.Uri.file(data.uri)).then(async doc => {
+            const editor = await vscode.window.showTextDocument(doc);
+            if (data.line) {
+                editor.selection = new vscode.Selection(
+                    new vscode.Position(data.line, data.column),
+                    new vscode.Position(data.line, data.length)
+                );
+                editor.revealRange(new vscode.Range(data.line, 0, data.line + 1, 0), vscode.TextEditorRevealType.InCenter);
+            }
         });
     }));
 
@@ -68,7 +75,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 function getNode(node: json.Node, text: string, config: RhamtConfiguration): json.Node {
     let found = false;
-    let container: any = undefined;
+    let container = undefined;
     json.visit(text, {
         onObjectProperty: (property: string, offset: number, length: number, startLine: number, startCharacter: number) => {
             if (!found && property === 'name') {

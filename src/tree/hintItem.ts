@@ -55,7 +55,14 @@ export class HintItem extends TreeItem {
         return {
             command: 'rhamt.openDoc',
             title: '',
-            arguments: [this.hint.file]
+            arguments: [
+                {
+                    uri: this.hint.file,
+                    line: this.hint.lineNumber - 1,
+                    column: this.hint.column,
+                    length: this.hint.length + this.hint.column
+                }
+            ]
         };
     }
 

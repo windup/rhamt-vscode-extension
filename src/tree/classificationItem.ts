@@ -55,7 +55,7 @@ export class ClassificationItem extends TreeItem {
         return {
             command: 'rhamt.openDoc',
             title: '',
-            arguments: [this.classification.file]
+            arguments: [{uri: this.classification.file}]
         };
     }
 
