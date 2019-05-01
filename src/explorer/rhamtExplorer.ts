@@ -57,6 +57,7 @@ export class RhamtExplorer {
         const treeDataProvider = this.dataProvider;
         const viewer = vscode.window.createTreeView('rhamtExplorerView', { treeDataProvider });
         this.context.subscriptions.push(viewer);
+        this.dataProvider.view = viewer;
         return viewer;
     }
 

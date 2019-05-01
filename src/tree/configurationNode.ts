@@ -1,5 +1,5 @@
 import { ConfigurationItem } from './configurationItem';
-import { EventEmitter, TreeItemCollapsibleState, Uri, workspace } from 'vscode';
+import { EventEmitter, TreeItemCollapsibleState, Uri, workspace, window } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { ClassificationNode } from './classificationNode';
 import { DataProvider } from './dataProvider';
@@ -12,6 +12,7 @@ import { FolderNode } from './folderNode';
 import { HintsNode } from './hintsNode';
 import { ClassificationsNode } from './classificationsNode';
 import { SortUtil } from './sortUtil';
+import { ResultsNode } from './resultsNode';
 
 export interface Grouping {
     groupByFile: boolean;
@@ -21,14 +22,14 @@ export interface Grouping {
 export class ConfigurationNode extends AbstractNode<ConfigurationItem> implements ReportHolder {
 
     private grouping: Grouping;
-    private loading: boolean = false;
-
     private classifications: IClassification[] = [];
     private hints: IHint[] = [];
     private issueFiles = new Map<string, IIssue[]>();
     private issueNodes = new Map<IIssue, ITreeNode>();
     private resourceNodes = new Map<string, ITreeNode>();
     private childNodes = new Map<string, ITreeNode>();
+
+    private results = [];
 
     constructor(
         config: RhamtConfiguration,
@@ -51,24 +52,11 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     public getChildren(): Promise<any> {
-        if (this.loading) {
-            return Promise.resolve([]);
-        }
-        if (this.grouping.groupByFile) {
-            const children = Array.from(this.childNodes.values());
-            return Promise.resolve(children.sort(SortUtil.sort));
-        }
-        return Promise.resolve(Array.from(this.issueNodes.values()));
+        return Promise.resolve(this.results);
     }
 
     public hasMoreChildren(): boolean {
-        if (this.config.results) {
-            if (this.grouping.groupByFile) {
-                return Array.from(this.childNodes.values()).length > 0;
-            }
-            return Array.from(this.issueNodes.values()).length > 0;
-        }
-        return false;
+        return this.results.length > 0;
     }
 
     private listen(): void {
@@ -79,18 +67,38 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             }
         });
         this.config.onResultsLoaded.on(() => {
-            this.loading = true;
             this.treeItem.iconPath = {
                 light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
                 dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
             };
-            this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
-            super.refresh(this);
-            setTimeout(() => {
-                this.treeItem.iconPath = undefined;
-                this.loading = false;
-                this.refresh(this);
-            }, 2000);
+            if (!this.config.results) {
+                this.results = [];
+                this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
+                super.refresh(this);
+                setTimeout(() => {
+                    this.treeItem.iconPath = undefined;
+                    super.refresh(this);
+                }, 2000);
+                return;
+            }
+            else {
+                this.treeItem.collapsibleState = TreeItemCollapsibleState.Expanded;
+                this.results = [
+                    new ResultsNode(
+                        this.config,
+                        this.modelService,
+                        this.onNodeCreateEmitter,
+                        this.dataProvider,
+                        this)
+                ];
+                this.computeIssues();
+                super.refresh(this);
+                this.dataProvider.reveal(this, true);
+                setTimeout(() => {
+                    this.treeItem.iconPath = undefined;
+                    this.refresh(this);
+                }, 2000);
+            }
         });
     }
 
@@ -174,6 +182,13 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
 
     getChildNodes(node: ITreeNode): ITreeNode[] {
         const children = [];
+        if (node instanceof ResultsNode) {
+            if (this.grouping.groupByFile) {
+                const children = Array.from(this.childNodes.values());
+                return children.sort(SortUtil.sort);
+            }
+            return Array.from(this.issueNodes.values());
+        }
         if (node instanceof FileNode) {
             const issues = this.issueFiles.get((node as FileNode).file);
             if (issues) {
@@ -212,7 +227,6 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     protected refresh(node?: ITreeNode): void {
-        this.computeIssues();
         this.treeItem.refresh();
         super.refresh(node);
     }

@@ -71,6 +71,6 @@ export class HintItem extends TreeItem {
     }
 
     public refresh(): void {
-        this.label = `${this.hint.title} [${this.hint.lineNumber}]`;
+        this.label = `${this.hint.title} [rule-id: ${this.hint.ruleId}}]`;
     }
 }

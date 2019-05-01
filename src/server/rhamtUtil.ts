@@ -25,6 +25,8 @@ export const rhamtChannel = new RhamtChannelImpl();
 
 export class RhamtUtil {
 
+    // static testResults = undefined;
+
     static async analyze(config: RhamtConfiguration, modelService: ModelService): Promise<RhamtProcessController> {
         try {
             await Utils.initConfiguration(config);
@@ -37,6 +39,21 @@ export class RhamtUtil {
             cancellable: true
         }, async (progress: any, token: any) => {
             return new Promise<any>(async resolve => {
+
+                // if (!this.testResults) {
+                //     this.testResults = config.results;
+                // }
+
+                // if (!config.results) {
+                //     config.results = this.testResults;
+                //     await this.loadResults(config, modelService, '4/1/19 @ 12:42AM');
+                // }
+                // else {
+                //     config.results = undefined;
+                // }
+                // resolve();
+                // return;
+
                 const executable = await Utils.findRhamtCli();
                 const windupHome = path.resolve(executable, '..', '..');
                 let params = [];
@@ -52,6 +69,12 @@ export class RhamtUtil {
                 let cancelled = false;
                 let resolved = false;
                 let serverManager: RhamtProcessController;
+                const date = new Date();
+                const time = date.toLocaleTimeString();
+                const timestamp = time.substring(0, time.lastIndexOf(':'));
+                const sun = time.substring(time.lastIndexOf(' ') + 1);
+                const year = new String(date.getFullYear()).substring(0, 2);
+                const executedTimestamp = `${date.getMonth()}/${date.getDate()}/${year} @ ${timestamp}${sun}`;
                 const onComplete = async () => {
                     serverManager.shutdown();
                     vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
@@ -59,7 +82,7 @@ export class RhamtUtil {
                             AnalysisResultsUtil.openReport(config.getReport());
                         }
                     });
-                    await this.loadResults(config, modelService);
+                    await this.loadResults(config, modelService, executedTimestamp);
                     if (!resolved) {
                         resolve();
                     }
@@ -151,10 +174,11 @@ export class RhamtUtil {
         return Promise.resolve(params);
     }
 
-    private static async loadResults(config: RhamtConfiguration, modelService: ModelService): Promise<any> {
+    private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string): Promise<any> {
         return AnalysisResultsUtil.loadFromLocation(config.getResultsLocation()).then(dom => {
             const summary: AnalysisResultsSummary = {
-                outputLocation: config.options['output']
+                outputLocation: config.options['output'],
+                executedTimestamp: startedTimestamp
             };
             config.summary = summary;
             config.results = new AnalysisResults(config, dom);

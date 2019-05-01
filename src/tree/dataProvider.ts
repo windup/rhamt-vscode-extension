@@ -1,18 +1,20 @@
-import { TreeDataProvider, Disposable, EventEmitter, Event, TreeItem, commands } from 'vscode';
+import { TreeDataProvider, Disposable, EventEmitter, Event, TreeItem, commands, TreeView, ProviderResult } from 'vscode';
 import { localize } from './localize';
 import * as path from 'path';
 import { ConfigurationNode, Grouping } from './configurationNode';
 import { ITreeNode } from './abstractNode';
 import { ModelService } from '../model/modelService';
+import { ResultsNode } from './resultsNode';
 
 export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
     private _onDidChangeTreeDataEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
     private _onNodeCreateEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
 
+    view: TreeView<any>;
     private _disposables: Disposable[] = [];
 
-    constructor(private grouping: Grouping, private modelService: ModelService) {
+    constructor(private grouping: Grouping, private modelService: ModelService, ) {
         this._disposables.push(this.modelService.onModelLoaded(m => {
             this.refresh(undefined);
         }));
@@ -21,9 +23,19 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         });
     }
 
+    public reveal(node: any, expand: boolean): void {
+        this.view.reveal(node, {expand});
+    }
+
     public dispose(): void {
         for (const disposable of this._disposables) {
             disposable.dispose();
+        }
+    }
+
+    public getParent(element: ITreeNode): ProviderResult<ITreeNode> {
+        if (element instanceof ResultsNode) {
+            return element.root;
         }
     }
 

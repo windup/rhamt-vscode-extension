@@ -11,7 +11,7 @@ export class ConfigurationItem extends TreeItem {
     private config: RhamtConfiguration;
 
     constructor(config: RhamtConfiguration) {
-        super(config.name);
+        super('Loading...');
         this.config = config;
         this.refresh();
     }
@@ -34,10 +34,5 @@ export class ConfigurationItem extends TreeItem {
 
     public refresh(): void {
         this.label = this.config.name;
-        if (this.config.results) {
-            if (this.config.results.getClassifications().length > 0) {
-                this.collapsibleState = TreeItemCollapsibleState.Collapsed;
-            }
-        }
     }
 }

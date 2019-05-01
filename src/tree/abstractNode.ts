@@ -5,7 +5,7 @@ import { DataProvider } from './dataProvider';
 import { ConfigurationNode } from './configurationNode';
 
 export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> implements ITreeNode {
-    private _id: string = ModelService.generateUniqueId();
+    private _id: string;
 
     protected onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>;
     protected config: RhamtConfiguration;
@@ -21,6 +21,7 @@ export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> 
         modelService: ModelService,
         onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>,
         dataProvider: DataProvider) {
+        this._id = ModelService.generateUniqueId();
         this.config = config;
         this.modelService = modelService;
         this.onNodeCreateEmitter = onNodeCreateEmitter;
@@ -47,6 +48,7 @@ export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> 
 export interface ITreeNode<T extends vscode.TreeItem = vscode.TreeItem> {
     readonly treeItem: T;
     readonly parent?: vscode.TreeItem;
+    root: ConfigurationNode;
     getChildren(): Promise<ITreeNode[]>;
     delete(): Promise<void>;
     getLabel(): string;
