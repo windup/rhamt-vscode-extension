@@ -134,7 +134,8 @@
         "tslint": "^5.11.0",
         "tslint-eslint-rules": "^5.4.0",
         "typescript": "^3.3.3333",
-        "vscode": "^1.1.33"
+        "vscode": "^1.1.33",
+        "tmp": "^0.1.0"
     },
     "dependencies": {
         "cheerio": "^1.0.0-rc.2",
