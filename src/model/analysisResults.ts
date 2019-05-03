@@ -8,7 +8,7 @@ export interface AnalysisResultsSummary {
     executedTimestamp?: string;
     executionDuration?: string;
     outputLocation?: string;
-
+    executable?: string;
     hintCount?: number;
     classificationCount?: number;
 }

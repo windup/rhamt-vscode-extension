@@ -1,5 +1,5 @@
 import { ConfigurationItem } from './configurationItem';
-import { EventEmitter, TreeItemCollapsibleState, Uri, workspace, window } from 'vscode';
+import { EventEmitter, TreeItemCollapsibleState, Uri, workspace } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { ClassificationNode } from './classificationNode';
 import { DataProvider } from './dataProvider';

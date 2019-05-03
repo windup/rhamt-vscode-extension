@@ -71,6 +71,7 @@ export async function activate(context: vscode.ExtensionContext) {
             });
         }
     }));
+    Utils.checkCli(modelService.outDir);
 }
 
 function getNode(node: json.Node, text: string, config: RhamtConfiguration): json.Node {

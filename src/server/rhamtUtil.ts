@@ -29,7 +29,7 @@ export class RhamtUtil {
 
     static async analyze(config: RhamtConfiguration, modelService: ModelService): Promise<RhamtProcessController> {
         try {
-            await Utils.initConfiguration(config);
+            await Utils.initConfiguration(config, modelService);
         } catch (e) {
             return Promise.reject();
         }
@@ -54,7 +54,7 @@ export class RhamtUtil {
                 // resolve();
                 // return;
 
-                const executable = await Utils.findRhamtCli();
+                const executable = await Utils.findRhamtCli(modelService.outDir);
                 const windupHome = path.resolve(executable, '..', '..');
                 let params = [];
                 try {
@@ -178,7 +178,8 @@ export class RhamtUtil {
         return AnalysisResultsUtil.loadFromLocation(config.getResultsLocation()).then(dom => {
             const summary: AnalysisResultsSummary = {
                 outputLocation: config.options['output'],
-                executedTimestamp: startedTimestamp
+                executedTimestamp: startedTimestamp,
+                executable: config.rhamtExecutable
             };
             config.summary = summary;
             config.results = new AnalysisResults(config, dom);

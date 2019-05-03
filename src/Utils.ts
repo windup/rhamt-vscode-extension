@@ -5,10 +5,16 @@ import * as fse from 'fs-extra';
 import * as path from 'path';
 import * as child_process from 'child_process';
 import { RhamtConfiguration } from './model/model';
+import { RhamtInstaller } from './util/rhamt-installer';
+import { ModelService } from './model/modelService';
 
 const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
+
+const RHAMT_VERSION = '4.2.1.Final';
+const RHAMT_FOLDER = `rhamt-cli-${RHAMT_VERSION}`;
+const DOWNLOAD_CLI_LOCATION = `http://central.maven.org/maven2/org/jboss/windup/rhamt-cli/${RHAMT_VERSION}/${RHAMT_FOLDER}-offline.zip`;
 
 export namespace Utils {
 
@@ -21,7 +27,7 @@ export namespace Utils {
         EXTENSION_NAME = name;
     }
 
-    export async function initConfiguration(config: RhamtConfiguration): Promise<void> {
+    export async function initConfiguration(config: RhamtConfiguration, modelService: ModelService): Promise<void> {
 
         await window.withProgress({
             location: ProgressLocation.Notification,
@@ -44,7 +50,7 @@ export namespace Utils {
             progress.report({message: 'Verifying rhamt-cli'});
 
             try {
-                rhamtCli = await findRhamtCli();
+                rhamtCli = await findRhamtCli(modelService.outDir);
             }
             catch (error) {
                 promptForFAQs('Unable to find rhamt-cli executable');
@@ -83,20 +89,36 @@ export namespace Utils {
         });
     }
 
-    export function findRhamtCli(): Promise<string> {
+    export function findRhamtCli(outDir: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             const rhamtPath = workspace.getConfiguration('rhamt.executable').get<string>('path');
             if (rhamtPath) {
                 resolve(rhamtPath);
             }
-
-            const rhamtHome = process.env['RHAMT_HOME'];
+            let rhamtHome = process.env['RHAMT_HOME'];
             if (rhamtHome) {
-                const isWindows = process.platform === 'win32';
-                resolve(path.join(rhamtHome, 'bin', 'rhamt-cli' +  isWindows ? '.bat' : ''));
+                return resolve(Utils.getRhamtExecutable(rhamtHome));
             }
-            reject(new Error(''));
+            rhamtHome = Utils.findRhamtCliDownload(outDir);
+            if (rhamtHome) {
+                const executable = Utils.getRhamtExecutable(rhamtHome);
+                if (fse.existsSync(executable)) {
+                    return resolve(executable);
+                }
+                else reject(new Error(''));
+            }
+            else reject(new Error(''));
         });
+    }
+
+    export function getRhamtExecutable(home: string): string {
+        const isWindows = process.platform === 'win32';
+        const executable = 'rhamt-cli' + (isWindows ? '.bat' : '');
+        return path.join(home, 'bin', executable);
+    }
+
+    export function findRhamtCliDownload(outDir: string): string {
+        return path.join(outDir, 'rhamt-cli', RHAMT_FOLDER);
     }
 
     export function findRhamtVersion(rhamtCli: string, javaHome: string): Promise<string> {
@@ -139,5 +161,34 @@ export namespace Utils {
 
     export function getPathToExtensionRoot(...args: string[]): string {
         return path.join(extensions.getExtension(getExtensionId())!.extensionPath, ...args);
+    }
+
+    export async function checkCli(dataOut: string): Promise<any> {
+        await findRhamtCli(dataOut).catch(() => Utils.showDownloadCliOption(dataOut));
+    }
+
+    export async function showDownloadCliOption(dataOut: string): Promise<any> {
+        const MSG = 'Unable to find RHAMT CLI';
+        const OPTION_DOWNLOAD = 'Download';
+        const OPTION_DISMISS = `Don't Show Again`;
+        const choice = await window.showInformationMessage(MSG, OPTION_DOWNLOAD, OPTION_DISMISS);
+        if (choice === OPTION_DOWNLOAD) {
+            const handler = {
+                log: msg => {
+                    console.log(`rhamt-cli download message: ${msg}`);
+                }
+            };
+            const out = path.resolve(dataOut, 'rhamt-cli');
+            RhamtInstaller.installCli(DOWNLOAD_CLI_LOCATION, out, handler).then(home => {
+                window.showInformationMessage('rhamt-cli download complete');
+                process.env['RHAMT_HOME'] = home;
+            }).catch(e => {
+                console.log(e);
+                window.showErrorMessage(`Error downloading rhamt-cli: ${e}`);
+            });
+        }
+        else if (choice === OPTION_DISMISS) {
+            commands.executeCommand('workbench.action.openSettings');
+        }
     }
 }

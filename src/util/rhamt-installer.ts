@@ -6,7 +6,7 @@ import * as tmp from 'tmp';
 const requestProgress = require('request-progress');
 import * as path from 'path';
 import { createDeferred } from './async';
-import { RhamtConfiguration, ChangeType } from '../model/model';
+import { ChangeType } from '../model/model';
 
 export type TemporaryFile = { filePath: string } & Disposable;
 
@@ -28,19 +28,15 @@ export class InstallHandler {
 
 export class RhamtInstaller {
 
-    static installCli(config: RhamtConfiguration, url: string, downloadDir: string): void {
-        const handler: InstallHandler = {
-            log: msg => {
-                console.log(`rhamt-cli download message: ${msg}`);
-            }
-        };
-        config.onChanged.emit({type: ChangeType.STARTED, name: 'installCliChanged', value: {url, downloadDir}});
-        RhamtInstaller.downloadRhamt(url, downloadDir, handler).then(home => {
-            console.log('download & extract complete');
-            config.onChanged.emit({type: ChangeType.COMPLETE, name: 'installCliChanged', value: {url, downloadDir, home}});
-        }).catch(e => {
-            console.log('error download & extract' + e);
-            config.onChanged.emit({type: ChangeType.ERROR, name: 'installCliChanged', value: {url, downloadDir, e}});
+    static installCli(url: string, downloadDir: string, handler: InstallHandler): Promise<any> {
+        return new Promise<any> ((resolve, reject) => {
+            RhamtInstaller.downloadRhamt(url, downloadDir, handler).then(home => {
+                console.log('download & extract complete');
+                resolve(home);
+            }).catch(e => {
+                console.log('error download & extract' + e);
+                reject({type: ChangeType.ERROR, name: 'installCliChanged', value: {url, downloadDir, e}});
+            });
         });
     }
 
