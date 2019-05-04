@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DataProvider } from '../tree/DataProvider';
+import { DataProvider } from '../tree/dataProvider';
 import { ModelService } from '../model/modelService';
 import { ReportHolder } from '../model/model';
 import { ITreeNode } from '../tree/abstractNode';
