@@ -13,7 +13,7 @@
     },
     "bugs": "https://github.com/windup/rhamt-vscode-extension/issues",
     "engines": {
-        "vscode": "^1.26.0"
+        "vscode": "1.33.1"
     },
     "categories": [
         "Other"
