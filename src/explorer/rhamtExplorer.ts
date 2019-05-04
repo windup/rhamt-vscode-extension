@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { DataProvider } from '../tree/dataProvider';
 import { ModelService } from '../model/modelService';
 import { ReportHolder } from '../model/model';
-import { ITreeNode } from '../tree/abstractNode';
 import { OptionsBuilder } from '../optionsBuilder';
 import { RhamtUtil } from '../server/rhamtUtil';
 import { AnalysisResultsUtil } from '../model/analysisResults';
@@ -53,7 +52,7 @@ export class RhamtExplorer {
         }));
     }
 
-    private createViewer(): vscode.TreeView<ITreeNode> {
+    private createViewer(): vscode.TreeView<any> {
         const treeDataProvider = this.dataProvider;
         const viewer = vscode.window.createTreeView('rhamtExplorerView', { treeDataProvider });
         this.context.subscriptions.push(viewer);
