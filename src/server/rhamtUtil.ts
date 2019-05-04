@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { Utils } from '../Utils';
 import { RhamtConfiguration } from '../model/model';
 import { RhamtRunner } from './rhamtRunner';
-import { RhamtProcessController } from './RhamtProcessController';
+import { RhamtProcessController } from './rhamtProcessController';
 import { ProgressMonitor } from './progressMonitor';
 import * as path from 'path';
 import { AnalysisResultsUtil, AnalysisResultsSummary, AnalysisResults } from '../model/analysisResults';
