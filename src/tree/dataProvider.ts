@@ -14,13 +14,16 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
     view: TreeView<any>;
     private _disposables: Disposable[] = [];
 
-    constructor(private grouping: Grouping, private modelService: ModelService, ) {
+    constructor(private grouping: Grouping, private modelService: ModelService) {
         this._disposables.push(this.modelService.onModelLoaded(m => {
             this.refresh(undefined);
         }));
-        commands.registerCommand('rhamt.modelReload', () => {
+        this._disposables.push(commands.registerCommand('rhamt.modelReload', () => {
             this.refresh(undefined);
-        });
+        }));
+        this._disposables.push(commands.registerCommand('rhamt.refreshResults', item => {
+            item.reload();
+        }));
     }
 
     public reveal(node: any, expand: boolean): void {
@@ -65,15 +68,12 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
     }
 
     private async doGetChildren(node?: ITreeNode): Promise<ITreeNode[]> {
-
         let result: ITreeNode[];
-
         if (node) {
             result = await node.getChildren();
         } else {
             result = await this.populateRootNodes();
         }
-
         return result;
     }
 

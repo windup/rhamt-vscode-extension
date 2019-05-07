@@ -60,6 +60,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     private listen(): void {
+        this.reload();
         this.config.onChanged.on(change => {
             if (change.type === ChangeType.MODIFIED &&
                 change.name === 'name') {
@@ -67,39 +68,43 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             }
         });
         this.config.onResultsLoaded.on(() => {
-            this.treeItem.iconPath = {
-                light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
-                dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
-            };
-            if (!this.config.results) {
-                this.results = [];
-                this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
-                super.refresh(this);
-                setTimeout(() => {
-                    this.treeItem.iconPath = undefined;
-                    super.refresh(this);
-                }, 2000);
-                return;
-            }
-            else {
-                this.treeItem.collapsibleState = TreeItemCollapsibleState.Expanded;
-                this.results = [
-                    new ResultsNode(
-                        this.config,
-                        this.modelService,
-                        this.onNodeCreateEmitter,
-                        this.dataProvider,
-                        this)
-                ];
-                this.computeIssues();
-                super.refresh(this);
-                this.dataProvider.reveal(this, true);
-                setTimeout(() => {
-                    this.treeItem.iconPath = undefined;
-                    this.refresh(this);
-                }, 2000);
-            }
+            this.reload();
         });
+    }
+
+    private reload(): void {
+        this.treeItem.iconPath = {
+            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
+            dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
+        };
+        if (!this.config.results) {
+            this.results = [];
+            this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
+            super.refresh(this);
+            setTimeout(() => {
+                this.treeItem.iconPath = undefined;
+                super.refresh(this);
+            }, 2000);
+            return;
+        }
+        else {
+            this.treeItem.collapsibleState = TreeItemCollapsibleState.Expanded;
+            this.results = [
+                new ResultsNode(
+                    this.config,
+                    this.modelService,
+                    this.onNodeCreateEmitter,
+                    this.dataProvider,
+                    this)
+            ];
+            this.computeIssues();
+            super.refresh(this);
+            this.dataProvider.reveal(this, true);
+            setTimeout(() => {
+                this.treeItem.iconPath = undefined;
+                this.refresh(this);
+            }, 2000);
+        }
     }
 
     private clearModel(): void {

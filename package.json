@@ -64,6 +64,11 @@
             {
                 "command": "rhamt.openReport",
                 "title": "Open Report"
+            },
+            {
+                "command": "rhamt.refreshResults",
+                "title": "Refresh"
+
             }
         ],
         "configuration": [
@@ -111,6 +116,10 @@
                 },
                 {
                     "command": "rhamt.deleteConfiguration",
+                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
+                },
+                {
+                    "command": "rhamt.refreshResults",
                     "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
                 },
                 {

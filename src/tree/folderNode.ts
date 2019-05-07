@@ -48,12 +48,16 @@ export class FolderNode extends AbstractNode<FolderItem> {
         return this.children.length > 0;
     }
 
+    private updateIcon(name: string): void {
+        this.treeItem.iconPath = {
+            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', name),
+            dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', name)
+        };
+    }
+
     private listen(): void {
         this.loading = true;
-        this.treeItem.iconPath = {
-            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
-            dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
-        };
+        this.updateIcon('Loading.svg');
         this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
         super.refresh(this);
         setTimeout(() => {
@@ -63,10 +67,7 @@ export class FolderNode extends AbstractNode<FolderItem> {
     }
 
     protected refresh(node?: ITreeNode): void {
-        this.treeItem.iconPath = {
-            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'default_folder.svg'),
-            dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'default_folder.svg')
-        };
+        this.updateIcon('default_folder.svg');
         const unsorted = this.root.getChildNodes(this);
         this.children = unsorted.sort(SortUtil.sort);
         this.treeItem.refresh();

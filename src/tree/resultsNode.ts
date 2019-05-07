@@ -6,11 +6,13 @@ import { ModelService } from '../model/modelService';
 import * as path from 'path';
 import { ConfigurationNode } from './configurationNode';
 import { ResultsItem } from './resultsItem';
+import { ReportNode } from './reportNode';
 
 export class ResultsNode extends AbstractNode<ResultsItem> {
 
     private loading: boolean = false;
     private children = [];
+    private reportNode: ReportNode;
 
     constructor(
         config: RhamtConfiguration,
@@ -20,6 +22,12 @@ export class ResultsNode extends AbstractNode<ResultsItem> {
         root: ConfigurationNode) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.root = root;
+        this.reportNode = new ReportNode(
+            config,
+            modelService,
+            onNodeCreateEmitter,
+            dataProvider,
+            root);
         this.treeItem = this.createItem();
         this.listen();
     }
@@ -59,7 +67,8 @@ export class ResultsNode extends AbstractNode<ResultsItem> {
     }
 
     protected refresh(node?: ITreeNode): void {
-        this.children = this.root.getChildNodes(this);
+        this.children = [this.reportNode];
+        this.children = this.children.concat(this.root.getChildNodes(this));
         this.treeItem.refresh(this.config.summary.executedTimestamp);
         super.refresh(node);
     }

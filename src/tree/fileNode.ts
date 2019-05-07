@@ -68,7 +68,9 @@ export class FileNode extends AbstractNode<FileItem> {
     protected refresh(node?: ITreeNode): void {
         this.children = [];
         const ext = path.extname(this.file);
-        const icon = ext === '.xml' ? 'file_type_xml.svg' : ext === '.java' ? 'file_type_java.svg' : 'default_file.svg';
+        const icon = ext === '.xml' ? 'file_type_xml.svg' :
+            ext === '.java' ? 'file_type_class.svg' :
+            'default_file.svg';
         this.treeItem.iconPath = {
             light: path.join(__dirname, '..', '..', '..', 'resources', 'light', icon),
             dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', icon)
