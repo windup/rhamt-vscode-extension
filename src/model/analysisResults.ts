@@ -103,7 +103,10 @@ export class AnalysisResults {
                 length: 0,
                 sourceSnippet: '',
                 category: '',
-                hint: ''
+                hint: '',
+                getConfiguration: () => {
+                    return this.config;
+                }
             };
 
             ele.children.forEach((child, i) => {
@@ -209,7 +212,10 @@ export class AnalysisResults {
                 links: [],
                 report: '',
                 description: '',
-                category: ''
+                category: '',
+                getConfiguration: () => {
+                    return this.config;
+                }
             };
             ele.children.forEach((child, i) => {
                 switch (child.name) {

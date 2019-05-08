@@ -100,6 +100,7 @@ export interface IIssue extends IUniqueElement {
     links: ILink[];
     report: string;
     category: string;
+    getConfiguration: () => RhamtConfiguration;
 }
 
 export type IQuickFixType = 'REPLACE' | 'DELETE_LINE' | 'INSERT_LINE' | 'TRANSFORMATION';
@@ -130,4 +131,11 @@ export interface IHint extends IIssue {
 
 export interface IClassification extends IIssue {
     description: string;
+}
+
+export interface ReportEndpoints {
+    location(): string;
+    port(): string;
+    resourcesRoot(): any;
+    reportsRoot(): any;
 }
