@@ -1,0 +1,25 @@
+
+.view {
+    padding-left: 0px;
+}
+
+.issue-label {
+    font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, HelveticaNeue-Light, Ubuntu, Droid Sans, sans-serif;
+    opacity: 1;
+    font-weight: 700;
+    line-height: 36px;
+    color: #cccccc;
+}
+
+table {
+    border-spacing: 0;
+    width: 100%;
+}
+
+table tr:nth-child(odd) {
+    background-color: hsla(0, 0%, 51%, .04);
+}
+
+table tr:hover {
+    background-color: hsla(0, 0%, 50%, .15)
+}
