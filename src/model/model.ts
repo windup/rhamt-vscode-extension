@@ -119,6 +119,10 @@ export interface ReportHolder {
     getReport: () => string;
 }
 
+export interface IssueContainer {
+    getIssue: () => IIssue;
+}
+
 export interface IHint extends IIssue {
     originalLineSource: string;
     lineNumber: number;

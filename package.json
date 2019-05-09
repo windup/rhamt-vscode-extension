@@ -66,6 +66,10 @@
                 "title": "Open Report"
             },
             {
+                "command": "rhamt.openIssueDetails",
+                "title": "View Details"
+            },
+            {
                 "command": "rhamt.refreshResults",
                 "title": "Refresh"
 
@@ -124,6 +128,10 @@
                 },
                 {
                     "command": "rhamt.openReport",
+                    "when": "view == rhamtExplorerView && viewItem == issue"
+                },
+                {
+                    "command": "rhamt.openIssueDetails",
                     "when": "view == rhamtExplorerView && viewItem == issue"
                 }
             ]

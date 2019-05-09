@@ -2,10 +2,10 @@ import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
 import { HintItem } from './hintItem';
-import { IHint, RhamtConfiguration, ReportHolder } from '../model/model';
+import { IHint, RhamtConfiguration, ReportHolder, IssueContainer, IIssue } from '../model/model';
 import { ModelService } from '../model/modelService';
 
-export class HintNode extends AbstractNode implements ReportHolder {
+export class HintNode extends AbstractNode implements ReportHolder, IssueContainer {
 
     hint: IHint;
 
@@ -35,5 +35,9 @@ export class HintNode extends AbstractNode implements ReportHolder {
 
     getReport(): string {
         return this.hint.report;
+    }
+
+    getIssue(): IIssue {
+        return this.hint;
     }
 }
