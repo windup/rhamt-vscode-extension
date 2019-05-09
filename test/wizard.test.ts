@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai';
 import * as sinon from 'sinon';
+import * as path from 'path';
 import { OptionsBuilder } from '../src/optionsBuilder';
 import { ModelService } from '../src/model/modelService';
 import { RhamtModel } from '../src/model/model';
@@ -13,7 +14,7 @@ suite('RHAMT / Wizard', () => {
     let sandbox: sinon.SinonSandbox;
     let inputStub: sinon.SinonStub;
     const name = 'val';
-    const modelService = new ModelService(new RhamtModel(), __dirname);
+    const modelService = new ModelService(new RhamtModel(), __dirname, getReportEndpoints(__dirname));
 
     setup(() => {
         sandbox = sinon.createSandbox();
@@ -53,4 +54,24 @@ suite('RHAMT / Wizard', () => {
             });
         });
     });
+
+    function getReportEndpoints(out: string): any {
+        return {
+            port: () => {
+                return process.env.RAAS_PORT || String(61435);
+            },
+            host: () => {
+                return 'localhost';
+            },
+            location: () => {
+                return `http://${this.host()}:${this.port()}`;
+            },
+            resourcesRoot: () => {
+                return vscode.Uri.file(path.join(out, 'out'));
+            },
+            reportsRoot: () => {
+                return out;
+            }
+        };
+    }
 });

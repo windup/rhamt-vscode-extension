@@ -1,4 +1,4 @@
-import { RhamtModel, RhamtConfiguration } from './model';
+import { RhamtModel, RhamtConfiguration, ReportEndpoints } from './model';
 import * as fs from 'fs';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
@@ -11,7 +11,10 @@ export class ModelService {
     public loaded: boolean = false;
     public onLoaded = new rhamtEvents.TypedEvent<RhamtModel>();
 
-    constructor(public model: RhamtModel, public outDir: string) {
+    constructor(
+        public model: RhamtModel,
+        public outDir: string,
+        public reportEndpoints: ReportEndpoints) {
     }
 
     public addConfiguration(config: RhamtConfiguration): void {

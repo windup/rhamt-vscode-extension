@@ -7,17 +7,22 @@ import { RhamtModel, RhamtConfiguration } from './model/model';
 import * as json from 'jsonc-parser';
 import { RhamtUtil } from './server/rhamtUtil';
 import * as fs from 'fs-extra';
+import { IssueDetailsView } from './issueDetails/issueDetailsView';
 
 let rhamtView: RhamtView;
+let detailsView: IssueDetailsView;
 let modelService: ModelService;
 let stateLocation: string;
 
 export async function activate(context: vscode.ExtensionContext) {
     stateLocation = context.extensionPath;
     await Utils.loadPackageInfo(context);
-    modelService = new ModelService(new RhamtModel(), path.join(stateLocation, 'data'));
+    const out = path.join(stateLocation, 'data');
+    const reportEndpoints = getReportEndpoints(context, out);
+    modelService = new ModelService(new RhamtModel(), out, reportEndpoints);
     rhamtView = new RhamtView(context, modelService);
     context.subscriptions.push(rhamtView);
+    detailsView = new IssueDetailsView(context, reportEndpoints);
 
     const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', item => {
         const config = item.config;
@@ -30,6 +35,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(runConfigurationDisposable);
 
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
+        detailsView.open(data.issue);
         vscode.workspace.openTextDocument(vscode.Uri.file(data.uri)).then(async doc => {
             const editor = await vscode.window.showTextDocument(doc);
             if (data.line) {
@@ -90,4 +96,27 @@ function getNode(node: json.Node, text: string, config: RhamtConfiguration): jso
         }
     });
     return container;
+}
+
+function getReportEndpoints(ctx: vscode.ExtensionContext, out: string): any {
+    const port = () => {
+        return process.env.RAAS_PORT || String(61435);
+    };
+    const host = () => {
+        return 'localhost';
+    };
+    const location = () => {
+        return `http://${host()}:${port()}`;
+    };
+    return {
+        port,
+        host,
+        location,
+        resourcesRoot: () => {
+            return vscode.Uri.file(path.join(ctx.extensionPath, 'resources'));
+        },
+        reportsRoot: () => {
+            return out;
+        }
+    };
 }
