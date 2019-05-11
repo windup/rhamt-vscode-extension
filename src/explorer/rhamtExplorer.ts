@@ -50,6 +50,14 @@ export class RhamtExplorer {
                 AnalysisResultsUtil.openReport((item as ReportHolder).getReport());
             }
         }));
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteIssue', item => {
+            item.root.deleteIssue(item);
+            // this.modelService.deleteIssue(this.hint);
+            // this.dataProvider.refresh(this.getParent());
+        }));
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.markIssueAsComplete', item => {
+            item.root.markIssueAsComplete(item);
+        }));
     }
 
     private createViewer(): vscode.TreeView<any> {
@@ -61,7 +69,7 @@ export class RhamtExplorer {
     }
 
     private createDataProvider(): DataProvider {
-        const provider: DataProvider = new DataProvider(this.grouping, this.modelService);
+        const provider: DataProvider = new DataProvider(this.grouping, this.modelService, this.context);
         this.context.subscriptions.push(provider);
         return provider;
     }

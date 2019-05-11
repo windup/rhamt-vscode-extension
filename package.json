@@ -72,7 +72,14 @@
             {
                 "command": "rhamt.refreshResults",
                 "title": "Refresh"
-
+            },
+            {
+                "command": "rhamt.deleteIssue",
+                "title": "Delete"
+            },
+            {
+                "command": "rhamt.markIssueAsComplete",
+                "title": "Mark as Complete"
             }
         ],
         "configuration": [
@@ -132,6 +139,14 @@
                 },
                 {
                     "command": "rhamt.openIssueDetails",
+                    "when": "view == rhamtExplorerView && viewItem == issue"
+                },
+                {
+                    "command": "rhamt.deleteIssue",
+                    "when": "view == rhamtExplorerView && viewItem == issue"
+                },
+                {
+                    "command": "rhamt.markIssueAsComplete",
                     "when": "view == rhamtExplorerView && viewItem == issue"
                 }
             ]

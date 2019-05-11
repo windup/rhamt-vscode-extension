@@ -1,4 +1,4 @@
-import { TreeDataProvider, Disposable, EventEmitter, Event, TreeItem, commands, TreeView, ProviderResult } from 'vscode';
+import { TreeDataProvider, Disposable, EventEmitter, Event, TreeItem, commands, TreeView, ProviderResult, ExtensionContext } from 'vscode';
 import { localize } from './localize';
 import * as path from 'path';
 import { ConfigurationNode, Grouping } from './configurationNode';
@@ -14,7 +14,7 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
     view: TreeView<any>;
     private _disposables: Disposable[] = [];
 
-    constructor(private grouping: Grouping, private modelService: ModelService) {
+    constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext) {
         this._disposables.push(this.modelService.onModelLoaded(m => {
             this.refresh(undefined);
         }));
