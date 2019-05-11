@@ -205,6 +205,11 @@ export class ModelService {
                 data.summary = config.summary;
             }
             configurations.push(data);
+            if (config.results) {
+                config.results.save(config.getResultsLocation()).catch(e => {
+                    console.log(`Error saving RHAMT configuration ${config.name} results: ${e} `);
+                });
+            }
         });
         this.doSave(this.getModelPersistanceLocation(), {configurations});
     }

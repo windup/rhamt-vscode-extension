@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import * as cheerio from 'cheerio';
 import { ModelService } from './modelService';
 import * as open from 'opn';
-import { IHint, IQuickFix, IClassification, RhamtConfiguration } from './model';
+import * as mkdirp from 'mkdirp';
+import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue } from './model';
 
 export interface AnalysisResultsSummary {
     executedTimestamp?: string;
@@ -86,6 +87,9 @@ export class AnalysisResults {
         const hints: IHint[] = [];
 
         this.dom('hints').children().each((i, ele) => {
+            if (this.dom(ele).attr('deleted')) {
+                return;
+            }
             const id = ModelService.generateUniqueId();
             const hint: IHint = {
                 id,
@@ -106,7 +110,8 @@ export class AnalysisResults {
                 hint: '',
                 getConfiguration: () => {
                     return this.config;
-                }
+                },
+                dom: ele
             };
 
             ele.children.forEach((child, i) => {
@@ -199,6 +204,9 @@ export class AnalysisResults {
     getClassifications(): IClassification[] {
         const classifications: IClassification[] = [];
         this.dom('classifications').children().each((i, ele) => {
+            if (this.dom(ele).attr('deleted')) {
+                return;
+            }
             const id = ModelService.generateUniqueId();
             const classification = {
                 id,
@@ -215,7 +223,8 @@ export class AnalysisResults {
                 category: '',
                 getConfiguration: () => {
                     return this.config;
-                }
+                },
+                dom: ele
             };
             ele.children.forEach((child, i) => {
                 switch (child.name) {
@@ -298,11 +307,23 @@ export class AnalysisResults {
         return hints;
     }
 
-    deleteIssue(name: string): boolean {
-        return false;
+    deleteIssue(issue: IIssue): void {
+        this.dom(issue.dom).attr('deleted', true);
     }
 
-    markAsFixed(name: string): boolean {
-        return false;
+    markIssueAsComplete(issue: IIssue): void {
+        this.dom(issue.dom).attr('complete', true);
+    }
+
+    save(out: string): Promise<void> {
+        return new Promise<void> ((resolve, reject) => {
+            mkdirp(require('path').dirname(out), (e: any) => {
+                if (e) reject(e);
+                fs.writeFile(out, this.dom.html(), null, e => {
+                    if (e) reject(e);
+                    else resolve();
+                });
+            });
+        });
     }
 }
