@@ -58,6 +58,13 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.markIssueAsComplete', item => {
             item.root.markIssueAsComplete(item);
         }));
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteResults', item => {
+            const output = item.config.options['output'];
+            if (output) {
+                this.modelService.deleteOuputLocation(output);
+            }
+            item.config.results = undefined;
+        }));
     }
 
     private createViewer(): vscode.TreeView<any> {

@@ -80,6 +80,10 @@
             {
                 "command": "rhamt.markIssueAsComplete",
                 "title": "Mark as Complete"
+            },
+            {
+                "command": "rhamt.deleteResults",
+                "title": "Delete"
             }
         ],
         "configuration": [
@@ -148,6 +152,10 @@
                 {
                     "command": "rhamt.markIssueAsComplete",
                     "when": "view == rhamtExplorerView && viewItem == issue"
+                },
+                {
+                    "command": "rhamt.deleteResults",
+                    "when": "view == rhamtExplorerView && viewItem == results"
                 }
             ]
         }

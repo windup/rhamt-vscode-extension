@@ -5,7 +5,7 @@ import { ClassificationNode } from './classificationNode';
 import { DataProvider } from './dataProvider';
 import * as path from 'path';
 import { HintNode } from './hintNode';
-import { RhamtConfiguration, ChangeType, IClassification, IHint, ReportHolder, IIssue } from '../model/model';
+import { RhamtConfiguration, ChangeType, IClassification, IHint, ReportHolder, IIssue, IssueContainer } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { FileNode } from './fileNode';
 import { FolderNode } from './folderNode';
@@ -154,13 +154,15 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             const root = workspace.getWorkspaceFolder(Uri.file(file));
 
             if (!this.childNodes.has(root.uri.fsPath)) {
-                this.childNodes.set(root.uri.fsPath, new FolderNode(
+                const folder = new FolderNode(
                     this.config,
                     root.uri.fsPath,
                     this.modelService,
                     this.onNodeCreateEmitter,
                     this.dataProvider,
-                    this));
+                    this);
+                this.childNodes.set(root.uri.fsPath, folder);
+                this.resourceNodes.set(root.uri.fsPath, folder);
             }
 
             const getParent = location => path.resolve(location, '..');
@@ -177,9 +179,6 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
                     this.onNodeCreateEmitter,
                     this.dataProvider,
                     this));
-                if (root.uri.fsPath === parent) {
-                    break;
-                }
                 parent = getParent(parent);
             }
         }
@@ -243,6 +242,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             this.modelService,
             this.onNodeCreateEmitter,
             this.dataProvider);
+        node.root = this;
         this.onNodeCreateEmitter.fire(node);
         return node;
     }
@@ -254,11 +254,60 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             this.modelService,
             this.onNodeCreateEmitter,
             this.dataProvider);
+        node.root = this;
         this.onNodeCreateEmitter.fire(node);
         return node;
     }
 
     getReport(): string {
         return this.config.getReport();
+    }
+
+    deleteIssue(node: any): void {
+        const issue = (node as IssueContainer).getIssue();
+        this.config.deleteIssue(issue);
+        this.issueNodes.delete(issue);
+        const file = issue.file;
+        const nodes = this.issueFiles.get(file);
+        if (nodes) {
+            const index = nodes.indexOf(issue);
+            if (index > -1) {
+                nodes.splice(index, 1);
+            }
+            if (nodes.length === 0) {
+                this.resourceNodes.delete(file);
+                let parentToRefresh = undefined;
+                const getParentFolderPath = location => path.resolve(location, '..');
+                let parentFolderPath = getParentFolderPath(file);
+                while (parentFolderPath) {
+                    const parentFolder = this.resourceNodes.get(parentFolderPath) as any;
+                    if (!parentFolder) break;
+                    const children = this.getChildSegments(parentFolderPath);
+                    if (children.length > 0) {
+                        parentToRefresh = parentFolder;
+                        break;
+                    }
+                    this.resourceNodes.delete(parentFolderPath);
+                    const root = workspace.getWorkspaceFolder(Uri.file(parentFolderPath));
+                    if (parentFolderPath === root.uri.fsPath && this.childNodes.has(parentFolderPath)) {
+                        this.childNodes.delete(parentFolderPath);
+                        parentToRefresh = parentFolder.parentNode;
+                        break;
+                    }
+                    parentFolderPath = getParentFolderPath(parentFolderPath);
+                }
+                if (parentToRefresh) {
+                    parentToRefresh.refresh(parentToRefresh);
+                }
+            }
+            else {
+                node.parentNode.refresh(node.parentNode);
+            }
+        }
+    }
+
+    markIssueAsComplete(node: any): void {
+        const issue = (node as IssueContainer).getIssue();
+        this.config.markIssueAsComplete(issue);
     }
 }

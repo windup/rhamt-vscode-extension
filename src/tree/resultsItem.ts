@@ -15,4 +15,8 @@ export class ResultsItem extends TreeItem {
         this.label = `Analysis Results (${executedTimestamp})`;
         this.collapsibleState = TreeItemCollapsibleState.Collapsed;
     }
+
+    public get contextValue(): string {
+        return 'results';
+    }
 }

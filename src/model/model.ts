@@ -80,6 +80,14 @@ export class RhamtConfiguration {
     getResultsLocation(): string {
         return path.resolve(this.options['output'], 'results.xml');
     }
+
+    deleteIssue(issue: IIssue): void {
+        this.results.deleteIssue(issue);
+    }
+
+    markIssueAsComplete(issue: IIssue): void {
+        this.results.markIssueAsComplete(issue);
+    }
 }
 
 export interface IUniqueElement {
@@ -101,6 +109,7 @@ export interface IIssue extends IUniqueElement {
     report: string;
     category: string;
     getConfiguration: () => RhamtConfiguration;
+    dom: any;
 }
 
 export type IQuickFixType = 'REPLACE' | 'DELETE_LINE' | 'INSERT_LINE' | 'TRANSFORMATION';

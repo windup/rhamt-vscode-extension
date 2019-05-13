@@ -56,7 +56,7 @@ export class ModelService {
         return false;
     }
 
-    private deleteOuputLocation(location: string) {
+    public deleteOuputLocation(location: string) {
         fs.exists(location, exists => {
             if (exists) {
                 fse.remove(location);
