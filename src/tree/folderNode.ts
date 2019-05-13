@@ -66,7 +66,7 @@ export class FolderNode extends AbstractNode<FolderItem> {
         }, 1000);
     }
 
-    protected refresh(node?: ITreeNode): void {
+    refresh(node?: ITreeNode): void {
         this.updateIcon('default_folder.svg');
         const unsorted = this.root.getChildNodes(this);
         this.children = unsorted.sort(SortUtil.sort);

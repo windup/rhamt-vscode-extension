@@ -69,6 +69,7 @@ export class ResultsNode extends AbstractNode<ResultsItem> {
     protected refresh(node?: ITreeNode): void {
         this.children = [this.reportNode];
         this.children = this.children.concat(this.root.getChildNodes(this));
+        this.children.forEach(child => child.parentNode = this);
         this.treeItem.refresh(this.config.summary.executedTimestamp);
         super.refresh(node);
     }

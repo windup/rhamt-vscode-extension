@@ -17,6 +17,7 @@ export class FileNode extends AbstractNode<FileItem> {
 
     file: string;
     private children = [];
+    private issues = [];
 
     constructor(
         config: RhamtConfiguration,
@@ -65,7 +66,7 @@ export class FileNode extends AbstractNode<FileItem> {
         }, 1000);
     }
 
-    protected refresh(node?: ITreeNode): void {
+    refresh(node?: ITreeNode): void {
         this.children = [];
         const ext = path.extname(this.file);
         const icon = ext === '.xml' ? 'file_type_xml.svg' :
@@ -75,8 +76,8 @@ export class FileNode extends AbstractNode<FileItem> {
             light: path.join(__dirname, '..', '..', '..', 'resources', 'light', icon),
             dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', icon)
         };
-        const issues = this.root.getChildNodes(this);
-        if (issues.find(issue => issue instanceof HintNode)) {
+        this.issues = this.root.getChildNodes(this);
+        if (this.issues.find(issue => issue instanceof HintNode)) {
             this.children.push(new HintsNode(
                 this.config,
                 this.file,
@@ -85,14 +86,15 @@ export class FileNode extends AbstractNode<FileItem> {
                 this.dataProvider,
                 this.root));
         }
-        if (issues.find(issue => issue instanceof ClassificationNode)) {
+        if (this.issues.find(issue => issue instanceof ClassificationNode)) {
             this.children.push(new ClassificationsNode(
                 this.config,
                 this.file,
                 this.modelService,
                 this.onNodeCreateEmitter,
                 this.dataProvider,
-                this.root));
+                this.root,
+                this));
         }
         this.treeItem.refresh();
         super.refresh(node);

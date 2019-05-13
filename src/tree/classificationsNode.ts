@@ -21,7 +21,8 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
         modelService: ModelService,
         onNodeCreateEmitter: EventEmitter<ITreeNode>,
         dataProvider: DataProvider,
-        root: ConfigurationNode) {
+        root: ConfigurationNode,
+        parent: ITreeNode) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.file = file;
         this.root = root;
@@ -65,6 +66,7 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
     protected refresh(node?: ITreeNode): void {
         const unsorted = this.root.getChildNodes(this);
         this.children = unsorted.sort(SortUtil.sort);
+        this.children.forEach(child => child.parentNode = this);
         this.treeItem.refresh(this.children.length);
         super.refresh(node);
     }

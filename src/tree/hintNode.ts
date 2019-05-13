@@ -14,7 +14,8 @@ export class HintNode extends AbstractNode implements ReportHolder, IssueContain
         config: RhamtConfiguration,
         modelService: ModelService,
         onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>,
-        dataProvider: DataProvider) {
+        dataProvider: DataProvider
+        ) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.hint = hint;
         this.treeItem = this.createItem();

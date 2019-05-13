@@ -65,6 +65,7 @@ export class HintsNode extends AbstractNode<HintsItem> {
     protected refresh(node?: ITreeNode): void {
         const unsorted = this.root.getChildNodes(this);
         this.children = unsorted.sort(HintsNode.compareHint);
+        this.children.forEach(child => child.parentNode = this);
         this.treeItem.refresh(this.children.length);
         super.refresh(node);
     }

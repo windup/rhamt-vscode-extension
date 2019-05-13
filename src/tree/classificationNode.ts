@@ -14,7 +14,8 @@ export class ClassificationNode extends AbstractNode implements ReportHolder, Is
         config: RhamtConfiguration,
         modelService: ModelService,
         onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>,
-        dataProvider: DataProvider) {
+        dataProvider: DataProvider
+        ) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.classification = classification;
         this.treeItem = this.createItem();

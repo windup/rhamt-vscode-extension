@@ -13,7 +13,7 @@ export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> 
     protected dataProvider: DataProvider;
 
     treeItem: T;
-    parent?: vscode.TreeItem;
+    parent: vscode.TreeItem;
     root: ConfigurationNode;
 
     constructor(
