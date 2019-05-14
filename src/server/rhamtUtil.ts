@@ -25,8 +25,6 @@ export const rhamtChannel = new RhamtChannelImpl();
 
 export class RhamtUtil {
 
-    // static testResults = undefined;
-
     static async analyze(config: RhamtConfiguration, modelService: ModelService): Promise<RhamtProcessController> {
         try {
             await Utils.initConfiguration(config, modelService);
@@ -39,20 +37,6 @@ export class RhamtUtil {
             cancellable: true
         }, async (progress: any, token: any) => {
             return new Promise<any>(async resolve => {
-
-                // if (!this.testResults) {
-                //     this.testResults = config.results;
-                // }
-
-                // if (!config.results) {
-                //     config.results = this.testResults;
-                //     await this.loadResults(config, modelService, '4/1/19 @ 12:42AM');
-                // }
-                // else {
-                //     config.results = undefined;
-                // }
-                // resolve();
-                // return;
 
                 const executable = await Utils.findRhamtCli(modelService.outDir);
                 const windupHome = path.resolve(executable, '..', '..');
@@ -158,7 +142,7 @@ export class RhamtUtil {
         params.push('--windupHome');
         params.push(windupHome);
         const source = config.options['source'];
-        if (source) {
+        if (source && source.length > 0) {
             params.push('--source');
             params.push(source.join(' '));
         }

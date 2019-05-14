@@ -3,7 +3,7 @@ import * as cheerio from 'cheerio';
 import { ModelService } from './modelService';
 import * as open from 'opn';
 import * as mkdirp from 'mkdirp';
-import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue } from './model';
+import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue, ILink } from './model';
 
 export interface AnalysisResultsSummary {
     executedTimestamp?: string;
@@ -268,6 +268,32 @@ export class AnalysisResults {
                     break;
                 }
                 case 'links': {
+                    child.children.forEach((ele, i) => {
+                        const link: ILink = {
+                            id: ModelService.generateUniqueId(),
+                            title: '',
+                            url: ''
+                        };
+                        ele.children.forEach(theLink => {
+                            switch (theLink.name) {
+                            case 'description': {
+                                const node = theLink.children[0];
+                                if (node) {
+                                    link.title = node.nodeValue;
+                                }
+                                break;
+                            }
+                            case 'url': {
+                                const node = theLink.children[0];
+                                if (node) {
+                                    link.url = node.nodeValue;
+                                }
+                                break;
+                            }
+                            }
+                        });
+                        classification.links.push(link);
+                    });
                     break;
                 }
                 case 'quickfixes': {

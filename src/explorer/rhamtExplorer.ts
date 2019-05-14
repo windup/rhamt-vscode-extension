@@ -52,8 +52,6 @@ export class RhamtExplorer {
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteIssue', item => {
             item.root.deleteIssue(item);
-            // this.modelService.deleteIssue(this.hint);
-            // this.dataProvider.refresh(this.getParent());
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.markIssueAsComplete', item => {
             item.root.markIssueAsComplete(item);

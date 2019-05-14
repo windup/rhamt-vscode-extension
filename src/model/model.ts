@@ -95,11 +95,12 @@ export interface IUniqueElement {
 }
 
 export interface ILink extends IUniqueElement {
-    description: string;
+    title: string;
     url: string;
 }
 
 export interface IIssue extends IUniqueElement {
+    title: string;
     quickfixes: IQuickFix[];
     file: string;
     severity: string;
@@ -139,7 +140,6 @@ export interface IHint extends IIssue {
     length: number;
     sourceSnippet: string;
     hint: string;
-    title: string;
 }
 
 export interface IClassification extends IIssue {
