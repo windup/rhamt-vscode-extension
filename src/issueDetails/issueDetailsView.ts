@@ -41,7 +41,7 @@ export class IssueDetailsView {
         }
     }
 
-    private render(issue: IIssue): string {
+    private render(issue: any): string {
         const cssPath = Uri.file(path.join(this.context.extensionPath, 'resources', 'dark', 'issue-details.css'));
         const config = issue.getConfiguration();
         const reports = path.join(config.options['output'], 'reports', path.sep);
@@ -50,6 +50,44 @@ export class IssueDetailsView {
             report = issue.report.replace(reports, '');
             report = `<a class="report-link" href="#">${report}</a>`;
         }
+        const showdown = require('showdown');
+        const converter = new showdown.Converter();
+        const noDetails = '—';
+        const isHint = 'hint' in issue;
+        let body = '';
+        body += '<h3>Title</h3>';
+        body += issue.title ? issue.title : noDetails;
+        if (report) {
+            body += '<h3>Report</h3>';
+            body += report;
+        }
+        body += `<h3>${isHint ? 'Message' : 'Description'}</h3>`;
+        body += (isHint && issue.hint) ? converter.makeHtml(issue.hint) : (!isHint && issue.description) ? issue.description : noDetails;
+        body += '<h3>Category ID</h3>';
+        body += issue.category ? issue.category : noDetails;
+        body += '<h3>Level of Effort</h3>';
+        body += issue.effort ? issue.effort : noDetails;
+        body += '<h3>Rule ID</h3>';
+        body += issue.ruleId ? issue.ruleId : noDetails;
+        body += '<h3>More Information</h3>';
+        if (issue.links.length === 0) {
+            body += noDetails;
+        }
+        issue.links.forEach(link => {
+            body += `
+                <p>${link.title}</p>
+                <ul>
+                    <li>
+                        <h class="report-link" href="${link.url}">${link.url}</a>
+                    </li>
+                </ul>
+            `;
+        });
+        if (isHint) {
+            body += '<h3>Source Snippet</h3>';
+            body += issue.sourceSnippet ? issue.sourceSnippet : noDetails;
+        }
+
         let html: string;
         if (issue) {
             html = `
@@ -61,56 +99,7 @@ export class IssueDetailsView {
                     </head>
                     <body">
                     <div style="margin:0px;padding:0px;" class="view">
-                        <table>
-                                <tbody>
-                                <tr style="background-color: inherit;">
-                                    <th style="width: 10%"></th>
-                                    <th style="width: 90%"></th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="issue-label">File</span>
-                                    </td>
-                                    <td>${issue.file}</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="issue-label">Category</span>
-                                    </td>
-                                    <td>${issue.category ? issue.category : '—'}</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="issue-label">Effort</span>
-                                    </td>
-                                    <td>${issue.effort ? issue.effort : '—'}</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="issue-label">Links</span>
-                                    </td>
-                                    <td>${issue.links.length > 0 ? issue.links : '—'}</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="issue-label">Report</span>
-                                    </td>
-                                    <td>${report ? report : '—'}</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="issue-label">Rule ID</span>
-                                    </td>
-                                    <td>${issue.ruleId}</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="issue-label">Severity</span>
-                                    </td>
-                                    <td>${issue.severity ? issue.severity : '—'}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        ${body}
                     </div>
                     </body>
                 </html>
