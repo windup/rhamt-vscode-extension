@@ -2,6 +2,8 @@ import { WebviewPanel, window, ViewColumn, ExtensionContext, Uri, commands } fro
 import { ReportEndpoints, IIssue, IssueContainer } from '../model/model';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
+import * as openLink from 'opn';
+import { AnalysisResultsUtil } from '../model/analysisResults';
 
 export class IssueDetailsView {
 
@@ -17,6 +19,12 @@ export class IssueDetailsView {
         this.context.subscriptions.push(commands.registerCommand('rhamt.openIssueDetails', item => {
             this.open((item as IssueContainer).getIssue(), true);
         }));
+        this.context.subscriptions.push(commands.registerCommand('rhamt.openIssueReport', item => {
+            AnalysisResultsUtil.openReport(item);
+        }));
+        this.context.subscriptions.push(commands.registerCommand('rhamt.openLink', item => {
+            openLink(item);
+        }));
     }
 
     open(issue: IIssue, reveal?: boolean): void {
@@ -26,6 +34,7 @@ export class IssueDetailsView {
         if (!this.view) {
             this.view = window.createWebviewPanel('rhamtIssueDetails', 'Issue Details', ViewColumn.Two, {
                 enableScripts: true,
+                enableCommandUris: true,
                 retainContextWhenHidden: true,
                 localResourceRoots: [this.endpoints.resourcesRoot()]
             });
@@ -48,7 +57,7 @@ export class IssueDetailsView {
         let report = '';
         if (issue.report && issue.report.startsWith(reports)) {
             report = issue.report.replace(reports, '');
-            report = `<a class="report-link" href="#">${report}</a>`;
+            report = `<a class="report-link" href="command:rhamt.openIssueReport?%22${issue.report}%22">Open Report</a>`;
         }
         const showdown = require('showdown');
         const converter = new showdown.Converter();
@@ -78,7 +87,7 @@ export class IssueDetailsView {
                 <p>${link.title}</p>
                 <ul>
                     <li>
-                        <h class="report-link" href="${link.url}">${link.url}</a>
+                        <a class="report-link" href="command:rhamt.openLink?%22${link.url}%22">${link.url}</a>
                     </li>
                 </ul>
             `;
@@ -87,7 +96,6 @@ export class IssueDetailsView {
             body += '<h3>Source Snippet</h3>';
             body += issue.sourceSnippet ? issue.sourceSnippet : noDetails;
         }
-
         let html: string;
         if (issue) {
             html = `
