@@ -120,10 +120,14 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         this.clearModel();
         if (this.config.results) {
             this.config.results.getClassifications().forEach(classification => {
+                const root = workspace.getWorkspaceFolder(Uri.file(classification.file));
+                if (!root) return;
                 this.classifications.push(classification);
                 this.initIssue(classification, this.createClassificationNode(classification));
             });
             this.config.results.getHints().forEach(hint => {
+                const root = workspace.getWorkspaceFolder(Uri.file(hint.file));
+                if (!root) return;
                 this.hints.push(hint);
                 this.initIssue(hint, this.createHintNode(hint));
             });
@@ -142,6 +146,9 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     private buildResourceNodes(file: string): void {
+
+        const root = workspace.getWorkspaceFolder(Uri.file(file));
+
         if (!this.resourceNodes.has(file)) {
             this.resourceNodes.set(file, new FileNode(
                 this.config,
@@ -150,8 +157,6 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
                 this.onNodeCreateEmitter,
                 this.dataProvider,
                 this));
-
-            const root = workspace.getWorkspaceFolder(Uri.file(file));
 
             if (!this.childNodes.has(root.uri.fsPath)) {
                 const folder = new FolderNode(
