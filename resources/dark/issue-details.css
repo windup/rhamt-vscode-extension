@@ -1,25 +1,16 @@
 
-.view {
-    padding-left: 0px;
+@font-face {
+    font-family: FontAwesome;
+    src: url('vscode-resource:./fontawesome-webfont.woff');
+    format: ('embedded-opentype');
 }
 
-.issue-label {
-    font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, HelveticaNeue-Light, Ubuntu, Droid Sans, sans-serif;
-    opacity: 1;
-    font-weight: 700;
-    line-height: 36px;
-    color: #cccccc;
+a {
+    text-decoration: none;
 }
 
-table {
-    border-spacing: 0;
-    width: 100%;
-}
-
-table tr:nth-child(odd) {
-    background-color: hsla(0, 0%, 51%, .04);
-}
-
-table tr:hover {
-    background-color: hsla(0, 0%, 50%, .15)
+a:after {
+    content: "\f08e";
+    font-family: FontAwesome;
+    padding-left: 5px;
 }
