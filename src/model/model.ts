@@ -111,6 +111,7 @@ export interface IIssue extends IUniqueElement {
     category: string;
     getConfiguration: () => RhamtConfiguration;
     dom: any;
+    complete: boolean;
 }
 
 export type IQuickFixType = 'REPLACE' | 'DELETE_LINE' | 'INSERT_LINE' | 'TRANSFORMATION';
@@ -131,6 +132,7 @@ export interface ReportHolder {
 
 export interface IssueContainer {
     getIssue: () => IIssue;
+    setComplete: () => void;
 }
 
 export interface IHint extends IIssue {
