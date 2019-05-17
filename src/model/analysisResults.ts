@@ -111,7 +111,8 @@ export class AnalysisResults {
                 getConfiguration: () => {
                     return this.config;
                 },
-                dom: ele
+                dom: ele,
+                complete: false
             };
 
             ele.children.forEach((child, i) => {
@@ -151,7 +152,7 @@ export class AnalysisResults {
                 case 'issue-category': {
                     const node = child.children[0];
                     if (node) {
-                        hint.category = node.nodeValue;
+                        hint.category = node.children[0].nodeValue;
                     }
                     break;
                 }
@@ -224,7 +225,8 @@ export class AnalysisResults {
                 getConfiguration: () => {
                     return this.config;
                 },
-                dom: ele
+                dom: ele,
+                complete: false
             };
             ele.children.forEach((child, i) => {
                 switch (child.name) {
@@ -263,7 +265,7 @@ export class AnalysisResults {
                 case 'issue-category': {
                     const node = child.children[0];
                     if (node) {
-                        classification.category = node.nodeValue;
+                        classification.category = node.children[0].nodeValue;
                     }
                     break;
                 }
