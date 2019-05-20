@@ -175,7 +175,6 @@
         "tslint-eslint-rules": "^5.4.0",
         "typescript": "^3.3.3333",
         "vscode": "^1.1.33",
-        "tmp": "^0.1.0",
         "showdown": "^1.9.0",
         "request-progress": "^3.0.0",
         "node-stream-zip": "^1.8.0"
@@ -186,6 +185,7 @@
         "fs-extra": "^6.0.1",
         "jsonc-parser": "^2.1.0",
         "mkdirp": "^0.5.1",
+        "tmp": "^0.1.0",
         "opn": "^5.5.0",
         "vscode-nls": "^2.0.2"
     }
