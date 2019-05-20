@@ -21,7 +21,13 @@ export class ClassificationItem extends TreeItem {
 
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
         const base = [__dirname, '..', '..', '..', 'resources'];
-        if (!this.classification.category || this.classification.category.includes('error') || this.classification.category.includes('mandatory')) {
+        if (this.classification.complete) {
+            return {
+                light: path.join(...base, 'light', 'complete.svg'),
+                dark: path.join(...base, 'dark', 'complete.svg')
+            };
+        }
+        else if (!this.classification.category || this.classification.category.includes('error') || this.classification.category.includes('mandatory')) {
             return {
                 light: path.join(...base, 'status-error.svg'),
                 dark: path.join(...base, 'dark', 'status-error-inverse.svg')

@@ -21,7 +21,13 @@ export class HintItem extends TreeItem {
 
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
         const base = [__dirname, '..', '..', '..', 'resources'];
-        if (!this.hint.category || this.hint.category.includes('error') || this.hint.category.includes('mandatory')) {
+        if (this.hint.complete) {
+            return {
+                light: path.join(...base, 'light', 'complete.svg'),
+                dark: path.join(...base, 'dark', 'complete.svg')
+            };
+        }
+        else if (!this.hint.category || this.hint.category.includes('error') || this.hint.category.includes('mandatory')) {
             return {
                 light: path.join(...base, 'status-error.svg'),
                 dark: path.join(...base, 'dark', 'status-error-inverse.svg')

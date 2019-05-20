@@ -41,4 +41,9 @@ export class HintNode extends AbstractNode implements ReportHolder, IssueContain
     getIssue(): IIssue {
         return this.hint;
     }
+
+    setComplete(): void {
+        this.hint.complete = true;
+        this.dataProvider.refresh(this);
+    }
 }

@@ -41,4 +41,9 @@ export class ClassificationNode extends AbstractNode implements ReportHolder, Is
     getIssue(): IIssue {
         return this.classification;
     }
+
+    setComplete(): void {
+        this.classification.complete = true;
+        this.dataProvider.refresh(this);
+    }
 }
