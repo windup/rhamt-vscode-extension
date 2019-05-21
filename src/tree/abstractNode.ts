@@ -8,7 +8,7 @@ export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> 
     private _id: string;
 
     protected onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>;
-    protected config: RhamtConfiguration;
+    config: RhamtConfiguration;
     protected modelService: ModelService;
     protected dataProvider: DataProvider;
 
