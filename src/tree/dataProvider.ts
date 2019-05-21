@@ -11,6 +11,8 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
     private _onDidChangeTreeDataEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
     private _onNodeCreateEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
 
+    private children: ConfigurationNode[] = [];
+
     view: TreeView<any>;
     private _disposables: Disposable[] = [];
 
@@ -86,13 +88,24 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         let nodes: any[];
 
         if (this.modelService.loaded) {
+            for (let i = this.children.length; i--;) {
+                const config = this.modelService.model.configurations.find(item => item.id === this.children[i].config.id);
+                if (!config) {
+                    this.children.splice(i, 1);
+                }
+            }
             nodes = this.modelService.model.configurations.map(config => {
-                return new ConfigurationNode(
-                    config,
-                    this.grouping,
-                    this.modelService,
-                    this._onNodeCreateEmitter,
-                    this);
+                let node = this.children.find(node => node.config.id === config.id);
+                if (!node) {
+                    node = new ConfigurationNode(
+                        config,
+                        this.grouping,
+                        this.modelService,
+                        this._onNodeCreateEmitter,
+                        this);
+                    this.children.push(node);
+                }
+                return node;
             });
         }
 
