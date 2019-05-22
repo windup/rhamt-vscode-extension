@@ -19,7 +19,7 @@ export class ClassificationItem extends TreeItem {
     delete(): void {
     }
 
-    public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
+    private getIconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
         const base = [__dirname, '..', '..', '..', 'resources'];
         if (this.classification.complete) {
             return {
@@ -73,6 +73,7 @@ export class ClassificationItem extends TreeItem {
     }
 
     public refresh(): void {
+        this.iconPath = this.getIconPath();
         this.label = this.classification.description;
     }
 }

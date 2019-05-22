@@ -114,7 +114,9 @@ export class AnalysisResults {
                 dom: ele,
                 complete: false
             };
-
+            if (this.dom(ele).attr('complete')) {
+                hint.complete = true;
+            }
             ele.children.forEach((child, i) => {
                 switch (child.name) {
                 case 'title': {
@@ -228,6 +230,9 @@ export class AnalysisResults {
                 dom: ele,
                 complete: false
             };
+            if (this.dom(ele).attr('complete')) {
+                classification.complete = true;
+            }
             ele.children.forEach((child, i) => {
                 switch (child.name) {
                 case 'classification': {

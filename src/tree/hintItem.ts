@@ -19,7 +19,7 @@ export class HintItem extends TreeItem {
     delete(): void {
     }
 
-    public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
+    private getIconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
         const base = [__dirname, '..', '..', '..', 'resources'];
         if (this.hint.complete) {
             return {
@@ -78,6 +78,7 @@ export class HintItem extends TreeItem {
     }
 
     public refresh(): void {
+        this.iconPath = this.getIconPath();
         this.label = `${this.hint.title} [rule-id: ${this.hint.ruleId}]`;
     }
 }
