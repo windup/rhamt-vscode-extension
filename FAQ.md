@@ -11,12 +11,10 @@ You can specify the path to an installation of the `rhamt-cli` executable from w
     ```
 
 #### Possible error messages
-* `rhamt-cli` executable file not found/set.
-    In this case, please follow above instructions to set available `rhamt-cli` executable path.
-
-
-* `RHAMT_HOME` not correctly set.
-    In this case, please specify a correct `RHAMT_HOME` environment variable.
+* Unable to find `rhamt-cli` executable
+    In this case, please follow above instructions to set the `rhamt-cli` executable path.
+* Unable to determine `rhamt-cli` version.
+    In this case, please verify the `rhamt-cli` exists, is executable, and is a supported version.
 
 ### Available Java Runtime (required by rhamt-cli)
 
