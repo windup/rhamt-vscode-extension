@@ -29,7 +29,7 @@ export class ClassificationItem extends TreeItem {
         }
         else if (!this.classification.category || this.classification.category.includes('error') || this.classification.category.includes('mandatory')) {
             return {
-                light: path.join(...base, 'status-error.svg'),
+                light: path.join(...base, 'light', 'status-error.svg'),
                 dark: path.join(...base, 'dark', 'status-error-inverse.svg')
             };
         }

@@ -29,7 +29,7 @@ export class HintItem extends TreeItem {
         }
         else if (!this.hint.category || this.hint.category.includes('error') || this.hint.category.includes('mandatory')) {
             return {
-                light: path.join(...base, 'status-error.svg'),
+                light: path.join(...base, 'light', 'status-error.svg'),
                 dark: path.join(...base, 'dark', 'status-error-inverse.svg')
             };
         }

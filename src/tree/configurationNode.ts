@@ -190,7 +190,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     getChildNodes(node: ITreeNode): ITreeNode[] {
-        const children = [];
+        let children = [];
         if (node instanceof ResultsNode) {
             if (this.grouping.groupByFile) {
                 const children = Array.from(this.childNodes.values());
@@ -205,16 +205,14 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             }
         }
         else if (node instanceof HintsNode) {
-            const issues = this.issueFiles.get((node as HintsNode).file);
-            if (issues) {
-                issues.forEach(issue => children.push(this.issueNodes.get(issue)));
-            }
+            const file = (node as HintsNode).file;
+            children = this.hints.filter(issue => issue.file === file)
+                .map(hint => this.issueNodes.get(hint));
         }
         else if (node instanceof ClassificationsNode) {
-            const issues = this.issueFiles.get((node as ClassificationsNode).file);
-            if (issues) {
-                issues.forEach(issue => children.push(this.issueNodes.get(issue)));
-            }
+            const file = (node as ClassificationsNode).file;
+            children = this.classifications.filter(issue => issue.file === file)
+                .map(classification => this.issueNodes.get(classification));
         }
         else {
             const segments = this.getChildSegments((node as FolderNode).folder);
