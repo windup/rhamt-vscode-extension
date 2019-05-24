@@ -84,6 +84,10 @@
             {
                 "command": "rhamt.deleteResults",
                 "title": "Delete"
+            },
+            {
+                "command": "rhamt.newConfiguration",
+                "title": "New Configuration"
             }
         ],
         "configuration": [
@@ -156,6 +160,10 @@
                 {
                     "command": "rhamt.deleteResults",
                     "when": "view == rhamtExplorerView && viewItem == results"
+                },
+                {
+                    "command": "rhamt.newConfiguration",
+                    "when": "view == rhamtExplorerView && viewItem != issue && viewITem != rhamtConfiguration"
                 }
             ]
         }

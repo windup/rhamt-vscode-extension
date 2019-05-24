@@ -63,6 +63,12 @@ export class RhamtExplorer {
             }
             item.config.results = undefined;
         }));
+        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.newConfiguration', async () => {
+            const config = this.modelService.createConfiguration();
+            this.modelService.addConfiguration(config);
+            vscode.commands.executeCommand('rhamt.openConfiguration', config);
+            this.dataProvider.refresh();
+        }));
     }
 
     private createViewer(): vscode.TreeView<any> {
