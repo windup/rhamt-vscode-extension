@@ -17,7 +17,7 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
     private _disposables: Disposable[] = [];
 
     constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext) {
-        this._disposables.push(this.modelService.onModelLoaded(m => {
+        this._disposables.push(this.modelService.onModelLoaded(() => {
             this.refresh(undefined);
         }));
         this._disposables.push(commands.registerCommand('rhamt.modelReload', () => {
