@@ -22,9 +22,9 @@ export class ModelService {
         public reportEndpoints: ReportEndpoints) {
     }
 
-    public addConfiguration(config: RhamtConfiguration): void {
+    public addConfiguration(config: RhamtConfiguration): Promise<void>  {
         this.model.configurations.push(config);
-        this.save();
+        return this.save();
     }
 
     public getConfiguration(id: string): RhamtConfiguration | undefined {
@@ -198,7 +198,7 @@ export class ModelService {
         }
     }
 
-    public save(): void {
+    public save(): Promise<void>  {
         const configurations = [];
         this.model.configurations.forEach(config => {
             const data: any = {
@@ -216,7 +216,7 @@ export class ModelService {
                 });
             }
         });
-        this.doSave(this.getModelPersistanceLocation(), {configurations});
+        return this.doSave(this.getModelPersistanceLocation(), {configurations});
     }
 
     public doSave(out: string, data: any): Promise<void> {

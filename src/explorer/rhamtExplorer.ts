@@ -26,7 +26,7 @@ export class RhamtExplorer {
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.createConfiguration', async () => {
             const config = await OptionsBuilder.build(this.modelService);
             if (config) {
-                this.modelService.addConfiguration(config);
+                await this.modelService.addConfiguration(config);
                 this.dataProvider.refresh();
                 vscode.window.showInformationMessage(`Successfully Created: ${config.name}`);
                 const run = await vscode.window.showQuickPick(['Yes', 'No'], {placeHolder: 'Run the analysis?'});
@@ -65,7 +65,7 @@ export class RhamtExplorer {
         }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.newConfiguration', async () => {
             const config = this.modelService.createConfiguration();
-            this.modelService.addConfiguration(config);
+            await this.modelService.addConfiguration(config);
             vscode.commands.executeCommand('rhamt.openConfiguration', config);
             this.dataProvider.refresh();
         }));
