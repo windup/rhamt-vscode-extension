@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/windup/rhamt-vscode-extension.svg?branch=master)](https://travis-ci.org/windup/rhamt-vscode-extension)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/windup/rhamt-vscode-extension/blob/master/README.md)
 
-The Visual Studio Code extension for the Red Hat Application Migraiton Toolkit.
+The Visual Studio Code extension for the Red Hat Application Migration Toolkit.
 
 > More information about RHAMT can be found [here](https://developers.redhat.com/products/rhamt/overview).
 
