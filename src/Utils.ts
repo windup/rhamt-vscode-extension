@@ -17,7 +17,7 @@ const findJava = require('find-java-home');
 const RHAMT_VERSION = '4.2.1.Final';
 const RHAMT_FOLDER = `rhamt-cli-${RHAMT_VERSION}`;
 // const DOWNLOAD_CLI_LOCATION = `http://central.maven.org/maven2/org/jboss/windup/rhamt-cli/${RHAMT_VERSION}/${RHAMT_FOLDER}-offline.zip`;
-const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/rhamt-vscode-extension-fork/releases/download/v0.0.1-alpha/rhamt-cli-4.2.0-SNAPSHOT-offline.zip';
+const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v0.0.1-alpha/rhamt-cli-4.2.0-SNAPSHOT-offline.zip';
 const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
