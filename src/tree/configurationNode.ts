@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Red Hat. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import { ConfigurationItem } from './configurationItem';
 import { EventEmitter, TreeItemCollapsibleState, Uri, workspace } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';

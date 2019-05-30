@@ -15,7 +15,7 @@ This extension provides support for performing application migrations using RHAM
 
 * Java Platform, `JRE version 8+` with `JAVA_HOME` environment variable 
 * A minimum of `4 GB RAM`; 8 GB recommended
-* Installation of the `rhamt-cli` (downloadable from [here](https://developers.redhat.com/products/rhamt/download/)) version `4.1.0-Final` with `RHAMT_HOME` environment variable.
+* Installation of the `rhamt-cli` (downloaded from [here](https://drive.google.com/file/d/1aXBW8YYoDqq15lcmmTzq17V_bnWfMhAQ/view?usp=sharing)).
 
 > Tip: You can optionally install the rhamt-cli once the extension has been installed.
 

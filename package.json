@@ -1,12 +1,13 @@
 {
     "name": "rhamt-vscode-extension",
-    "displayName": "rhamt-vscode-extension",
-    "description": "Red Hat Application Migration Toolkit",
-    "version": "0.0.2",
+    "displayName": "Red Hat Application Migration Toolkit",
+    "description": "Tooling for performing application migrations using RHAMT.",
+    "version": "0.0.3",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
     "preview": true,
+    "icon": "resources/rhamt_icon.png",
     "repository": {
         "type": "git",
         "url": "https://github.com/windup/rhamt-vscode-extension"

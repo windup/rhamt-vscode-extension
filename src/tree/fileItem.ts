@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Red Hat. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import { TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
 import { ModelService } from '../model/modelService';
 import * as path from 'path';

@@ -2,7 +2,6 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
 import { RhamtModel, RhamtConfiguration, ReportEndpoints } from './model';
 import * as fs from 'fs';
 import { rhamtEvents } from '../events';

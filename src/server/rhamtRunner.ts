@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Red Hat. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import * as cp from 'child_process';
 import * as os from 'os';
 const STARTED_REGEX = /.*Red Hat Application Migration Toolkit (.*)/;
