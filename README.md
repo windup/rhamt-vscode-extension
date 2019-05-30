@@ -11,6 +11,26 @@ The Visual Studio Code extension for the Red Hat Application Migration Toolkit.
 
 This extension provides support for performing application migrations using RHAMT.
 
+#### Configuration Wizard
+Use the configuration wizard to setup the analysis.  
+  
+![Configuration Wizard](resources/configuration_wizard.gif)  
+
+#### Jump to Code
+Jump to code containing identified migration issues.  
+  
+![Configuration Wizard](resources/jump_to_code.gif)  
+
+#### Issue Details
+View details about the migration issue.  
+  
+![Configuration Wizard](resources/issue_details.gif)  
+  
+#### Report
+Get a high-level view of the migration.  
+  
+![Configuration Wizard](resources/report.gif)  
+
 ## Requirements
 
 * Java Platform, `JRE version 8+` with `JAVA_HOME` environment variable 
