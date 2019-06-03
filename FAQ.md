@@ -9,6 +9,7 @@ You can specify the path to an installation of the `rhamt-cli` executable from w
         "rhamt.executable.path": "/some-path-to-rhamt-home/bin/rhamt-cli"
     }
     ```
+> rhamt-cli can be downloaded from [here](https://github.com/johnsteele/windup/releases/download/v0.0.1-alpha/rhamt-cli-4.2.0-SNAPSHOT-offline.zip).
 
 #### Possible error messages
 * Unable to find `rhamt-cli` executable
