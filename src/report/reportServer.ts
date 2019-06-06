@@ -7,9 +7,8 @@ import * as path from 'path';
 import * as http from 'http';
 import * as serveStatic from 'serve-static';
 import { ReportEndpoints } from '../model/model';
-import { Disposable } from 'vscode';
 
-export class ReportServer implements Disposable {
+export class ReportServer {
 
     public app: express.Application;
     private server: http.Server;

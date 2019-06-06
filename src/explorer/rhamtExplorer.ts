@@ -5,10 +5,8 @@
 import * as vscode from 'vscode';
 import { DataProvider } from '../tree/dataProvider';
 import { ModelService } from '../model/modelService';
-import { ReportHolder } from '../model/model';
 import { OptionsBuilder } from '../optionsBuilder';
 import { RhamtUtil } from '../server/rhamtUtil';
-import { AnalysisResultsUtil } from '../model/analysisResults';
 import { Grouping } from '../tree/configurationNode';
 
 export class RhamtExplorer {
@@ -49,11 +47,6 @@ export class RhamtExplorer {
             this.modelService.deleteConfiguration(config);
             this.dataProvider.refresh();
         }));
-        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.openReport', item => {
-            if (this.isReportHolder(item)) {
-                AnalysisResultsUtil.openReport((item as ReportHolder).getReport());
-            }
-        }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteIssue', item => {
             item.root.deleteIssue(item);
         }));
@@ -87,9 +80,5 @@ export class RhamtExplorer {
         const provider: DataProvider = new DataProvider(this.grouping, this.modelService, this.context);
         this.context.subscriptions.push(provider);
         return provider;
-    }
-
-    private isReportHolder(object: any): object is ReportHolder {
-        return 'getReport' in object;
     }
 }
