@@ -53,9 +53,10 @@ export class FolderNode extends AbstractNode<FolderItem> {
     }
 
     private updateIcon(name: string): void {
+        const base = [__dirname, '..', '..', '..', 'resources'];
         this.treeItem.iconPath = {
-            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', name),
-            dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', name)
+            light: path.join(...base, 'light', name),
+            dark: path.join(...base, 'dark', name)
         };
     }
 

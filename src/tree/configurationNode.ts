@@ -77,9 +77,10 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     private reload(): void {
+        const base = [__dirname, '..', '..', '..', 'resources'];
         this.treeItem.iconPath = {
-            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
-            dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
+            light: path.join(...base, 'light', 'Loading.svg'),
+            dark: path.join(...base, 'dark', 'Loading.svg')
         };
         if (!this.config.results) {
             this.results = [];

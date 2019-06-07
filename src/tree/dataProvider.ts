@@ -115,9 +115,10 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
         else {
             const item = new TreeItem(localize('loadingNode', 'Loading...'));
+            const base = [__dirname, '..', '..', '..', 'resources'];
             item.iconPath = {
-                light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
-                dark:  path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
+                light: path.join(...base, 'light', 'Loading.svg'),
+                dark:  path.join(...base, 'dark', 'Loading.svg')
             };
             nodes = [item];
             (async () => setTimeout(() => {

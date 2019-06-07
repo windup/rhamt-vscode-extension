@@ -54,9 +54,10 @@ export class HintsNode extends AbstractNode<HintsItem> {
 
     private listen(): void {
         this.loading = true;
+        const base = [__dirname, '..', '..', '..', 'resources'];
         this.treeItem.iconPath = {
-            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
-            dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
+            light: path.join(...base, 'light', 'Loading.svg'),
+            dark: path.join(...base, 'dark', 'Loading.svg')
         };
         this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
         setTimeout(() => {

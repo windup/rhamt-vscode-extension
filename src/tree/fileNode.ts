@@ -58,9 +58,10 @@ export class FileNode extends AbstractNode<FileItem> {
 
     private listen(): void {
         this.loading = true;
+        const base = [__dirname, '..', '..', '..', 'resources'];
         this.treeItem.iconPath = {
-            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', 'Loading.svg'),
-            dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', 'Loading.svg')
+            light: path.join(...base, 'light', 'Loading.svg'),
+            dark: path.join(...base, 'dark', 'Loading.svg')
         };
         this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
         super.refresh(this);
@@ -76,9 +77,10 @@ export class FileNode extends AbstractNode<FileItem> {
         const icon = ext === '.xml' ? 'file_type_xml.svg' :
             ext === '.java' ? 'file_type_class.svg' :
             'default_file.svg';
+        const base = [__dirname, '..', '..', '..', 'resources'];
         this.treeItem.iconPath = {
-            light: path.join(__dirname, '..', '..', '..', 'resources', 'light', icon),
-            dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', icon)
+            light: path.join(...base, 'light', icon),
+            dark: path.join(...base, 'dark', icon)
         };
         this.issues = this.root.getChildNodes(this);
         if (this.issues.find(issue => issue instanceof HintNode)) {
