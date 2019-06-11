@@ -20,7 +20,7 @@ let modelService: ModelService;
 let stateLocation: string;
 
 export async function activate(context: vscode.ExtensionContext) {
-    stateLocation = context.extensionPath;
+    stateLocation = context.storagePath;
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
     const reportEndpoints = getReportEndpoints(context, out);
