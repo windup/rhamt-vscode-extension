@@ -95,23 +95,56 @@ export namespace Utils {
 
     export function findRhamtCli(outDir: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
+            console.log('====================================');
+            console.log('resolving preference - rhamt.executable.path');
+            console.log('====================================');
             const rhamtPath = workspace.getConfiguration('rhamt.executable').get<string>('path');
             if (rhamtPath) {
+                console.log('====================================');
+                console.log(`preference rhamt.executable.path found - ${rhamtPath}`);
+                console.log('====================================');
                 resolve(rhamtPath);
             }
+            console.log('====================================');
+            console.log(`attempting to resolve rhamt-cli using RHAMT_HOME`);
+            console.log('====================================');
             let rhamtHome = process.env['RHAMT_HOME'];
             if (rhamtHome) {
-                return resolve(Utils.getRhamtExecutable(rhamtHome));
+                const executable = Utils.getRhamtExecutable(rhamtHome);
+                console.log('====================================');
+                console.log(`found rhamt-cli using RHAMT_HOME`);
+                console.log(`RHAMT_HOME=${rhamtHome}`);
+                console.log(`executable=${executable}`);
+                console.log('====================================');
+                return resolve(executable);
             }
+            console.log('====================================');
+            console.log(`attempting to find rhamt-cli download at location - ${outDir}`);
+            console.log('====================================');
             rhamtHome = Utils.findRhamtCliDownload(outDir);
             if (rhamtHome) {
+                console.log('====================================');
+                console.log(`rhamt-cli download found at - ${rhamtHome}`);
                 const executable = Utils.getRhamtExecutable(rhamtHome);
-                if (fse.existsSync(executable)) {
+                console.log(`rhamt-cli executable - ${executable}`);
+                const exists = fse.existsSync(executable);
+                if (exists) {
+                    console.log(`downloaded rhamt-cli executable exists`);
+                    console.log('====================================');
                     return resolve(executable);
                 }
-                else reject(new Error(''));
+                else {
+                    console.log(`downloaded rhamt-cli executable does NOT exist`);
+                    console.log('====================================');
+                    reject(new Error(''));
+                }
             }
-            else reject(new Error(''));
+            else {
+                console.log('====================================');
+                console.log('Unable to find rhamt-cli download');
+                console.log('====================================');
+                reject(new Error(''));
+            }
         });
     }
 
