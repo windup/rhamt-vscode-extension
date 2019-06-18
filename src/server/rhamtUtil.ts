@@ -33,7 +33,7 @@ export class RhamtUtil {
         try {
             await Utils.initConfiguration(config, modelService);
         } catch (e) {
-            return Promise.reject();
+            return Promise.reject(e);
         }
 
         return vscode.window.withProgress({
@@ -42,7 +42,14 @@ export class RhamtUtil {
         }, async (progress: any, token: any) => {
             return new Promise<any>(async resolve => {
 
-                const executable = await Utils.findRhamtCli(modelService.outDir);
+                let executable: any;
+                try {
+                    executable = await Utils.findRhamtCli(modelService.outDir);
+                }
+                catch (e) {
+                    vscode.window.showErrorMessage(`Error finding rhamt-cli: ${e}`);
+                    return Promise.reject(e);
+                }
                 const windupHome = path.resolve(executable, '..', '..');
                 let params = [];
                 try {
@@ -50,7 +57,7 @@ export class RhamtUtil {
                 }
                 catch (e) {
                     vscode.window.showErrorMessage(`Error: ${e}`);
-                    return Promise.reject();
+                    return Promise.reject(e);
                 }
                 rhamtChannel.clear();
                 progress.report({message: 'Executing rhamt-cli script...'});

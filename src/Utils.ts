@@ -3,8 +3,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { ExtensionContext, workspace, extensions, window, Uri, commands, ProgressLocation } from 'vscode';
-import * as fse from 'fs-extra';
 import * as path from 'path';
+import * as fs from 'fs';
+import * as fse from 'fs-extra';
 import * as child_process from 'child_process';
 import { RhamtConfiguration } from './model/model';
 import { RhamtInstaller } from './util/rhamt-installer';
@@ -14,7 +15,7 @@ const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
 
-const RHAMT_VERSION = '4.2.1.Final';
+const RHAMT_VERSION = '4.2.0-SNAPSHOT-offline';
 const RHAMT_FOLDER = `rhamt-cli-${RHAMT_VERSION}`;
 // const DOWNLOAD_CLI_LOCATION = `http://central.maven.org/maven2/org/jboss/windup/rhamt-cli/${RHAMT_VERSION}/${RHAMT_FOLDER}-offline.zip`;
 const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v0.0.1-alpha/rhamt-cli-4.2.0-SNAPSHOT-offline.zip';
@@ -48,7 +49,7 @@ export namespace Utils {
             catch (error) {
                 promptForFAQs('Unable to resolve Java Home');
                 progress.report({message: 'Unable to verify JAVA_HOME'});
-                return Promise.reject();
+                return Promise.reject(error);
             }
 
             progress.report({message: 'Verifying rhamt-cli'});
@@ -58,15 +59,15 @@ export namespace Utils {
             }
             catch (error) {
                 promptForFAQs('Unable to find rhamt-cli executable', {outDir: modelService.outDir});
-                return Promise.reject();
+                return Promise.reject(error);
             }
 
             try {
                 await findRhamtVersion(rhamtCli, javaHome);
             }
             catch (error) {
-                promptForFAQs('Unable to determine rhamt-cli version: \n' + error.message);
-                return Promise.reject();
+                promptForFAQs('Unable to determine rhamt-cli version: \n' + error.message, {outDir: modelService.outDir});
+                return Promise.reject(error);
             }
 
             config.rhamtExecutable = rhamtCli;
@@ -127,7 +128,7 @@ export namespace Utils {
                 console.log(`rhamt-cli download found at - ${rhamtHome}`);
                 const executable = Utils.getRhamtExecutable(rhamtHome);
                 console.log(`rhamt-cli executable - ${executable}`);
-                const exists = fse.existsSync(executable);
+                const exists = fs.existsSync(executable);
                 if (exists) {
                     console.log(`downloaded rhamt-cli executable exists`);
                     console.log('====================================');
@@ -165,7 +166,7 @@ export namespace Utils {
                 env: Object.assign({}, process.env, env)
             };
             child_process.exec(
-                `${rhamtCli} --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
+                `"${rhamtCli}" --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
                     if (error) {
                         reject(error);
                     } else {

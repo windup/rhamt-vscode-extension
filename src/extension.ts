@@ -30,10 +30,10 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(rhamtView);
     detailsView = new IssueDetailsView(context, reportEndpoints);
 
-    const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', item => {
+    const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
         const config = item.config;
         try {
-            RhamtUtil.analyze(config, modelService);
+            await RhamtUtil.analyze(config, modelService);
         } catch (e) {
             console.log(e);
         }
