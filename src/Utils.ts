@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import { ExtensionContext, workspace, extensions, window, Uri, commands, ProgressLocation } from 'vscode';
 import * as path from 'path';
-import * as fs from 'fs';
 import * as fse from 'fs-extra';
 import * as child_process from 'child_process';
 import { RhamtConfiguration } from './model/model';
@@ -128,17 +127,8 @@ export namespace Utils {
                 console.log(`rhamt-cli download found at - ${rhamtHome}`);
                 const executable = Utils.getRhamtExecutable(rhamtHome);
                 console.log(`rhamt-cli executable - ${executable}`);
-                const exists = fs.existsSync(executable);
-                if (exists) {
-                    console.log(`downloaded rhamt-cli executable exists`);
-                    console.log('====================================');
-                    return resolve(executable);
-                }
-                else {
-                    console.log(`downloaded rhamt-cli executable does NOT exist`);
-                    console.log('====================================');
-                    reject(new Error(''));
-                }
+                console.log('====================================');
+                return resolve(executable);
             }
             else {
                 console.log('====================================');
