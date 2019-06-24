@@ -166,6 +166,13 @@ export class RhamtUtil {
         }
         params.push('--target');
         params.push(target.join(' '));
+
+        let rules = config.options['userRulesDirectory'];
+        if (rules && rules.length > 0) {
+            params.push('--userRulesDirectory');
+            params.push(rules.join(' '));
+        }
+
         return Promise.resolve(params);
     }
 
