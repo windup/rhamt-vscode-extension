@@ -9,13 +9,13 @@ import { DataProvider } from './dataProvider';
 import { ConfigurationNode } from './configurationNode';
 
 export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> implements ITreeNode {
+    
     private _id: string;
-
     protected onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>;
-    config: RhamtConfiguration;
     protected modelService: ModelService;
     protected dataProvider: DataProvider;
 
+    config: RhamtConfiguration;
     treeItem: T;
     parent: vscode.TreeItem;
     root: ConfigurationNode;

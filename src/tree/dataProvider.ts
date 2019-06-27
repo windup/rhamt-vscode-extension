@@ -14,11 +14,10 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
     private _onDidChangeTreeDataEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
     private _onNodeCreateEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
-
     private children: ConfigurationNode[] = [];
+    private _disposables: Disposable[] = [];
 
     view: TreeView<any>;
-    private _disposables: Disposable[] = [];
 
     constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext) {
         this._disposables.push(this.modelService.onModelLoaded(() => {

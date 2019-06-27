@@ -15,10 +15,9 @@ import { SortUtil } from './sortUtil';
 export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
 
     private loading: boolean = false;
-
-    file: string;
     private children = [];
-
+    file: string;
+    
     constructor(
         config: RhamtConfiguration,
         file: string,

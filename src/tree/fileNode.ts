@@ -18,10 +18,11 @@ import { ClassificationNode } from './classificationNode';
 export class FileNode extends AbstractNode<FileItem> {
 
     private loading: boolean = false;
-
-    file: string;
     private children = [];
     private issues = [];
+    
+    file: string;
+   
 
     constructor(
         config: RhamtConfiguration,
