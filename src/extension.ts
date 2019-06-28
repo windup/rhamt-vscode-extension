@@ -14,7 +14,6 @@ import * as fs from 'fs-extra';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
 
-let rhamtView: RhamtView;
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
 let stateLocation: string;
@@ -25,9 +24,8 @@ export async function activate(context: vscode.ExtensionContext) {
     const out = path.join(stateLocation, 'data');
     const reportEndpoints = getReportEndpoints(context, out);
     modelService = new ModelService(new RhamtModel(), out, reportEndpoints);
-    rhamtView = new RhamtView(context, modelService);
+    new RhamtView(context, modelService);
     new ReportView(context, reportEndpoints);
-    context.subscriptions.push(rhamtView);
     detailsView = new IssueDetailsView(context, reportEndpoints);
 
     const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {

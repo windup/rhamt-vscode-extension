@@ -4,41 +4,23 @@
  *--------------------------------------------------------------------------------------------*/
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-import * as path from 'path';
-import { RhamtModel } from '../src/model/model';
-import { ModelService } from '../src/model/modelService';
 
-suite('RHAMT / Issue Explorer', () => {
+suite("RHAMT Extension Tests", () => {
 
-    let modelService: ModelService;
-
-    setup(() => {
-        modelService = new ModelService(new RhamtModel(), __dirname, getReportEndpoints(__dirname));
+    test('Extension should be present', () => {
+        assert.ok(vscode.extensions.getExtension('redhat.rhamt-vscode-extension'));
     });
 
-    test('model service', () => {
-        const name = 'rhamtConfiguration';
-        const config = modelService.createConfigurationWithName(name);
-        assert.equal(config.name, name);
+    test('should activate', async () => {
+        return vscode.extensions.getExtension('redhat.rhamt-vscode-extension')!.activate().then(() => {
+            assert.ok(true);
+        });
     });
 
-    function getReportEndpoints(out: string): any {
-        return {
-            port: () => {
-                return process.env.RAAS_PORT || String(61435);
-            },
-            host: () => {
-                return 'localhost';
-            },
-            location: () => {
-                return `http://${this.host()}:${this.port()}`;
-            },
-            resourcesRoot: () => {
-                return vscode.Uri.file(path.join(out, 'out'));
-            },
-            reportsRoot: () => {
-                return out;
-            }
-        };
-    }
+    test('should register all commands', async () => {
+        return vscode.commands.getCommands(true).then((commands) => {
+            let cmds = commands.filter(cmd => cmd.startsWith('rhamt.'));
+            assert.equal(cmds.length, 15, 'Some commands are not registered properly or a new command is not added to the test');
+        });
+    });
 });
