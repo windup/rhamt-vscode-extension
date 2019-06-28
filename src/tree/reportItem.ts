@@ -10,10 +10,10 @@ import { ReportHolder, RhamtConfiguration } from '../model/model';
 export class ReportItem extends TreeItem implements ReportHolder {
 
     static LABEL = 'Report';
-
     private _id: string = ModelService.generateUniqueId();
-    collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
     private config: RhamtConfiguration;
+    collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
+
 
     constructor(config: RhamtConfiguration) {
         super(ReportItem.LABEL);

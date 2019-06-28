@@ -15,10 +15,10 @@ import { HintNode } from './hintNode';
 export class HintsNode extends AbstractNode<HintsItem> {
 
     private loading: boolean = false;
-
-    file: string;
     private children = [];
 
+    file: string;
+    
     constructor(
         config: RhamtConfiguration,
         file: string,
