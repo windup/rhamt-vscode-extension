@@ -3,7 +3,7 @@
 #  Licensed under the MIT License. See License.txt in the project root for license information.
 # ---------------------------------------------------------------------------------------------
 
-FROM wsskeleton/theia-endpoint-runtime
+FROM eclipse/che-remote-plugin-runner-java11:next
 
 ENV RHAMT_VERSION=4.2.0-SNAPSHOT \
     RHAMT_ROOT=$HOME/rhamt
