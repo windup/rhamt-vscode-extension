@@ -1,0 +1,87 @@
+# A devfile to setup a helloworld vscode extension development environment to code, build and run that on Che.
+
+apiVersion: 1.0.0
+metadata:
+  name: rhamt-vscode-extension
+
+projects:
+
+  - name: rhamt-vscode-extension
+    source:
+      location: 'https://github.com/windup/rhamt-vscode-extension.git'
+      type: git
+
+components:
+
+  - alias: rhamt-vscode-ext-sidecar
+    type: dockerimage
+    image: johnsteele/rhamt-vscode-extension
+    endpoints:
+      - name: theia-remote-endpoint
+        port: 10000
+        attributes:
+          protocol: ws
+          public: 'true'
+    memoryLimit: 2G
+    mountSources: true
+
+  - alias: git
+    type: dockerimage
+    image: sunix/git-devtools
+    mountSources: true
+    memoryLimit: 256M
+
+  - alias: che-dev
+    type: dockerimage
+    image: eclipse/che-theia-dev:nightly
+    mountSources: true
+    endpoints:
+      - name: "theia-dev-flow"
+        port: 3010
+        attributes:
+          protocol: http
+          public: 'true'
+    memoryLimit: 512M
+
+  - id: che-incubator/typescript/latest
+    type: chePlugin
+    memoryLimit: 512M
+
+  - type: cheEditor
+    alias: theia-editor
+    id: eclipse/che-theia/next
+
+commands:
+
+  - name: build ... rhamt-vscode-extension
+    actions:
+      - type: exec
+        component: che-dev
+        command: npm install -g vsce && yarn && vsce package
+        workdir: /projects/rhamt-vscode-extension/
+
+  - name: run ... remote helloworld vscode ext
+    actions:
+      - type: exec
+        component: rhamt-vscode-ext-sidecar
+        command: >
+                 killall node;
+                 export THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT='2504' &&
+                 export THEIA_PLUGINS='local-dir:///projects/rhamt-vscode-extension/' &&
+                 export THEIA_PLUGIN_ENDPOINT_PORT='10000' &&
+                 node /home/theia/lib/node/plugin-remote.js
+        workdir: /home/theia/
+  
+  - name: run ... HOSTED che-theia + detect remote helloworld vscode ext
+    actions:
+      - type: exec
+        component: theia-editor
+        command: >
+                 kill `cat /tmp/node_theiadev.pid` &> /dev/null;
+                 mkdir -p /tmp/theiadev_projects &&
+                 export THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT='2504' &&
+                 export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
+                 node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
+        workdir: /home/theia
+
+
