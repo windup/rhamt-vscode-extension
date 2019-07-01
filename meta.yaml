@@ -1,7 +1,9 @@
+apiVersion: v2
 id: redhat.rhamt-vscode-extension
 version: 0.0.6
 type: VS Code extension
-name: RHAMT Extension
+name: rhamt
+displayName: RHAMT Extension
 title: RHAMT Extension
 description: Application migration and modernization using the Red Hat Application Migration Toolkit (RHAMT)
 icon: https://www.eclipse.org/che/images/logo-eclipseche.svg
@@ -12,6 +14,8 @@ firstPublicationDate: "2019-06-19"
 spec:
   containers:
     - image: "johnsteele/rhamt-vscode-extension:latest"
-    - name: rhamt-extension
+      name: rhamt-extension
+      memoryLimit: "2000Mi"
   extensions:
     - https://download.jboss.org/jbosstools/adapters/stable/rhamt-vscode-extension/rhamt-vscode-extension-0.0.6-120.vsix
+
