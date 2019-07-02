@@ -22,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
     stateLocation = context.storagePath;
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
-    const reportEndpoints = getReportEndpoints(context, out);
+    const reportEndpoints = getEndpoints(context, out);
     modelService = new ModelService(new RhamtModel(), out, reportEndpoints);
     new RhamtView(context, modelService);
     new ReportView(context, reportEndpoints);
@@ -102,25 +102,28 @@ function getNode(node: json.Node, text: string, config: RhamtConfiguration): jso
     return container;
 }
 
-function getReportEndpoints(ctx: vscode.ExtensionContext, out: string): any {
-    const port = () => {
+function getEndpoints(ctx: vscode.ExtensionContext, out: string): any {
+    const reportPort = () => {
         return process.env.RAAS_PORT || String(61435);
     };
-    const host = () => {
+    const reportHost = () => {
         return 'localhost';
     };
-    const location = () => {
-        return `http://${host()}:${port()}`;
+    const reportLocation = () => {
+        return `http://${reportHost()}:${reportPort()}`;
     };
     return {
-        port,
-        host,
-        location,
+        reportPort,
+        reportHost,
+        reportLocation,
         resourcesRoot: () => {
             return vscode.Uri.file(path.join(ctx.extensionPath, 'resources'));
         },
         reportsRoot: () => {
             return out;
+        },
+        configurationLocation: (config: RhamtConfiguration): string => {
+            return `${reportLocation()}/${config.id}`;
         }
     };
 }

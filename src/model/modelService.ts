@@ -2,7 +2,7 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { RhamtModel, RhamtConfiguration, ReportEndpoints } from './model';
+import { RhamtModel, RhamtConfiguration, Endpoints } from './model';
 import * as fs from 'fs';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
@@ -18,7 +18,7 @@ export class ModelService {
     constructor(
         public model: RhamtModel,
         public outDir: string,
-        public reportEndpoints: ReportEndpoints) {
+        public reportEndpoints: Endpoints) {
     }
 
     public addConfiguration(config: RhamtConfiguration): Promise<void>  {

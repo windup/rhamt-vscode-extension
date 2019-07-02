@@ -6,21 +6,21 @@ import * as express from 'express';
 import * as path from 'path';
 import * as http from 'http';
 import * as serveStatic from 'serve-static';
-import { ReportEndpoints } from '../model/model';
+import { Endpoints } from '../model/model';
 
 export class ReportServer {
 
     public app: express.Application;
     private server: http.Server;
-    private endpoints: ReportEndpoints;
+    private endpoints: Endpoints;
 
-    constructor(endpoints: ReportEndpoints) {
+    constructor(endpoints: Endpoints) {
         this.endpoints = endpoints;
     }
 
     public start(): void {
         this.app = express();
-        this.server = this.app.listen(this.endpoints.port());
+        this.server = this.app.listen(this.endpoints.reportPort());
         this.configServer();
     }
 

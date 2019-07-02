@@ -3,17 +3,17 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { WebviewPanel, window, ViewColumn, ExtensionContext, commands } from 'vscode';
-import { ReportEndpoints } from '../model/model';
+import { Endpoints } from '../model/model';
 import { ReportServer } from './reportServer';
 
 export class ReportView {
 
     private view: WebviewPanel | undefined = undefined;
-    private endpoints: ReportEndpoints;
+    private endpoints: Endpoints;
     private context: ExtensionContext;
     private reportServer: ReportServer;
 
-    constructor(context: ExtensionContext, endpoints: ReportEndpoints) {
+    constructor(context: ExtensionContext, endpoints: Endpoints) {
         this.context = context;
         this.endpoints = endpoints;
         this.reportServer = new ReportServer(this.endpoints);
@@ -21,7 +21,7 @@ export class ReportView {
         this.context.subscriptions.push(commands.registerCommand('rhamt.openReport', item => {
             const location = item.getReport() as string;
             const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
-            const report = `${this.endpoints.location()}/${relative}`;
+            const report = `${this.endpoints.reportLocation()}/${relative}`;
             this.open(report);
         }));
     }

@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { WebviewPanel, window, ViewColumn, ExtensionContext, Uri, commands } from 'vscode';
-import { ReportEndpoints, IIssue, IssueContainer } from '../model/model';
+import { Endpoints, IIssue, IssueContainer } from '../model/model';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
 import * as openLink from 'opn';
@@ -14,10 +14,10 @@ export class IssueDetailsView {
     onEditorClosed = new rhamtEvents.TypedEvent<void>();
 
     private view: WebviewPanel | undefined = undefined;
-    private endpoints: ReportEndpoints;
+    private endpoints: Endpoints;
     private context: ExtensionContext;
 
-    constructor(context: ExtensionContext, endpoints: ReportEndpoints) {
+    constructor(context: ExtensionContext, endpoints: Endpoints) {
         this.context = context;
         this.endpoints = endpoints;
         this.context.subscriptions.push(commands.registerCommand('rhamt.openIssueDetails', item => {

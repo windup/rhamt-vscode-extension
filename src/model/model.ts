@@ -152,9 +152,10 @@ export interface IClassification extends IIssue {
     description: string;
 }
 
-export interface ReportEndpoints {
-    location(): string;
-    port(): string;
+export interface Endpoints {
+    reportLocation(): string;
+    reportPort(): string;
     resourcesRoot(): any;
     reportsRoot(): any;
+    configurationLocation(config: RhamtConfiguration): string;
 }
