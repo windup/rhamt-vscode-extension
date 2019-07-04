@@ -3,7 +3,7 @@ import { WebviewPanel, window, ViewColumn, Uri, ExtensionContext } from 'vscode'
 import * as path from 'path';
 import { Endpoints, RhamtConfiguration } from '../model/model';
 
-export class RhamtConfigurationEditor {
+export class ConfigurationEditor {
 
     onEditorClosed = new rhamtEvents.TypedEvent<void>();
 
