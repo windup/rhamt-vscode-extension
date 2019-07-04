@@ -103,14 +103,23 @@ function getNode(node: json.Node, text: string, config: RhamtConfiguration): jso
 }
 
 function getEndpoints(ctx: vscode.ExtensionContext, out: string): any {
+    const host = () => {
+        return 'localhost';
+    };
+    const configurationPort = () => {
+        return process.env.RHAMT_CONFIG_PORT || String(61436);
+    };
+    const configurationLocation = () => {
+        return `http://${host()}:${configurationPort()}`;
+    };
     const reportPort = () => {
-        return process.env.RAAS_PORT || String(61435);
+        return process.env.RHAMT_REPORT_PORT || String(61435);
     };
     const reportHost = () => {
         return 'localhost';
     };
     const reportLocation = () => {
-        return `http://${reportHost()}:${reportPort()}`;
+        return `http://${host()}:${reportPort()}`;
     };
     return {
         reportPort,
@@ -123,7 +132,7 @@ function getEndpoints(ctx: vscode.ExtensionContext, out: string): any {
             return out;
         },
         configurationLocation: (config: RhamtConfiguration): string => {
-            return `${reportLocation()}/${config.id}`;
+            return `${configurationLocation()}/${config.id}`;
         }
     };
 }
