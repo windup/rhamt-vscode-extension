@@ -177,6 +177,8 @@
         "@types/sinon": "^5.0.7",
         "@types/sinon-chai": "^3.2.2",
         "@types/fs-extra": "^7.0.0",
+        "@types/socket.io": "^1.4.36",
+        "@types/socket.io-client": "^1.4.32",
         "chai": "^4.2.0",
         "sinon": "^7.2.7",
         "sinon-chai": "^3.3.0",
@@ -202,6 +204,8 @@
         "serve-static": "^1.14.1",
         "showdown": "^1.9.0",
         "tmp": "^0.1.0",
-        "vscode-nls": "^2.0.2"
+        "vscode-nls": "^2.0.2",
+        "socket.io": "^2.1.1",
+        "socket.io-client": "^2.1.1"
     }
 }

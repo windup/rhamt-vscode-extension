@@ -131,6 +131,7 @@ function getEndpoints(ctx: vscode.ExtensionContext, out: string): any {
         reportsRoot: () => {
             return out;
         },
+        configurationPort,
         configurationLocation: (config: RhamtConfiguration): string => {
             return `${configurationLocation()}/${config.id}`;
         }
