@@ -1,11 +1,11 @@
 import * as io from 'socket.io';
 import { ModelService } from '../model/modelService';
-import { ConfigurationClientsManager } from './configurationClientsManager';
+import { ConfigurationClientManager } from './configurationClientManager';
 import { ConfigurationClient } from './configurationClient';
 
 export class ClientConnectionService {
 
-    private clientManagers: Map<string, ConfigurationClientsManager> = new Map<string, ConfigurationClientsManager>();
+    private clientManagers: Map<string, ConfigurationClientManager> = new Map<string, ConfigurationClientManager>();
     private modelService: ModelService;
     private clientIdSeq: number = 0;
 
@@ -21,7 +21,7 @@ export class ClientConnectionService {
             const client = new ConfigurationClient(s, clientId);
             let manager = this.clientManagers.get(id);
             if (!manager) {
-                manager = new ConfigurationClientsManager(config);
+                manager = new ConfigurationClientManager(config);
                 this.clientManagers.set(id, manager);
             }
             client.onDisposed.on(() => {

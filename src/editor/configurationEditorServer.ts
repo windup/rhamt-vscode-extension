@@ -8,7 +8,7 @@ import { Endpoints } from '../model/model';
 import { ConfigurationServerController } from './configurationServerController';
 import { ClientConnectionService } from './clientConnectionService';
 
-export class ConfigurationServer {
+export class ConfigurationEditorServer {
 
     public app: express.Application;
     private server: http.Server;

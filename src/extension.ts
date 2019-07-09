@@ -13,6 +13,9 @@ import { RhamtUtil } from './server/rhamtUtil';
 import * as fs from 'fs-extra';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
+import { ConfigurationEditorServer } from './editor/configurationEditorServer';
+import { ConfigurationServerController } from './editor/configurationServerController';
+import { ClientConnectionService } from './editor/clientConnectionService';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -22,11 +25,16 @@ export async function activate(context: vscode.ExtensionContext) {
     stateLocation = context.storagePath;
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
-    const reportEndpoints = getEndpoints(context, out);
-    modelService = new ModelService(new RhamtModel(), out, reportEndpoints);
+    const endpoints = getEndpoints(context, out);
+    modelService = new ModelService(new RhamtModel(), out, endpoints);
     new RhamtView(context, modelService);
-    new ReportView(context, reportEndpoints);
-    detailsView = new IssueDetailsView(context, reportEndpoints);
+    new ReportView(context, endpoints);
+    detailsView = new IssueDetailsView(context, endpoints);
+
+    const configServerController = new ConfigurationServerController(modelService, endpoints.resourcesRoot());
+    const connectionService = new ClientConnectionService(modelService);
+    const configEditorServer = new ConfigurationEditorServer(endpoints, configServerController, connectionService);
+    configEditorServer.start();
 
     const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
         const config = item.config;

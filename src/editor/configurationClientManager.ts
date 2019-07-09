@@ -6,7 +6,7 @@ import { RhamtConfiguration } from '../model/model';
 
 const localize = nls.loadMessageBundle();
 
-export class ConfigurationClientsManager {
+export class ConfigurationClientManager {
 
     private clients: Map<string, ConfigurationClient> = new Map<string, ConfigurationClient>();
     private config: RhamtConfiguration;
