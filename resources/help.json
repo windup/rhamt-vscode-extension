@@ -86,7 +86,7 @@
       },
       {
         "name": "mavenizeGroupId",
-        "description": "Used in conjunction with <code>mavenize</code>. All pom.xml files will use this value as their <groupId>. If the parameter is omitted, RHAMT tries to guess some value based on the application, but this guess may be wrong. Last resort default value is 'com.mycompany.mavenized'.",
+        "description": "Used in conjunction with the `mavenize` option. All pom.xml files will use this value as their <groupId>. If the parameter is omitted, RHAMT tries to guess some value based on the application, but this guess may be wrong. Last resort default value is 'com.mycompany.mavenized'.",
         "type": "String",
         "ui-type": ["single"],
         "required": false
