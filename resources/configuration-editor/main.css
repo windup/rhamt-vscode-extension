@@ -1,0 +1,203 @@
+
+body {
+    background-color: rgb(30, 30, 30);
+    color: #cccccc;
+    font-size: 13px;
+    line-height: 1.4em;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, HelveticaNeue-Light, Ubuntu, Droid Sans, sans-serif;
+}
+
+.code {
+    font-family: Monaco, Menlo, Consolas, Droid Sans Mono, Inconsolata, Courier New, monospace, Droid Sans Fallback;
+    font-size: 90%;
+    background-color: hsla(0, 0%, 50%, .17);
+    border-radius: 4px;
+    padding: 1px 4px
+}
+
+label {
+    cursor: pointer;
+    font-weight: inherit;
+}
+
+.form-checkbox {
+    padding-left: 20px;
+    margin: 15px 0;
+    vertical-align: middle;
+}
+
+.form-checkbox input[type=checkbox], .form-checkbox input[type=radio] {
+    float: left;
+    margin: 5px 0 0 -20px;
+    vertical-align: middle;
+}
+
+.form-required {
+    margin-left: 5px;
+    color: red;
+}
+
+input {
+    color: inherit;
+    font-family: inherit;
+    font-size: 100%;
+}
+
+[type="checkbox"], [type="radio"] {
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.form-checkbox .note {
+    display: block;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    color: #586069;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+table tr:nth-child(odd) {
+    background-color: inherit;
+}
+
+table tr:hover {
+    background-color: hsla(0, 0%, 50%, .15)
+}
+
+.option-row {
+    cursor: pointer;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    height: 100%;
+    padding: 0 6px;
+    height: 22px;
+}
+
+.option-data {
+    overflow: hidden;
+    display: flex;
+    height: 100%;
+    flex: 1;
+}
+
+.option-label {
+    overflow: hidden;
+    display: flex;
+    height: 100%;
+    flex: 1;
+}
+
+.option-input {
+    display: inline;
+    align-self: center;
+    margin: 0;
+    border: none;
+    outline:0;
+  }
+
+.option-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+    margin-left: 10px;
+    line-height: 22px;
+  }
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+dd {
+    margin-left: 0;
+}
+
+.action-bar {
+    position: absolute;
+    right: 0;
+    margin-top: 1px;
+    text-align: right;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.actions-container {
+    display: flex;
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.action-item {
+    cursor: pointer;
+    display: inline-block;
+    transition: transform 50ms ease;
+    position: relative;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.edit-action {
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cstyle%3E.icon-canvas-transparent{opacity:0;fill:%232d2d30}.icon-vs-out{fill:%232d2d30}.icon-vs-bg{fill:%23c5c5c5}%3C/style%3E%3Cpath class='icon-canvas-transparent' d='M16 16H0V0h16v16z' id='canvas'/%3E%3Cpath class='icon-vs-bg' d='M14.598 4.25L12.91 6l-3-3 1.688-1.75 3 3zM8.91 4l-7 7 3 3 7-7-3-3zM1 12.09V15h2.91L1 12.09z' id='iconBg'/%3E%3C/svg%3E") 50% no-repeat;
+    margin-right: 4px;
+}
+
+.delete-action {
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='3 3 16 16'%3E%3Cpath fill='%23e8e8e8' d='M12.597 11.042l2.803 2.803-1.556 1.555-2.802-2.802L8.239 15.4l-1.556-1.555 2.802-2.803-2.802-2.803 1.555-1.556 2.804 2.803 2.803-2.803L15.4 8.239z'/%3E%3C/svg%3E") 50% no-repeat;        
+  }
+
+.action-label {
+    margin-right: 2px;
+    width: 16px;
+    height: 16px;
+    padding: 2px;
+    display: inline-block;
+    font-size: 11px;
+}
+
+.row-text {
+    display: inline-block;
+    line-height: 22px;
+    font-family: Menlo,Monaco,Consolas,Droid Sans Mono,Courier New,monospace,Droid Sans Fallback;
+    margin-right: 3px;
+    margin-left: 2px;
+}
+
+.table-row {
+    position: relative;
+    border: none;
+    border-width: 0px;
+}
+
+div.table-row.selected:not(:focus) {
+    background-color: #084066;
+}
+
+div.table-row.selected:focus {
+    background-color: #062f4a;
+}
+
+div.table-row.selected:focus:hover {
+    background-color: #062f4a;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
