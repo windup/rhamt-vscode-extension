@@ -156,6 +156,7 @@ export interface Endpoints {
     reportLocation(): string;
     reportPort(): string;
     resourcesRoot(): any;
+    configurationResourceRoot(): string;
     reportsRoot(): any;
     configurationPort(): string;
     configurationLocation(config: RhamtConfiguration): string;

@@ -1,20 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import * as fs from 'fs';
 import { ModelService } from '../model/modelService';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration, Endpoints } from '../model/model';
 import * as path from 'path';
 
 export class ConfigurationServerController {
 
     private modelService: ModelService;
-    private resourceLocation: string;
+    private endpoints: Endpoints;
     private elementData: any;
 
     constructor(
         modelService: ModelService,
-        resourceLocation: string) {
+        endpoints: Endpoints) {
         this.modelService = modelService;
-        this.resourceLocation = resourceLocation;
+        this.endpoints = endpoints;
         this.readElementData();
     }
 
@@ -22,7 +22,7 @@ export class ConfigurationServerController {
         return new Promise<any>((resolve, reject) => {
             if (this.elementData) resolve(this.elementData);
             else {
-                fs.readFile(path.join(this.resourceLocation, 'help.json'), (err, data: any) => {
+                fs.readFile(path.join(this.endpoints.resourcesRoot(), 'help.json'), (err, data: any) => {
                     if (err) reject(err);
                     else resolve(this.elementData = JSON.parse(data));
                 });

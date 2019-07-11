@@ -3,7 +3,6 @@ import * as path from 'path';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import * as io from 'socket.io';
-import * as serveStatic from 'serve-static';
 import { Endpoints } from '../model/model';
 import { ConfigurationServerController } from './configurationServerController';
 import { ClientConnectionService } from './clientConnectionService';
@@ -41,12 +40,9 @@ export class ConfigurationEditorServer {
     private configServer() {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.set('views', path.join(__dirname, '..', '..', 'resources', 'views'));
+        this.app.set('views', path.join(this.endpoints.configurationResourceRoot(), 'views'));
         this.app.set('view engine', 'jade');
-        this.app.use(express.static(path.join(__dirname, '..', '..', 'resources')));
-        this.app.use('/node_modules', express.static(path.join(__dirname, '..', '..', 'node_modules')));
-        this.app.use('/out', express.static(path.join(__dirname, '..', '..', 'out')));
-        this.app.use(serveStatic(path.join(__dirname, '..', '..', 'data')));
+        this.app.use(express.static(this.endpoints.configurationResourceRoot()));
         this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
             err.status = 404;
             next(err);
