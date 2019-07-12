@@ -1,0 +1,475 @@
+  <div class="monaco-shell">
+      <div class="manaco-shell-content">
+        <div class="app-shell" style="position:absolute;">
+          <div class="monaco-workbench-container" style="position: relative; height: 100%; ">
+            <div class="monaco-workbench mac" style="height:100%;">
+              <div class="part editor" style="position: relative; height: 100%;">
+                <div class="content" style="height:100%;">                  
+                    <div class="overlay-container" style="position: absolute; width: 100%; z-index: 10000; height: 100%; display: none;">
+                      <div class="defineKeybindingWidget" style="width: 400px; height: 110px; background-color: rgb(37, 37, 38); box-shadow: rgb(0, 0, 0) 0px 2px 8px; position: unset; margin: auto; margin-top: 150px;">
+                        <div style="text-align: center;">Enter desired value and then press ENTER.</div>
+                        <div class="settings-header-widget">
+                          <div class="settings-search-container">
+                            <div class="settings-search-input">
+                              <div class="monaco-inputbox idle" style="background-color: rgb(60, 60, 60); color: rgb(204, 204, 204); width: unset;">
+                                <div class="wrapper">
+                                  <input id='editDialogInput' class="input" autocorrect="off" autocapitalize="off" spellcheck="false" type="text"
+                                    wrap="off" aria-label="Press desired key combination and then press ENTER." aria-live="off" style="background-color: rgb(60, 60, 60); color: rgb(204, 204, 204); padding: 4px;">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div style="margin-top: 10px; text-align: center">
+                            <span id="openButton" style="text-decoration: underline; cursor: pointer; display: none;">Open File Explorer</span>
+                        </div>
+                      </div>
+                    </div>
+                  <div class="editor-container app-container">
+                    <div class="editor-instance app-instance" style="height: 100%; margin: auto; max-width: 900px;">
+                      <div class="extension-editor" style="height:100%; padding: 0px;  margin: 0px;">
+                            <div class="my-wrapper">                              
+                                      <div style="max-width: 900px; margin: auto; position: relative; padding-right: 10px;">
+                                <div style="position: relative; right: -10px;">
+                                <div style="margin-left: 10px;">                                 
+                              <div class="d-flex" style="margin-top: 15px;">
+                                  <div class="" style="width: 60%">
+                                      <form id='elementForm'>
+                                      </form>
+                                  </div>
+                                  <div class="" style="width: 40%; margin-left: 20px">
+                                  </div>
+                              </div>
+                                  </div>
+                                </div>
+                                <div>
+                                </div>
+                              </div>
+                              </div>
+                                </div>
+                              </div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <script>
+          $(document).ready(function () {
+            
+            var configClient = new ConfigClient(window.location.host, configId, elementData, $('#elementForm'), document);
+
+            function bindCommonElements() {
+                $('#configurationName').keyup(function(e){
+                    if (e.which !== 0) {
+                      configClient.setName($(this).val());
+                    }
+                });    
+                $('#cli').keyup(function(e){
+                    if (e.which !== 0) {
+                      configClient.setCli($(this).val());
+                    }
+                });        
+                $('#javaHome').keyup(function(e){
+                    if (e.which !== 0) {
+                      configClient.setJavaHome($(this).val());
+                    }
+                });
+            }
+
+            bindCommonElements();
+
+            function bindOptions() {
+              $('#userRulesDirectory').keyup(function(e){
+                if (e.which !== 0) {
+                  configClient.updateOption({name: 'userRulesDirectory', value: $(this).val()});
+                }
+              });
+            }
+
+            bindOptions();
+
+            function loadTable(input, help) {
+              if (!input || input.length === 0) {
+                $('#help-text-for-input').show();
+              }
+              else {
+                $('#help-text-for-input').hide();
+                var tableContent = '';
+                input.forEach(item => {
+                  tableContent += '<tr>';
+                  tableContent += '<td>';
+                  tableContent += '<div class="d-flex flex-justify-between">';
+                  tableContent += `<div>${item.path}</div>`;
+                  tableContent += `<div><div id="${item.id}" href="#" class="inputItem" style="vertical-align: middle;"></div></div>`;
+                  tableContent += '</div>';
+                  tableContent += '</td>';
+                  tableContent += '</tr>';
+                });
+                $('#input-table').html(tableContent);
+              }
+            }
+      
+            configClient.store.onReload = config => {
+              $('#configurationName').val(config._name);
+              $('#cli').val(config.cli);
+              $('#javaHome').val(config.jvm.location);
+              if (config.results) {
+                $('#reportLink').show();
+                $('#reportLink').href = `${config.results.summary.reportLocation}`;
+              }
+              else {
+                $('#reportLink').hide();
+              }
+            };
+
+            function loadSources(sources) {
+            }
+
+            function loadTargets(targets) {
+            }
+
+            function loadExcludedPackages(packages) {
+            }
+
+            function loadIncludedPackages(packages) {
+            }
+
+            function loadExcludedTags(tags) {
+            }
+
+            function loadIncludedTags(tags) {
+            }
+
+            function loadAdditionalClasspath(classpath) {
+            }
+
+            function updateCheckbox(name, value) {
+              if (value && !$(`#${name}`).is(':checked')) {                    
+                  $(`#${name}`).attr('checked', 'checked');
+              }
+              else if (!value && $(`#${name}`).is(':checked')) {
+                  $(`#${name}`).attr('checked', false);
+              }
+            }
+
+            function updateOptions(config) {
+              Object.keys(config.options).forEach(function(key) {
+                const name = key;
+                const value = config.options[key];
+                updateCheckbox(name, value);
+                switch (name) {
+                  case 'input': {
+                    loadInput(value);
+                    break;
+                  }
+                  case 'target': {
+                    loadTargets(value)
+                    break;
+                  }
+                  case 'output': {
+                    break;
+                  }
+                  case 'overwrite': {
+                    break;
+                  }       
+                  case 'userRulesDirectory': {
+                    $('#userRulesDirectoryText').val(value);
+                    break;
+                  }
+                  case 'userIgnorePath': {
+                    $('#userIgnorePathText').val(value);
+                    break;
+                  } 
+                  case 'skipReports': {
+                    break;
+                  }
+                  case 'sourceMode': {
+                    break;
+                  }
+                  case 'excludePackages': {
+                    loadExcludedPackages(value);
+                    break;
+                  }
+                  case 'mavenizeGroupId': {
+                    $('#mavenizeGroupId').val(value);
+                    break;
+                  }
+                  case 'exportCSV': {
+                    break;
+                  }
+                  case 'excludeTags': {
+                    loadExcludeTags(value);
+                    break;
+                  }
+                  case 'packages': {
+                    loadIncludedPackages(value);
+                    break;
+                  }
+                  case 'additionalClasspath': {
+                    loadAdditionalClasspath(value);
+                    break;
+                  }
+                  case 'source': {
+                    loadSources(value);
+                    break;
+                  }
+                  case 'disableTattletale': {
+                    break;
+                  }
+                  case 'enableCompatibleFilesReport': {
+                    break;
+                  }
+                  case 'includeTags': {
+                    loadIncludedTags(value);
+                    break;
+                  }
+                  case 'online': {
+                    break;
+                  }
+                  case 'enableClassNotFoundAnalysis': {
+                    break;
+                  }
+                  case 'disableTattletale': {
+                    break;
+                  }
+                  case 'enableTattletale': {
+                    break;
+                  }
+                  case 'explodedApp': {
+                    break;
+                  }
+                  case 'keepWorkDirs': {
+                    break;
+                  }
+                  case 'mavenize': {
+                    break;
+                  }
+                  case 'inputApplicationName': {
+                    $('#inputApplicationNameText').val(value);
+                    break;
+                  }
+                }
+              });
+            }
+
+            $('form-checkbox-details-trigger').mouseup(e => {
+              e.preventDefault();
+            });
+
+            configClient.store.onUpdateOption = (option, options) => {
+              configClient.store.config.options = options;
+             
+            };
+    
+            configClient.store.onUpdateName = change => {
+              console.log('refreshing name as it has changed');
+              $('#configurationName').val(configClient.store.config._name);
+            };
+    
+            $('#input-table').on('click', 'div.inputItem', function() {
+              const container = $(this).closest('.advanced-container');
+              configClient.deleteInput($(this).attr('id'));
+            });
+    
+            $('#inputButton').click(function() {
+                configClient.promptInput();
+            });
+    
+            var cliDownload = '';
+    
+            $('.form-checkbox input').click(function() {
+            });
+
+            var downloadingCli = false;
+            $('#download-dropdown').click(function(e) {
+            });
+    
+            $('#download-cli-btn').click(function() {
+              const location = $('#download-cli-destination').val();
+              console.log('location: ' + location + ' cliDownload: ' + cliDownload);
+              console.log($('#'+cliDownload));
+              console.log('id: ' + $('#'+cliDownload).attr('data-id') + ' url: ' + $('#'+cliDownload).attr('data-url'));
+              if (location && cliDownload) {
+                $('#download-cli-container').removeAttr('open');
+                $('#download-dropdown').text('Downloading...');
+                downloadingCli = true;
+                configClient.downloadInstall({
+                  id: $('#'+cliDownload).attr('data-id'),
+                  url: $('#'+cliDownload).attr('data-url'),
+                  downloadDir: location
+                });
+              }
+            });
+
+            configClient.store.onInstallCliChanged = change => {
+              console.log('client received installCli change: ' + change.type);
+              switch (change.type) {
+                case ChangeType.COMPLETE: {
+                  downloadingCli = false;                  
+                  $('#download-dropdown').text('Download ');
+                  $('#download-dropdown').append('<span class="dropdown-caret"></span>');
+                  console.log('cli text: ' + $('#cli').text());
+                  console.log('value.home: ' + change.value.home);
+                  if (!$('#cli').val()) {
+                    $('#cli').val(change.value.home);
+                    configClient.setCli(change.value.home);
+                  }
+                  console.log(JSON.stringify(change));
+                  break;
+                }
+                case ChangeType.ERROR: {
+                  downloadingCli = false;
+                  $('#download-dropdown').text('Download');
+                  $('#download-dropdown').append('<span class="dropdown-caret"></span>');
+                  $('#download-dropdown').removeClass('downloading');
+                  break;
+                }
+              }
+            };
+    
+            $('.download-install').click(function() {
+            });
+    
+            $('report-link').click(function(e) {
+            });
+      
+            $('.addButton').click(function(e) {
+              var option = $(this).attr('option');
+            });
+      
+            $('.boolean-option').click(function () {
+              const id = $(this).attr('id');
+              const enabled = $(this).is(':checked');
+              configClient.setOption('boolean', id, enabled);
+            });
+    
+            $("input").keypress(function(){
+              const id = $(this).attr('id');
+            });
+            
+            $('#cancel').hide();
+
+            configClient.store.onAnalysisStarted = () => {
+              $('#run').hide();
+              $('#cancel').show();
+              $('#reportLink').hide();
+            };
+
+            $('#reportLink').click(function() {
+              configClient.openReport();
+            });
+            
+            configClient.store.onAnalysisCompleted = config => {
+              $('#cancel').hide();
+              $('#run').show();
+              $('#run').text('Run');
+              $('#progress').html('');
+              if (config._results) {
+                $('#reportLink').show();
+                $('#reportLink').href = `${config._results.summary.reportLocation}`;
+              }
+              else {
+                $('#reportLink').hide();
+              }
+              console.log('Analysis completed');
+              console.log(config);
+            };
+
+            configClient.store.onProgress = msg => {
+              $('#run').hide();
+              $('#cancel').show();
+              $('#progress-container').show();
+              $('#progress').text(msg);
+            };
+      
+            $('#run').click(function() {
+              $('#cancel').hide();
+              $('#run').text('Preparing...');
+              $('#progress').text('');
+              configClient.run();
+            });
+
+            configClient.store.onStartingAnalysis = () => {
+              $('#cancel').hide();
+              $('#run').text('Preparing...');
+              $('#progress').text('');
+            }
+
+            $('#cancel').click(function() {
+              $('#cancel').hide();
+              $('#progress').text('');
+              configClient.cancel();
+            });
+
+            configClient.store.onServerStopped = msg => {
+              $('#cancel').hide();
+              $('#run').show();
+              $('#run').text('Run');
+            };
+
+            configClient.store.onErrorCancellingAnalysis = () => {
+              $('#cancel').show();
+              $('#progress-container').show();
+              $('#progress').text('error stopping analysis');
+            }
+      
+            configClient.store.onErrorStartingServer = () => {
+              $('#cancel').hide();
+              $('#run').text('Run');
+              $('#progress-container').show();
+              $('#progress').text('error starting rhamt');
+            }
+
+            $('.stop.enabled').click(function() {
+            });
+      
+            $('.advanced-container').focusin(function() {
+              $(this).find('.setting-item').css('border-color', '#0c7d9d');
+            });
+            $('.advanced-container').focusout(function() {
+              $(this).find('.setting-item').css('border-color', 'hsla(0, 0%, 50%, .22)');
+            });
+    
+            window.dragOverHandler = function (ev) {
+              ev.preventDefault();
+            };
+    
+            window.dropHandler = function (ev) {
+              ev.preventDefault();
+              if (ev.dataTransfer.items) {
+                var data = event.dataTransfer.items;
+                for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+                  if (data[i].kind == 'string' && data[i].type.match('^text/plain')) {
+                      data[i].getAsString(function (s){
+                        console.log('string is: ' + s);
+                        if (s.includes('//github.com/')) {
+                          configClient.cloneRepo(s);
+                        }
+                        else {
+                          configClient.addInput([s]);
+                        }
+                      });
+                  }
+                  else if (data[i].kind == 'file') {
+                      configClient.addInput([data[i].getAsFile().path]);
+                  }
+                }
+              }
+              removeDragData(ev)
+            };
+            window.removeDragData = function(ev) {
+              if (ev.dataTransfer.items) {
+                ev.dataTransfer.items.clear();
+              } else {
+                ev.dataTransfer.clearData();
+              }
+            };
+          });
+        </script>
+      
+      
