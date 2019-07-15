@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Red Hat. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import { rhamtEvents } from '../events';
 import { WebviewPanel, window, ViewColumn, Uri, ExtensionContext } from 'vscode';
 import * as path from 'path';

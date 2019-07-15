@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Red Hat. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import { Request, Response, NextFunction } from 'express';
 import * as fs from 'fs';
 import { ModelService } from '../model/modelService';
