@@ -69,15 +69,6 @@ export async function activate(context: vscode.ExtensionContext) {
                 if (configuration) {
                     configEditorService.openConfiguration(configuration);
                 }
-                // vscode.workspace.openTextDocument(vscode.Uri.file(location)).then(async doc => {
-                //     const editor = await vscode.window.showTextDocument(doc);
-                //     const node = getNode(json.parseTree(doc.getText()), doc.getText(), config);
-                //     if (node) {
-                //         const range = new vscode.Range(doc.positionAt(node.offset), doc.positionAt(node.offset + node.length));
-                //         editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
-                //         editor.selection = new vscode.Selection(range.start, range.end);
-                //     }
-                // });
             }
             else {
                 vscode.window.showErrorMessage('Unable to find configuration persistance file.');
@@ -96,24 +87,6 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
     Utils.checkCli(modelService.outDir, context);
 }
-
-// function getNode(node: json.Node, text: string, config: RhamtConfiguration): json.Node {
-//     let found = false;
-//     let container = undefined;
-//     json.visit(text, {
-//         onObjectProperty: (property: string, offset: number, length: number, startLine: number, startCharacter: number) => {
-//             if (!found && property === 'name') {
-//                 const childPath = json.getLocation(text, offset).path;
-//                 const childNode = json.findNodeAtLocation(node, childPath);
-//                 if (childNode && childNode.value === config.name) {
-//                     found = true;
-//                     container = childNode.parent.parent;
-//                 }
-//             }
-//         }
-//     });
-//     return container;
-// }
 
 function getEndpoints(ctx: vscode.ExtensionContext, out: string): any {
     const host = () => {
