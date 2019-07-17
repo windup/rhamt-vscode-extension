@@ -24,7 +24,7 @@ export class ConfigurationEditor {
 
     open(): void {
         if (!this.view) {
-            this.view = window.createWebviewPanel('rhamtConfigurationEditor', this.configuration.options['name'], ViewColumn.Active, {
+            this.view = window.createWebviewPanel('rhamtConfigurationEditor', this.configuration.name, ViewColumn.Active, {
                 enableScripts: true,
                 retainContextWhenHidden: true,
                 localResourceRoots: [Uri.file(path.join(this.context.extensionPath, 'out'))]
