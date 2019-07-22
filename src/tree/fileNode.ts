@@ -100,8 +100,7 @@ export class FileNode extends AbstractNode<FileItem> {
                 this.modelService,
                 this.onNodeCreateEmitter,
                 this.dataProvider,
-                this.root,
-                this));
+                this.root));
         }
         this.treeItem.refresh();
         super.refresh(node);

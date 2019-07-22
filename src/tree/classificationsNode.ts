@@ -24,8 +24,7 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
         modelService: ModelService,
         onNodeCreateEmitter: EventEmitter<ITreeNode>,
         dataProvider: DataProvider,
-        root: ConfigurationNode,
-        parent: ITreeNode) {
+        root: ConfigurationNode) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.file = file;
         this.root = root;
