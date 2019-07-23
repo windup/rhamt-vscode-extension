@@ -6,6 +6,7 @@ import * as vscode from 'vscode';
 import { Utils } from './Utils';
 import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
+import * as che from '@eclipse-che/plugin';
 import { ModelService } from './model/modelService';
 import { RhamtModel, RhamtConfiguration } from './model/model';
 import { RhamtUtil } from './server/rhamtUtil';
@@ -89,6 +90,7 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 function getEndpoints(ctx: vscode.ExtensionContext, out: string): any {
+    console.log(che.workspace.getCurrentWorkspace());
     const host = () => {
         return 'localhost';
     };
