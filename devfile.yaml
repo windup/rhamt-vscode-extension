@@ -33,7 +33,7 @@ components:
 
   - alias: che-dev
     type: dockerimage
-    image: eclipse/che-theia-dev:nightly
+    image: eclipse/che-theia-dev:next
     mountSources: true
     endpoints:
       - name: "theia-dev-flow"
@@ -49,7 +49,7 @@ components:
 
   - type: cheEditor
     alias: theia-editor
-    id: eclipse/che-theia/next
+    id: eclipse/che-theia/7.0.0-next
 
 commands:
 
@@ -57,7 +57,7 @@ commands:
     actions:
       - type: exec
         component: che-dev
-        command: npm install -g vsce && yarn && vsce package
+        command: npm install -g vsce && npm install && vsce package
         workdir: /projects/rhamt-vscode-extension/
 
   - name: run ... remote helloworld vscode ext
@@ -65,7 +65,6 @@ commands:
       - type: exec
         component: rhamt-vscode-ext-sidecar
         command: >
-                 killall node;
                  export THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT='2504' &&
                  export THEIA_PLUGINS='local-dir:///projects/rhamt-vscode-extension/' &&
                  export THEIA_PLUGIN_ENDPOINT_PORT='10000' &&
@@ -77,11 +76,10 @@ commands:
       - type: exec
         component: theia-editor
         command: >
-                 kill `cat /tmp/node_theiadev.pid` &> /dev/null;
                  mkdir -p /tmp/theiadev_projects &&
                  export THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT='2504' &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
-                 node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
+                 node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130
         workdir: /home/theia
 
 
