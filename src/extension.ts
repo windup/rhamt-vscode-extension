@@ -26,7 +26,7 @@ export async function activate(context: vscode.ExtensionContext) {
     stateLocation = context.storagePath;
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
-    const endpoints = getEndpoints(context, out);
+    const endpoints = await getEndpoints(context, out);
     modelService = new ModelService(new RhamtModel(), out, endpoints);
     new RhamtView(context, modelService);
     new ReportView(context, endpoints);
@@ -89,8 +89,19 @@ export async function activate(context: vscode.ExtensionContext) {
     Utils.checkCli(modelService.outDir, context);
 }
 
-function getEndpoints(ctx: vscode.ExtensionContext, out: string): any {
-    console.log(che.workspace.getCurrentWorkspace());
+async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<any> {
+    const workspace = await che.workspace.getCurrentWorkspace();
+    console.log(workspace);
+    const runtimeMachines = workspace!.runtime!.machines || {};
+    Object.keys(runtimeMachines).forEach((machineName: string) => {
+        const machineServers = runtimeMachines[machineName].servers || {};
+        Object.keys(machineServers).forEach((serverName: string) => {
+            const url = machineServers[serverName].url!;
+            const portNumber = machineServers[serverName].attributes.port!;
+            console.log(`portNumber: ${portNumber}, serverName: ${serverName}, url: ${url} `);
+        });
+
+    });
     const host = () => {
         return 'localhost';
     };
