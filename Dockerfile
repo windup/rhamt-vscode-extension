@@ -5,6 +5,8 @@
 
 FROM eclipse/che-remote-plugin-runner-java11/7.0.0-next
 
+RUN apk add --no-cache bash
+
 ENV RHAMT_VERSION=4.2.0-SNAPSHOT \
     RHAMT_ROOT=$HOME/rhamt
    
