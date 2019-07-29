@@ -10,13 +10,14 @@ import * as che from '@eclipse-che/plugin';
 import { ModelService } from './model/modelService';
 import { RhamtModel, RhamtConfiguration } from './model/model';
 import { RhamtUtil } from './server/rhamtUtil';
+import * as json from 'jsonc-parser';
 import * as fs from 'fs-extra';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
 import { ConfigurationEditorServer } from './editor/configurationEditorServer';
 import { ConfigurationServerController } from './editor/configurationServerController';
 import { ClientConnectionService } from './editor/clientConnectionService';
-import { ConfigurationEditorService } from './editor/configurationEditorService';
+// import { ConfigurationEditorService } from './editor/configurationEditorService';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -36,7 +37,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const connectionService = new ClientConnectionService(modelService);
     const configEditorServer = new ConfigurationEditorServer(endpoints, configServerController, connectionService);
     configEditorServer.start();
-    const configEditorService = new ConfigurationEditorService(endpoints, context);
+    // const configEditorService = new ConfigurationEditorService(endpoints, context);
 
     const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
         const config = item.config;
@@ -66,10 +67,19 @@ export async function activate(context: vscode.ExtensionContext) {
         const location = modelService.getModelPersistanceLocation();
         fs.exists(location, exists => {
             if (exists) {
-                const configuration = modelService.getConfiguration(config.id);
-                if (configuration) {
-                    configEditorService.openConfiguration(configuration);
-                }
+                // const configuration = modelService.getConfiguration(config.id);
+                // if (configuration) {
+                //     configEditorService.openConfiguration(configuration);
+                // }
+                vscode.workspace.openTextDocument(vscode.Uri.file(location)).then(async doc => {
+                    const editor = await vscode.window.showTextDocument(doc);
+                    const node = getNode(json.parseTree(doc.getText()), doc.getText(), config);
+                    if (node) {
+                        const range = new vscode.Range(doc.positionAt(node.offset), doc.positionAt(node.offset + node.length));
+                        editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
+                        editor.selection = new vscode.Selection(range.start, range.end);
+                    }
+                });
             }
             else {
                 vscode.window.showErrorMessage('Unable to find configuration persistance file.');
@@ -87,6 +97,24 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     }));
     Utils.checkCli(modelService.outDir, context);
+}
+
+function getNode(node: json.Node, text: string, config: RhamtConfiguration): json.Node {
+    let found = false;
+    let container = undefined;
+    json.visit(text, {
+        onObjectProperty: (property: string, offset: number, length: number, startLine: number, startCharacter: number) => {
+            if (!found && property === 'name') {
+                const childPath = json.getLocation(text, offset).path;
+                const childNode = json.findNodeAtLocation(node, childPath);
+                if (childNode && childNode.value === config.name) {
+                    found = true;
+                    container = childNode.parent.parent;
+                }
+            }
+        }
+    });
+    return container;
 }
 
 async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<any> {
