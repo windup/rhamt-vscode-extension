@@ -23,7 +23,7 @@ let modelService: ModelService;
 let stateLocation: string;
 
 export async function activate(context: vscode.ExtensionContext) {
-    stateLocation = context.globalStoragePath;
+    stateLocation = context.extensionPath;
     console.log(`rhamt-vscode-extension storing data at: ${stateLocation}`);
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
