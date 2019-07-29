@@ -6,7 +6,6 @@ import * as vscode from 'vscode';
 import { Utils } from './Utils';
 import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
-import * as che from '@eclipse-che/plugin';
 import { ModelService } from './model/modelService';
 import { RhamtModel, RhamtConfiguration } from './model/model';
 import { RhamtUtil } from './server/rhamtUtil';
@@ -24,7 +23,8 @@ let modelService: ModelService;
 let stateLocation: string;
 
 export async function activate(context: vscode.ExtensionContext) {
-    stateLocation = context.storagePath;
+    stateLocation = context.globalStoragePath;
+    console.log(`rhamt-vscode-extension storing data at: ${stateLocation}`);
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
     const endpoints = await getEndpoints(context, out);
@@ -118,18 +118,20 @@ function getNode(node: json.Node, text: string, config: RhamtConfiguration): jso
 }
 
 async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<any> {
-    const workspace = await che.workspace.getCurrentWorkspace();
-    console.log(workspace);
-    const runtimeMachines = workspace!.runtime!.machines || {};
-    Object.keys(runtimeMachines).forEach((machineName: string) => {
-        const machineServers = runtimeMachines[machineName].servers || {};
-        Object.keys(machineServers).forEach((serverName: string) => {
-            const url = machineServers[serverName].url!;
-            const portNumber = machineServers[serverName].attributes.port!;
-            console.log(`portNumber: ${portNumber}, serverName: ${serverName}, url: ${url} `);
-        });
+    if (process.env.CHE_WORKSPACE_NAMESPACE) {
+        const workspace = await require('@eclipse-che/plugin').workspace.getCurrentWorkspace();
+        console.log(workspace);
+        const runtimeMachines = workspace!.runtime!.machines || {};
+        Object.keys(runtimeMachines).forEach((machineName: string) => {
+            const machineServers = runtimeMachines[machineName].servers || {};
+            Object.keys(machineServers).forEach((serverName: string) => {
+                const url = machineServers[serverName].url!;
+                const portNumber = machineServers[serverName].attributes.port!;
+                console.log(`portNumber: ${portNumber}, serverName: ${serverName}, url: ${url} `);
+            });
 
-    });
+        });
+    }
     const host = () => {
         return 'localhost';
     };
