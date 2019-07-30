@@ -99,23 +99,23 @@ export async function activate(context: vscode.ExtensionContext) {
     Utils.checkCli(modelService.outDir, context);
 }
 
-function getNode(node: json.Node, text: string, config: RhamtConfiguration): json.Node {
-    let found = false;
-    let container = undefined;
-    json.visit(text, {
-        onObjectProperty: (property: string, offset: number, length: number, startLine: number, startCharacter: number) => {
-            if (!found && property === 'name') {
-                const childPath = json.getLocation(text, offset).path;
-                const childNode = json.findNodeAtLocation(node, childPath);
-                if (childNode && childNode.value === config.name) {
-                    found = true;
-                    container = childNode.parent.parent;
-                }
-            }
-        }
-    });
-    return container;
-}
+// function getNode(node: json.Node, text: string, config: RhamtConfiguration): json.Node {
+//     let found = false;
+//     let container = undefined;
+//     json.visit(text, {
+//         onObjectProperty: (property: string, offset: number, length: number, startLine: number, startCharacter: number) => {
+//             if (!found && property === 'name') {
+//                 const childPath = json.getLocation(text, offset).path;
+//                 const childNode = json.findNodeAtLocation(node, childPath);
+//                 if (childNode && childNode.value === config.name) {
+//                     found = true;
+//                     container = childNode.parent.parent;
+//                 }
+//             }
+//         }
+//     });
+//     return container;
+// }
 
 async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<any> {
     if (process.env.CHE_WORKSPACE_NAMESPACE) {
