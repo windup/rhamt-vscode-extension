@@ -9,7 +9,7 @@ import { RhamtView } from './explorer/rhamtView';
 import { ModelService } from './model/modelService';
 import { RhamtModel, RhamtConfiguration } from './model/model';
 import { RhamtUtil } from './server/rhamtUtil';
-import * as json from 'jsonc-parser';
+// import * as json from 'jsonc-parser';
 import * as fs from 'fs-extra';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
