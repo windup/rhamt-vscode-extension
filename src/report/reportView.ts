@@ -18,10 +18,11 @@ export class ReportView {
         this.endpoints = endpoints;
         this.reportServer = new ReportServer(this.endpoints);
         this.reportServer.start();
-        this.context.subscriptions.push(commands.registerCommand('rhamt.openReport', item => {
+        this.context.subscriptions.push(commands.registerCommand('rhamt.openReport', async item => {
             const location = item.getReport() as string;
             const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
-            const report = `${this.endpoints.reportLocation()}/${relative}`;
+            const url = await this.endpoints.reportLocation();
+            const report = `${url}/${relative}`;
             this.open(report);
         }));
     }
@@ -43,7 +44,7 @@ export class ReportView {
     }
 
     private render(location: string): string {
-        const html = `
+        return `
             <!DOCTYPE html>
             <html>
                 <body style="margin:0px;padding:0px;overflow:hidden">
@@ -52,6 +53,5 @@ export class ReportView {
                 </body>
             </html>
         `;
-        return html;
     }
 }

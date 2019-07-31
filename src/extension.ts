@@ -21,6 +21,7 @@ import { ConfigurationEditorService } from './editor/configurationEditorService'
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
 let stateLocation: string;
+let host: string;
 
 export async function activate(context: vscode.ExtensionContext) {
     stateLocation = context.extensionPath;
@@ -69,7 +70,9 @@ export async function activate(context: vscode.ExtensionContext) {
             if (exists) {
                 const configuration = modelService.getConfiguration(config.id);
                 if (configuration) {
-                    configEditorService.openConfiguration(configuration);
+                    configEditorService.openConfiguration(configuration).catch(e => {
+                        console.log(`Error opening configuration ${config} with error: ${e}`)
+                    });
                 }
                 // vscode.workspace.openTextDocument(vscode.Uri.file(location)).then(async doc => {
                 //     const editor = await vscode.window.showTextDocument(doc);
@@ -117,42 +120,47 @@ export async function activate(context: vscode.ExtensionContext) {
 //     return container;
 // }
 
-async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<any> {
-    if (process.env.CHE_WORKSPACE_NAMESPACE) {
-        const workspace = await require('@eclipse-che/plugin').workspace.getCurrentWorkspace();
-        console.log(workspace);
-        const runtimeMachines = workspace!.runtime!.machines || {};
-        Object.keys(runtimeMachines).forEach((machineName: string) => {
-            const machineServers = runtimeMachines[machineName].servers || {};
-            Object.keys(machineServers).forEach((serverName: string) => {
-                const url = machineServers[serverName].url!;
-                const portNumber = machineServers[serverName].attributes.port!;
-                console.log(`portNumber: ${portNumber}, serverName: ${serverName}, url: ${url} `);
-            });
-
-        });
+async function getHost(port: string): Promise<String> {
+    if (host) return host;
+    if (!process.env.CHE_WORKSPACE_NAMESPACE) {
+        return host = 'localhost';
     }
-    const host = () => {
-        return 'localhost';
-    };
+    const workspace = await require('@eclipse-che/plugin').workspace.getCurrentWorkspace();
+    console.log(workspace);
+    const runtimeMachines = workspace!.runtime!.machines || {};
+    Object.keys(runtimeMachines).forEach((machineName: string) => {
+        const machineServers = runtimeMachines[machineName].servers || {};
+        Object.keys(machineServers).forEach((serverName: string) => {
+            const url = machineServers[serverName].url!;
+            const portNumber = machineServers[serverName].attributes.port!;
+            if (String(portNumber) === port && String(url).includes('rhamt-vscode')) {
+                console.log('============');
+                console.log(`portNumber: ${portNumber}, serverName: ${serverName}, url: ${url} `);
+                console.log('============');
+                return host = url;
+            }
+        });
+    });
+}
+
+async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<any> {
     const configurationPort = () => {
-        return '61436';
+        return process.env.RHAMT_CONFIGURATION_PORT || String(61436);
     };
-    const configurationLocation = () => {
-        return `http://${host()}:${configurationPort()}`;
+    const configurationLocation = async () => {
+        const url = await getHost(configurationPort());
+        console.log(`using url: ${url}`)
+        return `http://${url}`;
     };
     const reportPort = () => {
         return process.env.RHAMT_REPORT_PORT || String(61435);
     };
-    const reportHost = () => {
-        return 'localhost';
-    };
-    const reportLocation = () => {
-        return `http://${host()}:${reportPort()}`;
+    const reportLocation = async () => {
+        const url = await getHost(reportPort());
+        return `http://${url}`;
     };
     return {
         reportPort,
-        reportHost,
         reportLocation,
         resourcesRoot: () => {
             return vscode.Uri.file(path.join(ctx.extensionPath, 'resources')).fsPath;

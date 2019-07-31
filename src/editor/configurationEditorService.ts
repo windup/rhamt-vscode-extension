@@ -17,12 +17,12 @@ export class ConfigurationEditorService {
         this.context = context;
     }
 
-    openConfiguration(configuration: RhamtConfiguration): void {
+    async openConfiguration(configuration: RhamtConfiguration): Promise<void> {
         let editor = this.editors.get(configuration.id);
         if (!editor) {
             editor = new ConfigurationEditor(configuration, this.endpoints, this.context);
             this.editors.set(configuration.id, editor);
         }
-        editor.open();
+        await editor.open();
     }
 }
