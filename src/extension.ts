@@ -9,7 +9,6 @@ import { RhamtView } from './explorer/rhamtView';
 import { ModelService } from './model/modelService';
 import { RhamtModel, RhamtConfiguration } from './model/model';
 import { RhamtUtil } from './server/rhamtUtil';
-// import * as json from 'jsonc-parser';
 import * as fs from 'fs-extra';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
@@ -74,15 +73,6 @@ export async function activate(context: vscode.ExtensionContext) {
                         console.log(`Error opening configuration ${config} with error: ${e}`)
                     });
                 }
-                // vscode.workspace.openTextDocument(vscode.Uri.file(location)).then(async doc => {
-                //     const editor = await vscode.window.showTextDocument(doc);
-                //     const node = getNode(json.parseTree(doc.getText()), doc.getText(), config);
-                //     if (node) {
-                //         const range = new vscode.Range(doc.positionAt(node.offset), doc.positionAt(node.offset + node.length));
-                //         editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
-                //         editor.selection = new vscode.Selection(range.start, range.end);
-                //     }
-                // });
             }
             else {
                 vscode.window.showErrorMessage('Unable to find configuration persistance file.');
@@ -102,62 +92,40 @@ export async function activate(context: vscode.ExtensionContext) {
     Utils.checkCli(modelService.outDir, context);
 }
 
-// function getNode(node: json.Node, text: string, config: RhamtConfiguration): json.Node {
-//     let found = false;
-//     let container = undefined;
-//     json.visit(text, {
-//         onObjectProperty: (property: string, offset: number, length: number, startLine: number, startCharacter: number) => {
-//             if (!found && property === 'name') {
-//                 const childPath = json.getLocation(text, offset).path;
-//                 const childNode = json.findNodeAtLocation(node, childPath);
-//                 if (childNode && childNode.value === config.name) {
-//                     found = true;
-//                     container = childNode.parent.parent;
-//                 }
-//             }
-//         }
-//     });
-//     return container;
-// }
-
 async function getHost(port: string): Promise<String> {
     if (host) return host;
     if (!process.env.CHE_WORKSPACE_NAMESPACE) {
-        return host = 'localhost';
+        return host = `http://localhost:${port}/`;
     }
     const workspace = await require('@eclipse-che/plugin').workspace.getCurrentWorkspace();
     console.log(workspace);
     const runtimeMachines = workspace!.runtime!.machines || {};
-    Object.keys(runtimeMachines).forEach((machineName: string) => {
+    for (let machineName of Object.keys(runtimeMachines)) {
         const machineServers = runtimeMachines[machineName].servers || {};
-        Object.keys(machineServers).forEach((serverName: string) => {
+        for (let serverName of Object.keys(machineServers)) {
             const url = machineServers[serverName].url!;
             const portNumber = machineServers[serverName].attributes.port!;
             if (String(portNumber) === port && String(url).includes('rhamt-vscode')) {
-                console.log('============');
-                console.log(`portNumber: ${portNumber}, serverName: ${serverName}, url: ${url} `);
-                console.log('============');
+
                 return host = url;
             }
-        });
-    });
+        }
+    }
+    return undefined;
 }
 
 async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<any> {
     const configurationPort = () => {
         return process.env.RHAMT_CONFIGURATION_PORT || String(61436);
     };
-    const configurationLocation = async () => {
-        const url = await getHost(configurationPort());
-        console.log(`using url: ${url}`)
-        return `http://${url}`;
+    const findConfigurationLocation = async () => {
+        return await getHost(configurationPort());
     };
     const reportPort = () => {
         return process.env.RHAMT_REPORT_PORT || String(61435);
     };
     const reportLocation = async () => {
-        const url = await getHost(reportPort());
-        return `http://${url}`;
+        return await getHost(reportPort());
     };
     return {
         reportPort,
@@ -172,8 +140,9 @@ async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<
             return out;
         },
         configurationPort,
-        configurationLocation: (config: RhamtConfiguration): string => {
-            return `${configurationLocation()}/${config.id}`;
+        configurationLocation: async (config: RhamtConfiguration): Promise<string> => {
+            const location = await findConfigurationLocation();
+            return `${location}${config.id}`;
         }
     };
 }

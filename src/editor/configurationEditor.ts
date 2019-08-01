@@ -34,7 +34,8 @@ export class ConfigurationEditor {
                 this.onEditorClosed.emit(undefined);
             });
             const location = await this.endpoints.configurationLocation(this.configuration);
-            this.view.webview.html = await this.render(location);
+            console.log(`rhamt configuration (${this.configuration.id}) editor editor using location: ${location}`);
+            this.view.webview.html = this.render(location);
         }
         this.view.reveal();
     }
