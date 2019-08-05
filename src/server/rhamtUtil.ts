@@ -63,7 +63,7 @@ export class RhamtUtil {
                 progress.report({message: 'Executing rhamt-cli script...'});
                 let cancelled = false;
                 let resolved = false;
-                let serverManager: RhamtProcessController;
+                let processController: RhamtProcessController;
                 const date = new Date();
                 const time = date.toLocaleTimeString();
                 const timestamp = time.substring(0, time.lastIndexOf(':'));
@@ -71,7 +71,7 @@ export class RhamtUtil {
                 const year = new String(date.getFullYear()).substring(0, 2);
                 const executedTimestamp = `${date.getMonth()}/${date.getDate()}/${year} @ ${timestamp}${sun}`;
                 const onComplete = async () => {
-                    serverManager.shutdown();
+                    processController.shutdown();
                     vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
                         if (result === 'Open Report') {
                             AnalysisResultsUtil.openReport(config.getReport());
@@ -84,9 +84,11 @@ export class RhamtUtil {
                 };
                 const monitor = new ProgressMonitor(progress, onComplete);
                 const onMessage = (data: string) => {
+                    console.log(`recieved message: ${data}`);
                     if (data.includes(':progress:')) {
                         const raw = data.replace(PROGRESS_REGEX, '');
-                        monitor.handleMessage(JSON.parse(raw));
+                        const sanitized = RhamtUtil.sanitize(raw);
+                        monitor.handleMessage(JSON.parse(sanitized));
                     }
                     else {
                         data = data.trim();
@@ -103,13 +105,13 @@ export class RhamtUtil {
                     }
                 };
                 try {
-                    serverManager = await RhamtRunner.run(config.rhamtExecutable, params, START_TIMEOUT, onMessage).then(cp => {
+                    processController = await RhamtRunner.run(config.rhamtExecutable, params, START_TIMEOUT, onMessage).then(cp => {
                         config.results = undefined;
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
                     });
                     if (cancelled) {
                         console.log('rhamt-cli was cancelled during startup.');
-                        serverManager.shutdown();
+                        processController.shutdown();
                         return;
                     }
                 } catch (e) {
@@ -119,8 +121,8 @@ export class RhamtUtil {
                 }
                 token.onCancellationRequested(() => {
                     cancelled = true;
-                    if (serverManager) {
-                        serverManager.shutdown();
+                    if (processController) {
+                        processController.shutdown();
                     }
                     if (!resolved) {
                         resolved = true;
@@ -130,6 +132,10 @@ export class RhamtUtil {
                 progress.report({ message: 'Preparing analysis configuration...' });
             });
         });
+    }
+
+    private static sanitize(unsanitized): string {
+        return unsanitized.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t").replace(/\f/g, "\\f").replace(/"/g,"\\\"").replace(/'/g,"\\\'").replace(/\&/g, "\\&");
     }
 
     private static buildParams(config: RhamtConfiguration, windupHome: string): Promise<any[]> {
