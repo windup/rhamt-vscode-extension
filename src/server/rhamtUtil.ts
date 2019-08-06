@@ -87,8 +87,7 @@ export class RhamtUtil {
                     console.log(`recieved message: ${data}`);
                     if (data.includes(':progress:')) {
                         const raw = data.replace(PROGRESS_REGEX, '');
-                        const sanitized = RhamtUtil.sanitize(raw);
-                        monitor.handleMessage(JSON.parse(sanitized));
+                        monitor.handleMessage(JSON.parse(raw));
                     }
                     else {
                         data = data.trim();
@@ -132,10 +131,6 @@ export class RhamtUtil {
                 progress.report({ message: 'Preparing analysis configuration...' });
             });
         });
-    }
-
-    private static sanitize(unsanitized): string {
-        return unsanitized.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t").replace(/\f/g, "\\f").replace(/"/g,"\\\"").replace(/'/g,"\\\'").replace(/\&/g, "\\&");
     }
 
     private static buildParams(config: RhamtConfiguration, windupHome: string): Promise<any[]> {
