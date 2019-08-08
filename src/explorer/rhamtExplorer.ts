@@ -28,7 +28,13 @@ export class RhamtExplorer {
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.createConfiguration', async () => {
             const config = await OptionsBuilder.build(this.modelService);
             if (config) {
-                await this.modelService.addConfiguration(config);
+                try {
+                    await this.modelService.addConfiguration(config);
+                }
+                catch (e) {
+                    vscode.window.showErrorMessage(e);
+                    return;
+                }
                 this.dataProvider.refresh();
                 vscode.window.showInformationMessage(`Successfully Created: ${config.name}`);
                 const run = await vscode.window.showQuickPick(['Yes', 'No'], {placeHolder: 'Run the analysis?'});
@@ -39,6 +45,7 @@ export class RhamtExplorer {
                     await RhamtUtil.analyze(config, this.modelService);
                 } catch (e) {
                     console.log(e);
+                    vscode.window.showErrorMessage(`Error during analysis: ${e}`);
                 }
             }
         }));
@@ -62,7 +69,13 @@ export class RhamtExplorer {
         }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.newConfiguration', async () => {
             const config = this.modelService.createConfiguration();
-            await this.modelService.addConfiguration(config);
+            try {
+                await this.modelService.addConfiguration(config);
+            } catch (e) {
+                console.log(`Error adding configurtion: ${e}`);
+                vscode.window.showErrorMessage(e);
+                return;
+            }
             vscode.commands.executeCommand('rhamt.openConfiguration', config);
             this.dataProvider.refresh();
         }));

@@ -54,7 +54,13 @@ export class ModelService {
             if (output) {
                 this.deleteOuputLocation(output);
             }
-            this.save();
+            try {
+                this.save();
+            }
+            catch (e) {
+                console.log(`Error saving configuration data: ${e}`);
+            }
+            
             return true;
         }
         return false;
@@ -197,9 +203,9 @@ export class ModelService {
         }
     }
 
-    public save(): Promise<void>  {
+    public async save(): Promise<void>  {
         const configurations = [];
-        this.model.configurations.forEach(config => {
+        for (const config of this.model.configurations) {
             const data: any = {
                 id: config.id,
                 name: config.name,
@@ -210,20 +216,23 @@ export class ModelService {
             }
             configurations.push(data);
             if (config.results) {
-                config.results.save(config.getResultsLocation()).catch(e => {
-                    console.log(`Error saving RHAMT configuration ${config.name} results: ${e} `);
-                });
+                try {
+                    await config.results.save(config.getResultsLocation());
+                }
+                catch (e) {
+                    return Promise.reject(`Error saving configuration results: ${e}`);
+                }
             }
-        });
+        }
         return this.doSave(this.getModelPersistanceLocation(), {configurations});
     }
 
     public doSave(out: string, data: any): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
             mkdirp(require('path').dirname(out), (e: any) => {
-                if (e) reject(e);
+                if (e) reject(`Error creating configuration output file: ${e}`);
                 fs.writeFile(out, JSON.stringify(data, null, 4), null, e => {
-                    if (e) reject(e);
+                    if (e) reject(`Error saving configuration data: ${e}`);
                     else resolve();
                 });
             });

@@ -153,7 +153,7 @@ export interface IClassification extends IIssue {
 }
 
 export interface Endpoints {
-    reportLocation(): string;
+    reportLocation(): Promise<string>;
     reportPort(): string;
     resourcesRoot(): any;
     configurationResourceRoot(): string;
