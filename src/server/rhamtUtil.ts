@@ -77,7 +77,12 @@ export class RhamtUtil {
                             AnalysisResultsUtil.openReport(config.getReport());
                         }
                     });
-                    await this.loadResults(config, modelService, executedTimestamp);
+                    try {
+                        await this.loadResults(config, modelService, executedTimestamp);
+                    }
+                    catch (e) {
+                        vscode.window.showErrorMessage(e);
+                    }
                     if (!resolved) {
                         resolve();
                     }
@@ -190,7 +195,8 @@ export class RhamtUtil {
     }
 
     private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string): Promise<any> {
-        return AnalysisResultsUtil.loadFromLocation(config.getResultsLocation()).then(dom => {
+        try {
+            const dom = await AnalysisResultsUtil.loadFromLocation(config.getResultsLocation());
             const summary: AnalysisResultsSummary = {
                 outputLocation: config.options['output'],
                 executedTimestamp: startedTimestamp,
@@ -198,7 +204,15 @@ export class RhamtUtil {
             };
             config.summary = summary;
             config.results = new AnalysisResults(config, dom);
+        }
+        catch (e) {
+            return Promise.reject(`Error loading analysis results from (${config.getResultsLocation()}): ${e}`);
+        }
+        try {
             modelService.save();
-        });
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
     }
 }
