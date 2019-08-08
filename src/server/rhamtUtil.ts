@@ -11,7 +11,7 @@ import { ProgressMonitor } from './progressMonitor';
 import * as path from 'path';
 import { AnalysisResultsUtil, AnalysisResultsSummary, AnalysisResults } from '../model/analysisResults';
 import { ModelService } from '../model/modelService';
-const PROGRESS_REGEX = /^:progress: /;
+const PROGRESS = ':progress:';
 const START_TIMEOUT = 60000;
 
 class RhamtChannelImpl {
@@ -84,10 +84,21 @@ export class RhamtUtil {
                 };
                 const monitor = new ProgressMonitor(progress, onComplete);
                 const onMessage = (data: string) => {
-                    console.log(`recieved message: ${data}`);
-                    if (data.includes(':progress:')) {
-                        const raw = data.replace(PROGRESS_REGEX, '');
-                        monitor.handleMessage(JSON.parse(raw));
+                    if (data.includes(PROGRESS)) {
+                        const trimmed = data.trim();
+                        const split = trimmed.split(PROGRESS);
+                        split.forEach(element => {
+                            if (element) {
+                                const raw = element.replace(PROGRESS, '').trim();
+                                try {
+                                    const json = JSON.parse(raw);
+                                    monitor.handleMessage(json);
+                                }
+                                catch (e) {
+                                    console.log(`Error parsing: ${e}`);
+                                }
+                            }
+                        });
                     }
                     else {
                         data = data.trim();
@@ -104,6 +115,7 @@ export class RhamtUtil {
                     }
                 };
                 try {
+                    console.log(`Executing RHAMT using params: ${params.join(' ')}`);
                     processController = await RhamtRunner.run(config.rhamtExecutable, params, START_TIMEOUT, onMessage).then(cp => {
                         config.results = undefined;
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
