@@ -106,7 +106,13 @@ export class ModelService {
             const parse = async data => {
                 if (data.byteLength > 0) {
                     const newConfigs = [];
-                    const configs = JSON.parse(data).configurations;
+                    let configs: any;
+                    try {
+                        configs = JSON.parse(data).configurations;
+                    }
+                    catch (e) {
+                        return Promise.reject('Error parsing configuration data from disk');
+                    }
                     for (const entry of configs) {
                         const config: RhamtConfiguration = new RhamtConfiguration();
                         ModelService.copy(entry, config);
@@ -138,20 +144,26 @@ export class ModelService {
                             }
                         }
                     });
-                    newConfigs.forEach(async config => await ModelService.loadResults(config));
+                    for (const config of newConfigs) {
+                        try {
+                            await ModelService.loadResults(config);
+                        }
+                        catch (e) {
+                            return reject(e);
+                        }
+                    }
                     this.model.configurations = newConfigs;
                 }
                 else {
                     this.model.configurations = [];
                 }
-                resolve();
             };
             const location = this.getModelPersistanceLocation();
             fs.exists(location, exists => {
                 if (exists) {
-                    fs.readFile(location, (e, data) => {
+                    fs.readFile(location, async (e, data) => {
                         if (e) reject(e);
-                        else parse(data);
+                        await parse(data).then(resolve).catch(reject);
                     });
                 }
             });
@@ -159,13 +171,24 @@ export class ModelService {
     }
 
     private parse(data: any): Promise<any> {
-        return new Promise<any>(async resolve => {
+        return new Promise<any>(async (resolve, reject) => {
             if (data.byteLength > 0) {
-                const configs = JSON.parse(data).configurations;
+                let configs: any;
+                try {
+                    configs = JSON.parse(data).configurations;
+                } 
+                catch (e) {
+                    return reject(`Error parsing configurations: ${e}`);
+                }
                 for (const entry of configs) {
                     const config: RhamtConfiguration = new RhamtConfiguration();
                     ModelService.copy(entry, config);
-                    await ModelService.loadResults(config);
+                    try {
+                        await ModelService.loadResults(config);
+                    }
+                    catch (e) {
+                        return reject(e);
+                    }
                     this.model.configurations.push(config);
                 }
             }
@@ -176,7 +199,7 @@ export class ModelService {
     }
 
     static async loadResults(target: RhamtConfiguration): Promise<void> {
-        return new Promise<void>(resolve => {
+        return new Promise<void>((resolve, reject) => {
             const location = target.getResultsLocation();
             fs.exists(location, async exists => {
                 if (exists) {
@@ -184,7 +207,7 @@ export class ModelService {
                         const dom = await AnalysisResultsUtil.loadFromLocation(location);
                         target.results = new AnalysisResults(target, dom);
                     } catch (e) {
-                        console.log(`Error loading analysis results for configuration at ${location} - ${e}`);
+                        return reject(`Error loading analysis results for configuration at ${location} - ${e}`);
                     }
                 }
                 resolve();
