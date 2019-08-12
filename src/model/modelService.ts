@@ -260,12 +260,22 @@ export class ModelService {
 
     public doSave(out: string, data: any): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
+            console.log(`Attempting to save analysis results.`);
             mkdirp(require('path').dirname(out), (e: any) => {
                 if (e) reject(`Error creating configuration output file: ${e}`);
-                fs.writeFile(out, JSON.stringify(data, null, 4), null, e => {
-                    if (e) reject(`Error saving configuration data: ${e}`);
-                    else resolve();
-                });
+                else {
+                    let str: string;
+                    try {
+                        str = JSON.stringify(data, null, 4);
+                    }
+                    catch (e) {
+                        return reject(`Error using JSON.stringify for analysis results: ${e}`);
+                    }
+                    fs.writeFile(out, str, null, e => {
+                        if (e) reject(`Error saving configuration data: ${e}`);
+                        else resolve();
+                    });
+                }
             });
         });
     }
