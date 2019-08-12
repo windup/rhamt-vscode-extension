@@ -41,7 +41,6 @@ export class RhamtUtil {
             cancellable: true
         }, async (progress: any, token: any) => {
             return new Promise<any>(async resolve => {
-
                 let executable: any;
                 try {
                     executable = await Utils.findRhamtCli(modelService.outDir);
@@ -78,6 +77,7 @@ export class RhamtUtil {
                         }
                     });
                     try {
+                        console.log(`Analysis complete. Loading results.`);
                         await this.loadResults(config, modelService, executedTimestamp);
                     }
                     catch (e) {
@@ -100,7 +100,9 @@ export class RhamtUtil {
                                     monitor.handleMessage(json);
                                 }
                                 catch (e) {
-                                    console.log(`Error parsing: ${e}`);
+                                    console.log(`Error parsing data: ${raw}`);
+                                    console.log(`Error parsing raw: ${raw}`);
+                                    console.log(`Error: ${e}`);
                                 }
                             }
                         });

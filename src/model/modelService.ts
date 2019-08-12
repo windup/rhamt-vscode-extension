@@ -163,7 +163,15 @@ export class ModelService {
                 if (exists) {
                     fs.readFile(location, async (e, data) => {
                         if (e) reject(e);
-                        await parse(data).then(resolve).catch(reject);
+                        else {
+                            try {
+                                await parse(data);
+                                resolve();
+                            }
+                            catch (e) {
+                                reject();
+                            }
+                        }
                     });
                 }
             });
