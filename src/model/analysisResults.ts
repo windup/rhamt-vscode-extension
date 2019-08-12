@@ -21,12 +21,18 @@ export interface AnalysisResultsSummary {
 export class AnalysisResultsUtil {
     static loadFromLocation(location: string): Promise<CheerioStatic> {
         return new Promise<CheerioStatic>((resolve, reject) => {
-            fs.readFile(location, (err, data: any) => {
+            fs.readFile(location, async (err, data: any) => {
                 if (err) {
                     reject(err);
                 }
                 else {
-                    resolve(cheerio.load(data, {xmlMode: true, recognizeSelfClosing: true}));
+                    try {
+                        const results = await cheerio.load(data, {xmlMode: true, recognizeSelfClosing: true});
+                        resolve(results);
+                    }
+                    catch (e) {
+                        reject(e);
+                    }
                 }
             });
         });

@@ -81,6 +81,7 @@ export class RhamtUtil {
                         await this.loadResults(config, modelService, executedTimestamp);
                     }
                     catch (e) {
+                        console.log(`Error loading analysis results: ${e}`);
                         vscode.window.showErrorMessage(e);
                     }
                     if (!resolved) {
@@ -214,7 +215,8 @@ export class RhamtUtil {
             modelService.save();
         }
         catch (e) {
-            return Promise.reject(e);
+            console.log(`Error saving analysis results: ${e}`);
+            return Promise.reject(`Error saving analysis results: ${e}`);
         }
     }
 }
