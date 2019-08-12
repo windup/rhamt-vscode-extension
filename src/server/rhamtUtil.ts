@@ -212,7 +212,7 @@ export class RhamtUtil {
             return Promise.reject(`Error loading analysis results from (${config.getResultsLocation()}): ${e}`);
         }
         try {
-            modelService.save();
+            await modelService.save();
         }
         catch (e) {
             console.log(`Error saving analysis results: ${e}`);

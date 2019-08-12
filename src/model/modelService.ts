@@ -261,7 +261,8 @@ export class ModelService {
     public doSave(out: string, data: any): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
             console.log(`Attempting to save analysis results.`);
-            mkdirp(require('path').dirname(out), (e: any) => {
+            const dir = path.dirname(out);
+            mkdirp(dir, (e: any) => {
                 if (e) reject(`Error creating configuration output file: ${e}`);
                 else {
                     let str: string;
@@ -269,6 +270,7 @@ export class ModelService {
                         str = JSON.stringify(data, null, 4);
                     }
                     catch (e) {
+                        console.log(`Error using JSON.stringify for analysis results: ${e}`);
                         return reject(`Error using JSON.stringify for analysis results: ${e}`);
                     }
                     fs.writeFile(out, str, null, e => {
