@@ -96,14 +96,16 @@ export class RhamtUtil {
                         split.forEach(element => {
                             if (element) {
                                 const raw = element.replace(PROGRESS, '').trim();
-                                try {
-                                    const json = JSON.parse(raw);
-                                    monitor.handleMessage(json);
-                                }
-                                catch (e) {
-                                    console.log(`Error parsing data: ${raw}`);
-                                    console.log(`Error parsing raw: ${raw}`);
-                                    console.log(`Error: ${e}`);
+                                if (!raw.includes('"op":"logMessage"')) {
+                                    try {
+                                        const json = JSON.parse(raw);
+                                        monitor.handleMessage(json);
+                                    }
+                                    catch (e) {
+                                        console.log(`Error parsing data: ${raw}`);
+                                        console.log(`Error parsing raw: ${raw}`);
+                                        console.log(`Error: ${e}`);
+                                    }
                                 }
                             }
                         });
