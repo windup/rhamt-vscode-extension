@@ -274,7 +274,11 @@ export class ModelService {
                 else {
                     console.log(`Configuration data:`);
                     console.log(data);
-                    
+                    let out = '';
+                    for (const prop in data) {
+                        out += prop + ': ' + data[prop]+'; ';
+                    }
+                    console.log(`Data w/ props: ${out}`);
                     let str: string;
                     try {
                         str = JSON.stringify(data, null, 4);
