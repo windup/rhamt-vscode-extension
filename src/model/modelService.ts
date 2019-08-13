@@ -251,20 +251,30 @@ export class ModelService {
                     await config.results.save(config.getResultsLocation());
                 }
                 catch (e) {
+                    console.log(`Error while saving configuration results: ${e}`);
                     return Promise.reject(`Error saving configuration results: ${e}`);
                 }
             }
         }
-        return this.doSave(this.getModelPersistanceLocation(), {configurations});
+        try {
+            await this.doSave(this.getModelPersistanceLocation(), {configurations});
+        }
+        catch (e) {
+            console.log(`Error while saving configuration data: ${e}`);
+            return Promise.reject(`Error saving configuration data: ${e}`);
+        }
     }
 
-    public doSave(out: string, data: any): Promise<void> {
+    public async doSave(out: string, data: any): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
-            console.log(`Attempting to save analysis results.`);
             const dir = path.dirname(out);
+            console.log(`Attempting to save configuration data at: out - ${out} dir - ${dir}`);
             mkdirp(dir, (e: any) => {
                 if (e) reject(`Error creating configuration output file: ${e}`);
                 else {
+                    console.log(`Configuration data:`);
+                    console.log(data);
+                    
                     let str: string;
                     try {
                         str = JSON.stringify(data, null, 4);

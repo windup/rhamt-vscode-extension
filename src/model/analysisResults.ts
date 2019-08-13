@@ -7,6 +7,7 @@ import * as cheerio from 'cheerio';
 import { ModelService } from './modelService';
 import * as open from 'opn';
 import * as mkdirp from 'mkdirp';
+import * as path from 'path';
 import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue, ILink } from './model';
 
 export interface AnalysisResultsSummary {
@@ -358,9 +359,11 @@ export class AnalysisResults {
         this.dom(issue.dom).attr('complete', true);
     }
 
-    save(out: string): Promise<void> {
+    async save(out: string): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
-            mkdirp(require('path').dirname(out), (e: any) => {
+            const dir = path.dirname(out);
+            console.log(`Attempting to save analysis results at: ${dir}`);
+            mkdirp(dir, (e: any) => {
                 if (e) reject(e);
                 fs.writeFile(out, this.dom.html(), null, e => {
                     if (e) reject(e);
