@@ -13,6 +13,7 @@ import { AnalysisResultsUtil, AnalysisResultsSummary, AnalysisResults } from '..
 import { ModelService } from '../model/modelService';
 const PROGRESS = ':progress:';
 const START_TIMEOUT = 60000;
+const START_PROGRESS = 'Using user rules dir:';
 
 class RhamtChannelImpl {
     private readonly channel: vscode.OutputChannel = vscode.window.createOutputChannel('RHAMT');
@@ -89,6 +90,7 @@ export class RhamtUtil {
                     }
                 };
                 const monitor = new ProgressMonitor(progress, onComplete);
+                let startedProgress = false;
                 const onMessage = (data: string) => {
                     if (data.includes(PROGRESS)) {
                         const trimmed = data.trim();
@@ -96,8 +98,9 @@ export class RhamtUtil {
                         split.forEach(element => {
                             if (element) {
                                 const raw = element.replace(PROGRESS, '').trim();
-                                if (!raw.includes('"op":"logMessage"')) {
+                                if (raw.includes('{"op":"') && !raw.includes('"op":"logMessage"')) {
                                     try {
+                                        console.log(`parsing: ${element}`);
                                         const json = JSON.parse(raw);
                                         monitor.handleMessage(json);
                                     }
@@ -112,7 +115,10 @@ export class RhamtUtil {
                     }
                     else {
                         data = data.trim();
-                        if (data && data.length > 1) {
+                        if (!startedProgress && data && data.length > 1) {
+                            if (data.includes(START_PROGRESS)) {
+                                startedProgress = true;
+                            }
                             rhamtChannel.print(data);
                         }
                     }
