@@ -263,7 +263,7 @@ export class ModelService {
         }
     }
 
-    public async doSave(out: string, data: any): Promise<void> {
+    public doSave(out: string, data: any): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
             const dir = path.dirname(out);
             console.log(`Attempting to save configuration data at: out - ${out} dir - ${dir}`);
@@ -277,18 +277,21 @@ export class ModelService {
                         out += prop + ': ' + data[prop]+'; ';
                     }
                     console.log(`Data w/ props: ${out}`);
-                    let str: string;
                     try {
-                        str = JSON.stringify(data, null, 4);
+                        const str = JSON.stringify(data, null, 4);
+                        console.log(`Serialized data is: ${str}`);
+                        fs.writeFile(out, str, null, e => {
+                            if (e) reject(`Error saving configuration data: ${e}`);
+                            else {
+                                console.log(`Successfully saved configuration data.`);
+                                resolve();
+                            }
+                        });
                     }
                     catch (e) {
                         console.log(`Error using JSON.stringify for analysis results: ${e}`);
                         return reject(`Error using JSON.stringify for analysis results: ${e}`);
                     }
-                    fs.writeFile(out, str, null, e => {
-                        if (e) reject(`Error saving configuration data: ${e}`);
-                        else resolve();
-                    });
                 }
             });
         });
