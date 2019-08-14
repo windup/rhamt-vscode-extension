@@ -21,9 +21,8 @@ export class ModelService {
         public reportEndpoints: Endpoints) {
     }
 
-    public addConfiguration(config: RhamtConfiguration): Promise<void>  {
+    public addConfiguration(config: RhamtConfiguration): void  {
         this.model.configurations.push(config);
-        return this.save();
     }
 
     public getConfiguration(id: string): RhamtConfiguration | undefined {
@@ -46,7 +45,7 @@ export class ModelService {
         return config;
     }
 
-    public deleteConfiguration(configuration: RhamtConfiguration): boolean {
+    public async deleteConfiguration(configuration: RhamtConfiguration): Promise<boolean> {
         const index = this.model.configurations.indexOf(configuration, 0);
         if (index > -1) {
             this.model.configurations.splice(index, 1);
@@ -55,12 +54,11 @@ export class ModelService {
                 this.deleteOuputLocation(output);
             }
             try {
-                this.save();
+                await this.save();
             }
             catch (e) {
                 console.log(`Error saving configuration data: ${e}`);
             }
-            
             return true;
         }
         return false;
@@ -74,12 +72,12 @@ export class ModelService {
         });
     }
 
-    public deleteConfigurationWithName(name: string): boolean {
+    public async deleteConfigurationWithName(name: string): Promise<boolean> {
         const config = this.model.configurations.find(item => item.name === name);
         if (config) {
             return this.deleteConfiguration(config);
         }
-        return false;
+        return Promise.resolve(false);
     }
 
     public load(): Promise<RhamtModel> {

@@ -75,7 +75,7 @@ export async function activate(context: vscode.ExtensionContext) {
                 }
             }
             else {
-                vscode.window.showErrorMessage('Unable to find configuration persistance file.');
+                vscode.window.showErrorMessage(`Unable to find configuration persistance file at: ${location}`);
             }
         });
     }));

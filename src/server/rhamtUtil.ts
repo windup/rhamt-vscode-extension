@@ -208,12 +208,11 @@ export class RhamtUtil {
     private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string): Promise<any> {
         try {
             const dom = await AnalysisResultsUtil.loadFromLocation(config.getResultsLocation());
-            const summary: AnalysisResultsSummary = {
+            config.summary = {
                 outputLocation: config.options['output'],
                 executedTimestamp: startedTimestamp,
                 executable: config.rhamtExecutable
             };
-            config.summary = summary;
             config.results = new AnalysisResults(config, dom);
         }
         catch (e) {

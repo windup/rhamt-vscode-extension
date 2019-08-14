@@ -24,16 +24,15 @@ export class AnalysisResultsUtil {
         return new Promise<CheerioStatic>((resolve, reject) => {
             fs.readFile(location, async (err, data: any) => {
                 if (err) {
-                    reject(err);
+                    return reject(err);
                 }
-                else {
-                    try {
-                        const results = await cheerio.load(data, {xmlMode: true, recognizeSelfClosing: true});
-                        resolve(results);
-                    }
-                    catch (e) {
-                        reject(e);
-                    }
+                try {
+                    console.log('Loading results XML');
+                    const results = cheerio.load(data, {xmlMode: true, recognizeSelfClosing: true});
+                    return resolve(results);
+                }
+                catch (e) {
+                    return reject(e);
                 }
             });
         });
@@ -359,7 +358,7 @@ export class AnalysisResults {
         this.dom(issue.dom).attr('complete', true);
     }
 
-    async save(out: string): Promise<void> {
+    save(out: string): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
             const dir = path.dirname(out);
             console.log(`Attempting to save analysis results at: ${dir}`);

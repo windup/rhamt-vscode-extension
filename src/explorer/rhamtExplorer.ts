@@ -28,10 +28,12 @@ export class RhamtExplorer {
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.createConfiguration', async () => {
             const config = await OptionsBuilder.build(this.modelService);
             if (config) {
+                this.modelService.addConfiguration(config);
                 try {
-                    await this.modelService.addConfiguration(config);
+                    await this.modelService.save();
                 }
                 catch (e) {
+                    console.log(`Error saving configuration: ${e}`);
                     vscode.window.showErrorMessage(e);
                     return;
                 }
@@ -49,10 +51,16 @@ export class RhamtExplorer {
                 }
             }
         }));
-        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', item => {
+        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', async item => {
             const config = item.config;
-            this.modelService.deleteConfiguration(config);
-            this.dataProvider.refresh();
+            try {
+                await this.modelService.deleteConfiguration(config);
+                this.dataProvider.refresh();
+            }
+            catch (e) {
+                console.log(`Error deleting configuration: ${e}`);
+                vscode.window.showErrorMessage(`Error deleting configuration.`);
+            }
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteIssue', item => {
             item.root.deleteIssue(item);
@@ -69,10 +77,11 @@ export class RhamtExplorer {
         }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.newConfiguration', async () => {
             const config = this.modelService.createConfiguration();
+            this.modelService.addConfiguration(config);
             try {
-                await this.modelService.addConfiguration(config);
+                await this.modelService.save();
             } catch (e) {
-                console.log(`Error adding configurtion: ${e}`);
+                console.log(`Error saving configurtion data: ${e}`);
                 vscode.window.showErrorMessage(e);
                 return;
             }
