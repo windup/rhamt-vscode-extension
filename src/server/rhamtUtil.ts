@@ -9,7 +9,7 @@ import { RhamtRunner } from './rhamtRunner';
 import { RhamtProcessController } from './rhamtProcessController';
 import { ProgressMonitor } from './progressMonitor';
 import * as path from 'path';
-import { AnalysisResultsUtil, AnalysisResultsSummary, AnalysisResults } from '../model/analysisResults';
+import { AnalysisResultsUtil, AnalysisResults } from '../model/analysisResults';
 import { ModelService } from '../model/modelService';
 const PROGRESS = ':progress:';
 const START_TIMEOUT = 60000;
