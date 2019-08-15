@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
+import * as os from 'os';
 import { Utils } from './Utils';
 import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
@@ -23,7 +24,7 @@ let stateLocation: string;
 let host: string;
 
 export async function activate(context: vscode.ExtensionContext) {
-    stateLocation = context.extensionPath;
+    stateLocation = path.join(os.homedir(), '.rhamt', 'tooling');
     console.log(`rhamt-vscode-extension storing data at: ${stateLocation}`);
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
