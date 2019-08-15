@@ -10,7 +10,6 @@ import { RhamtView } from './explorer/rhamtView';
 import { ModelService } from './model/modelService';
 import { RhamtModel, RhamtConfiguration } from './model/model';
 import { RhamtUtil } from './server/rhamtUtil';
-import * as fs from 'fs-extra';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
 import { ConfigurationEditorServer } from './editor/configurationEditorServer';
@@ -65,19 +64,8 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openConfiguration', (config: RhamtConfiguration) => {
-        const location = modelService.getModelPersistanceLocation();
-        fs.exists(location, exists => {
-            if (exists) {
-                const configuration = modelService.getConfiguration(config.id);
-                if (configuration) {
-                    configEditorService.openConfiguration(configuration).catch(e => {
-                        console.log(`Error opening configuration ${config} with error: ${e}`)
-                    });
-                }
-            }
-            else {
-                vscode.window.showErrorMessage(`Unable to find configuration persistance file at: ${location}`);
-            }
+        configEditorService.openConfiguration(config).catch(e => {
+            console.log(`Error opening configuration ${config} with error: ${e}`)
         });
     }));
 

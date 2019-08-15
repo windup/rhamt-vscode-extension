@@ -266,17 +266,12 @@ export class ModelService {
     public doSave(out: string, data: any): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
             const dir = path.dirname(out);
-            console.log(`Attempting to save configuration data at: out - ${out} dir - ${dir}`);
+            console.log(`Attempting to save configuration data at: out - ${out}`);
             mkdirp(dir, (e: any) => {
                 if (e) reject(`Error creating configuration output file: ${e}`);
                 else {
                     console.log(`Configuration data:`);
                     console.log(data);
-                    let out = '';
-                    for (const prop in data) {
-                        out += prop + ': ' + data[prop]+'; ';
-                    }
-                    console.log(`Data w/ props: ${out}`);
                     try {
                         const str = JSON.stringify(data, null, 4);
                         console.log(`Serialized data is: ${str}`);
