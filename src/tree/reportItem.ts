@@ -48,7 +48,7 @@ export class ReportItem extends TreeItem implements ReportHolder {
     }
 
     public get command(): Command {
-        return {
+        return process.env.CHE_WORKSPACE_NAMESPACE ? undefined : {
             command: 'rhamt.openReport',
             title: '',
             arguments: [this]

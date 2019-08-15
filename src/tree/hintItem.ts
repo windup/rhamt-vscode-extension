@@ -62,7 +62,7 @@ export class HintItem extends TreeItem {
     }
 
     public get command(): Command {
-        return {
+        return process.env.CHE_WORKSPACE_NAMESPACE ? undefined : {
             command: 'rhamt.openDoc',
             title: '',
             arguments: [

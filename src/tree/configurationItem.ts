@@ -25,11 +25,12 @@ export class ConfigurationItem extends TreeItem {
     }
 
     public get command(): Command {
-        return {
-            command: 'rhamt.openConfiguration',
-            title: '',
-            arguments: [this.config]
-        };
+        return process.env.CHE_WORKSPACE_NAMESPACE ? undefined :
+            {
+                command: 'rhamt.openConfiguration',
+                title: '',
+                arguments: [this.config]
+            };
     }
 
     public get contextValue(): string {
