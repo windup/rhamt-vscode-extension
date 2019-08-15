@@ -246,7 +246,7 @@ export class ModelService {
             configurations.push(data);
             if (config.results) {
                 try {
-                    await config.results.save(config.getResultsLocation());
+                    await this.saveAnalysisResults(config);
                 }
                 catch (e) {
                     console.log(`Error while saving configuration results: ${e}`);
@@ -263,12 +263,35 @@ export class ModelService {
         }
     }
 
+    private saveAnalysisResults(config: RhamtConfiguration): Promise<void> {
+        return new Promise<void> ((resolve, reject) => {
+            const out = config.getResultsLocation();
+            const dir = path.dirname(out);
+            console.log(`Attempting to save analysis results at: dir - ${dir} out - ${out}`);
+            mkdirp(dir, (e: any) => {
+                if (e) {
+                    console.log(`Error making results dir at: ${dir}`);
+                    console.log(`Error is: ${e}`);                    
+                    return reject(e);  
+                } 
+                fs.writeFile(out, config.results.dom.html(), null, e => {
+                    if (e) {
+                        console.log(`Error writing results at: ${out}`);
+                        console.log(`Error is: ${e}`);                    
+                        return reject(e);  
+                    } 
+                    resolve();
+                });
+            });
+        });
+    }
+
     public doSave(out: string, data: any): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
             const dir = path.dirname(out);
             console.log(`Attempting to save configuration data at: out - ${out}`);
             mkdirp(dir, (e: any) => {
-                if (e) reject(`Error creating configuration output file: ${e}`);
+                if (e) return reject(`Error creating configuration output file: ${e}`);
                 else {
                     console.log(`Configuration data:`);
                     console.log(data);
@@ -276,7 +299,7 @@ export class ModelService {
                         const str = JSON.stringify(data, null, 4);
                         console.log(`Serialized data is: ${str}`);
                         fs.writeFile(out, str, null, e => {
-                            if (e) reject(`Error saving configuration data: ${e}`);
+                            if (e) return reject(`Error saving configuration data: ${e}`);
                             else {
                                 console.log(`Successfully saved configuration data.`);
                                 resolve();
