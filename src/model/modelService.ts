@@ -267,7 +267,6 @@ export class ModelService {
         return new Promise<void> ((resolve, reject) => {
             const out = config.getResultsLocation();
             const dir = path.dirname(out);
-            console.log(`Attempting to save analysis results at: dir - ${dir} out - ${out}`);
             mkdirp(dir, (e: any) => {
                 if (e) {
                     console.log(`Error making results dir at: ${dir}`);
@@ -289,19 +288,14 @@ export class ModelService {
     public doSave(out: string, data: any): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
             const dir = path.dirname(out);
-            console.log(`Attempting to save configuration data at: out - ${out}`);
             mkdirp(dir, (e: any) => {
                 if (e) return reject(`Error creating configuration output file: ${e}`);
                 else {
-                    console.log(`Configuration data:`);
-                    console.log(data);
                     try {
                         const str = JSON.stringify(data, null, 4);
-                        console.log(`Serialized data is: ${str}`);
                         fs.writeFile(out, str, null, e => {
                             if (e) return reject(`Error saving configuration data: ${e}`);
                             else {
-                                console.log(`Successfully saved configuration data.`);
                                 resolve();
                             }
                         });

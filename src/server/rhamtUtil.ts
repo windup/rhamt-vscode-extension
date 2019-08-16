@@ -100,13 +100,11 @@ export class RhamtUtil {
                                 const raw = element.replace(PROGRESS, '').trim();
                                 if (raw.includes('{"op":"') && !raw.includes('"op":"logMessage"')) {
                                     try {
-                                        console.log(`parsing: ${element}`);
                                         const json = JSON.parse(raw);
                                         monitor.handleMessage(json);
                                     }
                                     catch (e) {
                                         console.log(`Error parsing data: ${raw}`);
-                                        console.log(`Error parsing raw: ${raw}`);
                                         console.log(`Error: ${e}`);
                                     }
                                 }
