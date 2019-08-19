@@ -49,7 +49,12 @@ export class ConfigurationServerController {
     }
 
     configuration(req: Request, res: Response, next: NextFunction): void {
-        this.findConfiguration(req, res).then(config => {
+        this.findConfiguration(req, res).then(result => {
+            const config = {
+                id: result.id,
+                name: result.name,
+                options: result.options
+            };
             res.status(200).json({config});
         });
     }
