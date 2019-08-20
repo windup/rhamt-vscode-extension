@@ -95,9 +95,6 @@ export namespace Utils {
 
     export function findRhamtCli(outDir: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            console.log('====================================');
-            console.log('resolving preference - rhamt.executable.path');
-            console.log('====================================');
             const rhamtPath = workspace.getConfiguration('rhamt.executable').get<string>('path');
             if (rhamtPath) {
                 console.log('====================================');
@@ -105,9 +102,6 @@ export namespace Utils {
                 console.log('====================================');
                 resolve(rhamtPath);
             }
-            console.log('====================================');
-            console.log(`attempting to resolve rhamt-cli using RHAMT_HOME`);
-            console.log('====================================');
             let rhamtHome = process.env['RHAMT_HOME'];
             if (rhamtHome) {
                 const executable = Utils.getRhamtExecutable(rhamtHome);
@@ -118,9 +112,6 @@ export namespace Utils {
                 console.log('====================================');
                 return resolve(executable);
             }
-            console.log('====================================');
-            console.log(`attempting to find rhamt-cli download at location - ${outDir}`);
-            console.log('====================================');
             rhamtHome = Utils.findRhamtCliDownload(outDir);
             if (rhamtHome) {
                 console.log('====================================');

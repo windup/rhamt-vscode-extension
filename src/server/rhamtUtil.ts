@@ -104,8 +104,7 @@ export class RhamtUtil {
                                         monitor.handleMessage(json);
                                     }
                                     catch (e) {
-                                        console.log(`Error parsing data: ${raw}`);
-                                        console.log(`Error: ${e}`);
+                                        console.log(`Error Parsing: ${e}`);
                                     }
                                 }
                             }

@@ -3,11 +3,11 @@
 #  Licensed under the MIT License. See License.txt in the project root for license information.
 # ---------------------------------------------------------------------------------------------
 
-FROM eclipse/che-remote-plugin-runner-java11:7.0.0-next
+FROM eclipse/che-remote-plugin-runner-java8:7.0.0-next
 
 RUN apk add --no-cache bash
 
-ENV RHAMT_VERSION=4.2.0-SNAPSHOT \
+ENV RHAMT_VERSION=4.3.0-SNAPSHOT \
     RHAMT_ROOT=$HOME/rhamt
    
 ENV RHAMT_HOME=${RHAMT_ROOT}/rhamt-cli-${RHAMT_VERSION}
