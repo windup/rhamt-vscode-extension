@@ -78,7 +78,7 @@ export class FileNode extends AbstractNode<FileItem> {
 
         if (process.env.CHE_WORKSPACE_NAMESPACE) {
             this.treeItem.iconPath = ext === '.xml' ? 'fa fa-code file-icon medium-yellow' :
-                ext === '.java' ? 'fa fa-java file-icon medium-orange' :
+                ext === '.java' ? 'fa fa-file file-icon medium-orange' :
                 'fa fa-file file-icon';
         }
         else {
