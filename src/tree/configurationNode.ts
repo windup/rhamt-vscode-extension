@@ -87,7 +87,8 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
             super.refresh(this);
             setTimeout(() => {
-                this.treeItem.iconPath = undefined;
+                this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
+                    'config-icon medium-purple file-icon' : undefined;
                 super.refresh(this);
             }, 2000);
             return;

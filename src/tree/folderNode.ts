@@ -54,7 +54,7 @@ export class FolderNode extends AbstractNode<FolderItem> {
 
     private updateIcon(name: string): void {
         const base = [__dirname, '..', '..', '..', 'resources'];
-        this.treeItem.iconPath = {
+        this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-folder file-icon' : {
             light: path.join(...base, 'light', name),
             dark: path.join(...base, 'dark', name)
         };

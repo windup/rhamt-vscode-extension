@@ -26,24 +26,24 @@ export class ClassificationItem extends TreeItem {
     private getIconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
         const base = [__dirname, '..', '..', '..', 'resources'];
         if (this.classification.complete) {
-            return {
+            return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa medium-green fa-check' : {
                 light: path.join(...base, 'light', 'complete.svg'),
                 dark: path.join(...base, 'dark', 'complete.svg')
             };
         }
         else if (!this.classification.category || this.classification.category.includes('error') || this.classification.category.includes('mandatory')) {
-            return {
+            return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa medium-red fa-times-circle' : {
                 light: path.join(...base, 'light', 'status-error.svg'),
                 dark: path.join(...base, 'dark', 'status-error-inverse.svg')
             };
         }
         else if (this.classification.category.includes('potential')) {
-            return {
+            return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-exclamation-circle medium-yellow' : {
                 light: path.join(...base, 'light', 'status-warning.svg'),
                 dark: path.join(...base, 'dark', 'status-warning-inverse.svg')
             };
         }
-        return {
+        return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-question-circle medium-blue' : {
             light: path.join(...base, 'light', 'status-info.svg'),
             dark: path.join(...base, 'dark', 'status-info-inverse.svg')
         };

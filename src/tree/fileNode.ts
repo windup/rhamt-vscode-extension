@@ -75,14 +75,22 @@ export class FileNode extends AbstractNode<FileItem> {
     refresh(node?: ITreeNode): void {
         this.children = [];
         const ext = path.extname(this.file);
-        const icon = ext === '.xml' ? 'file_type_xml.svg' :
-            ext === '.java' ? 'file_type_class.svg' :
-            'default_file.svg';
-        const base = [__dirname, '..', '..', '..', 'resources'];
-        this.treeItem.iconPath = {
-            light: path.join(...base, 'light', icon),
-            dark: path.join(...base, 'dark', icon)
-        };
+
+        if (process.env.CHE_WORKSPACE_NAMESPACE) {
+            this.treeItem.iconPath = ext === '.xml' ? 'file_type_xml.svg' :
+                ext === '.java' ? 'file_type_class.svg' :
+                'default_file.svg';
+        }
+        else {
+            const icon = ext === '.xml' ? 'code-icon medium-blue file-icon' :
+                ext === '.java' ? 'java-icon medium-purple file-icon' :
+                'fa fa-file file-icon';
+                const base = [__dirname, '..', '..', '..', 'resources'];
+            this.treeItem.iconPath = {
+                light: path.join(...base, 'light', icon),
+                dark: path.join(...base, 'dark', icon)
+            };
+        }
         this.issues = this.root.getChildNodes(this);
         if (this.issues.find(issue => issue instanceof HintNode)) {
             this.children.push(new HintsNode(
