@@ -88,7 +88,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             super.refresh(this);
             setTimeout(() => {
                 this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
-                    'config-icon medium-purple file-icon' : undefined;
+                    'fa fa-cube medium-purple file-icon' : undefined;
                 super.refresh(this);
             }, 2000);
             return;
