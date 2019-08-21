@@ -77,9 +77,9 @@ export class FileNode extends AbstractNode<FileItem> {
         const ext = path.extname(this.file);
 
         if (process.env.CHE_WORKSPACE_NAMESPACE) {
-            this.treeItem.iconPath = ext === '.xml' ? 'fa fa-code file-icon medium-yellow' :
-                ext === '.java' ? 'fa fa-coffee file-icon medium-orange' :
-                'fa fa-file file-icon';
+            this.treeItem.iconPath = ext === '.xml' ? 'fa fa-code medium-yellow' :
+                ext === '.java' ? 'fa fa-file-o medium-orange' :
+                'fa fa-file';
         }
         else {
             const icon = ext === '.xml' ? 'file_type_xml.svg' :

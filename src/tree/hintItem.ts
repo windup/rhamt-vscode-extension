@@ -38,7 +38,7 @@ export class HintItem extends TreeItem {
             };
         }
         else if (this.hint.category.includes('potential')) {
-            return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-exclamation-circle medium-yellow' : {
+            return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-exclamation-triangle medium-yellow' : {
                 light: path.join(...base, 'light', 'status-warning.svg'),
                 dark: path.join(...base, 'dark', 'status-warning-inverse.svg')
             };

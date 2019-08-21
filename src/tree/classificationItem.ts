@@ -38,7 +38,7 @@ export class ClassificationItem extends TreeItem {
             };
         }
         else if (this.classification.category.includes('potential')) {
-            return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-exclamation-circle medium-yellow' : {
+            return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-exclamation-triangle medium-yellow' : {
                 light: path.join(...base, 'light', 'status-warning.svg'),
                 dark: path.join(...base, 'dark', 'status-warning-inverse.svg')
             };

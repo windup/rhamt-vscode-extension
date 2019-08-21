@@ -88,7 +88,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             super.refresh(this);
             setTimeout(() => {
                 this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
-                    'fa fa-cube medium-purple file-icon' : undefined;
+                    'fa fa-cube medium-purple' : undefined;
                 super.refresh(this);
             }, 2000);
             return;
@@ -107,7 +107,8 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             super.refresh(this);
             this.dataProvider.reveal(this, true);
             setTimeout(() => {
-                this.treeItem.iconPath = undefined;
+                this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
+                    'fa fa-cube medium-purple' : undefined;
                 this.refresh(this);
             }, 2000);
         }
