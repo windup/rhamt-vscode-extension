@@ -43,7 +43,7 @@ export class HintItem extends TreeItem {
                 dark: path.join(...base, 'dark', 'status-warning-inverse.svg')
             };
         }
-        return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-question-circle medium-blue' : {
+        return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-question-circle-o medium-blue' : {
             light: path.join(...base, 'light', 'status-info.svg'),
             dark: path.join(...base, 'dark', 'status-info-inverse.svg')
         };

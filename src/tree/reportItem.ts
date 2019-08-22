@@ -25,7 +25,7 @@ export class ReportItem extends TreeItem implements ReportHolder {
 
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
         const base = [__dirname, '..', '..', '..', 'resources'];
-        return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-tachometer medium-blue' : {
+        return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-line-chart medium-blue' : {
             light: path.join(...base, 'light', 'file_type_log.svg'),
             dark: path.join(...base, 'dark', 'file_type_log.svg')
         };
