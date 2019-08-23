@@ -63,12 +63,20 @@
                 "title": "Delete"
             },
             {
+                "command": "rhamt.openConfiguration",
+                "title": "Open"
+            },
+            {
                 "command": "rhamt.openReport",
                 "title": "Open Report"
             },
             {
                 "command": "rhamt.openIssueDetails",
                 "title": "View Details"
+            },
+            {
+                "command": "rhamt.openIssue",
+                "title": "Open"
             },
             {
                 "command": "rhamt.refreshResults",
@@ -139,6 +147,10 @@
                     "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
                 },
                 {
+                    "command": "rhamt.openConfiguration",
+                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
+                },
+                {
                     "command": "rhamt.refreshResults",
                     "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
                 },
@@ -148,6 +160,10 @@
                 },
                 {
                     "command": "rhamt.openIssueDetails",
+                    "when": "view == rhamtExplorerView && viewItem == issue"
+                },
+                {
+                    "command": "rhamt.openIssue",
                     "when": "view == rhamtExplorerView && viewItem == issue"
                 },
                 {
@@ -164,7 +180,7 @@
                 },
                 {
                     "command": "rhamt.newConfiguration",
-                    "when": "view == rhamtExplorerView && viewItem != issue && viewITem != rhamtConfiguration"
+                    "when": "view == rhamtExplorerView && viewItem != issue && viewItem != rhamtConfiguration"
                 }
             ]
         }
