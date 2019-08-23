@@ -5,15 +5,17 @@
 import * as vscode from 'vscode';
 import { RhamtExplorer } from './rhamtExplorer';
 import { ModelService } from '../model/modelService';
+import { ConfigurationEditorService } from '../editor/configurationEditorService';
 
 export class RhamtView {
 
     constructor(private context: vscode.ExtensionContext,
-        private modelService: ModelService) {
+        private modelService: ModelService,
+        private configEditorService: ConfigurationEditorService) {
         this.createExplorer();
     }
 
     private createExplorer(): RhamtExplorer {
-        return new RhamtExplorer(this.context, this.modelService);
+        return new RhamtExplorer(this.context, this.modelService, this.configEditorService);
     }
 }

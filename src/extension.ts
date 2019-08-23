@@ -29,7 +29,8 @@ export async function activate(context: vscode.ExtensionContext) {
     const out = path.join(stateLocation, 'data');
     const endpoints = await getEndpoints(context, out);
     modelService = new ModelService(new RhamtModel(), out, endpoints);
-    new RhamtView(context, modelService);
+    const configEditorService = new ConfigurationEditorService(endpoints, context);
+    new RhamtView(context, modelService, configEditorService);
     new ReportView(context, endpoints);
     detailsView = new IssueDetailsView(context, endpoints);
 
@@ -37,7 +38,6 @@ export async function activate(context: vscode.ExtensionContext) {
     const connectionService = new ClientConnectionService(modelService);
     const configEditorServer = new ConfigurationEditorServer(endpoints, configServerController, connectionService);
     configEditorServer.start();
-    const configEditorService = new ConfigurationEditorService(endpoints, context);
 
     const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
         const config = item.config;
@@ -60,12 +60,6 @@ export async function activate(context: vscode.ExtensionContext) {
                 );
                 editor.revealRange(new vscode.Range(data.line, 0, data.line + 1, 0), vscode.TextEditorRevealType.InCenter);
             }
-        });
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openConfiguration', (config: RhamtConfiguration) => {
-        configEditorService.openConfiguration(config).catch(e => {
-            console.log(`Error opening configuration ${config} with error: ${e}`)
         });
     }));
 

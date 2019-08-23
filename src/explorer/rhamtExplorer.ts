@@ -8,6 +8,8 @@ import { ModelService } from '../model/modelService';
 import { OptionsBuilder } from '../optionsBuilder';
 import { RhamtUtil } from '../server/rhamtUtil';
 import { Grouping } from '../tree/configurationNode';
+import { RhamtConfiguration } from '../model/model';
+import { ConfigurationEditorService } from '../editor/configurationEditorService';
 
 export class RhamtExplorer {
 
@@ -18,7 +20,8 @@ export class RhamtExplorer {
     };
 
     constructor(private context: vscode.ExtensionContext,
-        private modelService: ModelService) {
+        private modelService: ModelService,
+        private configEditorService: ConfigurationEditorService) {
         this.dataProvider = this.createDataProvider();
         this.createViewer();
         this.createCommands();
@@ -87,6 +90,11 @@ export class RhamtExplorer {
             }
             vscode.commands.executeCommand('rhamt.openConfiguration', config);
             this.dataProvider.refresh();
+        }));
+        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.openConfiguration', (config: RhamtConfiguration) => {
+            this.configEditorService.openConfiguration(config).catch(e => {
+                console.log(`Error opening configuration ${config} with error: ${e}`)
+            });
         }));
     }
 
