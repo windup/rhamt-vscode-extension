@@ -12,7 +12,7 @@ export class ConfigurationItem extends TreeItem {
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
-    private config: RhamtConfiguration;
+    config: RhamtConfiguration;
 
     constructor(config: RhamtConfiguration) {
         super('Loading...');
@@ -29,7 +29,7 @@ export class ConfigurationItem extends TreeItem {
             {
                 command: 'rhamt.openConfiguration',
                 title: '',
-                arguments: [this.config]
+                arguments: [this]
             };
     }
 

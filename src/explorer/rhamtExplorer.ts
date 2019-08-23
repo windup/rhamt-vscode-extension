@@ -88,12 +88,14 @@ export class RhamtExplorer {
                 vscode.window.showErrorMessage(e);
                 return;
             }
-            vscode.commands.executeCommand('rhamt.openConfiguration', config);
-            this.dataProvider.refresh();
-        }));
-        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.openConfiguration', (config: RhamtConfiguration) => {
             this.configEditorService.openConfiguration(config).catch(e => {
                 console.log(`Error opening configuration ${config} with error: ${e}`)
+            });
+            this.dataProvider.refresh();
+        }));
+        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.openConfiguration', item => {
+            this.configEditorService.openConfiguration(item.config).catch(e => {
+                console.log(`Error opening configuration ${item.config} with error: ${e}`)
             });
         }));
     }
