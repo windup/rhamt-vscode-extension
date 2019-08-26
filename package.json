@@ -71,6 +71,10 @@
                 "title": "Open Report"
             },
             {
+                "command": "rhamt.openDoc",
+                "title": "Open Code"
+            },
+            {
                 "command": "rhamt.openIssueDetails",
                 "title": "View Details"
             },
@@ -156,6 +160,10 @@
                 },
                 {
                     "command": "rhamt.openReport",
+                    "when": "view == rhamtExplorerView && viewItem == issue"
+                },
+                {
+                    "command": "rhamt.openDoc",
                     "when": "view == rhamtExplorerView && viewItem == issue"
                 },
                 {
