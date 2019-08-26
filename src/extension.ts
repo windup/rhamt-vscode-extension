@@ -51,8 +51,9 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(runConfigurationDisposable);
 
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
-        detailsView.open((data as IssueContainer).getIssue());
-        vscode.workspace.openTextDocument(vscode.Uri.file(data.uri)).then(async doc => {
+        const issue = (data as IssueContainer).getIssue();
+        detailsView.open(issue);
+        vscode.workspace.openTextDocument(vscode.Uri.file(issue.file)).then(async doc => {
             const editor = await vscode.window.showTextDocument(doc);
             if (data instanceof HintItem) {
                 const item = data as HintItem;
