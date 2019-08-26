@@ -8,7 +8,6 @@ import { ModelService } from '../model/modelService';
 import { OptionsBuilder } from '../optionsBuilder';
 import { RhamtUtil } from '../server/rhamtUtil';
 import { Grouping } from '../tree/configurationNode';
-import { RhamtConfiguration } from '../model/model';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 
 export class RhamtExplorer {
