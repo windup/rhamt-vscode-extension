@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { ModelService } from '../model/modelService';
-import { IHint, IIssue } from '../model/model';
+import { IHint, IIssue, IssueContainer } from '../model/model';
 import * as path from 'path';
 
-export class HintItem extends TreeItem {
+export class HintItem extends TreeItem implements IssueContainer {
 
     private _id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
@@ -61,24 +61,27 @@ export class HintItem extends TreeItem {
         return 'rhamt.openDoc';
     }
 
-    public get uri(): string {
+    public getIssue(): IIssue {
+        return this.hint;
+    }
+
+    public setComplete(): void {
+    }
+
+    public getUri(): string {
         return this.hint.file;
     }
 
-    public get lineNumber(): number {
+    public getLineNumber(): number {
         return this.hint.lineNumber - 1;
     }
 
-    public get column(): number {
+    public getColumn(): number {
         return this.hint.column;
     }
 
-    public get length(): number {
+    public getLength(): number {
         return this.hint.length + this.hint.column;
-    }
-
-    public get issue(): IIssue {
-        return this.issue;
     }
 
     public get command(): Command {

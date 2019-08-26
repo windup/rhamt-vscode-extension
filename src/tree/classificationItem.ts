@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { ModelService } from '../model/modelService';
-import { IClassification, IIssue } from '../model/model';
+import { IClassification, IIssue, IssueContainer } from '../model/model';
 import * as path from 'path';
 
-export class ClassificationItem extends TreeItem {
+export class ClassificationItem extends TreeItem implements IssueContainer {
 
     private _id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
@@ -61,12 +61,11 @@ export class ClassificationItem extends TreeItem {
         return 'rhamt.openDoc';
     }
 
-    public get uri(): string {
-        return this.classification.file;
+    public getIssue(): IIssue {
+        return this.classification;
     }
 
-    public get issue(): IIssue {
-        return this.classification;
+    public setComplete(): void {
     }
 
     public get command(): Command {

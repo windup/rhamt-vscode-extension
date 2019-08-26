@@ -8,7 +8,7 @@ import { Utils } from './Utils';
 import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
 import { ModelService } from './model/modelService';
-import { RhamtModel, RhamtConfiguration } from './model/model';
+import { RhamtModel, RhamtConfiguration, IssueContainer } from './model/model';
 import { RhamtUtil } from './server/rhamtUtil';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
@@ -16,6 +16,7 @@ import { ConfigurationEditorServer } from './editor/configurationEditorServer';
 import { ConfigurationServerController } from './editor/configurationServerController';
 import { ClientConnectionService } from './editor/clientConnectionService';
 import { ConfigurationEditorService } from './editor/configurationEditorService';
+import { HintItem } from './tree/hintItem';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -50,15 +51,16 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(runConfigurationDisposable);
 
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
-        detailsView.open(data.issue);
+        detailsView.open((data as IssueContainer).getIssue());
         vscode.workspace.openTextDocument(vscode.Uri.file(data.uri)).then(async doc => {
             const editor = await vscode.window.showTextDocument(doc);
-            if (data.line) {
+            if (data instanceof HintItem) {
+                const item = data as HintItem;
                 editor.selection = new vscode.Selection(
-                    new vscode.Position(data.line, data.column),
-                    new vscode.Position(data.line, data.length)
+                    new vscode.Position(item.getLineNumber(), item.getColumn()),
+                    new vscode.Position(item.getLineNumber(), item.getLength())
                 );
-                editor.revealRange(new vscode.Range(data.line, 0, data.line + 1, 0), vscode.TextEditorRevealType.InCenter);
+                editor.revealRange(new vscode.Range(item.getLineNumber(), 0, item.getLineNumber() + 1, 0), vscode.TextEditorRevealType.InCenter);
             }
         });
     }));
