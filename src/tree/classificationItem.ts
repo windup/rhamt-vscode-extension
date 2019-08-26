@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { ModelService } from '../model/modelService';
-import { IClassification } from '../model/model';
+import { IClassification, IIssue } from '../model/model';
 import * as path from 'path';
 
 export class ClassificationItem extends TreeItem {
@@ -61,14 +61,19 @@ export class ClassificationItem extends TreeItem {
         return 'rhamt.openDoc';
     }
 
+    public get uri(): string {
+        return this.classification.file;
+    }
+
+    public get issue(): IIssue {
+        return this.classification;
+    }
+
     public get command(): Command {
         return process.env.CHE_WORKSPACE_NAMESPACE ? undefined : {
             command: 'rhamt.openDoc',
             title: '',
-            arguments: [{
-                uri: this.classification.file,
-                issue: this.classification
-            }]
+            arguments: [this]
         };
     }
 

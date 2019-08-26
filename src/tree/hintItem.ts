@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { ModelService } from '../model/modelService';
-import { IHint } from '../model/model';
+import { IHint, IIssue } from '../model/model';
 import * as path from 'path';
 
 export class HintItem extends TreeItem {
@@ -61,19 +61,31 @@ export class HintItem extends TreeItem {
         return 'rhamt.openDoc';
     }
 
+    public get uri(): string {
+        return this.hint.file;
+    }
+
+    public get lineNumber(): number {
+        return this.hint.lineNumber - 1;
+    }
+
+    public get column(): number {
+        return this.hint.column;
+    }
+
+    public get length(): number {
+        return this.hint.length + this.hint.column;
+    }
+
+    public get issue(): IIssue {
+        return this.issue;
+    }
+
     public get command(): Command {
         return process.env.CHE_WORKSPACE_NAMESPACE ? undefined : {
             command: 'rhamt.openDoc',
             title: '',
-            arguments: [
-                {
-                    uri: this.hint.file,
-                    line: this.hint.lineNumber - 1,
-                    column: this.hint.column,
-                    length: this.hint.length + this.hint.column,
-                    issue: this.hint
-                }
-            ]
+            arguments: [this]
         };
     }
 
