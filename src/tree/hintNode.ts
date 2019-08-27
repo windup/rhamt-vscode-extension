@@ -12,6 +12,7 @@ import { ModelService } from '../model/modelService';
 export class HintNode extends AbstractNode implements ReportHolder, IssueContainer {
 
     hint: IHint;
+    item: HintItem;
 
     constructor(
         hint: IHint,
@@ -34,8 +35,8 @@ export class HintNode extends AbstractNode implements ReportHolder, IssueContain
     }
 
     createItem(): HintItem {
-        const item = new HintItem(this.hint);
-        return item;
+        this.item = new HintItem(this.hint);
+        return this.item;
     }
 
     getReport(): string {
