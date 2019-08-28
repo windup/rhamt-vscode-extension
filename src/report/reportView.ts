@@ -22,7 +22,7 @@ export class ReportView {
             const location = item.getReport() as string;
             const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
             const url = await this.endpoints.reportLocation();
-            const report = `${url}/${relative}`;
+            const report = `${url}${relative}`;
             this.open(report);
         }));
     }
