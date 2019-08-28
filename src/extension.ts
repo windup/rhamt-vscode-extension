@@ -22,7 +22,8 @@ import { HintNode } from './tree/hintNode';
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
 let stateLocation: string;
-let host: string;
+let configurationUrl: string;
+let reportUrl: string;
 
 export async function activate(context: vscode.ExtensionContext) {
     stateLocation = path.join(os.homedir(), '.rhamt', 'tooling');
@@ -84,9 +85,8 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 async function getHost(port: string): Promise<String> {
-    if (host) return host;
     if (!process.env.CHE_WORKSPACE_NAMESPACE) {
-        return host = `http://localhost:${port}/`;
+        return `http://localhost:${port}/`;
     }
     const workspace = await require('@eclipse-che/plugin').workspace.getCurrentWorkspace();
     console.log(workspace);
@@ -97,7 +97,7 @@ async function getHost(port: string): Promise<String> {
             const url = machineServers[serverName].url!;
             const portNumber = machineServers[serverName].attributes.port!;
             if (String(portNumber) === port && String(url).includes('rhamt-vscode')) {
-                return host = url;
+                return url;
             }
         }
     }
@@ -109,12 +109,14 @@ async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<
         return process.env.RHAMT_CONFIGURATION_PORT || String(61436);
     };
     const findConfigurationLocation = async () => {
+        if (configurationUrl) return configurationUrl;
         return await getHost(configurationPort());
     };
     const reportPort = () => {
         return process.env.RHAMT_REPORT_PORT || String(61435);
     };
     const reportLocation = async () => {
+        if (reportUrl) return reportUrl;
         return await getHost(reportPort());
     };
     return {
