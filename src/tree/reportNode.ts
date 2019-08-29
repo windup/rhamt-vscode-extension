@@ -12,6 +12,8 @@ import { ConfigurationNode } from './configurationNode';
 
 export class ReportNode extends AbstractNode {
 
+    private item: ReportItem;
+
     constructor(
         config: RhamtConfiguration,
         modelService: ModelService,
@@ -32,6 +34,11 @@ export class ReportNode extends AbstractNode {
     }
 
     createItem(): ReportItem {
-        return new ReportItem(this.config);
+        this.item = new ReportItem(this.config);
+        return this.item;
+    }
+
+    getReport(): string {
+        return this.item.getReport();
     }
 }
