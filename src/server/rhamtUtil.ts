@@ -74,7 +74,11 @@ export class RhamtUtil {
                     processController.shutdown();
                     vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
                         if (result === 'Open Report') {
-                            AnalysisResultsUtil.openReport(config.getReport());
+                            vscode.commands.executeCommand('rhamt.openReport', {
+                                getReport: () => {
+                                    return config.getReport();
+                                }
+                            });
                         }
                     });
                     try {
