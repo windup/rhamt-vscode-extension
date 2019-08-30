@@ -7,7 +7,7 @@
     "publisher": "redhat",
     "author": "Red Hat",
     "preview": true,
-    "icon": "resources/rhamt_icon.png",
+    "icon": "resources/openshift_logo.png",
     "repository": {
         "type": "git",
         "url": "https://github.com/windup/rhamt-vscode-extension"
