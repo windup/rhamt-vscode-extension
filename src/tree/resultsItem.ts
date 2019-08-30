@@ -9,13 +9,10 @@ export class ResultsItem extends TreeItem {
 
     id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
+    iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
     constructor() {
         super('Loading results...');
-    }
-
-    public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
-        return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-circle medium-green' : undefined;
     }
 
     public refresh(executedTimestamp: string): void {

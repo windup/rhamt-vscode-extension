@@ -64,7 +64,7 @@ export class ResultsNode extends AbstractNode<ResultsItem> {
         };
         this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
         setTimeout(() => {
-            this.treeItem.iconPath = undefined;
+            this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-circle medium-green' : undefined;
             this.loading = false;
             this.refresh(this);
             this.dataProvider.reveal(this, true);
