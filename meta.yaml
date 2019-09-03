@@ -12,10 +12,24 @@ repository: https://github.com/windup/rhamt-vscode-extension
 category: Other
 firstPublicationDate: "2019-06-19"
 spec:
+  endpoints:
+   - name: "configuration-endpoint"
+     public: true
+     targetPort: 61436
+     attributes:
+       protocol: http
+  - name: "report-endpoint"
+    public: true
+    targetPort: 61435
+    attributes:
+       protocol: http
   containers:
-    - image: "johnsteele/rhamt-vscode-extension:latest"
+    - image: "johnsteele/rhamt-vscode-extension:java8"
       name: rhamt-extension
-      memoryLimit: "2000Mi"
+      memoryLimit: 4G
+      ports:
+        - exposedPort: 61435
+        - exposedPort: 61436
   extensions:
     - https://download.jboss.org/jbosstools/adapters/stable/rhamt-vscode-extension/rhamt-vscode-extension-0.0.6-120.vsix
 
