@@ -84,7 +84,7 @@ export async function activate(context: vscode.ExtensionContext) {
     Utils.checkCli(modelService.outDir, context);
 }
 
-async function getHost(port: string): Promise<String> {
+async function getHost(port: string): Promise<string> {
     if (!process.env.CHE_WORKSPACE_NAMESPACE) {
         return `http://localhost:${port}/`;
     }
@@ -132,9 +132,12 @@ async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<
             return out;
         },
         configurationPort,
-        configurationLocation: async (config: RhamtConfiguration): Promise<string> => {
-            const location = await findConfigurationLocation();
-            return `${location}${config.id}`;
+        configurationLocation: async (config?: RhamtConfiguration): Promise<string> => {
+            let location = await findConfigurationLocation();
+            if (config) {
+                location = `${location}${config.id}`;
+            }
+            return location;
         }
     };
 }

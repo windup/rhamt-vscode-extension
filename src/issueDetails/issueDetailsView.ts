@@ -31,7 +31,7 @@ export class IssueDetailsView {
         }));
     }
 
-    open(issue: IIssue, reveal?: boolean): void {
+    async open(issue: IIssue, reveal?: boolean): Promise<void> {
         if (!reveal && !this.view) {
             return;
         }
@@ -47,15 +47,16 @@ export class IssueDetailsView {
                 this.onEditorClosed.emit(undefined);
             });
         }
-        this.view.webview.html = this.render(issue);
+        this.view.webview.html = await this.render(issue);
 
         if (reveal) {
             this.view.reveal(ViewColumn.Two);
         }
     }
 
-    private render(issue: any): string {
-        const cssPath = Uri.file(path.join(this.context.extensionPath, 'resources', 'dark', 'issue-details.css'));
+    private async render(issue: any): Promise<string> {
+        const url = await this.endpoints.configurationLocation();
+        const cssPath = `${url}dark/issue-details.css`;
         const config = issue.getConfiguration();
         const reports = path.join(config.options['output'], 'reports', path.sep);
         let report = '';
