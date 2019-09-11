@@ -2,7 +2,7 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { WebviewPanel, window, ViewColumn, ExtensionContext, Uri, commands } from 'vscode';
+import { WebviewPanel, window, ViewColumn, ExtensionContext, commands } from 'vscode';
 import { Endpoints, IIssue, IssueContainer } from '../model/model';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
@@ -108,7 +108,7 @@ export class IssueDetailsView {
                 <html>
                     <head>
                         <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-                        <link href="${cssPath.with({ scheme: 'vscode-resource' })}" rel="stylesheet" type="text/css">
+                        <link href="${cssPath}" rel="stylesheet" type="text/css">
                     </head>
                     <body">
                     <div style="margin:0px;padding:0px;" class="view">

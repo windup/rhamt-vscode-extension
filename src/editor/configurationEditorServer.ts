@@ -47,6 +47,7 @@ export class ConfigurationEditorServer {
         this.app.set('views', path.join(this.endpoints.configurationResourceRoot(), 'views'));
         this.app.set('view engine', 'jade');
         this.app.use(express.static(this.endpoints.configurationResourceRoot()));
+        this.app.use(express.static(this.endpoints.resourcesRoot()));
         this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
             err.status = 404;
             next(err);
