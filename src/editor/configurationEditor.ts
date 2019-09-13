@@ -44,6 +44,13 @@ export class ConfigurationEditor {
         return `
             <!DOCTYPE html>
             <html>
+                <head>
+                <meta
+                    http-equiv="Content-Security-Policy"
+                    content="
+                    default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';"
+                />
+                </head>
                 <body style="margin:0px;padding:0px;overflow:hidden">
                     <iframe src="${location}"
                         frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>

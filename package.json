@@ -43,7 +43,7 @@
         "commands": [
             {
                 "category": "RHAMT",
-                "command": "rhamt.createConfiguration",
+                "command": "rhamt.newConfiguration",
                 "title": "New Configuration",
                 "icon": {
                     "light": "resources/light/add.svg",
@@ -97,10 +97,6 @@
             {
                 "command": "rhamt.deleteResults",
                 "title": "Delete"
-            },
-            {
-                "command": "rhamt.newConfiguration",
-                "title": "New Configuration"
             }
         ],
         "configuration": [
@@ -136,7 +132,7 @@
         "menus": {
             "view/title": [
                 {
-                    "command": "rhamt.createConfiguration",
+                    "command": "rhamt.newConfiguration",
                     "when": "view == rhamtExplorerView",
                     "group": "navigation"
                 }
