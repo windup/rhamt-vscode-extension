@@ -1,7 +1,7 @@
 
 @font-face {
     font-family: FontAwesome;
-    src: url('./fontawesome-webfont.woff');
+    src: url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.woff');
     format: ('embedded-opentype');
 }
 
