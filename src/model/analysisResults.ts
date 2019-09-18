@@ -25,7 +25,6 @@ export class AnalysisResultsUtil {
                     return reject(err);
                 }
                 try {
-                    console.log('Loading results XML');
                     const results = cheerio.load(data, {xmlMode: true, recognizeSelfClosing: true});
                     return resolve(results);
                 }
