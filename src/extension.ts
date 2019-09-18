@@ -64,11 +64,13 @@ export async function activate(context: vscode.ExtensionContext) {
             else if (data instanceof HintItem) {
                 item = data;
             }
-            editor.selection = new vscode.Selection(
-                new vscode.Position(item.getLineNumber(), item.getColumn()),
-                new vscode.Position(item.getLineNumber(), item.getLength())
-            );
-            editor.revealRange(new vscode.Range(item.getLineNumber(), 0, item.getLineNumber() + 1, 0), vscode.TextEditorRevealType.InCenter);
+            if (item) {
+                editor.selection = new vscode.Selection(
+                    new vscode.Position(item.getLineNumber(), item.getColumn()),
+                    new vscode.Position(item.getLineNumber(), item.getLength())
+                );
+                editor.revealRange(new vscode.Range(item.getLineNumber(), 0, item.getLineNumber() + 1, 0), vscode.TextEditorRevealType.InCenter);
+            }
         });
     }));
 
