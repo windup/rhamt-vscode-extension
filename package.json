@@ -79,10 +79,6 @@
                 "title": "View Details"
             },
             {
-                "command": "rhamt.openIssue",
-                "title": "Open"
-            },
-            {
                 "command": "rhamt.refreshResults",
                 "title": "Refresh"
             },
@@ -168,10 +164,6 @@
                 },
                 {
                     "command": "rhamt.openIssueDetails",
-                    "when": "view == rhamtExplorerView && viewItem == issue"
-                },
-                {
-                    "command": "rhamt.openIssue",
                     "when": "view == rhamtExplorerView && viewItem == issue"
                 },
                 {
