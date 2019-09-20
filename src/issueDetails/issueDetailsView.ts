@@ -6,8 +6,6 @@ import { WebviewPanel, window, ViewColumn, ExtensionContext, commands } from 'vs
 import { Endpoints, IIssue, IssueContainer } from '../model/model';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
-import * as openLink from 'opn';
-import { AnalysisResultsUtil } from '../model/analysisResults';
 
 export class IssueDetailsView {
 
@@ -23,11 +21,12 @@ export class IssueDetailsView {
         this.context.subscriptions.push(commands.registerCommand('rhamt.openIssueDetails', item => {
             this.open((item as IssueContainer).getIssue(), true);
         }));
-        this.context.subscriptions.push(commands.registerCommand('rhamt.openIssueReport', item => {
-            AnalysisResultsUtil.openReport(item);
-        }));
         this.context.subscriptions.push(commands.registerCommand('rhamt.openLink', item => {
-            openLink(item);
+            commands.executeCommand('rhamt.openReport', {
+                getReport: () => {
+                    return item;
+                }
+            });
         }));
     }
 
@@ -36,11 +35,10 @@ export class IssueDetailsView {
             return;
         }
         if (!this.view) {
-            this.view = window.createWebviewPanel('rhamtIssueDetails', 'Issue Details', ViewColumn.Two, {
+            this.view = window.createWebviewPanel('rhamtIssueDetails', 'Issue Details', ViewColumn.One, {
                 enableScripts: true,
                 enableCommandUris: true,
-                retainContextWhenHidden: true,
-                localResourceRoots: [this.endpoints.resourcesRoot()]
+                retainContextWhenHidden: true
             });
             this.view.onDidDispose(() => {
                 this.view = undefined;
@@ -50,7 +48,7 @@ export class IssueDetailsView {
         this.view.webview.html = await this.render(issue);
 
         if (reveal) {
-            this.view.reveal(ViewColumn.Two);
+            this.view.reveal(ViewColumn.One);
         }
     }
 
@@ -62,7 +60,7 @@ export class IssueDetailsView {
         let report = '';
         if (issue.report && issue.report.startsWith(reports)) {
             report = issue.report.replace(reports, '');
-            report = `<a class="report-link" href="command:rhamt.openIssueReport?%22${issue.report}%22">Open Report</a>`;
+            report = `<a class="report-link" href="command:rhamt.openLink?%22${issue.report}%22">Open Report</a>`;
         }
         const showdown = require('showdown');
         const converter = new showdown.Converter();
@@ -119,11 +117,15 @@ export class IssueDetailsView {
             `;
         }
         else {
-            html = `
-                <!DOCTYPE html>
+            html = `<!DOCTYPE html>
                 <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; https:;">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    </head>
                     <body style="margin:0px;padding:0px;overflow:hidden; margin-left: 20px;">
-                    <p>No issue details available.</p>
+                        <p>No issue details available.</p>
                     </body>
                 </html>
             `;

@@ -32,8 +32,7 @@ export class ReportView {
             this.view = window.createWebviewPanel('rhamtReportView', 'RHAMT Report', ViewColumn.One, {
                 enableScripts: true,
                 enableCommandUris: true,
-                retainContextWhenHidden: true,
-                localResourceRoots: [this.endpoints.resourcesRoot()]
+                retainContextWhenHidden: true
             });
             this.view.onDidDispose(() => {
                 this.view = undefined;
