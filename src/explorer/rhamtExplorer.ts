@@ -66,9 +66,17 @@ export class RhamtExplorer {
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteIssue', item => {
             item.root.deleteIssue(item);
+            this.modelService.saveAnalysisResults(item.root.config).catch(e => {
+                console.log(`Error saving analysis results: ${e}`);
+                vscode.window.showErrorMessage(e);
+            });
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.markIssueAsComplete', item => {
             item.root.markIssueAsComplete(item);
+            this.modelService.saveAnalysisResults(item.root.config).catch(e => {
+                console.log(`Error saving analysis results: ${e}`);
+                vscode.window.showErrorMessage(e);
+            });
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteResults', item => {
             const output = item.config.options['output'];

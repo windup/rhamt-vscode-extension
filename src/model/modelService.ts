@@ -263,7 +263,7 @@ export class ModelService {
         }
     }
 
-    private saveAnalysisResults(config: RhamtConfiguration): Promise<void> {
+    saveAnalysisResults(config: RhamtConfiguration): Promise<void> {
         return new Promise<void> ((resolve, reject) => {
             const out = config.getResultsLocation();
             const dir = path.dirname(out);
