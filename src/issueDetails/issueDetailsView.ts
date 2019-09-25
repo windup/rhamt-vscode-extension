@@ -99,7 +99,7 @@ export class IssueDetailsView {
             body += '<h3>Source Snippet</h3>';
             body += issue.sourceSnippet ? issue.sourceSnippet : noDetails;
         }
-        const cheClass = process.env.CHE_WORKSPACE_NAMESPACE ? 'che' : '';
+        const dark = process.env.CHE_WORKSPACE_NAMESPACE ? 'dark' : '';
         let html: string;
         if (issue) {
             html = `
@@ -109,8 +109,8 @@ export class IssueDetailsView {
                         <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
                         <link href="${cssPath}" rel="stylesheet" type="text/css">
                     </head>
-                    <body class="${cheClass}">
-                    <div style="margin:0px;padding:0px;" class="view">
+                    <body>
+                    <div style="margin:0px;padding:0px;" class="view ${dark}">
                         ${body}
                     </div>
                     </body>
