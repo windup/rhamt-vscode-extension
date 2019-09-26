@@ -21,4 +21,5 @@ a:after {
     font-family: -apple-system,BlinkMacSystemFont,sans-serif;
     font-size: 13px;
     line-height: 1.4em;
+    padding: 10px;
 }
