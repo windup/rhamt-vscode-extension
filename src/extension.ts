@@ -95,11 +95,13 @@ async function getHost(port: string): Promise<string> {
     const runtimeMachines = workspace!.runtime!.machines || {};
     for (let machineName of Object.keys(runtimeMachines)) {
         const machineServers = runtimeMachines[machineName].servers || {};
+        console.log(`machineName: ${machineName}`);
+        console.log(runtimeMachines[machineName]);
         for (let serverName of Object.keys(machineServers)) {
             const url = machineServers[serverName].url!;
             const portNumber = machineServers[serverName].attributes.port!;
-            console.log(`serverName: ${serverName}`);
-            console.log(`serverUrl: ${String(url)}`);
+            console.log(`machineServerName: ${serverName}`);
+            console.log(`machineServerUrl: ${String(url)}`);
             console.log(machineServers[serverName]);
             if (String(portNumber) === port && String(url).includes('rhamt')) {
                 return url;
