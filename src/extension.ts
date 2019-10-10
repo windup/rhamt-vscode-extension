@@ -98,6 +98,9 @@ async function getHost(port: string): Promise<string> {
         for (let serverName of Object.keys(machineServers)) {
             const url = machineServers[serverName].url!;
             const portNumber = machineServers[serverName].attributes.port!;
+            console.log(`serverName: ${serverName}`);
+            console.log(`serverUrl: ${String(url)}`);
+            console.log(machineServers[serverName]);
             if (String(portNumber) === port && String(url).includes('rhamt')) {
                 return url;
             }
