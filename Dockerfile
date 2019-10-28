@@ -3,7 +3,7 @@
 #  Licensed under the MIT License. See License.txt in the project root for license information.
 # ---------------------------------------------------------------------------------------------
 
-FROM eclipse/che-remote-plugin-runner-java8:7.0.0-next
+FROM eclipse/che-remote-plugin-runner-java8:next
 
 RUN apk add --no-cache bash
 
