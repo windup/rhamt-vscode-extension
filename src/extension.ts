@@ -124,7 +124,11 @@ async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<
     };
     const reportLocation = async () => {
         if (reportUrl) return reportUrl;
-        return await getHost(reportPort());
+        const location = await getHost(reportPort());
+        if (!location) {
+            console.error(`unable to find report location.`);
+        }
+        return location;
     };
     return {
         reportPort,
@@ -141,6 +145,9 @@ async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<
         configurationPort,
         configurationLocation: async (config?: RhamtConfiguration): Promise<string> => {
             let location = await findConfigurationLocation();
+            if (!location) {
+                console.error(`unable to find configuration location.`);
+            }
             if (config) {
                 location = `${location}${config.id}`;
             }
