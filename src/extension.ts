@@ -22,8 +22,6 @@ import { HintNode } from './tree/hintNode';
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
 let stateLocation: string;
-let configurationUrl: string;
-let reportUrl: string;
 
 export async function activate(context: vscode.ExtensionContext) {
     stateLocation = path.join(os.homedir(), '.rhamt', 'tooling');
@@ -118,17 +116,18 @@ async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<
         return process.env.RHAMT_CONFIGURATION_PORT || String(61436);
     };
     const findConfigurationLocation = async () => {
-        if (configurationUrl) return configurationUrl;
         return await getHost(configurationPort());
     };
     const reportPort = () => {
         return process.env.RHAMT_REPORT_PORT || String(61435);
     };
     const reportLocation = async () => {
-        if (reportUrl) return reportUrl;
-        const location = await getHost(reportPort());
+        let location = await getHost(reportPort());
         if (!location) {
             console.error(`unable to find report location.`);
+        }
+        else if (!location.endsWith('/')) {
+            location = `${location}/`;
         }
         return location;
     };
@@ -151,6 +150,9 @@ async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<
                 console.error(`unable to find configuration location.`);
             }
             if (config) {
+                if (!location.endsWith('/')) {
+                    location = `${location}/`;
+                }
                 location = `${location}${config.id}`;
             }
             return location;
