@@ -273,10 +273,27 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         return this.config.getReport();
     }
 
+    private doDeleteIssue(node: any): void {
+        const issue = (node as IssueContainer).getIssue();
+        if (node instanceof HintNode) {
+            const index = this.hints.indexOf(issue as IHint);
+            if (index > -1) {
+                this.hints.splice(index, 1);
+            }
+        }
+        else {
+            const index = this.classifications.indexOf(issue as IClassification);
+            if (index > -1) {
+                this.classifications.splice(index, 1);
+            }
+        }
+    }
+
     deleteIssue(node: any): void {
         const issue = (node as IssueContainer).getIssue();
-        this.config.deleteIssue(issue);
+        this.config.deleteIssue(issue);        
         this.issueNodes.delete(issue);
+        this.doDeleteIssue(node);
         const file = issue.file;
         const nodes = this.issueFiles.get(file);
         if (nodes) {

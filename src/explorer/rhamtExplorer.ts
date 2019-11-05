@@ -64,12 +64,15 @@ export class RhamtExplorer {
                 vscode.window.showErrorMessage(`Error deleting configuration.`);
             }
         }));
-        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteIssue', item => {
-            item.root.deleteIssue(item);
-            this.modelService.saveAnalysisResults(item.root.config).catch(e => {
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteIssue', async item => {
+            try {
+                item.root.deleteIssue(item);
+                await this.modelService.saveAnalysisResults(item.root.config);
+            }
+            catch (e) {
                 console.log(`Error saving analysis results: ${e}`);
                 vscode.window.showErrorMessage(e);
-            });
+            }
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.markIssueAsComplete', item => {
             item.root.markIssueAsComplete(item);
