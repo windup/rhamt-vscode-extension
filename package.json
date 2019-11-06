@@ -177,10 +177,6 @@
                 {
                     "command": "rhamt.deleteResults",
                     "when": "view == rhamtExplorerView && viewItem == results"
-                },
-                {
-                    "command": "rhamt.newConfiguration",
-                    "when": "view == rhamtExplorerView && viewItem != issue && viewItem != rhamtConfiguration"
                 }
             ]
         }
