@@ -3,9 +3,31 @@
 [![Build Status](https://travis-ci.org/windup/rhamt-vscode-extension.svg?branch=master)](https://travis-ci.org/windup/rhamt-vscode-extension)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/windup/rhamt-vscode-extension/blob/master/README.md)
 
-The Visual Studio Code extension for the Red Hat Application Migration Toolkit.
+## Description
 
-> More information about RHAMT can be found [here](https://developers.redhat.com/products/rhamt/overview).
+The Visual Studio Code (VSCode) and Eclipse Che extension for the Red Hat Application Migration Toolkit (RHAMT).
+
+RHAMT (the product of the downstream project [Windup](https://github.com/windup/windup)) is a command-line Application Migration and Modernization Assessment tool.
+
+> The documentation for RHAMT can be found [here](https://developers.redhat.com/products/rhamt/overview).
+
+## VSCode
+
+This extension is published [here](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension) the Microsoft Visual Studio Marketplace.
+
+To add this extension to a VSCode installation, open VSCode, navigate to the Extensions Marketplace View, and search using the keyword `'rhamt'`.
+
+![VSCode Extension Marketplace View](resources/rhamt_vscode_installation.png)  
+
+## Eclipse Che
+
+This extension is supported in [Eclipse Che](https://www.eclipse.org/che/) `7.4.0` or higher.
+
+To add this Che plugin to a workspace, open Che, navigate to the plugins tab, and search using the keyword `'migration'`.
+
+![Eclipse Che Plugin](resources/rhamt_che_installation.png)  
+
+Additionally, this [demo](https://github.com/johnsteele/che-rhamt-demo) can be used to quickly experiment with the Che plugin.
 
 ## Features
 
