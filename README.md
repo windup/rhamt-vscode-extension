@@ -29,7 +29,7 @@ To add this plugin to a Che workspace, open Che, navigate to the plugins tab, an
 
 ![Eclipse Che Plugin](resources/rhamt_che_installation.png)
 
-Additionally, to add this Che plugin to the worksace, open Che, navigate to the Plugins view, and search for the `Application Migration Migration and Modernization using RHAMT` plugin.
+Alternatively, to add this Che plugin to the worksace, open Che, navigate to the Plugins view, and search for the `Application Migration Migration and Modernization using RHAMT` plugin.
 
 ![Eclipse Che Plugin](resources/rhamt_che_installation_view.png)
 
