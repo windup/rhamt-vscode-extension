@@ -29,7 +29,7 @@ To add this plugin to a Che workspace, open Che, navigate to the plugins tab, an
 
 ![Eclipse Che Plugin](resources/rhamt_che_installation.png)
 
-Alternatively, to add this Che plugin to the worksace, open Che, navigate to the Plugins view, and search for the `Application Migration Migration and Modernization using RHAMT` plugin.
+Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Application Migration Migration and Modernization using RHAMT` plugin.
 
 ![Eclipse Che Plugin](resources/rhamt_che_installation_view.png)
 
@@ -38,6 +38,8 @@ Lastly, this [demo](https://github.com/johnsteele/che-rhamt-demo) can be used to
 ## Features
 
 This extension provides the ability to analyze, assess, and migrate source code (`using RHAMT`) from within VSCode and Eclipse Che.
+
+The look and feel of both VSCode and Eclipse Che are very similar; therefore, the functionality demonstrated below should be consistent between the two environments.
 
 #### Configuration Wizard
 Use the configuration wizard to setup the analysis.  
@@ -55,7 +57,7 @@ View details about the migration issue.
 ![Configuration Wizard](resources/issue_details.gif)  
   
 #### Report
-Get a high-level view of the migration.  
+Use the generated reports to better understand and assess the migration efforts.  
   
 ![Configuration Wizard](resources/report.gif)  
 
