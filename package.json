@@ -2,7 +2,7 @@
     "name": "rhamt-vscode-extension",
     "displayName": "Red Hat Application Migration Toolkit",
     "description": "Application Migration and Modernization using RHAMT.",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
