@@ -2,7 +2,6 @@ node_modules/
 .vscode-test
 .vscode
 .DS_Store
-meta.yaml
 data/
 out/
 build/
