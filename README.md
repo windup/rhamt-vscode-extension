@@ -17,7 +17,7 @@ RHAMT (the product of the downstream project [Windup](https://github.com/windup/
 
 This extension is published [here](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension) in the Microsoft Visual Studio Marketplace.
 
-To add this extension to a VSCode installation, open VSCode, navigate to the Extensions Marketplace View, and search using the keyword `'rhamt'`.
+To add this extension to a VSCode installation, open VSCode, navigate to the Extensions Marketplace View, and search using the keyword `rhamt`.
 
 ![VSCode Extension Marketplace View](resources/rhamt_vscode_installation.png)  
 
@@ -25,7 +25,7 @@ To add this extension to a VSCode installation, open VSCode, navigate to the Ext
 
 This extension is supported in [Eclipse Che](https://www.eclipse.org/che/) `7.4.0` or higher.
 
-To add this plugin to a Che workspace, open Che, navigate to the plugins tab, and search using the keyword `'migration'`.
+To add this plugin to a Che workspace, open Che, navigate to the plugins tab, and search using the keyword `migration`.
 
 ![Eclipse Che Plugin](resources/rhamt_che_installation.png)
 
@@ -37,7 +37,7 @@ Lastly, this [demo](https://github.com/johnsteele/che-rhamt-demo) can be used to
 
 ## Features
 
-This extension provides the ability to analyze, assess, and migrate source code (`using RHAMT`) from within VSCode and Eclipse Che.
+This extension provides the ability to analyze, assess, and migrate source code (using RHAMT) from within VSCode and Eclipse Che.
 
 The look and feel of both VSCode and Eclipse Che are very similar; therefore, the functionality demonstrated below should be consistent between the two environments.
 
