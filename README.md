@@ -65,9 +65,8 @@ Use the generated reports to better understand and assess the migration efforts.
 
 * Java Platform, `JRE version 8+` with `JAVA_HOME` environment variable 
 * A minimum of `4 GB RAM`; 8 GB recommended
-* Installation of the `rhamt-cli` (downloaded from [here](https://github.com/johnsteele/windup/releases/download/v0.0.1-alpha/rhamt-cli-4.2.0-SNAPSHOT-offline.zip)).
 
-> Tip: You can optionally install the rhamt-cli once the extension has been installed.
+> Tip: You can install the rhamt-cli once the extension has been installed.
 
 ## Extension Settings
 
