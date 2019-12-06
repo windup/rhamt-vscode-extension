@@ -33,8 +33,6 @@ Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugi
 
 ![Eclipse Che Plugin](resources/rhamt_che_installation_view.png)
 
-Lastly, this [demo](https://github.com/johnsteele/che-rhamt-demo) can be used to quickly experiment with the Che plugin.
-
 ## Features
 
 This extension provides the ability to analyze, assess, and migrate source code (using RHAMT) from within VSCode and Eclipse Che.
@@ -66,7 +64,7 @@ Use the generated reports to better understand and assess the migration efforts.
 * Java Platform, `JRE version 8+` with `JAVA_HOME` environment variable 
 * A minimum of `4 GB RAM`; 8 GB recommended
 
-> Tip: You can install the rhamt-cli once the extension has been installed.
+> Tip: The rhamt-cli can be installed from within VSCode once the extension has been installed.
 
 ## Extension Settings
 
