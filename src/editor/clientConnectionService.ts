@@ -25,7 +25,7 @@ export class ClientConnectionService {
             const client = new ConfigurationClient(s, clientId);
             let manager = this.clientManagers.get(id);
             if (!manager) {
-                manager = new ConfigurationClientManager(config);
+                manager = new ConfigurationClientManager(config, this.modelService);
                 this.clientManagers.set(id, manager);
             }
             client.onDisposed.on(() => {

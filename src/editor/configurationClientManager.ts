@@ -2,11 +2,13 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+import * as vscode from 'vscode';
 import { ConfigurationClient } from './configurationClient';
 import * as os from 'os';
 import { workspace, commands, window, Uri } from 'vscode';
 import * as nls from 'vscode-nls';
 import { RhamtConfiguration } from '../model/model';
+import { ModelService } from '../model/modelService';
 
 const localize = nls.loadMessageBundle();
 
@@ -14,9 +16,11 @@ export class ConfigurationClientManager {
 
     private clients: Map<string, ConfigurationClient> = new Map<string, ConfigurationClient>();
     private config: RhamtConfiguration;
+    private modelService: ModelService;
 
-    constructor(config: RhamtConfiguration) {
+    constructor(config: RhamtConfiguration, modelService: ModelService) {
         this.config = config;
+        this.modelService = modelService;
     }
 
     notifyStopped(): void {
@@ -54,7 +58,7 @@ export class ConfigurationClientManager {
         client.onUpdateName.on(data => {});
         client.onUpdateJvm.on(data => {});
         client.onUpdateCli.on(data => {});
-        client.onAddOptionValue.on(data => {
+        client.onAddOptionValue.on(async data => {
             const values = this.config.options[data.option.name];
             if (values) {
                 this.config.options[data.option.name] = values.concat(data.value);
@@ -65,8 +69,9 @@ export class ConfigurationClientManager {
             this.clients.forEach(c => {
                 c.notifyUpdateOption(data.option, this.config.options);
             });
+            this.save();
         });
-        client.onUpdateOption.on(data => {
+        client.onUpdateOption.on(async data => {
             if (!data.value) {
                 delete this.config.options[data.name];
             }
@@ -76,6 +81,7 @@ export class ConfigurationClientManager {
             this.clients.forEach(c => {
                 c.notifyUpdateOption(data, this.config.options);
             });
+            this.save();
         });
         client.onOpenReport.on(() => {
             this.openReport();
@@ -106,8 +112,19 @@ export class ConfigurationClientManager {
                 this.clients.forEach(c => {
                     c.notifyUpdateOption(option, this.config.options);
                 });
+                this.save();
             }
         });
+    }
+
+    private async save(): Promise<void> {
+        try {
+            await this.modelService.save();
+        } catch (e) {
+            console.log(`Error saving configurtion data: ${e}`);
+            vscode.window.showErrorMessage(e);
+            return;
+        }
     }
 
     report(msg: string): void {
