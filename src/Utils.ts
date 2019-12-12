@@ -97,34 +97,26 @@ export namespace Utils {
         return new Promise<string>((resolve, reject) => {
             const rhamtPath = workspace.getConfiguration('rhamt.executable').get<string>('path');
             if (rhamtPath) {
-                console.log('====================================');
                 console.log(`preference rhamt.executable.path found - ${rhamtPath}`);
-                console.log('====================================');
                 resolve(rhamtPath);
             }
             let rhamtHome = process.env['RHAMT_HOME'];
             if (rhamtHome) {
                 const executable = Utils.getRhamtExecutable(rhamtHome);
-                console.log('====================================');
                 console.log(`found rhamt-cli using RHAMT_HOME`);
                 console.log(`RHAMT_HOME=${rhamtHome}`);
                 console.log(`executable=${executable}`);
-                console.log('====================================');
                 return resolve(executable);
             }
             rhamtHome = Utils.findRhamtCliDownload(outDir);
             if (rhamtHome) {
-                console.log('====================================');
                 console.log(`rhamt-cli download found at - ${rhamtHome}`);
                 const executable = Utils.getRhamtExecutable(rhamtHome);
                 console.log(`rhamt-cli executable - ${executable}`);
-                console.log('====================================');
                 return resolve(executable);
             }
             else {
-                console.log('====================================');
                 console.log('Unable to find rhamt-cli download');
-                console.log('====================================');
                 reject(new Error(''));
             }
         });
