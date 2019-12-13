@@ -39,6 +39,12 @@ export class ConfigurationEditor {
         this.view.reveal();
     }
 
+    async close() {
+        if (this.view) {
+            this.view.dispose();
+        }
+    }
+
     private render(location: string): string {
         return `
             <!DOCTYPE html>

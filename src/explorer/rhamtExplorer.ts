@@ -56,7 +56,10 @@ export class RhamtExplorer {
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', async item => {
             const config = item.config;
             try {
-                await this.modelService.deleteConfiguration(config);
+                const deleted = await this.modelService.deleteConfiguration(config);
+                if (deleted) {
+                    this.configEditorService.closeEditor(config);
+                }
                 this.dataProvider.refresh();
             }
             catch (e) {

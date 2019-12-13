@@ -25,4 +25,12 @@ export class ConfigurationEditorService {
         }
         await editor.open();
     }
+
+    closeEditor(configuration: RhamtConfiguration) {
+        let editor = this.editors.get(configuration.id);
+        if (editor) {
+            editor.close();
+            this.editors.delete(configuration.id);
+        }
+    }
 }
