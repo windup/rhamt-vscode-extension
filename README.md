@@ -42,7 +42,7 @@ The look and feel of both VSCode and Eclipse Che are very similar; therefore, th
 #### Configuration Wizard
 Use the configuration wizard to setup the analysis.  
   
-![Configuration Wizard](resources/configuration_wizard.gif)  
+![Configuration Wizard](resources/configuration_editor.gif)  
 
 #### Jump to Code
 Jump to code containing identified migration issues.  
