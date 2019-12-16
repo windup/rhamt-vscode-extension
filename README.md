@@ -39,10 +39,10 @@ This extension provides the ability to analyze, assess, and migrate source code 
 
 The look and feel of both VSCode and Eclipse Che are very similar; therefore, the functionality demonstrated below should be consistent between the two environments.
 
-#### Configuration Wizard
-Use the configuration wizard to setup the analysis.  
+#### Configuration Editor
+Use the configuration editor to setup the analysis.  
   
-![Configuration Wizard](resources/configuration_editor.gif)  
+![Configuration Editor](resources/configuration_editor.gif)  
 
 #### Jump to Code
 Jump to code containing identified migration issues.  
