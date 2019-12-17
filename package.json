@@ -125,6 +125,12 @@
                 }
             ]
         },
+        "snippets": [
+            {
+                "language": "xml",
+                "path": "./rule-snippets/xml.json"
+            }
+        ],
         "menus": {
             "view/title": [
                 {
