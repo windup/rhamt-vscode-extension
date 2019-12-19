@@ -1,0 +1,43 @@
+{
+    "{N} Ruleset": {
+        "prefix": "ruleset",
+        "body": [
+            "<?xml version=\"1.0\"?>",
+            "<ruleset id=\"$1\" xmlns=\"http://windup.jboss.org/schema/jboss-ruleset\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+            "    xsi:schemaLocation=\"http://windup.jboss.org/schema/jboss-ruleset http://windup.jboss.org/schema/jboss-ruleset/windup-jboss-ruleset.xsd\">",
+            "    <metadata>",
+            "        <description>",
+            "            $2",
+            "        </description>",
+            "        <!-- version ranges applied to from and to technologies -->",
+            "        <dependencies>",
+            "             <addon id=\"org.jboss.windup.rules,2.4.0.Final\"/>",
+            "        </dependencies>",
+            "    </metadata>",
+            "    <rules>",
+            "        $3",
+            "    </rules>",
+            "</ruleset>"
+        ]
+    },
+
+    "{N} Java Class Rule": {
+        "prefix": "javaclass",
+        "body": [
+            "<rule id=\"$1\">",
+            "    <!-- rule condition, when it could be fired -->",
+            "    <when>",
+            "        <javaclass references=\"$2\">",
+			"            <location>$3</location>",
+			"        </javaclass>",
+            "    </when>",
+            "    <!-- rule operation, what to do if it is fired -->",
+            "    <perform>",
+            "        <hint title=\"$4\" effort=\"$5\" category-id=\"$6\">",
+            "            <message>$7</message>",
+            "        </hint>",
+            "    </perform>",
+            "</rule>"
+        ]
+    }
+}
