@@ -27,17 +27,130 @@
             "<rule id=\"$1\">",
             "    <!-- rule condition, when it could be fired -->",
             "    <when>",
-            "        <javaclass references=\"$2\">",
-			"            <location>$3</location>",
-			"        </javaclass>",
+            "        <or>",
+            "            <javaclass references=\"$2\">",
+			"                <location>$3</location>",
+            "            </javaclass>",
+            "        </or>",
             "    </when>",
             "    <!-- rule operation, what to do if it is fired -->",
             "    <perform>",
             "        <hint title=\"$4\" effort=\"$5\" category-id=\"$6\">",
             "            <message>$7</message>",
+            "            <link href=\"https://$8\" title=\"Knowledge base article about $9\" />",
+            "            <tag>$10</tag>",
+            "            <quickfix name=\"$11\" type=\"$12\">",
+            "                <replacement>$13</replacement>",
+            "                <search>$14</search>",
+            "            </quickfix>",
             "        </hint>",
             "    </perform>",
             "</rule>"
+        ]
+    },
+
+    "{N} File Exists Rule": {
+        "prefix": "file-exists",
+        "body": [
+            "<rule id=\"$1\">",
+            "    <!-- rule condition, when it could be fired -->",
+            "    <when>",
+            "        <or>",
+            "            <file-exists filename=\"$2\" />",
+            "        </or>",
+            "    </when>",
+            "    <!-- rule operation, what to do if it is fired -->",
+            "    <perform>",
+            "        <hint title=\"$3\" effort=\"$4\" category-id=\"$5\">",
+            "            <message>$6</message>",
+            "            <link href=\"https://$7\" title=\"Knowledge base article about $8\" />",
+            "            <tag>$9</tag>",
+            "            <quickfix name=\"$10\" type=\"$11\">",
+            "                <replacement>$12</replacement>",
+            "                <search>$13</search>",
+            "            </quickfix>",
+            "        </hint>",
+            "    </perform>",
+            "</rule>"
+        ]
+    },
+
+    "{N} File Content Rule": {
+        "prefix": "filecontent",
+        "body": [
+            "<rule id=\"$1\">",
+            "    <!-- rule condition, when it could be fired -->",
+            "    <when>",
+            "        <or>",
+            "           <filecontent filename=\"$2\" pattern=\"$3\"/>",
+            "        </or>",
+            "    </when>",
+            "    <!-- rule operation, what to do if it is fired -->",
+            "    <perform>",
+            "        <hint title=\"$4\" effort=\"$5\" category-id=\"$6\">",
+            "            <message>$7</message>",
+            "            <link href=\"https://$8\" title=\"Knowledge base article about $9\" />",
+            "            <tag>$10</tag>",
+            "            <quickfix name=\"$11\" type=\"$12\">",
+            "                <replacement>$13</replacement>",
+            "                <search>$14</search>",
+            "            </quickfix>",
+            "        </hint>",
+            "    </perform>",
+            "</rule>"
+        ]
+    },
+
+    "{N} String Pattern Rule": {
+        "prefix": "string",
+        "body": [
+            "<rule id=\"$1\">",
+            "    <!-- rule condition, when it could be fired -->",
+            "    <when>",
+            "        <or>",
+            "            <javaclass references=\"$2\">",
+			"                <location>$3</location>",
+            "            </javaclass>",
+            "        </or>",
+            "    </when>",
+            "    <!-- rule operation, what to do if it is fired -->",
+            "    <perform>",
+            "        <hint title=\"$4\" effort=\"$5\" category-id=\"$6\">",
+            "            <message>$7</message>",
+            "            <link href=\"https://$8\" title=\"Knowledge base article about $9\" />",
+            "            <tag>$10</tag>",
+            "            <quickfix name=\"$11\" type=\"$12\">",
+            "                <replacement>$13</replacement>",
+            "                <search>$14</search>",
+            "            </quickfix>",
+            "        </hint>",
+            "    </perform>",
+            "</rule>"
+        ]
+    },
+
+    "{N} Hint": {
+        "prefix": "hint",
+        "body": [
+            "<hint title=\"$1\" effort=\"$2\" category-id=\"$3\">",
+            "    <message>$4</message>",
+            "    <link href=\"https://$5\" title=\"Knowledge base article about $6\" />",
+            "    <tag>$7</tag>",
+            "    <quickfix name=\"$8\" type=\"$9\">",
+            "        <replacement>$10</replacement>",
+            "        <search>$11</search>",
+            "    </quickfix>",
+            " </hint>"
+        ]
+    },
+
+    "{N} Quickfix": {
+        "prefix": "quickfix",
+        "body": [
+            "<quickfix name=\"$1\" type=\"$2\">",
+            "    <replacement>$3</replacement>",
+            "    <search>$4</search>",
+            "</quickfix>"
         ]
     }
 }
