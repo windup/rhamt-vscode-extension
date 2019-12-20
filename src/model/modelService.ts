@@ -207,6 +207,9 @@ export class ModelService {
     static async loadResults(target: RhamtConfiguration): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const location = target.getResultsLocation();
+            if (!location) {
+                return reject(`Error loading analysis results. Cannot resolve configuraiton output location.`);
+            }
             fs.exists(location, async exists => {
                 if (exists) {
                     try {

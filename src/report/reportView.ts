@@ -20,6 +20,9 @@ export class ReportView {
         this.reportServer.start();
         this.context.subscriptions.push(commands.registerCommand('rhamt.openReport', async item => {
             const location = item.getReport() as string;
+            if (!location) {
+                return window.showErrorMessage(`Unable to find report on filesystem`);
+            }
             const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
             const url = await this.endpoints.reportLocation();
             const report = `${url}${relative}`;

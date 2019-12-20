@@ -22,7 +22,7 @@
     },
 
     "{N} Java Class Rule": {
-        "prefix": "javaclass",
+        "prefix": "javaclass-rule",
         "body": [
             "<rule id=\"$1\">",
             "    <!-- rule condition, when it could be fired -->",
@@ -35,13 +35,17 @@
             "    </when>",
             "    <!-- rule operation, what to do if it is fired -->",
             "    <perform>",
-            "        <hint title=\"$4\" effort=\"$5\" category-id=\"$6\">",
-            "            <message>$7</message>",
-            "            <link href=\"https://$8\" title=\"Knowledge base article about $9\" />",
-            "            <tag>$10</tag>",
-            "            <quickfix name=\"$11\" type=\"$12\">",
-            "                <replacement>$13</replacement>",
-            "                <search>$14</search>",
+            "        <hint issue-display-mode=\"$4all\" title=\"$5\" effort=\"$6\" category-id=\"$7\">",
+            "            <message>",
+            "            <![CDATA[",
+            "                $8",
+            "            ]]>",
+            "            </message>",
+            "            <link href=\"https://$9\" title=\"Knowledge base article about $10\" />",
+            "            <tag>$11</tag>",
+            "            <quickfix name=\"$12\" type=\"$13\">",
+            "                <replacement>$14</replacement>",
+            "                <search>$15</search>",
             "            </quickfix>",
             "        </hint>",
             "    </perform>",
@@ -50,7 +54,7 @@
     },
 
     "{N} File Exists Rule": {
-        "prefix": "file-exists",
+        "prefix": "fileexists-rule",
         "body": [
             "<rule id=\"$1\">",
             "    <!-- rule condition, when it could be fired -->",
@@ -61,34 +65,12 @@
             "    </when>",
             "    <!-- rule operation, what to do if it is fired -->",
             "    <perform>",
-            "        <hint title=\"$3\" effort=\"$4\" category-id=\"$5\">",
-            "            <message>$6</message>",
-            "            <link href=\"https://$7\" title=\"Knowledge base article about $8\" />",
-            "            <tag>$9</tag>",
-            "            <quickfix name=\"$10\" type=\"$11\">",
-            "                <replacement>$12</replacement>",
-            "                <search>$13</search>",
-            "            </quickfix>",
-            "        </hint>",
-            "    </perform>",
-            "</rule>"
-        ]
-    },
-
-    "{N} File Content Rule": {
-        "prefix": "filecontent",
-        "body": [
-            "<rule id=\"$1\">",
-            "    <!-- rule condition, when it could be fired -->",
-            "    <when>",
-            "        <or>",
-            "           <filecontent filename=\"$2\" pattern=\"$3\"/>",
-            "        </or>",
-            "    </when>",
-            "    <!-- rule operation, what to do if it is fired -->",
-            "    <perform>",
-            "        <hint title=\"$4\" effort=\"$5\" category-id=\"$6\">",
-            "            <message>$7</message>",
+            "        <hint issue-display-mode=\"$3all\" title=\"$4\" effort=\"$5\" category-id=\"$6\">",
+            "            <message>",
+            "            <![CDATA[",
+            "                $7",
+            "            ]]>",
+            "            </message>",
             "            <link href=\"https://$8\" title=\"Knowledge base article about $9\" />",
             "            <tag>$10</tag>",
             "            <quickfix name=\"$11\" type=\"$12\">",
@@ -101,25 +83,27 @@
         ]
     },
 
-    "{N} String Pattern Rule": {
-        "prefix": "string",
+    "{N} File Content Rule": {
+        "prefix": "filecontent-rule",
         "body": [
             "<rule id=\"$1\">",
             "    <!-- rule condition, when it could be fired -->",
             "    <when>",
             "        <or>",
-            "            <javaclass references=\"$2\">",
-			"                <location>$3</location>",
-            "            </javaclass>",
+            "           <filecontent filename=\"{*}\" pattern=\"$2\"/>",
             "        </or>",
             "    </when>",
             "    <!-- rule operation, what to do if it is fired -->",
             "    <perform>",
-            "        <hint title=\"$4\" effort=\"$5\" category-id=\"$6\">",
-            "            <message>$7</message>",
+            "        <hint issue-display-mode=\"$3all\" title=\"$4\" effort=\"$5\" category-id=\"$6\">",
+            "            <message>",
+            "            <![CDATA[",
+            "                $7",
+            "            ]]>",
+            "            </message>",
             "            <link href=\"https://$8\" title=\"Knowledge base article about $9\" />",
             "            <tag>$10</tag>",
-            "            <quickfix name=\"$11\" type=\"$12\">",
+            "            <quickfix name=\"$12\" type=\"$12\">",
             "                <replacement>$13</replacement>",
             "                <search>$14</search>",
             "            </quickfix>",
@@ -132,13 +116,17 @@
     "{N} Hint": {
         "prefix": "hint",
         "body": [
-            "<hint title=\"$1\" effort=\"$2\" category-id=\"$3\">",
-            "    <message>$4</message>",
-            "    <link href=\"https://$5\" title=\"Knowledge base article about $6\" />",
-            "    <tag>$7</tag>",
-            "    <quickfix name=\"$8\" type=\"$9\">",
-            "        <replacement>$10</replacement>",
-            "        <search>$11</search>",
+            "<hint issue-display-mode=\"$1all\" title=\"$2\" effort=\"$3\" category-id=\"$4\">",
+            "    <message>",
+            "    <![CDATA[",
+            "        $5",
+            "    ]]>",
+            "    </message>",
+            "    <link href=\"https://$6\" title=\"$7\" />",
+            "    <tag>$8</tag>",
+            "    <quickfix name=\"$9\" type=\"$10\">",
+            "        <replacement>$11</replacement>",
+            "        <search>$12</search>",
             "    </quickfix>",
             " </hint>"
         ]
@@ -151,6 +139,69 @@
             "    <replacement>$3</replacement>",
             "    <search>$4</search>",
             "</quickfix>"
+        ]
+    },
+
+    "{N} Classification": {
+        "prefix": "classification",
+        "body": [
+            "<classification issue-display-mode=\"$1\" title=\"$2\" effort=\"$3\">",
+            "    <description>",
+            "      <![CDATA[",
+            "          $4",
+            "      ]]>",
+            "    </description>",
+            "    <link title=\"$5\" href=\"$6\" />",
+            "    <tag>$7</tag>",
+            "</classification>"
+        ]
+    },
+
+    "{N} Message": {
+        "prefix": "message",
+        "body": [
+            "<message>",
+            "  <![CDATA[",
+            "    $1",
+            "  ]]>",
+            "</message>"
+        ]
+    },
+
+    "{N} File Content": {
+        "prefix": "filecontent",
+        "body": [
+            "<filecontent filename=\"{*}\" pattern=\"$1\"/>"
+        ]
+    },
+
+    "{N} File Exists Tag": {
+        "prefix": "fileexists",
+        "body": [
+            "<file-exists filename=\"$1\" />"
+        ]
+    },
+
+    "{N} Link": {
+        "prefix": "link",
+        "body": [
+            "<link href=\"$1\" title=\"$2\" />"
+        ]
+    },
+
+    "{N} Tag": {
+        "prefix": "tag",
+        "body": [
+            "<tag>$1</tag>"
+        ]
+    },
+
+    "{N} Java Class": {
+        "prefix": "javaclass",
+        "body": [
+            "<javaclass references=\"$1\">",
+			"    <location>$2</location>",
+            "</javaclass>"
         ]
     }
 }

@@ -78,10 +78,12 @@ export class RhamtConfiguration {
     }
 
     getReport(): string {
+        if (!this.options['output']) return undefined;
         return path.resolve(this.options['output'], 'index.html');
     }
 
     getResultsLocation(): string {
+        if (!this.options['output']) return undefined;
         return path.resolve(this.options['output'], 'results.xml');
     }
 
