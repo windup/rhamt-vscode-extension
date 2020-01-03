@@ -28,6 +28,7 @@
     ],
     "activationEvents": [
         "onCommand:rhamt.createConfiguration",
+        "onCommand:rhamt.newRuleset",
         "onCommand:rhamt.showRhamtExplorer",
         "onView:rhamtExplorerView"
     ],
@@ -93,6 +94,10 @@
             {
                 "command": "rhamt.deleteResults",
                 "title": "Delete"
+            },
+            {
+                "command": "rhamt.newRuleset",
+                "title": "New Ruleset"
             }
         ],
         "configuration": [

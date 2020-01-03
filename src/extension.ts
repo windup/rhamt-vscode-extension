@@ -81,6 +81,12 @@ export async function activate(context: vscode.ExtensionContext) {
             });
         }
     }));
+
+    const newRulesetDisposable = vscode.commands.registerCommand('rhamt.newRuleset', async () => {
+
+    });
+    context.subscriptions.push(newRulesetDisposable);
+
     Utils.checkCli(modelService.outDir, context);
 }
 
