@@ -18,6 +18,7 @@ import { ClientConnectionService } from './editor/clientConnectionService';
 import { ConfigurationEditorService } from './editor/configurationEditorService';
 import { HintItem } from './tree/hintItem';
 import { HintNode } from './tree/hintNode';
+import { NewRulesetWizard } from './wizard/newRulesetWizard';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -83,8 +84,8 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
 
     const newRulesetDisposable = vscode.commands.registerCommand('rhamt.newRuleset', async () => {
-
-    });
+        new NewRulesetWizard().open();
+    }); 
     context.subscriptions.push(newRulesetDisposable);
 
     Utils.checkCli(modelService.outDir, context);
