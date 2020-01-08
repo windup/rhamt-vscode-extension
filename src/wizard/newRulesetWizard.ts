@@ -34,20 +34,19 @@ export class NewRulesetWizard {
     }
 
     template(): string {
-        return `<?xml version=\"1.0\"?>
-<ruleset id=\"$1\" xmlns=\"http://windup.jboss.org/schema/jboss-ruleset\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\",
-    xsi:schemaLocation=\"http://windup.jboss.org/schema/jboss-ruleset http://windup.jboss.org/schema/jboss-ruleset/windup-jboss-ruleset.xsd\">
+        return `<?xml version="1.0"?>
+<ruleset id="" xmlns="http://windup.jboss.org/schema/jboss-ruleset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance",
+    xsi:schemaLocation="http://windup.jboss.org/schema/jboss-ruleset http://windup.jboss.org/schema/jboss-ruleset/windup-jboss-ruleset.xsd">
     <metadata>
         <description>
-            $2
         </description>
         <!-- version ranges applied to from and to technologies -->
         <dependencies>
-                <addon id=\"org.jboss.windup.rules,2.4.0.Final\"/>
+                <addon id="org.jboss.windup.rules,2.4.0.Final"/>
         </dependencies>
     </metadata>
     <rules>
-        $3
+
     </rules>
 </ruleset>
         `;
