@@ -19,19 +19,7 @@ This extension is published [here](https://marketplace.visualstudio.com/items?it
 
 To add this extension to a VSCode installation, open VSCode, navigate to the Extensions Marketplace View, and search using the keyword `rhamt`.
 
-![VSCode Extension Marketplace View](resources/rhamt_vscode_installation.png)  
-
-## Eclipse Che
-
-This extension is supported in [Eclipse Che](https://www.eclipse.org/che/) `7.4.0` or higher.
-
-To add this plugin to a Che workspace, open Che, navigate to the plugins tab, and search using the keyword `migration`.
-
-![Eclipse Che Plugin](resources/rhamt_che_installation.png)
-
-Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Application Migration Migration and Modernization using RHAMT` plugin.
-
-![Eclipse Che Plugin](resources/rhamt_che_installation_view.png)
+![VSCode Extension Marketplace View](resources/rhamt_vscode_installation.png)
 
 ## Features
 
@@ -59,6 +47,18 @@ Use the generated reports to better understand and assess the migration efforts.
   
 ![Configuration Wizard](resources/report.gif)  
 
+## Eclipse Che
+
+This extension is supported in [Eclipse Che](https://www.eclipse.org/che/) `7.4.0` or higher.
+
+To add this plugin to a Che workspace, open Che, navigate to the plugins tab, and search using the keyword `migration`.
+
+![Eclipse Che Plugin](resources/rhamt_che_installation.png)
+
+Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Application Migration Migration and Modernization using RHAMT` plugin.
+
+![Eclipse Che Plugin](resources/rhamt_che_installation_view.png)
+
 ## Requirements
 
 * Java Platform, `JRE version 8+` with `JAVA_HOME` environment variable 
@@ -70,7 +70,7 @@ Use the generated reports to better understand and assess the migration efforts.
 
 This extension contributes the following settings:
 
-* `rhamt.executable.path`: The location of the rhamt-cli. 
+* `rhamt.executable.path`: The location of the rhamt-cli.
 
 ## Build
 
