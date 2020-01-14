@@ -452,12 +452,14 @@ class ConfigClient {
             $(`.${option.name}-custom`).remove();
             const values = config.options[option.name];
             const options = option['available-options'];
-            options.forEach((item) => {
-                $(`#${option.name}-${item}`).prop('checked', values && values.includes(item));
-            });
+            if (options) {
+                options.forEach((item) => {
+                    $(`#${option.name}-${item}`).prop('checked', values && values.includes(item));
+                });
+            }
             if (values) {
                 values.forEach((item) => {
-                    if (!options.includes(item)) {
+                    if (!options || !options.includes(item)) {
                         $(`#${option.name}-table`).append(this.createTableRow(option, item, `${option.name}-custom`, config));
                         $(`#${option.name}-${item}`).prop('checked', true);
                     }
