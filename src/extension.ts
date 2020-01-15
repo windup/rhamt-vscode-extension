@@ -84,7 +84,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
 
     const newRulesetDisposable = vscode.commands.registerCommand('rhamt.newRuleset', async () => {
-        new NewRulesetWizard().open();
+        new NewRulesetWizard(modelService).open();
     }); 
     context.subscriptions.push(newRulesetDisposable);
 

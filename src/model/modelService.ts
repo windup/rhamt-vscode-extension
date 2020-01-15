@@ -14,6 +14,7 @@ export class ModelService {
 
     public loaded: boolean = false;
     public onLoaded = new rhamtEvents.TypedEvent<RhamtModel>();
+    public rulesets: string[] = [];
 
     constructor(
         public model: RhamtModel,
@@ -174,6 +175,10 @@ export class ModelService {
                 }
             });
         });
+    }
+
+    registerRuleset(location: string): void {
+        this.rulesets.push(location);
     }
 
     private parse(data: any): Promise<any> {

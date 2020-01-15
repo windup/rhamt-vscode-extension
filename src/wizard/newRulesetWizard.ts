@@ -2,8 +2,15 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import { ModelService } from '../model/modelService';
 
 export class NewRulesetWizard {
+
+    private modelService: ModelService;
+
+    constructor(modelService: ModelService) {
+        this.modelService = modelService;
+    }
 
     async open (): Promise<any> {
         const fileName = await vscode.window.showInputBox({value: 'custom-ruleset.rhamt.xml', placeHolder: 'File name', valueSelection: [0, 14]});
@@ -21,6 +28,7 @@ export class NewRulesetWizard {
             }
             const document = await vscode.workspace.openTextDocument(file);
             await vscode.window.showTextDocument(document);
+            this.modelService.registerRuleset(file);
         }
     }
 

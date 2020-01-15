@@ -214,8 +214,9 @@ class ConfigClient {
         table.style.marginRight = '20px';
         table.classList.add('user-table');
         top.appendChild(table);
-        if (option['ui-type'].includes('select-many')) {
-            option['available-options'].forEach((item) => {
+        const availableOptions = option['available-options'];
+        if (option['ui-type'].includes('select-many') && availableOptions && availableOptions.length > 0) {
+            availableOptions.forEach((item) => {
                 table.appendChild(this.createTableRow(option, item, 'built-in', config));
             });
         }
@@ -448,7 +449,28 @@ class ConfigClient {
                 $(`#${option.name}`).prop('checked', checked);
             }
         }
-        if (option['ui-type'].includes('select-many')) {
+
+        if (option['ui-type'].includes('select-many') && option['ui-type'].includes('many')) {
+            const table = $(`#${option.name}-table`);
+            $(`.${option.name}-custom`).remove();
+            table.children().remove();
+            const options = option['available-options'];
+            if (options && options.length > 0) {
+                options.forEach((item) => {
+                    table.append(this.createTableRow(option, item, 'built-in', config));
+                });
+            }
+
+            const values = config.options[option.name];
+            if (options) {
+                options.forEach((item) => {
+                    $(`#${option.name}-${item}`).prop('checked', values && values.includes(item));
+                });
+            }
+            this.bindManyValuesTable(option, config);
+        }
+
+        else if (option['ui-type'].includes('select-many')) {
             $(`.${option.name}-custom`).remove();
             const values = config.options[option.name];
             const options = option['available-options'];
@@ -474,6 +496,59 @@ class ConfigClient {
             $(`#${option.name}-input`).val(value);
         }
     }
+
+    bindManyValuesTable(option, config) {
+        const input = config.options[option.name];
+        if (!input || input.length === 0) {
+            return;
+        }
+        const options = option['available-options'];
+        const table = $(`#${option.name}-table`);
+        input.forEach((item) => {
+            if (!options.includes(item)) {
+                const row = document.createElement('tr');
+                const data = document.createElement('td');
+                data.style.padding = '0px';
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('table-row');
+                wrapper.tabIndex = -1;
+                const bar = document.createElement('div');
+                bar.classList.add('action-bar');
+                wrapper.append(bar);
+                const container = document.createElement('ul');
+                container.classList.add('actions-container');
+                bar.append(container);
+                const editItem = document.createElement('li');
+                editItem.classList.add('action-item');
+                container.append(editItem);
+                const editAction = document.createElement('a');
+                editAction.classList.add('action-label', 'edit-action');
+                editAction.title = 'Edit Item';
+                editItem.append(editAction);
+                editAction.onclick = () => {
+                    this.showEditDialog(option.name, undefined, { currentValue: item });
+                };
+                const deleteItem = document.createElement('li');
+                deleteItem.classList.add('action-item');
+                container.append(deleteItem);
+                const deleteAction = document.createElement('a');
+                deleteAction.classList.add('action-label', 'delete-action');
+                deleteAction.title = 'Delete Item';
+                deleteItem.append(deleteAction);
+                deleteAction.onclick = () => {
+                    this.deleteItem(option, item, config);
+                };
+                const col1 = document.createElement('div');
+                col1.classList.add('row-text');
+                col1.textContent = item;
+                wrapper.append(col1);
+                data.append(wrapper);
+                row.append(data);
+                table.append(row);
+            }
+        });
+    }
+
     bindDynamicTable(option, config) {
         $(`#${option.name}-table`).children().remove();
         const input = config.options[option.name];
