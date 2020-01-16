@@ -50,11 +50,9 @@
         "name": "userRulesDirectory",
         "description": "User Rules Directory (Search pattern: *.windup.groovy, *.windup.xml, *.rhamt.groovy and *.rhamt.xml).",
         "type": "Path",
-        "ui-type": ["many", "file_or_directory", "text", "select-many"],
+        "ui-type": ["many", "file_or_directory", "text", "recent"],
         "placeholder": "No Directories Specified",
-        "required": false,
-        "available-options": [
-        ]
+        "required": false
       },
       {
         "name": "userIgnorePath",
