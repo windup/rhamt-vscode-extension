@@ -53,7 +53,8 @@ export class ConfigurationServerController {
             const config = {
                 id: result.id,
                 name: result.name,
-                options: result.options
+                options: result.options,
+                recentRulests: this.modelService.getRulesets()
             };
             res.status(200).json({config});
         });

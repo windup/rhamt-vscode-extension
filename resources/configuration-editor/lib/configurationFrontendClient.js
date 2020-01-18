@@ -125,14 +125,23 @@ class ConfigClient {
         $('.overlay-container *').click(function (e) {
             e.stopPropagation();
         });
+        $('.recent-container').click(() => {
+            this.hideRecentDialog();
+        });
+        $('.recent-container *').click(function (e) {
+            e.stopPropagation();
+        });
         $(document).keyup(e => {
             if (e.key === 'Escape') {
                 this.hideEditDialog();
+                this.hideRecentDialog();
+            }
+            else if (e.which === 13 && $(`.recent-container`).is(':visible')) {
+                this.hideRecentDialog();
+                this.updateRulesetsOption();
             }
         });
         $('#elementForm').on('click', 'div.table-row', e => {
-            console.log('selected');
-            console.log(e.target);
             if ($(e.target).hasClass('delete-action')) {
                 return;
             }
@@ -217,7 +226,7 @@ class ConfigClient {
         const availableOptions = option['available-options'];
         if (option['ui-type'].includes('select-many') && availableOptions && availableOptions.length > 0) {
             availableOptions.forEach((item) => {
-                table.appendChild(this.createTableRow(option, item, 'built-in', config));
+                table.appendChild(this.createTableRow(option, item, 'built-in', config, true));
             });
         }
         else {
@@ -241,8 +250,67 @@ class ConfigClient {
         const addButton = this.createAddButton();
         toolbar.appendChild(addButton);
         this.bindAddButton(option, addButton);
+        
+        if (option['ui-type'].includes('recent')) {
+            const recentButton = this.createRecentButton();
+            recentButton.style.marginLeft = '5px';
+            toolbar.appendChild(recentButton);
+            recentButton.onclick = () => {
+                this.showRecentDialog(option, undefined);
+            };
+        }
     }
-    createTableRow(option, item, group, config) {
+
+    createRecentButton() {
+        const addButton = document.createElement('a');
+        addButton.classList.add('monaco-button', 'monaco-text-button', 'setting-exclude-addButton');
+        addButton.setAttribute('role', 'button');
+        addButton.style.color = 'rgb(255, 255, 255)';
+        addButton.style.backgroundColor = 'rgb(14, 99, 156)';
+        addButton.style.width = 'auto';
+        addButton.style.padding = '2px 14px';
+        addButton.textContent = 'Recent...';
+        return addButton;
+    }
+
+    showRecentDialog(option) {
+       $('.monaco-inputbox').removeClass('synthetic-focus');
+        this.populateRecentTable(option, this.store.config, this.store.config.recentRulests);
+        $('.recent-container').css('display', 'block');
+    }
+
+    updateRulesetsOption() {
+        const option = 'userRulesDirectory'; 
+        console.log(`element is: ${$(`.recent-${option}-custom:checkbox:checked`)}`);
+        
+        let values = this.store.config.options[option] || [];
+        $(`#recent-table .option-input:checkbox:checked`).each((index, value) => {
+            values.push($(value).data('option-item'));
+        });
+        this.updateOption({ name: option, value: values });
+    }
+
+    populateRecentTable(option, config, recent) {
+        $('#recent-table').children().remove();
+        $('#recent-add-button').remove();
+        const values = config.options[option.name];
+        if (recent) {
+            recent.forEach((item) => {
+                console.log(`Creating row for ${item}`);
+                console.log(`values is: ${values}`);
+                console.log(`option: ${option}`);
+                if (!values || !values.includes(item)) {
+                    $(`#recent-table`).append(this.createTableRow(option, item, `recent-${option.name}-custom`, config, false));
+                }
+            });
+        }
+    }
+
+    hideRecentDialog() {
+        $('.recent-container').css('display', 'none');
+    }
+
+    createTableRow(option, item, group, config, bind) {
         const row = document.createElement('tr');
         row.classList.add(group, 'option-row');
         const data = document.createElement('td');
@@ -260,10 +328,13 @@ class ConfigClient {
         input.style.outline = '0';
         input.id = `${option.name}-${item}`;
         input.type = 'checkbox';
+        $(input).data('option-item', item);
         wrapper.appendChild(input);
-        input.onclick = () => {
-            this.updateSelectManyOption(option, item, input.checked, config);
-        };
+        if (bind) {
+            input.onclick = () => {
+                this.updateSelectManyOption(option, item, input.checked, config);
+            };
+        }
         const content = document.createElement('div');
         content.classList.add('option-content');
         wrapper.appendChild(content);
@@ -450,27 +521,7 @@ class ConfigClient {
             }
         }
 
-        if (option['ui-type'].includes('select-many') && option['ui-type'].includes('many')) {
-            const table = $(`#${option.name}-table`);
-            $(`.${option.name}-custom`).remove();
-            table.children().remove();
-            const options = option['available-options'];
-            if (options && options.length > 0) {
-                options.forEach((item) => {
-                    table.append(this.createTableRow(option, item, 'built-in', config));
-                });
-            }
-
-            const values = config.options[option.name];
-            if (options) {
-                options.forEach((item) => {
-                    $(`#${option.name}-${item}`).prop('checked', values && values.includes(item));
-                });
-            }
-            this.bindManyValuesTable(option, config);
-        }
-
-        else if (option['ui-type'].includes('select-many')) {
+        if (option['ui-type'].includes('select-many')) {
             $(`.${option.name}-custom`).remove();
             const values = config.options[option.name];
             const options = option['available-options'];
@@ -482,7 +533,7 @@ class ConfigClient {
             if (values) {
                 values.forEach((item) => {
                     if (!options || !options.includes(item)) {
-                        $(`#${option.name}-table`).append(this.createTableRow(option, item, `${option.name}-custom`, config));
+                        $(`#${option.name}-table`).append(this.createTableRow(option, item, `${option.name}-custom`, config, true));
                         $(`#${option.name}-${item}`).prop('checked', true);
                     }
                 });
@@ -495,58 +546,6 @@ class ConfigClient {
             const value = config.options[option.name];
             $(`#${option.name}-input`).val(value);
         }
-    }
-
-    bindManyValuesTable(option, config) {
-        const input = config.options[option.name];
-        if (!input || input.length === 0) {
-            return;
-        }
-        const options = option['available-options'];
-        const table = $(`#${option.name}-table`);
-        input.forEach((item) => {
-            if (!options.includes(item)) {
-                const row = document.createElement('tr');
-                const data = document.createElement('td');
-                data.style.padding = '0px';
-                const wrapper = document.createElement('div');
-                wrapper.classList.add('table-row');
-                wrapper.tabIndex = -1;
-                const bar = document.createElement('div');
-                bar.classList.add('action-bar');
-                wrapper.append(bar);
-                const container = document.createElement('ul');
-                container.classList.add('actions-container');
-                bar.append(container);
-                const editItem = document.createElement('li');
-                editItem.classList.add('action-item');
-                container.append(editItem);
-                const editAction = document.createElement('a');
-                editAction.classList.add('action-label', 'edit-action');
-                editAction.title = 'Edit Item';
-                editItem.append(editAction);
-                editAction.onclick = () => {
-                    this.showEditDialog(option.name, undefined, { currentValue: item });
-                };
-                const deleteItem = document.createElement('li');
-                deleteItem.classList.add('action-item');
-                container.append(deleteItem);
-                const deleteAction = document.createElement('a');
-                deleteAction.classList.add('action-label', 'delete-action');
-                deleteAction.title = 'Delete Item';
-                deleteItem.append(deleteAction);
-                deleteAction.onclick = () => {
-                    this.deleteItem(option, item, config);
-                };
-                const col1 = document.createElement('div');
-                col1.classList.add('row-text');
-                col1.textContent = item;
-                wrapper.append(col1);
-                data.append(wrapper);
-                row.append(data);
-                table.append(row);
-            }
-        });
     }
 
     bindDynamicTable(option, config) {

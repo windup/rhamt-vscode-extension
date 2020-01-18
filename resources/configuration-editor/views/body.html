@@ -14,7 +14,7 @@
                               <div class="monaco-inputbox idle" style="background-color: rgb(60, 60, 60); color: rgb(204, 204, 204); width: unset;">
                                 <div class="wrapper">
                                   <input id='editDialogInput' class="input" autocorrect="off" autocapitalize="off" spellcheck="false" type="text"
-                                    wrap="off" aria-label="Press desired key combination and then press ENTER." aria-live="off" style="background-color: rgb(60, 60, 60); color: rgb(204, 204, 204); padding: 4px;">
+                                    wrap="off" aria-label="Press desired key combination and then press ENTER." aria-live="off" style="background-color: rgb(60, 60, 60); color: rgb(204, 204, 204); padding: 4px;">                                  
                                 </div>
                               </div>
                             </div>
@@ -22,6 +22,25 @@
                         </div>
                         <div style="margin-top: 10px; text-align: center">
                             <span id="openButton" style="text-decoration: underline; cursor: pointer; display: none;">Open File Explorer</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="recent-container" style="position: absolute; width: 100%; z-index: 10000; height: 100%; display: none;">
+                      <div class="defineKeybindingWidget" style="width: 550px; height: 110px; background-color: rgb(37, 37, 38); box-shadow: rgb(0, 0, 0) 0px 2px 8px; position: unset; margin: auto; margin-top: 150px;">
+                        <div style="text-align: center;">Select rulesets and then press ENTER.</div>
+                        <div class="settings-header-widget">
+                          <div class="settings-search-container">
+                            <div class="settings-search-input">
+                              <div class="monaco-inputbox idle" style="border: none; color: rgb(204, 204, 204); width: unset;">
+                                <div class="wrapper">
+                                  <div class="recent-wrapper">
+                                    <table id="recent-table" style="text-align: left; width: 100%; background-color: rgb(37, 37, 38);" class="recent-table">
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
