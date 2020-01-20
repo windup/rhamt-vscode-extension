@@ -58,6 +58,7 @@ export class ConfigurationEditorServer {
         const router = express.Router();
         router.get('/:id', this.controller.get.bind(this.controller));
         router.get('/configuration/:id', this.controller.configuration.bind(this.controller));
+        router.get('/rulesets/recent', this.controller.recentRulesets.bind(this.controller));
         this.app.use(router);
     }
 

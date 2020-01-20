@@ -23,6 +23,17 @@ class Services {
             });
         });
     }
+    getRecentRulesets() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: `http://${this.store.host}/rulesets/recent`,
+                method: 'GET',
+                dataType: 'json',
+                success: resolve,
+                error: reject
+            });
+        });
+    }
     getHelp() {
         return new Promise((resolve, reject) => {
             $.getJSON(`http://${this.store.host}/help.json`, function (data) {
@@ -51,8 +62,6 @@ class SocketWrapper {
     onServerMessage(message, fn) {
         return this._socket.on(message, (...args) => {
             try {
-                console.log('client received message!!! ' + message);
-                console.log(args);
                 fn(...args);
             }
             catch (err) {
@@ -74,7 +83,6 @@ class ConfigClient {
         this.form = form;
         this._socket = new SocketWrapper(io.connect(url));
         this._socket.onServerMessage('connect', () => {
-            console.log('client connected. connecting raas client...');
         });
         this._socket.onServerMessage('disconnect', () => {
             console.log('client disconnected');
@@ -114,6 +122,10 @@ class ConfigClient {
             this.bindOption(option, this.store.config);
         });
         this._socket.onServerMessage('updateName', (data) => {
+        });
+        this._socket.onServerMessage('recentRuleset', (data) => {
+            console.log(`New ruleset: ${data}`);
+            
         });
         this.loadConfiguration().then(() => {
             this.renderOptions(this.store.config);
@@ -274,15 +286,20 @@ class ConfigClient {
     }
 
     showRecentDialog(option) {
-       $('.monaco-inputbox').removeClass('synthetic-focus');
-        this.populateRecentTable(option, this.store.config, this.store.config.recentRulests);
+        this._services.getRecentRulesets().then(data => {
+            this.doShowRecentRulesetDialog(data, option);
+        }).catch(e => {
+            console.log(`error while lading recent rulesets - ${e}`);
+        });
+    }
+
+    doShowRecentRulesetDialog(data, option) {
+        this.populateRecentTable(option, this.store.config, data);
         $('.recent-container').css('display', 'block');
     }
 
     updateRulesetsOption() {
-        const option = 'userRulesDirectory'; 
-        console.log(`element is: ${$(`.recent-${option}-custom:checkbox:checked`)}`);
-        
+        const option = 'userRulesDirectory';
         let values = this.store.config.options[option] || [];
         $(`#recent-table .option-input:checkbox:checked`).each((index, value) => {
             values.push($(value).data('option-item'));
@@ -296,9 +313,6 @@ class ConfigClient {
         const values = config.options[option.name];
         if (recent) {
             recent.forEach((item) => {
-                console.log(`Creating row for ${item}`);
-                console.log(`values is: ${values}`);
-                console.log(`option: ${option}`);
                 if (!values || !values.includes(item)) {
                     $(`#recent-table`).append(this.createTableRow(option, item, `recent-${option.name}-custom`, config, false));
                 }
@@ -504,7 +518,6 @@ class ConfigClient {
                 (typeof value === 'boolean' && value) ||
                 (typeof value === 'string' && value !== ''));
             if (option.name === 'mavenize') {
-                console.log('here');
             }
             if (!checked && $(`#${option.name}`).is(':checked') && option.type !== 'Boolean') {
                 $(`#${option.name}-details`).show();

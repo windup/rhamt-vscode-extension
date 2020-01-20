@@ -53,11 +53,14 @@ export class ConfigurationServerController {
             const config = {
                 id: result.id,
                 name: result.name,
-                options: result.options,
-                recentRulests: this.modelService.getRulesets()
+                options: result.options
             };
             res.status(200).json({config});
         });
+    }
+
+    recentRulesets(req: Request, res: Response, next: NextFunction): void {
+        res.status(200).json(this.modelService.getRulesets());
     }
 
     private findConfiguration(req: Request, res: Response): Promise<RhamtConfiguration> {
