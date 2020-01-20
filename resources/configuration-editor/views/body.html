@@ -31,7 +31,7 @@
                         <div class="settings-header-widget">
                           <div class="settings-search-container">
                             <div class="settings-search-input">
-                              <div class="monaco-inputbox idle" style="border: none; color: rgb(204, 204, 204); width: unset;">
+                              <div class="monaco-inputbox idle" style="border: none; color: rgb(204, 204, 204); width: unset; outline-style: none;">
                                 <div class="wrapper">
                                   <div class="recent-wrapper">
                                     <table id="recent-table" style="text-align: left; width: 100%; background-color: rgb(37, 37, 38);" class="recent-table">
@@ -136,7 +136,7 @@
             configClient.store.onReload = config => {
               $('#configurationName').val(config._name);
               $('#cli').val(config.cli);
-              $('#javaHome').val(config.jvm.location);
+              // $('#javaHome').val(config.jvm.location);
               if (config.results) {
                 $('#reportLink').show();
                 $('#reportLink').href = `${config.results.summary.reportLocation}`;
