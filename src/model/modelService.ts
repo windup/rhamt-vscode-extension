@@ -178,11 +178,24 @@ export class ModelService {
     }
 
     registerRuleset(location: string): void {
-        this.rulesets.push(location);
+        if (!this.rulesets.includes(location)) {
+            this.rulesets.push(location);
+        }
     }
 
     getRulesets(): string[] {
-        return this.rulesets;
+        let allRulesets = this.rulesets.slice();
+        for (const config of this.model.configurations) {
+            const rulesets = config.options['userRulesDirectory'];
+            if (rulesets && rulesets.length > 0) {
+                rulesets.forEach(ruleset => {
+                    if (!allRulesets.includes(ruleset)) {
+                        allRulesets.push(ruleset);
+                    }
+                })
+            }
+        }
+        return allRulesets;
     }
 
     private parse(data: any): Promise<any> {
