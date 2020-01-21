@@ -308,15 +308,26 @@ class ConfigClient {
     }
 
     populateRecentTable(option, config, recent) {
-        $('#recent-table').children().remove();
-        $('#recent-add-button').remove();
         const values = config.options[option.name];
+        $('#recent-table').children().remove();
+        let empty = true;
         if (recent) {
             recent.forEach((item) => {
                 if (!values || !values.includes(item)) {
+                    empty = false;
                     $(`#recent-table`).append(this.createTableRow(option, item, `recent-${option.name}-custom`, config, false));
                 }
             });
+        }
+        if (!empty) {
+            $('#recent-table').css('display', 'block');
+            $('#no-rulesets-placeholder').css('display', 'none');
+            $('#select-recent-label').css('display', 'block');
+        }
+        else {
+            $('#recent-table').css('display', 'none');
+            $('#no-rulesets-placeholder').css('display', 'block');
+            $('#select-recent-label').css('display', 'none');
         }
     }
 

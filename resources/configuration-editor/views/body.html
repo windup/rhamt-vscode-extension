@@ -27,13 +27,14 @@
                     </div>
                     <div class="recent-container" style="position: absolute; width: 100%; z-index: 10000; height: 100%; display: none;">
                       <div class="defineKeybindingWidget" style="width: 550px; background-color: rgb(37, 37, 38); box-shadow: rgb(0, 0, 0) 0px 2px 8px; position: unset; margin: auto; margin-top: 150px;">
-                        <div style="text-align: center;">Select rulesets and then press ENTER.</div>
+                        <div id="select-recent-label" style="text-align: center;">Select rulesets and then press ENTER.</div>
                         <div class="settings-header-widget" style="  height: 110px; overflow: auto;">
                           <div class="settings-search-container">
                             <div class="settings-search-input">
                               <div class="monaco-inputbox idle" style="border: none; color: rgb(204, 204, 204); width: unset; outline-style: none;">
                                 <div class="wrapper">
                                   <div class="recent-wrapper">
+                                    <div id="no-rulesets-placeholder" style="display: none; margin-top: 40px;">No recent rulesets discovered.</div>
                                     <table id="recent-table" style="text-align: left; width: 100%; background-color: rgb(37, 37, 38);" class="recent-table">
                                     </table>
                                   </div>
