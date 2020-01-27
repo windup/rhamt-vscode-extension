@@ -9,8 +9,6 @@ import { OptionsBuilder } from '../optionsBuilder';
 import { RhamtUtil } from '../server/rhamtUtil';
 import { Grouping } from '../tree/configurationNode';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
-import { IssueContainer } from '../model/model';
-import { Diff } from '../diff/diff';
 
 export class RhamtExplorer {
 
@@ -114,8 +112,6 @@ export class RhamtExplorer {
             });
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.previewQuickfix', item => {
-            const issue = (item as IssueContainer).getIssue();
-            Diff.compare(issue);
         }));
     }
 
