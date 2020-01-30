@@ -10,8 +10,9 @@ import * as vscode from 'vscode';
 
 export class Diff {
 
-    static async compare(hint: IHint, quickfix: IQuickFix): Promise<any> {
+    static async compare(quickfix: IQuickFix): Promise<any> {
         try {
+            const hint = quickfix.hint;
             const file = vscode.Uri.parse(hint.file);
             var content = fs.readFileSync(file.fsPath, 'utf8');
             const tmp = await createRandomFile(content);
