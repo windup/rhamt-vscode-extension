@@ -20,9 +20,7 @@ export class FileNode extends AbstractNode<FileItem> {
     private loading: boolean = false;
     private children = [];
     private issues = [];
-    
     file: string;
-   
 
     constructor(
         config: RhamtConfiguration,

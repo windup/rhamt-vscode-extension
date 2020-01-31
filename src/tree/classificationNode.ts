@@ -8,6 +8,7 @@ import { DataProvider } from './dataProvider';
 import { ClassificationItem } from './classificationItem';
 import { RhamtConfiguration, IClassification, ReportHolder, IssueContainer, IIssue } from '../model/model';
 import { ModelService } from '../model/modelService';
+import { ConfigurationNode } from './configurationNode';
 
 export class ClassificationNode extends AbstractNode implements ReportHolder, IssueContainer {
 
@@ -18,9 +19,11 @@ export class ClassificationNode extends AbstractNode implements ReportHolder, Is
         config: RhamtConfiguration,
         modelService: ModelService,
         onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>,
-        dataProvider: DataProvider
+        dataProvider: DataProvider,
+        root: ConfigurationNode
         ) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
+        this.root = root;
         this.classification = classification;
         this.treeItem = this.createItem();
     }

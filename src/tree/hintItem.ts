@@ -99,5 +99,6 @@ export class HintItem extends TreeItem implements IssueContainer {
     public refresh(): void {
         this.iconPath = this.getIconPath();
         this.label = `${this.hint.title} [rule-id: ${this.hint.ruleId}]`;
+        this.collapsibleState = TreeItemCollapsibleState.Collapsed;
     }
 }

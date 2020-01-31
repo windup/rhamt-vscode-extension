@@ -30,7 +30,6 @@ export class QuickfixesNode extends AbstractNode<QuickfixesItem> {
         this.hint = hint;
         this.root = root;
         this.treeItem = this.createItem();
-        this.computeChildren();
         this.listen();
     }
 
@@ -42,7 +41,7 @@ export class QuickfixesNode extends AbstractNode<QuickfixesItem> {
         return Promise.resolve();
     }
 
-    private computeChildren() {
+    private loadChildren() {
         const quickfixes = this.computeQuickfixes();
         this.children = quickfixes.sort(QuickfixesNode.compareQuickfix);
         this.children.forEach(child => child.parentNode = this);
@@ -88,6 +87,7 @@ export class QuickfixesNode extends AbstractNode<QuickfixesItem> {
     }
 
     protected refresh(node?: ITreeNode): void {
+        this.loadChildren();
         this.treeItem.refresh(this.children.length);
         super.refresh(node);
     }

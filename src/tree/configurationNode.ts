@@ -251,9 +251,8 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             this.config,
             this.modelService,
             this.onNodeCreateEmitter,
-            this.dataProvider);
-        node.root = this;
-        this.onNodeCreateEmitter.fire(node);
+            this.dataProvider,
+            this);
         return node;
     }
 
@@ -263,9 +262,8 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             this.config,
             this.modelService,
             this.onNodeCreateEmitter,
-            this.dataProvider);
-        node.root = this;
-        this.onNodeCreateEmitter.fire(node);
+            this.dataProvider,
+            this);
         return node;
     }
 
