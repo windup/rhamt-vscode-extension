@@ -8,26 +8,41 @@ import { DataProvider } from './dataProvider';
 import { HintItem } from './hintItem';
 import { IHint, RhamtConfiguration, ReportHolder, IssueContainer, IIssue } from '../model/model';
 import { ModelService } from '../model/modelService';
+import * as path from 'path';
+import { QuickfixesNode } from './quickfixesNode';
+import { ConfigurationNode } from './configurationNode';
 
-export class HintNode extends AbstractNode implements ReportHolder, IssueContainer {
+export class HintNode extends AbstractNode<HintItem> implements ReportHolder, IssueContainer {
 
+    private loading: boolean = false;
     hint: IHint;
     item: HintItem;
+    private children = [];
 
     constructor(
         hint: IHint,
         config: RhamtConfiguration,
         modelService: ModelService,
         onNodeCreateEmitter: vscode.EventEmitter<ITreeNode>,
-        dataProvider: DataProvider
+        dataProvider: DataProvider,
+        root: ConfigurationNode
         ) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
+        this.root = root;
         this.hint = hint;
-        this.treeItem = this.createItem();
+        this.treeItem = this.item = this.createItem();
+        this.init();
     }
 
-    getChildren(): Promise<ITreeNode[]> {
-        return Promise.resolve([]);
+    public getChildren(): Promise<ITreeNode[]> {
+        if (this.loading) {
+            return Promise.resolve([]);
+        }
+        return Promise.resolve(this.children);
+    }
+
+    public hasMoreChildren(): boolean {
+        return this.children.length > 0;
     }
 
     delete(): Promise<void> {
@@ -35,8 +50,7 @@ export class HintNode extends AbstractNode implements ReportHolder, IssueContain
     }
 
     createItem(): HintItem {
-        this.item = new HintItem(this.hint);
-        return this.item;
+        return new HintItem(this.hint);
     }
 
     getReport(): string {
@@ -52,5 +66,37 @@ export class HintNode extends AbstractNode implements ReportHolder, IssueContain
         this.config.markIssueAsComplete(this.getIssue());
         (this.treeItem as HintItem).refresh();
         this.dataProvider.refresh(this);
+    }
+
+    private init(): void {
+        this.loading = true;
+        const base = [__dirname, '..', '..', '..', 'resources'];
+        this.treeItem.iconPath = {
+            light: path.join(...base, 'light', 'Loading.svg'),
+            dark: path.join(...base, 'dark', 'Loading.svg')
+        };
+        this.treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
+        super.refresh(this);
+        setTimeout(() => {
+            this.loading = false;
+            this.refresh(this);
+        }, 1000);
+    }
+
+    refresh(node?: ITreeNode): void {
+        if (this.hint.quickfixes.length > 0 ) {
+            const quickfix = new QuickfixesNode(
+                this.config,
+                this.hint,
+                this.modelService,
+                this.onNodeCreateEmitter,
+                this.dataProvider,
+                this.root
+            );
+            (quickfix as any).parentNode = this;
+            this.children.push(quickfix);
+        }
+        this.treeItem.refresh();
+        super.refresh(node);
     }
 }

@@ -58,7 +58,7 @@ export async function activate(context: vscode.ExtensionContext) {
             const editor = await vscode.window.showTextDocument(doc);
             let item: HintItem;
             if (data instanceof HintNode) {
-                item = (data as HintNode).treeItem;
+                item = (data as HintNode).item;
             }
             else if (data instanceof HintItem) {
                 item = data;
