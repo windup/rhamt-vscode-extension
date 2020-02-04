@@ -44,7 +44,7 @@ export class QuickfixItem extends TreeItem implements IssueContainer {
     }
 
     public getIssue(): IIssue {
-        return this.quickfix.hint;
+        return this.quickfix.issue;
     }
 
     public setComplete(): void {
@@ -64,6 +64,6 @@ export class QuickfixItem extends TreeItem implements IssueContainer {
 
     public refresh(): void {
         this.iconPath = this.getIconPath();
-        this.label = `${this.quickfix.name} [id: ${this.quickfix.id}]`;
+        this.label = `${this.quickfix.name} [type: ${new String(this.quickfix.type).toLowerCase()}]`;
     }
 }

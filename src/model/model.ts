@@ -123,7 +123,7 @@ export interface IIssue extends IUniqueElement {
 export type IQuickFixType = 'REPLACE' | 'DELETE_LINE' | 'INSERT_LINE' | 'TRANSFORMATION';
 
 export interface IQuickFix extends IUniqueElement {
-    hint: IHint
+    issue: IIssue;
     type: IQuickFixType;
     searchString: string;
     replacementString: string;

@@ -41,7 +41,7 @@ export class QuickfixNode extends AbstractNode implements IssueContainer {
     }
 
     getIssue(): IIssue {
-        return this.quickfix.hint;
+        return this.quickfix.issue;
     }
 
     setComplete(): void {

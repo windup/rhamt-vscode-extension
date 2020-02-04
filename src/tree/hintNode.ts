@@ -84,7 +84,7 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
     }
 
     refresh(node?: ITreeNode): void {
-        if (this.hint.quickfixes.length > 0 ) {
+        if (this.hint.quickfixes.length > 0) {
             const quickfix = new QuickfixesNode(
                 this.config,
                 this.hint,
@@ -95,6 +95,7 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
             );
             (quickfix as any).parentNode = this;
             this.children.push(quickfix);
+            this.treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
         }
         this.treeItem.refresh();
         super.refresh(node);

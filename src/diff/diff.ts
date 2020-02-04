@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IHint, IQuickFix } from "../model/model";
+import { IQuickFix, IIssue } from "../model/model";
 import { createRandomFile } from './utils';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
@@ -12,11 +12,11 @@ export class Diff {
 
     static async compare(quickfix: IQuickFix): Promise<any> {
         try {
-            const hint = quickfix.hint;
-            const file = vscode.Uri.parse(hint.file);
+            const issue = quickfix.issue;
+            const file = vscode.Uri.parse(issue.file);
             var content = fs.readFileSync(file.fsPath, 'utf8');
             const tmp = await createRandomFile(content);
-            const written = await Diff.writeTemp(tmp, quickfix, hint);
+            const written = await Diff.writeTemp(tmp, quickfix, issue);
             if (!written) {
                 throw new Error('Unable to write quickfix file.');
             }
@@ -29,10 +29,10 @@ export class Diff {
         }        
     }
 
-    static writeTemp(file: vscode.Uri, quickfix: IQuickFix, hint: IHint): Thenable<boolean> {
+    static writeTemp(file: vscode.Uri, quickfix: IQuickFix, issue: IIssue): Thenable<boolean> {
         const edit = new vscode.WorkspaceEdit();
         if (quickfix.type === 'REPLACE') {
-            edit.insert(file, new vscode.Position(hint.lineNumber, hint.column), quickfix.replacementString);
+            // edit.insert(file, new vscode.Position(issue.lineNumber, issue.column), quickfix.replacementString);
             return vscode.workspace.applyEdit(edit);
         }
     }

@@ -100,7 +100,7 @@ export class AnalysisResults {
             const id = ModelService.generateUniqueId();
             const hint: IHint = {
                 id,
-                quickfixes: this.getQuickfixes(ele),
+                quickfixes: [],
                 file: '',
                 severity: '',
                 ruleId: '',
@@ -169,6 +169,7 @@ export class AnalysisResults {
                     break;
                 }
                 case 'quickfixes': {
+                    hint.quickfixes = this.computeQuickfixes(child, hint);
                     break;
                 }
                 case 'rule-id': {
@@ -206,9 +207,81 @@ export class AnalysisResults {
         return hints;
     }
 
-    private getQuickfixes(ele: CheerioElement): IQuickFix[] {
+    private computeQuickfixes(ele: CheerioElement, issue: IIssue): IQuickFix[] {
         const quickfixes: IQuickFix[] = [];
+
+        ele.children.forEach((child, i) => {
+            switch (child.name) {
+                case 'quickfix': {
+                    const quickfix = this.computeQuickfix(child, issue);
+                    quickfixes.push(quickfix);
+                    break;
+                }
+            }
+        });
+
         return quickfixes;
+    }
+
+    private computeQuickfix(ele: CheerioElement, issue: IIssue): IQuickFix {
+        const quickfix: IQuickFix = {
+            file: issue.file,
+            issue,
+            id: '',
+            name: '',
+            newLine: '',
+            replacementString: '',
+            searchString: '',
+            transformationId: '',
+            type: 'REPLACE'
+        };
+        ele.children.forEach((child, i) => {
+            switch (child.name) {
+                case 'file': {
+                    const node = child.children[0];
+                    if (node) {
+                        quickfix.file = node.nodeValue;
+                    }
+                    break;
+                }
+                case 'name': {
+                    const node = child.children[0];
+                    if (node) {
+                        quickfix.name = node.nodeValue;
+                    }
+                    break;
+                }
+                case 'newLine': {
+                    const node = child.children[0];
+                    if (node) {
+                        quickfix.newLine = node.nodeValue;
+                    }
+                    break;
+                }
+                case 'replacement': {
+                    const node = child.children[0];
+                    if (node) {
+                        quickfix.replacementString = node.nodeValue;
+                    }
+                    break;
+                }
+                case 'search': {
+                    const node = child.children[0];
+                    if (node) {
+                        quickfix.searchString = node.nodeValue;
+                    }
+                    break;
+                }
+                case 'type': {
+                    const node = child.children[0];
+                    if (node) {
+                        (quickfix as any).type = node.nodeValue;
+                    }
+                    break;
+                }
+            }
+        });
+        return quickfix;
     }
 
     getClassifications(): IClassification[] {
@@ -220,7 +293,7 @@ export class AnalysisResults {
             const id = ModelService.generateUniqueId();
             const classification = {
                 id,
-                quickfixes: this.getQuickfixes(ele),
+                quickfixes: [],
                 file: '',
                 severity: '',
                 ruleId: '',
@@ -272,6 +345,10 @@ export class AnalysisResults {
                             classification.report = report;
                         }
                     }
+                    break;
+                }
+                case 'quickfixes': {
+                    classification.quickfixes = this.computeQuickfixes(child, classification);
                     break;
                 }
                 case 'issue-category': {
