@@ -13,15 +13,17 @@ export class Diff {
     static async compare(quickfix: IQuickFix): Promise<any> {
         try {
             const issue = quickfix.issue;
-            const file = vscode.Uri.parse(issue.file);
+            const file = vscode.Uri.file(issue.file);
+            
             var content = fs.readFileSync(file.fsPath, 'utf8');
             const tmp = await createRandomFile(content);
-            const tmpFile = vscode.Uri.file(tmp);
-            const written = await Diff.writeTemp(tmpFile, quickfix, issue);
+            const quickfixedFile = vscode.Uri.file(tmp);
+            const written = await Diff.writeTemp(quickfixedFile, quickfix, issue);
             if (!written) {
                 throw new Error('Unable to write quickfix file.');
             }
-            await Diff.openDiff(file, tmpFile);
+
+            await Diff.openDiff(file, quickfixedFile);
         }
         catch (e) {
             const msg = `Quickfix Error - ${e}`;
@@ -40,6 +42,6 @@ export class Diff {
     }
 
     static async openDiff(original: vscode.Uri, modified: vscode.Uri): Promise<any> {
-        return vscode.commands.executeCommand('vscode.diff', original, modified, 'Quickfix Preview');
+        return vscode.commands.executeCommand('vscode.diff', original, modified, 'Current ⟷ Quickfix Applied', {preview: false});
     }
 }
