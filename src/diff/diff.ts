@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IQuickFix, IIssue } from "../model/model";
+import { IQuickFix } from "../model/model";
 import { createRandomFile } from './utils';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
@@ -16,11 +16,12 @@ export class Diff {
             const file = vscode.Uri.parse(issue.file);
             var content = fs.readFileSync(file.fsPath, 'utf8');
             const tmp = await createRandomFile(content);
-            const written = await Diff.writeTemp(tmp, quickfix, issue);
+            const tmpFile = vscode.Uri.file(tmp);
+            const written = await Diff.writeTemp(tmpFile, quickfix, issue);
             if (!written) {
                 throw new Error('Unable to write quickfix file.');
             }
-            await Diff.openDiff(file, tmp);
+            await Diff.openDiff(file, tmpFile);
         }
         catch (e) {
             const msg = `Quickfix Error - ${e}`;
@@ -29,15 +30,16 @@ export class Diff {
         }        
     }
 
-    static writeTemp(file: vscode.Uri, quickfix: IQuickFix, issue: IIssue): Thenable<boolean> {
+    static writeTemp(file: vscode.Uri, quickfix: IQuickFix, issue: any): Thenable<boolean> {
         const edit = new vscode.WorkspaceEdit();
-        if (quickfix.type === 'REPLACE') {
-            // edit.insert(file, new vscode.Position(issue.lineNumber, issue.column), quickfix.replacementString);
+        if (quickfix.type === 'REPLACE' && issue.lineNumber) {
+            const lineNumber = issue.lineNumber-1;
+            edit.replace(file, new vscode.Range(lineNumber, issue.column+1, lineNumber, quickfix.replacementString.length), quickfix.replacementString);
             return vscode.workspace.applyEdit(edit);
         }
     }
 
     static async openDiff(original: vscode.Uri, modified: vscode.Uri): Promise<any> {
-        return vscode.commands.executeCommand('vscode.diff', original, modified, 'Quickfix Preview', {preview: true});
+        return vscode.commands.executeCommand('vscode.diff', original, modified, 'Quickfix Preview');
     }
 }

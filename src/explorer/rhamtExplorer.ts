@@ -113,7 +113,7 @@ export class RhamtExplorer {
             });
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.previewQuickfix', item => {
-            Diff.compare(item.quickfix);
+            Diff.compare(item);
         }));
     }
 
