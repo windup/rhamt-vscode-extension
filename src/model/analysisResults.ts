@@ -227,7 +227,7 @@ export class AnalysisResults {
         const quickfix: IQuickFix = {
             file: issue.file,
             issue,
-            id: '',
+            id: ModelService.generateUniqueId(),
             name: '',
             newLine: '',
             replacementString: '',
