@@ -18,7 +18,8 @@ export class IssueDetailsView {
     constructor(context: ExtensionContext, endpoints: Endpoints) {
         this.context = context;
         this.endpoints = endpoints;
-        this.context.subscriptions.push(commands.registerCommand('rhamt.openIssueDetails', item => {
+        this.context.subscriptions.push(commands.registerCommand('rhamt.openIssueDetails', async item => {
+            // await vscode.commands.executeCommand('workbench.action.newGroupBelow');
             this.open((item as IssueContainer).getIssue(), true);
         }));
         this.context.subscriptions.push(commands.registerCommand('rhamt.openLink', item => {
