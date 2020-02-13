@@ -99,6 +99,10 @@
             {
                 "command": "rhamt.newRuleset",
                 "title": "New Ruleset"
+            },
+            {
+                "command": "rhamt.applyQuickfix",
+                "title": "Apply Quickfix"
             }
         ],
         "configuration": [
@@ -189,6 +193,10 @@
                 {
                     "command": "rhamt.deleteResults",
                     "when": "view == rhamtExplorerView && viewItem == results"
+                },
+                {
+                    "command": "rhamt.applyQuickfix",
+                    "when": "view == rhamtExplorerView && viewItem == quickfix"
                 }
             ]
         }
@@ -220,6 +228,7 @@
         "fs-extra": "^8.0.1",
         "jade": "^1.11.0",
         "jsonc-parser": "^2.1.0",
+        "mime-types": "^2.1.26",
         "mkdirp": "^0.5.1",
         "node-stream-zip": "^1.8.0",
         "opn": "^5.5.0",

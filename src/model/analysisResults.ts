@@ -6,6 +6,8 @@ import * as fs from 'fs';
 import * as cheerio from 'cheerio';
 import { ModelService } from './modelService';
 import * as open from 'opn';
+import * as readline from 'readline';
+import * as mime from 'mime-types';
 import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue, ILink } from './model';
 
 export interface AnalysisResultsSummary {
@@ -109,6 +111,7 @@ export class AnalysisResults {
                 links: [],
                 report: '',
                 originalLineSource: '',
+                quickfixedLine: '',
                 lineNumber: 0,
                 column: 0,
                 length: 0,
@@ -124,7 +127,7 @@ export class AnalysisResults {
             if (this.dom(ele).attr('complete')) {
                 hint.complete = true;
             }
-            ele.children.forEach((child, i) => {
+            ele.children.forEach(async (child, i) => {
                 switch (child.name) {
                 case 'title': {
                     const node = child.children[0];
@@ -169,7 +172,7 @@ export class AnalysisResults {
                     break;
                 }
                 case 'quickfixes': {
-                    hint.quickfixes = this.computeQuickfixes(child, hint);
+                    hint.quickfixes = await this.computeQuickfixes(child, hint);
                     break;
                 }
                 case 'rule-id': {
@@ -207,13 +210,13 @@ export class AnalysisResults {
         return hints;
     }
 
-    private computeQuickfixes(ele: CheerioElement, issue: IIssue): IQuickFix[] {
+    private async computeQuickfixes(ele: CheerioElement, issue: IIssue): Promise<IQuickFix[]> {
         const quickfixes: IQuickFix[] = [];
 
-        ele.children.forEach((child, i) => {
+        ele.children.forEach(async (child, i) => {
             switch (child.name) {
                 case 'quickfix': {
-                    const quickfix = this.computeQuickfix(child, issue);
+                    const quickfix = await this.computeQuickfix(child, issue);
                     quickfixes.push(quickfix);
                     break;
                 }
@@ -223,7 +226,7 @@ export class AnalysisResults {
         return quickfixes;
     }
 
-    private computeQuickfix(ele: CheerioElement, issue: IIssue): IQuickFix {
+    private async computeQuickfix(ele: CheerioElement, issue: IIssue): Promise<IQuickFix> {
         const quickfix: IQuickFix = {
             file: issue.file,
             issue,
@@ -281,8 +284,36 @@ export class AnalysisResults {
                 }
             }
         });
+        if ((issue as any).lineNumber) {
+            const hint = issue as IHint;
+            if (!hint.originalLineSource) {
+                const type = mime.lookup(hint.file);
+                console.log(`mime type - ${type}`);
+                if (type && type.startsWith('text')) {
+                    // TODO: Hints are not serialized like configurations.
+                    // so this will process every time we start up, which is not correct.
+                    // we need to do this only once after the analysis, so we can refer back to it.
+                    hint.originalLineSource = await this.readLine(hint.file, hint.lineNumber);
+                    if (hint.originalLineSource && quickfix.type === 'REPLACE') {
+                        hint.quickfixedLine = this.replace(
+                            hint.originalLineSource,
+                            quickfix.searchString,
+                            quickfix.replacementString);
+                        console.log(`quickfixedLine - ${hint.quickfixedLine}`);
+                        
+                    }
+                }
+                else {
+                    console.log(`unable to read mime type ${type} of file - ${hint.file}`);
+                }
+            }
+        }
         return quickfix;
     }
+
+    private replace(origin, search, replacement): string {
+        return origin.replace(search, replacement);
+      }
 
     getClassifications(): IClassification[] {
         const classifications: IClassification[] = [];
@@ -313,7 +344,7 @@ export class AnalysisResults {
             if (this.dom(ele).attr('complete')) {
                 classification.complete = true;
             }
-            ele.children.forEach((child, i) => {
+            ele.children.forEach(async (child, i) => {
                 switch (child.name) {
                 case 'classification': {
                     const node = child.children[0];
@@ -348,7 +379,7 @@ export class AnalysisResults {
                     break;
                 }
                 case 'quickfixes': {
-                    classification.quickfixes = this.computeQuickfixes(child, classification);
+                    classification.quickfixes = await this.computeQuickfixes(child, classification);
                     break;
                 }
                 case 'issue-category': {
@@ -416,7 +447,8 @@ export class AnalysisResults {
 
     getHintsFor(file: string): IHint[] {
         const hints = [];
-        this.getHints().forEach(hint => {
+        const allHints = this.getHints();
+        allHints.forEach(hint => {
             if (hint.file === file) {
                 hints.push(hint);
             }
@@ -430,5 +462,22 @@ export class AnalysisResults {
 
     markIssueAsComplete(issue: IIssue): void {
         this.dom(issue.dom).attr('complete', true);
+    }
+
+    private readLine(file: string, lineNumber: number): Promise<string> {
+        return new Promise<string>(resolve => {
+            console.log(`start reading file - ${file}`);
+            const input = fs.createReadStream(file);
+            var myInterface = readline.createInterface({ input });
+            var lineno = 0;
+            myInterface.on('line', function (line) {
+                if (++lineno === lineNumber) {
+                    console.log(`found line - ${line}`);
+                    myInterface.close();
+                    input.destroy();
+                    resolve(line)
+                }
+            });
+        });
     }
 }

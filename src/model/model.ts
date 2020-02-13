@@ -144,6 +144,7 @@ export interface IssueContainer {
 
 export interface IHint extends IIssue {
     originalLineSource: string;
+    quickfixedLine: string;
     lineNumber: number;
     column: number;
     length: number;
