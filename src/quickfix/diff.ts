@@ -12,7 +12,7 @@ export class Diff {
     static async compare(quickfix: IQuickFix): Promise<any> {
         try {
             const issue = quickfix.issue;
-            const file = vscode.Uri.file(issue.file);
+            let file = vscode.Uri.file(issue.file);
             var content = fs.readFileSync(file.fsPath, 'utf8');       
             const modified = file.with({query: JSON.stringify(content)});
             await Diff.openDiff(file, modified, quickfix, issue);
@@ -31,8 +31,9 @@ export class Diff {
             const end = editor.document.lineAt(lineNumber).range.end;
             edit.delete(file, new vscode.Range(lineNumber, 0, lineNumber, end.character));
             await vscode.workspace.applyEdit(edit);
-            edit = new vscode.WorkspaceEdit();            
-            edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, issue.quickfixedLine.length), issue.quickfixedLine);
+            edit = new vscode.WorkspaceEdit();
+            const replacement = issue.quickfixedLines[quickfix.id];
+            edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, replacement.length), replacement);
             return vscode.workspace.applyEdit(edit);
         }
         // TODO: Delete Line
@@ -43,7 +44,9 @@ export class Diff {
         await vscode.commands.executeCommand('vscode.diff', original, modified, 'Current ⟷ Quickfix', {
             preview: false
         });
-        const textEditor = vscode.window.visibleTextEditors.filter(e => e.document.uri.toString() === original.toString())[0];
+        const textEditor = vscode.window.visibleTextEditors.filter(e => {
+            return e.document.uri.fsPath === modified.fsPath && e.document.uri.query === modified.query
+        })[0];
         if (!textEditor) {
             const msg = `could not file diff editor for quickfix file`;
             console.log(msg);

@@ -111,7 +111,7 @@ export class AnalysisResults {
                 links: [],
                 report: '',
                 originalLineSource: '',
-                quickfixedLine: '',
+                quickfixedLines: {},
                 lineNumber: 0,
                 column: 0,
                 length: 0,
@@ -295,12 +295,11 @@ export class AnalysisResults {
                     // we need to do this only once after the analysis, so we can refer back to it.
                     hint.originalLineSource = await this.readLine(hint.file, hint.lineNumber);
                     if (hint.originalLineSource && quickfix.type === 'REPLACE') {
-                        hint.quickfixedLine = this.replace(
+                        const quickfixedLine = this.replace(
                             hint.originalLineSource,
                             quickfix.searchString,
                             quickfix.replacementString);
-                        console.log(`quickfixedLine - ${hint.quickfixedLine}`);
-                        
+                        hint.quickfixedLines[quickfix.id] = quickfixedLine;
                     }
                 }
                 else {
@@ -325,6 +324,7 @@ export class AnalysisResults {
             const classification = {
                 id,
                 quickfixes: [],
+                quickfixedLines: {},
                 file: '',
                 severity: '',
                 ruleId: '',
