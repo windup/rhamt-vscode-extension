@@ -6,6 +6,7 @@
 import { IQuickFix, IIssue } from "../model/model";
 import * as fs from 'fs';
 import * as vscode from 'vscode';
+import * as os from 'os';
 
 export class Diff {
 
@@ -36,8 +37,28 @@ export class Diff {
             edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, replacement.length), replacement);
             return vscode.workspace.applyEdit(edit);
         }
-        // TODO: Delete Line
-        // TODO: Insert Line
+        if (quickfix.type === 'DELETE_LINE' && issue.lineNumber) {
+            let edit = new vscode.WorkspaceEdit();
+            const lineNumber = issue.lineNumber-1;
+            const end = editor.document.lineAt(lineNumber).range.end;
+            edit.delete(file, new vscode.Range(lineNumber, 0, lineNumber, end.character));
+            return vscode.workspace.applyEdit(edit);
+        }
+        if (quickfix.type === 'INSERT_LINE' && issue.lineNumber) {
+            const lineNumber = issue.lineNumber-1;
+            const replacement = issue.originalLineSource;
+            const text = editor.document.getText(new vscode.Range(lineNumber, 0, lineNumber, replacement.length));
+            if (text !== replacement) {
+                let edit = new vscode.WorkspaceEdit();
+                edit.insert(file, new vscode.Position(lineNumber, 0), os.EOL);
+                await vscode.workspace.applyEdit(edit);
+                edit = new vscode.WorkspaceEdit();
+                const replacement = quickfix.newLine;
+                edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, replacement.length), replacement);
+                return vscode.workspace.applyEdit(edit);
+            }
+            return Promise.resolve(true);
+        }
     }
 
     static async openDiff(original: vscode.Uri, modified: vscode.Uri, quickfix: IQuickFix, issue: IIssue): Promise<any> {
