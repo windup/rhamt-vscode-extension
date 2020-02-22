@@ -60,22 +60,12 @@ export interface Clone extends Input {
 
 export class RhamtConfiguration {
     onChanged = new rhamtEvents.TypedEvent<{type: number, name: string, value: any}>();
-    onResultsLoaded = new rhamtEvents.TypedEvent<void>();
     id: string;
     name: string;
     summary: AnalysisResultsSummary | undefined;
-    private _results: AnalysisResults | undefined;
+    results: AnalysisResults | undefined;
     rhamtExecutable: string;
     options: { [index: string]: any } = {};
-
-    set results(results: AnalysisResults | undefined) {
-        this._results = results;
-        this.onResultsLoaded.emit(undefined);
-    }
-
-    get results(): AnalysisResults | undefined {
-        return this._results;
-    }
 
     getReport(): string {
         if (!this.options['output']) return undefined;

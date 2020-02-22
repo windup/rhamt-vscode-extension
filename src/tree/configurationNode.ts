@@ -33,7 +33,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     private resourceNodes = new Map<string, ITreeNode>();
     private childNodes = new Map<string, ITreeNode>();
 
-    private results = [];
+    results = [];
 
     constructor(
         config: RhamtConfiguration,
@@ -63,20 +63,18 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         return this.results.length > 0;
     }
 
-    private listen(): void {
-        this.reload();
+    private async listen(): Promise<void> {
+        await this.reload();
         this.config.onChanged.on(change => {
             if (change.type === ChangeType.MODIFIED &&
                 change.name === 'name') {
                 this.refresh(this);
             }
         });
-        this.config.onResultsLoaded.on(() => {
-            this.reload();
-        });
     }
 
-    private reload(): void {
+    async reload(): Promise<void> {
+        this.clearModel();
         const base = [__dirname, '..', '..', '..', 'resources'];
         this.treeItem.iconPath = {
             light: path.join(...base, 'light', 'Loading.svg'),
@@ -103,7 +101,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
                     this.dataProvider,
                     this)
             ];
-            this.computeIssues();
+            await this.computeIssues();
             super.refresh(this);
             this.dataProvider.reveal(this, true);
             setTimeout(() => {
@@ -123,16 +121,18 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         this.childNodes.clear();
     }
 
-    private computeIssues(): void {
+    private async computeIssues(): Promise<void> {
         this.clearModel();
         if (this.config.results) {
-            this.config.results.getClassifications().forEach(classification => {
+            const classifications = await this.config.results.getClassifications();
+            classifications.forEach(classification => {
                 const root = workspace.getWorkspaceFolder(Uri.file(classification.file));
                 if (!root) return;
                 this.classifications.push(classification);
                 this.initIssue(classification, this.createClassificationNode(classification));
             });
-            this.config.results.getHints().forEach(hint => {
+            const hints = await this.config.results.getHints();
+            hints.forEach(hint => {
                 const root = workspace.getWorkspaceFolder(Uri.file(hint.file));
                 if (!root) return;
                 this.hints.push(hint);

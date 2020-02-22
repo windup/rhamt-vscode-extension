@@ -9,13 +9,14 @@ import { ConfigurationNode, Grouping } from './configurationNode';
 import { ITreeNode } from './abstractNode';
 import { ModelService } from '../model/modelService';
 import { ResultsNode } from './resultsNode';
+import { RhamtConfiguration } from '../model/model';
 
 export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
     private _onDidChangeTreeDataEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
     private _onNodeCreateEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
-    private children: ConfigurationNode[] = [];
     private _disposables: Disposable[] = [];
+    private children: ConfigurationNode[] = [];
 
     view: TreeView<any>;
 
@@ -82,8 +83,26 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         return result;
     }
 
+    public reload(config: RhamtConfiguration): void {
+        let node = this.children.find(node => node.config.id === config.id);
+        if (node) {
+            node.reload();
+        }
+    }
+
     public async refresh(node?: ITreeNode): Promise<void> {
         this._onDidChangeTreeDataEmitter.fire(node);
+    }
+
+    public remove(config: RhamtConfiguration): void {
+        let node = this.children.find(node => node.config.id === config.id);
+        if (node) {
+            const index = this.children.indexOf(node);
+            if (index > -1) {
+                this.children.splice(index, 1);
+            }
+        }
+        this.refresh();
     }
 
     private async populateRootNodes(): Promise<any[]> {

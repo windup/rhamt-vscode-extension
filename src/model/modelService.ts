@@ -211,11 +211,13 @@ export class ModelService {
                 for (const entry of configs) {
                     const config: RhamtConfiguration = new RhamtConfiguration();
                     ModelService.copy(entry, config);
-                    try {
-                        await ModelService.loadResults(config);
-                    }
-                    catch (e) {
-                        return reject(e);
+                    if (config.summary) {
+                        try {
+                            await ModelService.loadResults(config);
+                        }
+                        catch (e) {
+                            return reject(e);
+                        }
                     }
                     this.model.configurations.push(config);
                 }
@@ -258,6 +260,7 @@ export class ModelService {
     }
 
     public async save(): Promise<void>  {
+        
         const configurations = [];
         for (const config of this.model.configurations) {
             const data: any = {
@@ -271,6 +274,7 @@ export class ModelService {
             configurations.push(data);
             if (config.results) {
                 try {
+                    data.quickfixes = await this.computeQuickfixData(config);
                     await this.saveAnalysisResults(config);
                 }
                 catch (e) {
@@ -307,6 +311,20 @@ export class ModelService {
                     resolve();
                 });
             });
+        });
+    }
+
+    private async computeQuickfixData(config: RhamtConfiguration): Promise<any> {
+        return new Promise<any>(async resolve => {
+            const result: { [index: string]: any } = {};
+            const hints = await config.results.getHints();
+            hints.forEach(hint => {
+                result[hint.id] = {
+                    originalLineSource: hint.originalLineSource,
+                    quickfixedLines: hint.quickfixedLines
+                }
+            });
+            resolve(result);
         });
     }
 

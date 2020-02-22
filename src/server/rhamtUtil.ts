@@ -30,7 +30,7 @@ export const rhamtChannel = new RhamtChannelImpl();
 
 export class RhamtUtil {
 
-    static async analyze(config: RhamtConfiguration, modelService: ModelService): Promise<RhamtProcessController> {
+    static async analyze(config: RhamtConfiguration, modelService: ModelService, onStarted: () => void, onAnalysisComplete: () => void): Promise<RhamtProcessController> {
         try {
             await Utils.initConfiguration(config, modelService);
         } catch (e) {
@@ -82,13 +82,13 @@ export class RhamtUtil {
                         }
                     });
                     try {
-                        console.log(`Analysis complete. Loading results.`);
                         await this.loadResults(config, modelService, executedTimestamp);
                     }
                     catch (e) {
                         console.log(`Error loading analysis results: ${e}`);
                         vscode.window.showErrorMessage(e);
                     }
+                    onAnalysisComplete();
                     if (!resolved) {
                         resolve();
                     }
@@ -134,7 +134,7 @@ export class RhamtUtil {
                 try {
                     console.log(`Executing RHAMT using params: ${params.join(' ')}`);
                     processController = await RhamtRunner.run(config.rhamtExecutable, params, START_TIMEOUT, onMessage).then(cp => {
-                        config.results = undefined;
+                        onStarted();
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
                     });
                     if (cancelled) {

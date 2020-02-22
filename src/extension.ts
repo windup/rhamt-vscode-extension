@@ -9,7 +9,6 @@ import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
 import { ModelService } from './model/modelService';
 import { RhamtModel, RhamtConfiguration, IssueContainer } from './model/model';
-import { RhamtUtil } from './server/rhamtUtil';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
 import { ConfigurationEditorServer } from './editor/configurationEditorServer';
@@ -40,16 +39,6 @@ export async function activate(context: vscode.ExtensionContext) {
     const connectionService = new ClientConnectionService(modelService);
     const configEditorServer = new ConfigurationEditorServer(endpoints, configServerController, connectionService);
     configEditorServer.start();
-
-    const runConfigurationDisposable = vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
-        const config = item.config;
-        try {
-            await RhamtUtil.analyze(config, modelService);
-        } catch (e) {
-            console.log(e);
-        }
-    });
-    context.subscriptions.push(runConfigurationDisposable);
 
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
         const issue = (data as IssueContainer).getIssue();

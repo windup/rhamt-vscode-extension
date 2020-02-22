@@ -5,7 +5,6 @@
 import * as vscode from 'vscode';
 import { DataProvider } from '../tree/dataProvider';
 import { ModelService } from '../model/modelService';
-import { OptionsBuilder } from '../optionsBuilder';
 import { RhamtUtil } from '../server/rhamtUtil';
 import { Grouping } from '../tree/configurationNode';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
@@ -30,32 +29,6 @@ export class RhamtExplorer {
     }
 
     private createCommands(): void {
-        this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.createConfiguration', async () => {
-            const config = await OptionsBuilder.build(this.modelService);
-            if (config) {
-                this.modelService.addConfiguration(config);
-                try {
-                    await this.modelService.save();
-                }
-                catch (e) {
-                    console.log(`Error saving configuration: ${e}`);
-                    vscode.window.showErrorMessage(e);
-                    return;
-                }
-                this.dataProvider.refresh();
-                vscode.window.showInformationMessage(`Successfully Created: ${config.name}`);
-                const run = await vscode.window.showQuickPick(['Yes', 'No'], {placeHolder: 'Run the analysis?'});
-                if (!run || run === 'No') {
-                    return;
-                }
-                try {
-                    await RhamtUtil.analyze(config, this.modelService);
-                } catch (e) {
-                    console.log(e);
-                    vscode.window.showErrorMessage(`Error during analysis: ${e}`);
-                }
-            }
-        }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deleteConfiguration', async item => {
             const config = item.config;
             try {
@@ -63,7 +36,7 @@ export class RhamtExplorer {
                 if (deleted) {
                     this.configEditorService.closeEditor(config);
                 }
-                this.dataProvider.refresh();
+                this.dataProvider.remove(config);
             }
             catch (e) {
                 console.log(`Error deleting configuration: ${e}`);
@@ -93,6 +66,7 @@ export class RhamtExplorer {
                 this.modelService.deleteOuputLocation(output);
             }
             item.config.results = undefined;
+            this.dataProvider.reload(item.config);
         }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.newConfiguration', async () => {
             const config = this.modelService.createConfiguration();
@@ -120,6 +94,24 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', (item: IQuickFix) => {
             if (item.type === 'REPLACE') {
                 applyReplaceQuickfix(item);
+            }
+        }));
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
+            const config = item.config;
+            try {
+                await RhamtUtil.analyze(
+                    config,
+                    this.modelService,
+                    () => {
+                        config.results = undefined;
+                        this.dataProvider.reload(config);
+                    },
+                    () => {
+                        this.dataProvider.reload(config);
+                    });
+            } catch (e) {
+                console.log(e);
+                vscode.window.showErrorMessage(`Error running analysis - ${e}`);
             }
         }));
     }
