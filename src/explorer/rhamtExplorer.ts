@@ -66,6 +66,7 @@ export class RhamtExplorer {
                 this.modelService.deleteOuputLocation(output);
             }
             item.config.results = undefined;
+            item.config.summary = undefined;
             this.dataProvider.reload(item.config);
         }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.newConfiguration', async () => {
@@ -104,6 +105,7 @@ export class RhamtExplorer {
                     this.modelService,
                     () => {
                         config.results = undefined;
+                        config.summary = undefined;
                         this.dataProvider.reload(config);
                     },
                     () => {
