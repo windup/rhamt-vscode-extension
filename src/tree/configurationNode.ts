@@ -134,7 +134,10 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             const hints = await this.config.results.getHints();
             hints.forEach(hint => {
                 const root = workspace.getWorkspaceFolder(Uri.file(hint.file));
-                if (!root) return;
+                if (!root) {
+                    console.log(`unable to find file in workspace - ${hint.file}`);
+                    return;
+                }
                 this.hints.push(hint);
                 this.initIssue(hint, this.createHintNode(hint));
             });

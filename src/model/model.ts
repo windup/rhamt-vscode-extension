@@ -99,6 +99,7 @@ export interface IIssue extends IUniqueElement {
     title: string;
     quickfixes: IQuickFix[];
     quickfixedLines: { [index: string]: any };
+    originalLineSource: string;
     file: string;
     severity: string;
     ruleId: string;
@@ -134,7 +135,6 @@ export interface IssueContainer {
 }
 
 export interface IHint extends IIssue {
-    originalLineSource: string;
     lineNumber: number;
     column: number;
     length: number;

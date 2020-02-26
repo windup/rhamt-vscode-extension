@@ -272,9 +272,9 @@ export class ModelService {
                 data.summary = config.summary;
             }
             configurations.push(data);
-            if (config.results) {
+            if (config.summary && config.results) {
                 try {
-                    data.quickfixes = await this.computeQuickfixData(config);
+                    data.summary.quickfixes = await this.computeQuickfixData(config);
                     await this.saveAnalysisResults(config);
                 }
                 catch (e) {
@@ -314,14 +314,16 @@ export class ModelService {
         });
     }
 
-    private async computeQuickfixData(config: RhamtConfiguration): Promise<any> {
+    async computeQuickfixData(config: RhamtConfiguration): Promise<any> {
         return new Promise<any>(async resolve => {
             const result: { [index: string]: any } = {};
-            const hints = await config.results.getHints();
-            hints.forEach(hint => {
-                result[hint.id] = {
-                    originalLineSource: hint.originalLineSource,
-                    quickfixedLines: hint.quickfixedLines
+            let elements = [];
+            elements = elements.concat(await config.results.getHints());
+            elements = elements.concat(await config.results.getClassifications());
+            elements.forEach(element => {
+                result[element.id] = {
+                    originalLineSource: element.originalLineSource,
+                    quickfixedLines: element.quickfixedLines
                 }
             });
             resolve(result);

@@ -17,6 +17,7 @@ export interface AnalysisResultsSummary {
     executable?: string;
     hintCount?: number;
     classificationCount?: number;
+    quickfixes?: any;
 }
 
 export class AnalysisResultsUtil {
@@ -34,6 +35,35 @@ export class AnalysisResultsUtil {
                     return reject(e);
                 }
             });
+        });
+    }
+
+    static async loadAndPersistIDs(location: string): Promise<CheerioStatic> {
+        return new Promise<CheerioStatic>(async (resolve, reject) => {
+            try {
+                const results = await AnalysisResultsUtil.loadFromLocation(location);
+
+                const elements = results('hints').children();
+                for (let index = 0; index < elements.length; index++) {
+                    const hint = elements[index];
+                    results(hint).attr('id', ModelService.generateUniqueId());
+                    const quickixes = results(hint).find('quickfixes').children();
+                    for (let i2 = 0; i2 < quickixes.length; i2++) {
+                        results(quickixes[i2]).attr('id', ModelService.generateUniqueId());
+                    }
+                }
+                const classifications = results('classifications').children();
+                for (let index = 0; index < classifications.length; index++) {
+                    const classification = classifications[index];
+                    results(classification).attr('id', ModelService.generateUniqueId());
+                }
+                await AnalysisResultsUtil.save(results, location);
+                resolve(results);
+            }
+            catch (e) {
+                console.log(`Error while loadAndPersistIDs ${e}`);
+                return reject(e);
+            }
         });
     }
 
@@ -105,6 +135,7 @@ export class AnalysisResults {
             const hint = await this.readHint(elements[index]);
             hints.push(hint);
         }
+
         return this.hintCache = hints;
     }
 
@@ -112,9 +143,8 @@ export class AnalysisResults {
         if (this.dom(ele).attr('deleted')) {
             return;
         }
-        const id = ModelService.generateUniqueId();
         const hint: IHint = {
-            id,
+            id: this.dom(ele).attr('id'),
             quickfixes: [],
             file: '',
             severity: '',
@@ -247,7 +277,7 @@ export class AnalysisResults {
         const quickfix: IQuickFix = {
             file: issue.file,
             issue,
-            id: ModelService.generateUniqueId(),
+            id: this.dom(ele).attr('id'),
             name: '',
             newLine: '',
             replacementString: '',
@@ -301,6 +331,17 @@ export class AnalysisResults {
                 }
             }
         });
+
+        // If quickfixes have already been read and persisted
+        if (this.config.summary.quickfixes) {
+            const originalLineSource = this.config.summary.quickfixes[issue.id].originalLineSource;
+            const quickfixedLine = this.config.summary.quickfixes[issue.id].quickfixedLines[quickfix.id];
+            issue.originalLineSource = issue.originalLineSource || originalLineSource;
+            issue.quickfixedLines[quickfix.id] = quickfixedLine;
+            return quickfix;
+        }
+
+        // Otherwise, read the quickfix data to be serialized later on
         if ((issue as any).lineNumber) {
             const hint = issue as IHint;
             const type = mime.lookup(hint.file);
@@ -344,11 +385,12 @@ export class AnalysisResults {
         if (this.dom(ele).attr('deleted')) {
             return;
         }
-        const id = ModelService.generateUniqueId();
+        const id = this.dom(ele).attr('id');
         const classification = {
             id,
             quickfixes: [],
             quickfixedLines: {},
+            originalLineSource: '',
             file: '',
             severity: '',
             ruleId: '',

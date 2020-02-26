@@ -208,13 +208,14 @@ export class RhamtUtil {
 
     private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string): Promise<any> {
         try {
-            const dom = await AnalysisResultsUtil.loadFromLocation(config.getResultsLocation());
+            const dom = await AnalysisResultsUtil.loadAndPersistIDs(config.getResultsLocation());
             config.summary = {
                 outputLocation: config.options['output'],
                 executedTimestamp: startedTimestamp,
                 executable: config.rhamtExecutable
             };
             config.results = new AnalysisResults(config, dom);
+            config.summary.quickfixes = await modelService.computeQuickfixData(config);
         }
         catch (e) {
             return Promise.reject(`Error loading analysis results from (${config.getResultsLocation()}): ${e}`);
