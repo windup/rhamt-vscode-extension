@@ -14,11 +14,11 @@ import { RhamtConfiguration } from '../model/model';
 export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
     private _onDidChangeTreeDataEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
-    private _onNodeCreateEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
+     _onNodeCreateEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
     private _disposables: Disposable[] = [];
     private children: ConfigurationNode[] = [];
 
-    view: TreeView<any>;
+    private view: TreeView<any>;
 
     constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext) {
         this._disposables.push(this.modelService.onModelLoaded(() => {
@@ -30,6 +30,13 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         this._disposables.push(commands.registerCommand('rhamt.refreshResults', item => {
             item.reload();
         }));
+    }
+
+    public setView(view: TreeView<any>): void {
+        this.view = view;
+        this.view.onDidExpandElement(node => {
+            this.refresh(node.element);
+        });
     }
 
     public reveal(node: any, expand: boolean): void {
@@ -83,6 +90,17 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         return result;
     }
 
+    public createNewConfigurationNode(config: RhamtConfiguration): ConfigurationNode {
+        const node = new ConfigurationNode(
+            config,
+            this.grouping,
+            this.modelService,
+            this._onNodeCreateEmitter,
+            this);
+        this.children.push(node);
+        return node;
+    }
+
     public reload(config: RhamtConfiguration): void {
         let node = this.children.find(node => node.config.id === config.id);
         if (node) {
@@ -102,7 +120,7 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
                 this.children.splice(index, 1);
             }
         }
-        this.refresh();
+        this.refresh(undefined);
     }
 
     private async populateRootNodes(): Promise<any[]> {

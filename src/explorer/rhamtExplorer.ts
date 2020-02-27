@@ -82,7 +82,7 @@ export class RhamtExplorer {
             this.configEditorService.openConfiguration(config).catch(e => {
                 console.log(`Error opening configuration ${config} with error: ${e}`)
             });
-            this.dataProvider.refresh();
+            this.dataProvider.refresh(undefined);
         }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.openConfiguration', item => {
             this.configEditorService.openConfiguration(item.config).catch(e => {
@@ -122,7 +122,7 @@ export class RhamtExplorer {
         const treeDataProvider = this.dataProvider;
         const viewer = vscode.window.createTreeView('rhamtExplorerView', { treeDataProvider });
         this.context.subscriptions.push(viewer);
-        this.dataProvider.view = viewer;
+        this.dataProvider.setView(viewer);
         return viewer;
     }
 

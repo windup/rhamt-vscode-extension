@@ -88,7 +88,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
                 this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
                     'fa fa-cube medium-purple' : undefined;
                 super.refresh(this);
-            }, 2000);
+            }, 100);
             return;
         }
         else {
@@ -108,7 +108,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
                 this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
                     'fa fa-cube medium-purple' : undefined;
                 this.refresh(this);
-            }, 2000);
+            }, 100);
         }
     }
 
