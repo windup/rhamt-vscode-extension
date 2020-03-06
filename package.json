@@ -31,7 +31,8 @@
         "onCommand:rhamt.createConfiguration",
         "onCommand:rhamt.newRuleset",
         "onCommand:rhamt.showRhamtExplorer",
-        "onView:rhamtExplorerView"
+        "onView:rhamtExplorerView",
+        "onWebviewPanel:rhamtConfigurationEditor"
     ],
     "scripts": {
         "vscode:prepublish": "npm run compile",
