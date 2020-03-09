@@ -18,6 +18,7 @@ import { ConfigurationEditorService } from './editor/configurationEditorService'
 import { HintItem } from './tree/hintItem';
 import { HintNode } from './tree/hintNode';
 import { NewRulesetWizard } from './wizard/newRulesetWizard';
+import { ConfigurationEditorSerializer } from './editor/configurationEditorSerializer';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
