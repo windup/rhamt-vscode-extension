@@ -345,6 +345,7 @@ export class AnalysisResults {
         if ((issue as any).lineNumber) {
             const hint = issue as IHint;
             const type = mime.lookup(hint.file);
+            // TODO: This will ignore .properties files and others that we might want to support.
             if (type && type.startsWith('text')) {
                 if (!hint.originalLineSource) {
                     hint.originalLineSource = await this.readLine(hint.file, hint.lineNumber);
