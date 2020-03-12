@@ -133,9 +133,6 @@ export class ConfigurationClientManager {
         });
     }
 
-    done(): void {
-    }
-
     openReport(): void {
         commands.executeCommand('rhamt.openReport', this.config);
     }
