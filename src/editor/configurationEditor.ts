@@ -50,11 +50,13 @@ export class ConfigurationEditor {
             <!DOCTYPE html>
             <html>
                 <head>
-                <meta
-                    http-equiv="Content-Security-Policy"
-                    content="
-                    default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';"
-                />
+                <meta http-equiv="Content-Security-Policy" content="">'
+                <script>
+                    (function () {
+                        const vscode = acquireVsCodeApi();
+                        vscode.setState({id: "${this.configuration.id}"});
+                    }());
+                </script>
                 </head>
                 <body style="margin:0px;padding:0px;overflow:hidden">
                     <iframe src="${location}"
