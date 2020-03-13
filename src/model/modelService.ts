@@ -26,6 +26,16 @@ export class ModelService {
         this.model.configurations.push(config);
     }
 
+    public async eagerlyGetConfiguration(id: string): Promise<any> {
+        if (!this.loaded) {
+            await this.load().catch(e => {
+                console.log('error while loading model service.');
+                console.log(e);
+            });
+        }
+        return this.getConfiguration(id);
+    }
+
     public getConfiguration(id: string): RhamtConfiguration | undefined {
         return this.model.configurations.find(config => config.id === id);
     }

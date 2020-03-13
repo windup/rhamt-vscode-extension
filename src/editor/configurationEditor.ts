@@ -16,10 +16,14 @@ export class ConfigurationEditor {
     private endpoints: Endpoints;
     private context: ExtensionContext;
 
-    constructor(configuration: RhamtConfiguration, endpoints: Endpoints, context: ExtensionContext) {
+    constructor(configuration: RhamtConfiguration, endpoints: Endpoints, context: ExtensionContext, webview?: WebviewPanel) {
         this.configuration = configuration;
         this.endpoints = endpoints;
         this.context = context;
+        if (webview) {
+            this.view = webview;
+            this.setupView();
+        }
     }
 
     async open(): Promise<void> {
@@ -29,13 +33,17 @@ export class ConfigurationEditor {
                 retainContextWhenHidden: true,
                 localResourceRoots: [Uri.file(path.join(this.context.extensionPath, 'out'))]
             });
-            this.view.onDidDispose(() => {
-                this.view = undefined;
-                this.onEditorClosed.emit(undefined);
-            });
-            const location = await this.endpoints.configurationLocation(this.configuration);
-            this.view.webview.html = this.render(location);
+            this.setupView();
         }
+    }
+
+    private async setupView(): Promise<void> {
+        this.view.onDidDispose(() => {
+            this.view = undefined;
+            this.onEditorClosed.emit(undefined);
+        });
+        const location = await this.endpoints.configurationLocation(this.configuration);
+        this.view.webview.html = this.render(location);
         this.view.reveal();
     }
 

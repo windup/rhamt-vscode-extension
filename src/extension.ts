@@ -80,7 +80,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     Utils.checkCli(modelService.outDir, context);
 
-    vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer());
+    vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer(modelService, configEditorService));
 }
 
 async function getHost(port: string): Promise<string> {

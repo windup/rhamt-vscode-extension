@@ -5,6 +5,7 @@
 import { ConfigurationEditor } from './configurationEditor';
 import { ExtensionContext } from 'vscode';
 import { Endpoints, RhamtConfiguration } from '../model/model';
+import * as vscode from 'vscode';
 
 export class ConfigurationEditorService {
 
@@ -17,10 +18,10 @@ export class ConfigurationEditorService {
         this.context = context;
     }
 
-    async openConfiguration(configuration: RhamtConfiguration): Promise<void> {
+    async openConfiguration(configuration: RhamtConfiguration, view?: vscode.WebviewPanel): Promise<void> {
         let editor = this.editors.get(configuration.id);
         if (!editor) {
-            editor = new ConfigurationEditor(configuration, this.endpoints, this.context);
+            editor = new ConfigurationEditor(configuration, this.endpoints, this.context, view);
             this.editors.set(configuration.id, editor);
         }
         await editor.open();
