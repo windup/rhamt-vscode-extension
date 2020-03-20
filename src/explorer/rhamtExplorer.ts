@@ -90,7 +90,7 @@ export class RhamtExplorer {
             });
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.previewQuickfix', item => {
-            Diff.compare(item);
+            Diff.openQuickfixPreview(item);
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', (item: IQuickFix) => {
             if (item.type === 'REPLACE') {

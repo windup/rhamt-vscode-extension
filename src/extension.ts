@@ -19,6 +19,7 @@ import { HintItem } from './tree/hintItem';
 import { HintNode } from './tree/hintNode';
 import { NewRulesetWizard } from './wizard/newRulesetWizard';
 import { ConfigurationEditorSerializer } from './editor/configurationEditorSerializer';
+import { QuickfixContentProvider } from './quickfix/contentProvider';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -81,6 +82,9 @@ export async function activate(context: vscode.ExtensionContext) {
     Utils.checkCli(modelService.outDir, context);
 
     vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer(modelService, configEditorService));
+
+    const quickfixContentProvider = new QuickfixContentProvider(modelService);
+    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('quickfix', quickfixContentProvider));
 }
 
 async function getHost(port: string): Promise<string> {

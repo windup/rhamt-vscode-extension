@@ -107,7 +107,7 @@ export interface IIssue extends IUniqueElement {
     links: ILink[];
     report: string;
     category: string;
-    getConfiguration: () => RhamtConfiguration;
+    configuration: RhamtConfiguration;
     dom: any;
     complete: boolean;
 }

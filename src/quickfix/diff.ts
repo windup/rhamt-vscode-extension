@@ -3,26 +3,38 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IQuickFix, IIssue } from "../model/model";
-import * as fs from 'fs';
+import { IQuickFix } from "../model/model";
 import * as vscode from 'vscode';
 import * as os from 'os';
 
 export class Diff {
 
-    static async compare(quickfix: IQuickFix): Promise<any> {
-        try {
-            const issue = quickfix.issue;
-            let file = vscode.Uri.file(issue.file);
-            var content = fs.readFileSync(file.fsPath, 'utf8');       
-            const modified = file.with({query: JSON.stringify(content)});
-            await Diff.openDiff(file, modified, quickfix, issue);
-        }
-        catch (e) {
-            const msg = `Quickfix Error - ${e}`;
+    static async openQuickfixPreview(quickfix: IQuickFix): Promise<any> {
+        const config = quickfix.issue.configuration;
+        var ext = /(?:\.([^.]+))?$/.exec(quickfix.issue.file)[1];
+        const original = vscode.Uri.parse(`quickfix://${config.id}/${quickfix.issue.id}${ext ? '.'.concat(ext) : ''}?${quickfix.id}#left`);
+        const modified = vscode.Uri.parse(`quickfix://${config.id}/${quickfix.issue.id}${ext ? '.'.concat(ext) : ''}?${quickfix.id}#right`);
+        await vscode.commands.executeCommand('vscode.diff', original, modified, 'Current ⟷ Quickfix', {
+            preview: true
+        });
+        const textEditor = vscode.window.visibleTextEditors.filter(e => {
+            return e.document.uri.authority === modified.authority &&
+                e.document.uri.path === modified.path &&
+                    e.document.uri.query === modified.query &&
+                        e.document.uri.fragment === modified.fragment;
+        })[0];
+        if (!textEditor) {
+            const msg = `could not find diff editor for quickfix file`;
             console.log(msg);
             vscode.window.showErrorMessage(msg);
-        }        
+            return;
+        }
+        const written = await Diff.writeTemp(modified, quickfix, quickfix.issue, textEditor);
+        if (!written) {
+            const msg = `could not write quickfix file`;
+            console.log(msg);
+            vscode.window.showErrorMessage(msg);
+        }
     }
 
     static async writeTemp(file: vscode.Uri, quickfix: IQuickFix, issue: any, editor: vscode.TextEditor): Promise<boolean> {
@@ -58,27 +70,6 @@ export class Diff {
                 return vscode.workspace.applyEdit(edit);
             }
             return Promise.resolve(true);
-        }
-    }
-
-    static async openDiff(original: vscode.Uri, modified: vscode.Uri, quickfix: IQuickFix, issue: IIssue): Promise<any> {
-        await vscode.commands.executeCommand('vscode.diff', original, modified, 'Current ⟷ Quickfix', {
-            preview: false
-        });
-        const textEditor = vscode.window.visibleTextEditors.filter(e => {
-            return e.document.uri.fsPath === modified.fsPath && e.document.uri.query === modified.query
-        })[0];
-        if (!textEditor) {
-            const msg = `could not file diff editor for quickfix file`;
-            console.log(msg);
-            vscode.window.showErrorMessage(msg);
-            return;
-        }
-        const written = await Diff.writeTemp(modified, quickfix, issue, textEditor);
-        if (!written) {
-            const msg = `could not write quickfix file`;
-            console.log(msg);
-            vscode.window.showErrorMessage(msg);
         }
     }
 }

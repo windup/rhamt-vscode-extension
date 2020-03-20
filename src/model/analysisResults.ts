@@ -161,9 +161,7 @@ export class AnalysisResults {
             sourceSnippet: '',
             category: '',
             hint: '',
-            getConfiguration: () => {
-                return this.config;
-            },
+            configuration: this.config,
             dom: ele,
             complete: false
         };
@@ -402,9 +400,7 @@ export class AnalysisResults {
             report: '',
             description: '',
             category: '',
-            getConfiguration: () => {
-                return this.config;
-            },
+            configuration: this.config,
             dom: ele,
             complete: false
         };
