@@ -11,7 +11,7 @@ export class Diff {
 
     static async openQuickfixPreview(quickfix: IQuickFix): Promise<any> {
         const config = quickfix.issue.configuration;
-        var ext = /(?:\.([^.]+))?$/.exec(quickfix.issue.file)[1];
+        const ext = /(?:\.([^.]+))?$/.exec(quickfix.issue.file)[1];
         const original = vscode.Uri.parse(`quickfix://${config.id}/${quickfix.issue.id}${ext ? '.'.concat(ext) : ''}?${quickfix.id}#left`);
         const modified = vscode.Uri.parse(`quickfix://${config.id}/${quickfix.issue.id}${ext ? '.'.concat(ext) : ''}?${quickfix.id}#right`);
         await vscode.commands.executeCommand('vscode.diff', original, modified, 'Current ⟷ Quickfix', {

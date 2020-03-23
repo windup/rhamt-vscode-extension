@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Red Hat. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import * as vscode from "vscode";
 import { ModelService } from "../model/modelService";
 import * as fs from 'fs';
@@ -11,7 +16,7 @@ export class QuickfixContentProvider implements vscode.TextDocumentContentProvid
         const config = this.modelService.getConfiguration(uri.authority);
         const hints = await config.results.getHints();
         let hintId = uri.path.substring(1);
-        var ext = /(?:\.([^.]+))?$/.exec(hintId)[1];
+        const ext = /(?:\.([^.]+))?$/.exec(hintId)[1];
         if (ext) {
             hintId = hintId.replace('.'.concat(ext), '');
         }
