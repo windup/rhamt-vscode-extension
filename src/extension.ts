@@ -20,6 +20,7 @@ import { HintNode } from './tree/hintNode';
 import { NewRulesetWizard } from './wizard/newRulesetWizard';
 import { ConfigurationEditorSerializer } from './editor/configurationEditorSerializer';
 import { QuickfixContentProvider } from './quickfix/contentProvider';
+import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvider';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -85,6 +86,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const quickfixContentProvider = new QuickfixContentProvider(modelService);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('quickfix', quickfixContentProvider));
+
+    const quickfixedProvider = new QuickfixedResourceProvider(modelService);
+    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('quickfixed', quickfixedProvider));
 }
 
 async function getHost(port: string): Promise<string> {
