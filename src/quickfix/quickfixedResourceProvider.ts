@@ -2,10 +2,9 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
 import * as vscode from "vscode";
 import { ModelService } from '../model/modelService';
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 
 export class QuickfixedResourceProvider implements vscode.TextDocumentContentProvider {
 
@@ -21,8 +20,6 @@ export class QuickfixedResourceProvider implements vscode.TextDocumentContentPro
             hintId = hintId.replace('.'.concat(ext), '');
         }
         const issue = hints.find(hint => hint.id === hintId);
-        
-        var content = fs.readFileSync(issue.file, 'utf8');
-        return content;
+        return fs.readFileSync(issue.file, 'utf8');
     }
 }
