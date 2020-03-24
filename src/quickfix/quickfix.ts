@@ -13,7 +13,7 @@ export async function applyReplaceQuickfix(quickfix: IQuickFix): Promise<void> {
         const file = vscode.Uri.parse(`quickfixed://${config.id}/${quickfix.issue.id}?${quickfix.id}`);
         const doc = await vscode.workspace.openTextDocument(file);
         let edit = new vscode.WorkspaceEdit();
-        const lineNumber = issue.lineNumber-1;
+        const lineNumber = issue.lineNumber - 1;
         const end = doc.lineAt(lineNumber).range.end;
         edit.delete(file, new vscode.Range(lineNumber, 0, lineNumber, end.character));
         await vscode.workspace.applyEdit(edit);

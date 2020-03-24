@@ -10,7 +10,7 @@ import { Grouping } from '../tree/configurationNode';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
 import { applyReplaceQuickfix } from '../quickfix/quickfix';
-import { IQuickFix } from '../model/model';
+import { QuickfixNode } from '../tree/quickfixNode';
 
 export class RhamtExplorer {
 
@@ -92,10 +92,8 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.previewQuickfix', item => {
             Diff.openQuickfixPreview(item);
         }));
-        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', (item: IQuickFix) => {
-            if (item.type === 'REPLACE') {
-                applyReplaceQuickfix(item);
-            }
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', (item: QuickfixNode) => {
+            applyReplaceQuickfix(item.quickfix);
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
             const config = item.config;
