@@ -29,7 +29,7 @@ export class Diff {
             vscode.window.showErrorMessage(msg);
             return;
         }
-        const written = await Diff.writeTemp(modified, quickfix, quickfix.issue, textEditor);
+        const written = await Diff.writeQuickfix(modified, quickfix, quickfix.issue, textEditor.document);
         if (!written) {
             const msg = `could not write quickfix file`;
             console.log(msg);
@@ -37,11 +37,11 @@ export class Diff {
         }
     }
 
-    static async writeTemp(file: vscode.Uri, quickfix: IQuickFix, issue: any, editor: vscode.TextEditor): Promise<boolean> {
+    static async writeQuickfix(file: vscode.Uri, quickfix: IQuickFix, issue: any, document: vscode.TextDocument): Promise<boolean> {
         if (quickfix.type === 'REPLACE' && issue.lineNumber) {
             let edit = new vscode.WorkspaceEdit();
             const lineNumber = issue.lineNumber-1;
-            const end = editor.document.lineAt(lineNumber).range.end;
+            const end = document.lineAt(lineNumber).range.end;
             edit.delete(file, new vscode.Range(lineNumber, 0, lineNumber, end.character));
             await vscode.workspace.applyEdit(edit);
             edit = new vscode.WorkspaceEdit();
@@ -52,14 +52,14 @@ export class Diff {
         if (quickfix.type === 'DELETE_LINE' && issue.lineNumber) {
             let edit = new vscode.WorkspaceEdit();
             const lineNumber = issue.lineNumber-1;
-            const end = editor.document.lineAt(lineNumber).range.end;
+            const end = document.lineAt(lineNumber).range.end;
             edit.delete(file, new vscode.Range(lineNumber, 0, lineNumber, end.character));
             return vscode.workspace.applyEdit(edit);
         }
         if (quickfix.type === 'INSERT_LINE' && issue.lineNumber) {
             const lineNumber = issue.lineNumber-1;
             const replacement = issue.originalLineSource;
-            const text = editor.document.getText(new vscode.Range(lineNumber, 0, lineNumber, replacement.length));
+            const text = document.getText(new vscode.Range(lineNumber, 0, lineNumber, replacement.length));
             if (text !== replacement) {
                 let edit = new vscode.WorkspaceEdit();
                 edit.insert(file, new vscode.Position(lineNumber, 0), os.EOL);

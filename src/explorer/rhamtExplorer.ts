@@ -9,7 +9,7 @@ import { RhamtUtil } from '../server/rhamtUtil';
 import { Grouping } from '../tree/configurationNode';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
-import { applyReplaceQuickfix } from '../quickfix/quickfix';
+import { applyQuickfix } from '../quickfix/quickfix';
 import { QuickfixNode } from '../tree/quickfixNode';
 
 export class RhamtExplorer {
@@ -93,7 +93,13 @@ export class RhamtExplorer {
             Diff.openQuickfixPreview(item);
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', (item: QuickfixNode) => {
-            applyReplaceQuickfix(item.quickfix);
+            try {
+                applyQuickfix(item.quickfix);
+            }
+            catch (e) {
+                console.log(`Error applying quickfix - ${e}`);
+                vscode.window.showErrorMessage(`Error applying quickfix ${e}`);
+            }
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
             const config = item.config;
