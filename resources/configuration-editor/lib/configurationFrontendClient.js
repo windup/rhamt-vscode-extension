@@ -15,7 +15,7 @@ class Services {
     getConfiguration() {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: `http://${this.store.host}/configuration/${this.store.id}`,
+                url: `${window.location.protocol}//${this.store.host}/configuration/${this.store.id}`,
                 method: 'GET',
                 dataType: 'json',
                 success: resolve,
@@ -26,7 +26,7 @@ class Services {
     getRecentRulesets() {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: `http://${this.store.host}/rulesets/recent`,
+                url: `${window.location.protocol}//${this.store.host}/rulesets/recent`,
                 method: 'GET',
                 dataType: 'json',
                 success: resolve,
@@ -36,7 +36,7 @@ class Services {
     }
     getHelp() {
         return new Promise((resolve, reject) => {
-            $.getJSON(`http://${this.store.host}/help.json`, function (data) {
+            $.getJSON(`${window.location.protocol}//${this.store.host}/help.json`, function (data) {
                 $.each(data, function (key, val) {
                     console.log(`key: ${JSON.stringify(key)} value: ${JSON.stringify(val)}`);
                 });
@@ -76,7 +76,7 @@ class SocketWrapper {
 exports.SocketWrapper = SocketWrapper;
 class ConfigClient {
     constructor(host, id, elementData, form) {
-        const url = `http://${host}?id=${id}`;
+        const url = `${window.location.protocol}//${host}?id=${id}`;
         this.store = new RhamtConfigurationStore(host, id);
         this._services = new Services(this.store);
         this.elementData = elementData;
