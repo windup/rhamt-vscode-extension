@@ -2,7 +2,7 @@
     "name": "rhamt-vscode-extension",
     "displayName": "Migration Toolkit",
     "description": "Red Hat Application Migration Toolkit",
-    "version": "0.0.23",
+    "version": "0.0.24",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
@@ -104,6 +104,10 @@
             {
                 "command": "rhamt.applyQuickfix",
                 "title": "Apply Quickfix"
+            },
+            {
+                "command": "rhamt.applyQuickfixes",
+                "title": "Apply Quickfixes"
             }
         ],
         "configuration": [
@@ -198,6 +202,10 @@
                 {
                     "command": "rhamt.applyQuickfix",
                     "when": "view == rhamtExplorerView && viewItem == quickfix"
+                },
+                {
+                    "command": "rhamt.applyQuickfixes",
+                    "when": "view == rhamtExplorerView && viewItem == quickfix-container"
                 }
             ]
         }
