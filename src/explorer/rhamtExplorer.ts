@@ -9,8 +9,8 @@ import { RhamtUtil } from '../server/rhamtUtil';
 import { Grouping } from '../tree/configurationNode';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
-import { applyQuickfix } from '../quickfix/quickfix';
-import { QuickfixNode } from '../tree/quickfixNode';
+import { applyQuickfixes, applyQuickfix } from '../quickfix/quickfix';
+import { IQuickFix } from '../model/model';
 
 export class RhamtExplorer {
 
@@ -92,13 +92,22 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.previewQuickfix', item => {
             Diff.openQuickfixPreview(item);
         }));
-        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', (item: QuickfixNode) => {
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', (quickfix: IQuickFix) => {
             try {
-                applyQuickfix(item.quickfix);
+                applyQuickfix(quickfix);
             }
             catch (e) {
                 console.log(`Error applying quickfix - ${e}`);
                 vscode.window.showErrorMessage(`Error applying quickfix ${e}`);
+            }
+        }));
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfixes', (items: IQuickFix[]) => {
+            try {
+                applyQuickfixes(items);
+            }
+            catch (e) {
+                console.log(`Error applying quickfixes - ${e}`);
+                vscode.window.showErrorMessage(`Error applying quickfixes ${e}`);
             }
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
