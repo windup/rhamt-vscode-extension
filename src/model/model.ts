@@ -63,9 +63,18 @@ export class RhamtConfiguration {
     id: string;
     name: string;
     summary: AnalysisResultsSummary | undefined;
-    results: AnalysisResults | undefined;
+    private _results: AnalysisResults | null;
     rhamtExecutable: string;
     options: { [index: string]: any } = {};
+
+    get results(): AnalysisResults | null {
+        return this._results;
+    }
+
+    set results(results: AnalysisResults | null) {
+        this._results = results;
+
+    }
 
     getReport(): string {
         if (!this.options['output']) return undefined;
@@ -78,11 +87,28 @@ export class RhamtConfiguration {
     }
 
     deleteIssue(issue: IIssue): void {
-        this.results.deleteIssue(issue);
+        this._results.deleteIssue(issue);
     }
 
     markIssueAsComplete(issue: IIssue): void {
-        this.results.markIssueAsComplete(issue);
+        this._results.markIssueAsComplete(issue);
+    }
+
+    getQuickfixesForResource(resource: string): IQuickFix[] {
+        let quickfixes = [];
+        if (this._results) {
+            this._results.model.hints.filter(hint => {
+                if (hint.file === resource || resource.includes(hint.file)) {
+                    quickfixes = quickfixes.concat(hint.quickfixes)
+                }
+            });
+            this._results.model.classifications.filter(classification => {
+                if (classification.file === resource || resource.includes(classification.file)) {
+                    quickfixes = quickfixes.concat(classification.quickfixes)
+                }
+            });
+        }
+        return quickfixes;
     }
 }
 
@@ -130,8 +156,8 @@ export interface ReportHolder {
 }
 
 export interface IssueContainer {
-    getIssue: () => IIssue;
-    setComplete: () => void;
+    getIssue?: () => IIssue;
+    setComplete?: () => void;
 }
 
 export interface IHint extends IIssue {

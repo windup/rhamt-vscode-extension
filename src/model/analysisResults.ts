@@ -88,16 +88,30 @@ export class AnalysisResultsUtil {
 export class AnalysisResults {
 
     reports: Map<string, string> = new Map<string, string>();
+
     config: RhamtConfiguration;
     dom: CheerioStatic;
 
-    private hintCache: IHint[];
-    private classificationCache: IClassification[];
+    private _model: AnalysisResults.Model;
 
-    constructor(config: RhamtConfiguration, dom: CheerioStatic) {
-        this.config = config;
+    constructor(dom: CheerioStatic, config: RhamtConfiguration) {
         this.dom = dom;
+        this.config = config;
+    }
+
+    async init(): Promise<AnalysisResults.Model> {
         this.loadReports();
+        if (this._model) {
+            return this._model;
+        }
+        const hints = await this.getHints();
+        const classifications = await this.getClassifications();
+        this._model = { hints, classifications};
+        return this._model;
+    }
+
+    get model(): AnalysisResults.Model | null {
+        return this._model;
     }
 
     loadReports(): void {
@@ -125,18 +139,14 @@ export class AnalysisResults {
         });
     }
 
-    async getHints(): Promise<IHint[]> {
-        if (this.hintCache) {
-            return this.hintCache;
-        }
+    private async getHints(): Promise<IHint[]> {
         const hints: IHint[] = [];
         const elements = this.dom('hints').children();
         for (let index = 0; index < elements.length; index++) {
             const hint = await this.readHint(elements[index]);
             hints.push(hint);
         }
-
-        return this.hintCache = hints;
+        return hints;
     }
 
     private async readHint(ele: any): Promise<IHint> {
@@ -367,17 +377,14 @@ export class AnalysisResults {
         return origin.replace(search, replacement);
     }
 
-    async getClassifications(): Promise<IClassification[]> {
-        if (this.classificationCache) {
-            return this.classificationCache;
-        }
+    private async getClassifications(): Promise<IClassification[]> {
         const classifications: IClassification[] = [];
         const elements = this.dom('classifications').children();
         for (let index = 0; index < elements.length; index++) {
             const classification = await this.readClassification(elements[index]);
             classifications.push(classification);
         }
-        return this.classificationCache = classifications;
+        return classifications;
     }
 
     private async readClassification(ele: any): Promise<IClassification> {
@@ -545,5 +552,13 @@ export class AnalysisResults {
                 }
             });
         });
+    }
+}
+
+export namespace AnalysisResults {
+    
+    export interface Model {
+        hints: IHint[];
+        classifications: IClassification[];
     }
 }

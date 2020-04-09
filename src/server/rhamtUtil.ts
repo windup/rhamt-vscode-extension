@@ -214,8 +214,9 @@ export class RhamtUtil {
                 executedTimestamp: startedTimestamp,
                 executable: config.rhamtExecutable
             };
-            config.results = new AnalysisResults(config, dom);
-            config.summary.quickfixes = await modelService.computeQuickfixData(config);
+            config.results = new AnalysisResults(dom, config);
+            await config.results.init();
+            config.summary.quickfixes = modelService.computeQuickfixData(config);
         }
         catch (e) {
             return Promise.reject(`Error loading analysis results from (${config.getResultsLocation()}): ${e}`);

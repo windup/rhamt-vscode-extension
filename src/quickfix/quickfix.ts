@@ -7,13 +7,18 @@ import { IQuickFix, IssueContainer } from '../model/model';
 import * as fs from 'fs-extra';
 import { Diff } from './diff';
 
+export async function applyQuickfixes(quickfixes: IQuickFix[]): Promise<any> {
+    for (let quickfix of quickfixes) {
+        await applyQuickfix(quickfix);
+    }
+}
+
 export async function applyQuickfix(quickfix: IQuickFix): Promise<any> {
-    const issue = quickfix.issue as any;
-    const config = issue.configuration;
+    const config = quickfix.issue.configuration;
     const file = vscode.Uri.parse(`quickfixed://${config.id}/${quickfix.issue.id}?${quickfix.id}`);
     const doc = await vscode.workspace.openTextDocument(file);
-    await Diff.writeQuickfix(file, quickfix, issue, doc);
-    return fs.writeFileSync(issue.file, doc.getText());
+    await Diff.writeQuickfix(file, quickfix, quickfix.issue, doc);
+    return fs.writeFileSync(quickfix.file, doc.getText());
 }
 
 export namespace Quickfix {

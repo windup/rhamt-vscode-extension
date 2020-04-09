@@ -107,7 +107,7 @@
             },
             {
                 "command": "rhamt.applyQuickfixes",
-                "title": "Apply Quickfixes"
+                "title": "Apply All Quickfixes"
             }
         ],
         "configuration": [

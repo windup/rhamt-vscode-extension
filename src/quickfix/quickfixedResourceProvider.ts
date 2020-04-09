@@ -11,9 +11,9 @@ export class QuickfixedResourceProvider implements vscode.TextDocumentContentPro
     constructor(private modelService: ModelService) {
     }
 
-    async provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): Promise<string> {
+    provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): string {
         const config = this.modelService.getConfiguration(uri.authority);
-        const hints = await config.results.getHints();
+        const hints = config.results.model.hints;
         let hintId = uri.path.substring(1);
         const ext = /(?:\.([^.]+))?$/.exec(hintId)[1];
         if (ext) {

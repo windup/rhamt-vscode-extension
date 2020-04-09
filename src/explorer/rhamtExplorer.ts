@@ -92,18 +92,18 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.previewQuickfix', item => {
             Diff.openQuickfixPreview(item);
         }));
-        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', (quickfix: IQuickFix) => {
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', item => {
             try {
-                applyQuickfix(quickfix);
+                applyQuickfix(item.quickfix);
             }
             catch (e) {
                 console.log(`Error applying quickfix - ${e}`);
                 vscode.window.showErrorMessage(`Error applying quickfix ${e}`);
             }
         }));
-        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfixes', (items: IQuickFix[]) => {
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfixes', item => {
             try {
-                applyQuickfixes(items);
+                applyQuickfixes(item.quickfixes);
             }
             catch (e) {
                 console.log(`Error applying quickfixes - ${e}`);

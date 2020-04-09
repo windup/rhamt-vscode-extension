@@ -248,7 +248,8 @@ export class ModelService {
                 if (exists) {
                     try {
                         const dom = await AnalysisResultsUtil.loadFromLocation(location);
-                        target.results = new AnalysisResults(target, dom);
+                        target.results = new AnalysisResults(dom, target);
+                        await target.results.init();
                     } catch (e) {
                         return reject(`Error loading analysis results for configuration at ${location} - ${e}`);
                     }
@@ -284,7 +285,7 @@ export class ModelService {
             configurations.push(data);
             if (config.summary && config.results) {
                 try {
-                    data.summary.quickfixes = await this.computeQuickfixData(config);
+                    data.summary.quickfixes = this.computeQuickfixData(config);
                     await this.saveAnalysisResults(config);
                 }
                 catch (e) {
@@ -324,20 +325,18 @@ export class ModelService {
         });
     }
 
-    async computeQuickfixData(config: RhamtConfiguration): Promise<any> {
-        return new Promise<any>(async resolve => {
-            const result: { [index: string]: any } = {};
-            let elements = [];
-            elements = elements.concat(await config.results.getHints());
-            elements = elements.concat(await config.results.getClassifications());
-            elements.forEach(element => {
-                result[element.id] = {
-                    originalLineSource: element.originalLineSource,
-                    quickfixedLines: element.quickfixedLines
-                }
-            });
-            resolve(result);
+    computeQuickfixData(config: RhamtConfiguration): any {
+        const result: { [index: string]: any } = {};
+        let elements = [];
+        elements = elements.concat(config.results.model.hints);
+        elements = elements.concat(config.results.model.classifications);
+        elements.forEach(element => {
+            result[element.id] = {
+                originalLineSource: element.originalLineSource,
+                quickfixedLines: element.quickfixedLines
+            }
         });
+        return result
     }
 
     public doSave(out: string, data: any): Promise<void> {
