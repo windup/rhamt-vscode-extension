@@ -5,7 +5,7 @@
 import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { FolderItem } from './folderItem';
 import { ConfigurationNode } from './configurationNode';
@@ -18,6 +18,7 @@ export class FolderNode extends AbstractNode<FolderItem> {
 
     folder: string;
     private children = [];
+    quickfixes: IQuickFix[];
 
     constructor(
         config: RhamtConfiguration,
@@ -29,12 +30,13 @@ export class FolderNode extends AbstractNode<FolderItem> {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.folder = folder;
         this.root = root;
+        this.quickfixes = this.config.getQuickfixesForResource(this.folder);
         this.treeItem = this.createItem();
         this.listen();
     }
 
     createItem(): FolderItem {
-        return new FolderItem(this.folder);
+        return new FolderItem(this.folder, this.quickfixes.length > 0);
     }
 
     delete(): Promise<void> {

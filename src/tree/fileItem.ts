@@ -16,7 +16,6 @@ export class FileItem extends TreeItem {
     private file: string;
     private hasQuickfixes: boolean;
     
-
     constructor(file: string, hasQuickfixes: boolean) {
         super(file);
         this.file = file;

@@ -98,12 +98,12 @@ export class RhamtConfiguration {
         let quickfixes = [];
         if (this._results) {
             this._results.model.hints.filter(hint => {
-                if (hint.file === resource || resource.includes(hint.file)) {
+                if (hint.file === resource || hint.file.includes(resource)) {
                     quickfixes = quickfixes.concat(hint.quickfixes)
                 }
             });
             this._results.model.classifications.filter(classification => {
-                if (classification.file === resource || resource.includes(classification.file)) {
+                if (classification.file === resource || classification.file.includes(resource)) {
                     quickfixes = quickfixes.concat(classification.quickfixes)
                 }
             });

@@ -5,6 +5,7 @@
 import { TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
 import { ModelService } from '../model/modelService';
 import * as path from 'path';
+import { Quickfix } from '../quickfix/quickfix';
 
 export class FolderItem extends TreeItem {
 
@@ -13,15 +14,21 @@ export class FolderItem extends TreeItem {
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
     private folder: string;
+    private hasQuickfixes: boolean;
 
-    constructor(folder: string) {
+    constructor(folder: string, hasQuickfixes: boolean) {
         super(folder);
         this.folder = folder;
+        this.hasQuickfixes = hasQuickfixes;
         this.refresh();
     }
 
     public refresh(): void {
         this.label = path.basename(this.folder);
         this.collapsibleState = TreeItemCollapsibleState.Collapsed;
+    }
+
+    public get contextValue(): string {
+        return this.hasQuickfixes ? Quickfix.CONTAINER : undefined;
     }
 }
