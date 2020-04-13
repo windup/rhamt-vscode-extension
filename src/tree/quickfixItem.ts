@@ -4,15 +4,16 @@
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { ModelService } from '../model/modelService';
-import { IIssue, IssueContainer, IQuickFix } from '../model/model';
+import { IIssue, IQuickFix, IssueContainer } from '../model/model';
 import * as path from 'path';
+import { Quickfix } from '../quickfix/quickfix';
 
 export class QuickfixItem extends TreeItem implements IssueContainer {
 
     private _id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
-    quickfix: IQuickFix;
+    private quickfix: IQuickFix;
 
     constructor(quickfix: IQuickFix) {
         super(quickfix.name);
@@ -59,7 +60,7 @@ export class QuickfixItem extends TreeItem implements IssueContainer {
     }
 
     public get contextValue(): string {
-        return 'quickfix';
+        return Quickfix.TYPE;
     }
 
     public refresh(): void {

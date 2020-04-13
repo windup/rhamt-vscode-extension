@@ -5,7 +5,7 @@
 import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration, IHint } from '../model/model';
+import { RhamtConfiguration, IHint, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
 import * as path from 'path';
 import { ConfigurationNode } from './configurationNode';
@@ -18,6 +18,7 @@ export class QuickfixesNode extends AbstractNode<QuickfixesItem> {
     private children = [];
 
     hint: IHint;
+    quickfixes: IQuickFix[];
     
     constructor(
         config: RhamtConfiguration,
@@ -29,6 +30,7 @@ export class QuickfixesNode extends AbstractNode<QuickfixesItem> {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.hint = hint;
         this.root = root;
+        this.quickfixes = this.hint.quickfixes;
         this.treeItem = this.createItem();
         this.listen();
     }
@@ -93,8 +95,8 @@ export class QuickfixesNode extends AbstractNode<QuickfixesItem> {
     }
 
     static compareQuickfix(node1: ITreeNode, node2: ITreeNode): number {
-        const one = (node1 as QuickfixNode).quickfix.name;
-        const other = (node2 as QuickfixNode).quickfix.name;
+        const one = (node1 as QuickfixNode).getQuickfixes()[0].name;
+        const other = (node2 as QuickfixNode).getQuickfixes()[0].name;
         const a = one || 0;
         const b = other || 0;
         if (a !== b) {

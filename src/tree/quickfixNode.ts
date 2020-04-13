@@ -6,11 +6,12 @@
 import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration, IssueContainer, IIssue, IQuickFix } from '../model/model';
+import { RhamtConfiguration, IIssue, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { QuickfixItem } from './quickfixItem';
+import { Quickfix } from '../quickfix/quickfix';
 
-export class QuickfixNode extends AbstractNode implements IssueContainer {
+export class QuickfixNode extends AbstractNode implements Quickfix.IQuickfixContainer  {
 
     quickfix: IQuickFix;
     item: QuickfixItem;
@@ -45,5 +46,9 @@ export class QuickfixNode extends AbstractNode implements IssueContainer {
     }
 
     setComplete(): void {
+    }
+
+    getQuickfixes(): IQuickFix[] {
+        return [this.quickfix];
     }
 }

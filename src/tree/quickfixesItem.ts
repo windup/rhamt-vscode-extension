@@ -4,7 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
 import { ModelService } from '../model/modelService';
-import { IHint } from '../model/model';
+import { IHint, IQuickFix } from '../model/model';
+import { Quickfix } from '../quickfix/quickfix';
 
 export class QuickfixesItem extends TreeItem {
 
@@ -12,12 +13,19 @@ export class QuickfixesItem extends TreeItem {
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
+    quickfixes: IQuickFix[];
+
     constructor(hint: IHint) {
         super(hint.id);
+        this.quickfixes = hint.quickfixes;
     }
 
     public refresh(count: number): void {
         this.label = `Quickfixes (${count})`;
         this.collapsibleState = TreeItemCollapsibleState.Collapsed;
+    }
+
+    public get contextValue(): string {
+        return Quickfix.CONTAINER;
     }
 }
