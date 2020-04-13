@@ -157,55 +157,68 @@
             "view/item/context": [
                 {
                     "command": "rhamt.runConfiguration",
-                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
+                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration",
+                    "group": "rhamt"
                 },
                 {
                     "command": "rhamt.deleteConfiguration",
-                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
+                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration",
+                    "group": "rhamt"
                 },
                 {
                     "command": "rhamt.openConfiguration",
-                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
+                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration",
+                    "group": "rhamt"
                 },
                 {
                     "command": "rhamt.refreshResults",
-                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration"
+                    "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration",
+                    "group": "rhamt"
                 },
                 {
                     "command": "rhamt.openReport",
-                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i"
+                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i",
+                    "group": "rhamt@1"
                 },
                 {
                     "command": "rhamt.openReport",
-                    "when": "view == rhamtExplorerView && viewItem == report"
+                    "when": "view == rhamtExplorerView && viewItem == report",
+                    "group": "rhamt@1"
                 },
                 {
                     "command": "rhamt.openDoc",
-                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i"
+                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i",
+                    "group": "rhamt@0"
                 },
                 {
                     "command": "rhamt.openIssueDetails",
-                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i"
+                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i",
+                    "group": "rhamt@2"
                 },
                 {
                     "command": "rhamt.deleteIssue",
-                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i"
+                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i",
+                    "group": "rhamt@4"
                 },
                 {
                     "command": "rhamt.markIssueAsComplete",
-                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i"
+                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i",
+                    "group": "rhamt@3"
                 },
                 {
                     "command": "rhamt.deleteResults",
-                    "when": "view == rhamtExplorerView && viewItem == results"
+                    "when": "view == rhamtExplorerView && viewItem == results",
+                    "group": "rhamt"
                 },
                 {
                     "command": "rhamt.applyQuickfix",
-                    "when": "view == rhamtExplorerView && viewItem == quickfix"
+                    "when": "view == rhamtExplorerView && viewItem == quickfix",
+                    "group": "rhamt"
                 },
                 {
                     "command": "rhamt.applyQuickfixes",
-                    "when": "view == rhamtExplorerView && viewItem =~ /quickfix-container/i"
+                    "when": "view == rhamtExplorerView && viewItem =~ /quickfix-container/i",
+                    "group": "rhamt@5"
                 }
             ]
         }
