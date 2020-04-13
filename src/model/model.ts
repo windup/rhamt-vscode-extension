@@ -122,6 +122,7 @@ export interface ILink extends IUniqueElement {
 }
 
 export interface IIssue extends IUniqueElement {
+    type: IIssueType;
     title: string;
     quickfixes: IQuickFix[];
     quickfixedLines: { [index: string]: any };
@@ -138,6 +139,10 @@ export interface IIssue extends IUniqueElement {
     complete: boolean;
 }
 
+export enum IIssueType {
+    Hint,
+    Classification
+}
 export type IQuickFixType = 'REPLACE' | 'DELETE_LINE' | 'INSERT_LINE' | 'TRANSFORMATION';
 
 export interface IQuickFix extends IUniqueElement {

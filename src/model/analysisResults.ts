@@ -8,7 +8,7 @@ import { ModelService } from './modelService';
 import * as open from 'opn';
 import * as readline from 'readline';
 import * as mime from 'mime-types';
-import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue, ILink } from './model';
+import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue, ILink, IIssueType } from './model';
 
 export interface AnalysisResultsSummary {
     executedTimestamp?: string;
@@ -154,6 +154,7 @@ export class AnalysisResults {
             return;
         }
         const hint: IHint = {
+            type: IIssueType.Hint,
             id: this.dom(ele).attr('id'),
             quickfixes: [],
             file: '',
@@ -392,7 +393,8 @@ export class AnalysisResults {
             return;
         }
         const id = this.dom(ele).attr('id');
-        const classification = {
+        const classification: IClassification = {
+            type: IIssueType.Classification,
             id,
             quickfixes: [],
             quickfixedLines: {},
@@ -402,7 +404,6 @@ export class AnalysisResults {
             ruleId: '',
             effort: '',
             title: id,
-            messageOrDescription: '',
             links: [],
             report: '',
             description: '',

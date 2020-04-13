@@ -5,7 +5,7 @@
 import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration, IQuickFix } from '../model/model';
+import { RhamtConfiguration, IQuickFix, IIssueType } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { ConfigurationNode } from './configurationNode';
 import { ClassificationsItem } from './classificationsItem';
@@ -29,9 +29,15 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.file = file;
         this.root = root;
-        this.quickfixes = this.config.getQuickfixesForResource(this.file);
+        this.quickfixes = this.computeQuickfixes();
         this.treeItem = this.createItem();
         this.listen();
+    }
+
+    computeQuickfixes(): IQuickFix[] {
+        return this.config.getQuickfixesForResource(this.file).filter(quickfix => {
+            return quickfix.issue.type === IIssueType.Classification 
+        });
     }
 
     createItem(): ClassificationsItem {
