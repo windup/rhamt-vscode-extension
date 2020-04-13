@@ -5,7 +5,7 @@
 import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { ConfigurationNode } from './configurationNode';
 import { ClassificationsItem } from './classificationsItem';
@@ -17,6 +17,7 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
     private loading: boolean = false;
     private children = [];
     file: string;
+    quickfixes: IQuickFix[];
     
     constructor(
         config: RhamtConfiguration,
@@ -28,12 +29,13 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.file = file;
         this.root = root;
+        this.quickfixes = this.config.getQuickfixesForResource(this.file);
         this.treeItem = this.createItem();
         this.listen();
     }
 
     createItem(): ClassificationsItem {
-        return new ClassificationsItem(this.file);
+        return new ClassificationsItem(this.file, this.quickfixes.length > 0);
     }
 
     delete(): Promise<void> {

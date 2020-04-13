@@ -6,7 +6,7 @@ import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
 import { HintItem } from './hintItem';
-import { IHint, RhamtConfiguration, ReportHolder, IssueContainer, IIssue } from '../model/model';
+import { IHint, RhamtConfiguration, ReportHolder, IssueContainer, IIssue, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
 import * as path from 'path';
 import { QuickfixesNode } from './quickfixesNode';
@@ -18,6 +18,7 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
     hint: IHint;
     item: HintItem;
     private children = [];
+    quickfixes: IQuickFix[];
 
     constructor(
         hint: IHint,
@@ -30,6 +31,7 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.root = root;
         this.hint = hint;
+        this.quickfixes = this.hint.quickfixes;
         this.treeItem = this.item = this.createItem();
         this.init();
     }

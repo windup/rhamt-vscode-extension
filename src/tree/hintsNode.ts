@@ -5,7 +5,7 @@
 import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
 import * as path from 'path';
 import { ConfigurationNode } from './configurationNode';
@@ -18,6 +18,7 @@ export class HintsNode extends AbstractNode<HintsItem> {
     private children = [];
 
     file: string;
+    quickfixes: IQuickFix[];
     
     constructor(
         config: RhamtConfiguration,
@@ -29,12 +30,13 @@ export class HintsNode extends AbstractNode<HintsItem> {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.file = file;
         this.root = root;
+        this.quickfixes = this.config.getQuickfixesForResource(this.file);
         this.treeItem = this.createItem();
         this.listen();
     }
 
     createItem(): HintsItem {
-        return new HintsItem(this.file);
+        return new HintsItem(this.file, this.quickfixes.length > 0);
     }
 
     delete(): Promise<void> {

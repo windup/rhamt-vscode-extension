@@ -10,7 +10,6 @@ import { Grouping } from '../tree/configurationNode';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
 import { applyQuickfixes, applyQuickfix } from '../quickfix/quickfix';
-import { IQuickFix } from '../model/model';
 
 export class RhamtExplorer {
 

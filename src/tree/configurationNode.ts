@@ -121,18 +121,16 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         this.childNodes.clear();
     }
 
-    private async computeIssues(): Promise<void> {
+    private computeIssues(): void {
         this.clearModel();
         if (this.config.results) {
-            const classifications = await this.config.results.getClassifications();
-            classifications.forEach(classification => {
+            this.config.results.model.classifications.forEach(classification => {
                 const root = workspace.getWorkspaceFolder(Uri.file(classification.file));
                 if (!root) return;
                 this.classifications.push(classification);
                 this.initIssue(classification, this.createClassificationNode(classification));
             });
-            const hints = await this.config.results.getHints();
-            hints.forEach(hint => {
+            this.config.results.model.hints.forEach(hint => {
                 const root = workspace.getWorkspaceFolder(Uri.file(hint.file));
                 if (!root) {
                     console.log(`unable to find file in workspace - ${hint.file}`);

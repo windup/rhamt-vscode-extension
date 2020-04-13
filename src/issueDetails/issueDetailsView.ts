@@ -55,7 +55,7 @@ export class IssueDetailsView {
     private async render(issue: any): Promise<string> {
         const url = await this.endpoints.configurationLocation();
         const cssPath = `${url}dark/issue-details.css`;
-        const config = issue.getConfiguration();
+        const config = issue.configuration;
         const reports = path.join(config.options['output'], 'reports', path.sep);
         let report = '';
         if (issue.report && issue.report.startsWith(reports)) {
