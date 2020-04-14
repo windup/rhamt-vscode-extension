@@ -3,13 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
-import { ModelService } from '../model/modelService';
 import { IClassification, IIssue, IssueContainer } from '../model/model';
 import * as path from 'path';
 
 export class ClassificationItem extends TreeItem implements IssueContainer {
 
-    private _id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
     private classification: IClassification;
@@ -47,10 +45,6 @@ export class ClassificationItem extends TreeItem implements IssueContainer {
             light: path.join(...base, 'light', 'status-info.svg'),
             dark: path.join(...base, 'dark', 'status-info-inverse.svg')
         };
-    }
-
-    public get id(): string {
-        return this._id;
     }
 
     public get tooltip(): string {

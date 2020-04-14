@@ -3,14 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
-import { ModelService } from '../model/modelService';
 import * as path from 'path';
 import { ReportHolder, RhamtConfiguration } from '../model/model';
 
 export class ReportItem extends TreeItem implements ReportHolder {
 
     static LABEL = 'Report';
-    private _id: string = ModelService.generateUniqueId();
     private config: RhamtConfiguration;
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
@@ -29,10 +27,6 @@ export class ReportItem extends TreeItem implements ReportHolder {
             light: path.join(...base, 'light', 'file_type_log.svg'),
             dark: path.join(...base, 'dark', 'file_type_log.svg')
         };
-    }
-
-    public get id(): string {
-        return this._id;
     }
 
     public get tooltip(): string {
