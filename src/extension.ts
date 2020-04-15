@@ -96,19 +96,13 @@ async function getHost(port: string): Promise<string> {
         return `http://localhost:${port}/`;
     }
     const workspace = await require('@eclipse-che/plugin').workspace.getCurrentWorkspace();
-    console.log(workspace);
     const runtimeMachines = workspace!.runtime!.machines || {};
     for (let machineName of Object.keys(runtimeMachines)) {
         const machineServers = runtimeMachines[machineName].servers || {};
-        console.log(`machineName: ${machineName}`);
-        console.log(runtimeMachines[machineName]);
         if (String(machineName).includes('rhamt')) {
             for (let serverName of Object.keys(machineServers)) {
                 const url = machineServers[serverName].url!;
                 const portNumber = machineServers[serverName].attributes.port!;
-                console.log(`machineServerName: ${serverName}`);
-                console.log(`machineServerUrl: ${String(url)}`);
-                console.log(machineServers[serverName]);
                 if (String(portNumber) === port) {
                     return url;
                 }
