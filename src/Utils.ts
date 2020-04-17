@@ -2,13 +2,14 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { ExtensionContext, workspace, extensions, window, Uri, commands, ProgressLocation } from 'vscode';
+import { ExtensionContext, workspace, extensions, window, ProgressLocation } from 'vscode';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as child_process from 'child_process';
 import { RhamtConfiguration } from './model/model';
 import { RhamtInstaller } from './util/rhamt-installer';
 import { ModelService } from './model/modelService';
+import { promptForFAQs } from './util/faq';
 
 const RHAMT_VERSION_REGEX = /^version /;
 
@@ -151,28 +152,6 @@ export namespace Utils {
 
     function parseVersion(raw: string): string {
         return raw.replace(RHAMT_VERSION_REGEX, '');
-    }
-
-    export async function promptForFAQs(message: string, downloadCli?: { outDir: string }): Promise<any> {
-        const DOWNLOAD = 'Download';
-        const options = [];
-        if (downloadCli) {
-            options.push(DOWNLOAD);
-        }
-        const OPTION_SHOW_FAQS = 'Show FAQs';
-        const OPTION_OPEN_SETTINGS = 'Open Settings';
-        options.push(OPTION_SHOW_FAQS, OPTION_OPEN_SETTINGS);
-        const choiceForDetails = await window.showErrorMessage(message, ...options);
-        if (choiceForDetails === DOWNLOAD) {
-            Utils.downloadCli(downloadCli.outDir);
-        }
-        if (choiceForDetails === OPTION_SHOW_FAQS) {
-            const faqPath: string = Utils.getPathToExtensionRoot('FAQ.md');
-            commands.executeCommand('markdown.showPreview', Uri.file(faqPath));
-        }
-        else if (choiceForDetails === OPTION_OPEN_SETTINGS) {
-            commands.executeCommand('workbench.action.openSettings');
-        }
     }
 
     export function getExtensionId(): string {
