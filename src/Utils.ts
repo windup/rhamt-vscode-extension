@@ -99,7 +99,7 @@ export namespace Utils {
             const rhamtPath = workspace.getConfiguration('rhamt.executable').get<string>('path');
             if (rhamtPath) {
                 console.log(`preference rhamt.executable.path found - ${rhamtPath}`);
-                resolve(rhamtPath);
+                return rhamtPath;
             }
             let rhamtHome = process.env['RHAMT_HOME'];
             if (rhamtHome) {
@@ -107,7 +107,7 @@ export namespace Utils {
                 console.log(`found rhamt-cli using RHAMT_HOME`);
                 console.log(`RHAMT_HOME=${rhamtHome}`);
                 console.log(`executable=${executable}`);
-                return resolve(executable);
+                return executable;
             }
             rhamtHome = Utils.findRhamtCliDownload(outDir);
             if (rhamtHome) {
@@ -118,7 +118,7 @@ export namespace Utils {
             }
             else {
                 console.log('Unable to find rhamt-cli download');
-                reject(new Error(''));
+                reject(new Error('Unable to find rhamt-cli download'));
             }
         });
     }

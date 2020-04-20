@@ -42,14 +42,7 @@ export class RhamtUtil {
             cancellable: true
         }, async (progress: any, token: any) => {
             return new Promise<any>(async resolve => {
-                let executable: any;
-                try {
-                    executable = await Utils.findRhamtCli(modelService.outDir);
-                }
-                catch (e) {
-                    vscode.window.showErrorMessage(`Error finding rhamt-cli: ${e}`);
-                    return Promise.reject(e);
-                }
+                const executable = config.rhamtExecutable;
                 const windupHome = path.resolve(executable, '..', '..');
                 let params = [];
                 try {
