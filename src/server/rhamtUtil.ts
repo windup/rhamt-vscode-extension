@@ -11,22 +11,10 @@ import { ProgressMonitor } from './progressMonitor';
 import * as path from 'path';
 import { AnalysisResultsUtil, AnalysisResults } from '../model/analysisResults';
 import { ModelService } from '../model/modelService';
+import { rhamtChannel } from '../util/console';
 const PROGRESS = ':progress:';
 const START_TIMEOUT = 60000;
 const START_PROGRESS = 'Using user rules dir:';
-
-class RhamtChannelImpl {
-    private readonly channel: vscode.OutputChannel = vscode.window.createOutputChannel('RHAMT');
-    print(text: string) {
-        this.channel.append(text);
-        this.channel.show();
-    }
-    clear() {
-        this.channel.clear();
-    }
-}
-
-export const rhamtChannel = new RhamtChannelImpl();
 
 export class RhamtUtil {
 

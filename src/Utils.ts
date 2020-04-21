@@ -18,7 +18,6 @@ const findJava = require('find-java-home');
 const RHAMT_VERSION = '4.3.0.Final';
 const RHAMT_FOLDER = `rhamt-cli-${RHAMT_VERSION}`;
 // const DOWNLOAD_CLI_LOCATION = `http://central.maven.org/maven2/org/jboss/windup/rhamt-cli/${RHAMT_VERSION}/${RHAMT_FOLDER}-offline.zip`;
-const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v0.0.3-alpha/rhamt-cli-4.3.0.Final-offline.zip';
 const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
@@ -194,4 +193,6 @@ export namespace Utils {
             window.showErrorMessage(`Error downloading rhamt-cli: ${e}`);
         });
     }
+
+    const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v0.0.3-alpha/rhamt-cli-4.3.0.Final-offline.zip';
 }
