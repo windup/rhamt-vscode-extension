@@ -154,5 +154,5 @@ export namespace Utils {
         });
     }
 
-    const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v0.0.3-alpha/rhamt-cli-4.3.0.Final-offline.zip';
+    const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v0.0.4-alpha/rhamt-cli-4.3.2-SNAPSHOT-offline.zip';
 }

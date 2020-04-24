@@ -5,7 +5,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-const RHAMT_VERSION = '4.3.0.Final';
+const RHAMT_VERSION = '4.3.2-SNAPSHOT';
 const RHAMT_FOLDER = `rhamt-cli-${RHAMT_VERSION}`;
 
 export function findRhamtCli(outDir: string): Promise<string> {
