@@ -5,6 +5,7 @@
 import { WebviewPanel, window, ViewColumn, ExtensionContext, commands } from 'vscode';
 import { Endpoints } from '../model/model';
 import { ReportServer } from './reportServer';
+import * as opn from 'open';
 
 export class ReportView {
 
@@ -19,18 +20,29 @@ export class ReportView {
         this.reportServer = new ReportServer(this.endpoints);
         this.reportServer.start();
         this.context.subscriptions.push(commands.registerCommand('rhamt.openReport', async item => {
-            const location = item.getReport() as string;
-            if (!location) {
-                return window.showErrorMessage(`Unable to find report on filesystem`);
-            }
-            const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
-            const url = await this.endpoints.reportLocation();
-            const report = `${url}${relative}`;
-            this.open(report);
+            this.openReport(item);
+        }));
+        this.context.subscriptions.push(commands.registerCommand('rhamt.openReportExternal', async item => {
+            this.openReport(item, true);
         }));
     }
 
-    open(location: string): void {
+    private async openReport(item: any, external?: boolean): Promise<any> {
+        const location = item.getReport() as string;
+        if (!location) {
+            return window.showErrorMessage(`Unable to find report on filesystem`);
+        }
+        const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
+        const url = await this.endpoints.reportLocation();
+        const report = `${url}${relative}`;
+        this.open(report, external);
+    }
+
+    open(location: string, external?: boolean): void {
+        if (external) {
+            opn(location);
+            return;
+        }
         if (!this.view) {
             this.view = window.createWebviewPanel('rhamtReportView', 'RHAMT Report', ViewColumn.One, {
                 enableScripts: true,

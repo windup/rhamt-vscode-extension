@@ -71,7 +71,11 @@
             },
             {
                 "command": "rhamt.openReport",
-                "title": "Open Report"
+                "title": "Open Report (Embedded Browser)"
+            },
+            {
+                "command": "rhamt.openReportExternal",
+                "title": "Open Report (External Browser)"
             },
             {
                 "command": "rhamt.openDoc",
@@ -181,9 +185,19 @@
                     "group": "rhamt@1"
                 },
                 {
+                    "command": "rhamt.openReportExternal",
+                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i",
+                    "group": "rhamt@2"
+                },
+                {
                     "command": "rhamt.openReport",
                     "when": "view == rhamtExplorerView && viewItem == report",
                     "group": "rhamt@1"
+                },
+                {
+                    "command": "rhamt.openReportExternal",
+                    "when": "view == rhamtExplorerView && viewItem == report",
+                    "group": "rhamt@2"
                 },
                 {
                     "command": "rhamt.openDoc",
@@ -253,6 +267,7 @@
         "mime-types": "^2.1.26",
         "mkdirp": "^0.5.1",
         "node-stream-zip": "^1.8.0",
+        "open": "^7.0.3",
         "opn": "^5.5.0",
         "request": "^2.88.0",
         "request-progress": "^3.0.0",
