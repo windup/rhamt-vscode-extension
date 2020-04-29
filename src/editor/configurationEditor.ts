@@ -35,6 +35,7 @@ export class ConfigurationEditor {
             });
             this.setupView();
         }
+        this.view.reveal();
     }
 
     private async setupView(): Promise<void> {
