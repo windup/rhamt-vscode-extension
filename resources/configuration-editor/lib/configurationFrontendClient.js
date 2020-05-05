@@ -478,6 +478,18 @@ class ConfigClient {
         title.classList.add('code');
         title.textContent = `--${option.name}`;
         wrapper.appendChild(title);
+        if (option.required) {
+            if (option.name === 'name') {
+                title.textContent = `${option.name}`;   
+            }
+            const required = document.createElement('span');
+            required.classList.add('form-required');
+            required.textContent = '*';
+            wrapper.appendChild(required);
+            input.checked = true;
+            input.setAttribute('checked', 'checked');
+            input.disabled = true;
+        }
         const note = document.createElement('p');
         note.classList.add('note');
         note.textContent = option.description;
@@ -568,7 +580,9 @@ class ConfigClient {
         }
         else {
             const value = config.options[option.name];
-            $(`#${option.name}-input`).val(value);
+            if (!$(`#${option.name}-input`).is(":focus")) {
+                $(`#${option.name}-input`).val(value);
+            }
         }
     }
 
