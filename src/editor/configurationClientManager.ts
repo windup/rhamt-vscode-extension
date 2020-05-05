@@ -7,7 +7,7 @@ import { ConfigurationClient } from './configurationClient';
 import * as os from 'os';
 import { workspace, commands, window, Uri } from 'vscode';
 import * as nls from 'vscode-nls';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration, ChangeType } from '../model/model';
 import { ModelService } from '../model/modelService';
 
 const localize = nls.loadMessageBundle();
@@ -72,7 +72,11 @@ export class ConfigurationClientManager {
             this.save();
         });
         client.onUpdateOption.on(async data => {
-            if (!data.value) {
+            if (data.name === 'name') {
+                this.config.name = data.value;
+                this.config.onChanged.emit({type: ChangeType.MODIFIED, name: 'name', value: data.name});
+            }
+            else if (!data.value) {
                 delete this.config.options[data.name];
             }
             else {
