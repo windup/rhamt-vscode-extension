@@ -34,17 +34,14 @@ export abstract class AbstractNode<T extends vscode.TreeItem = vscode.TreeItem> 
         this.dataProvider.refresh(node);
     }
 
-    getLabel(): string {
-        return this.treeItem.label;
-    }
-
+    abstract getLabel(): string;
     abstract getChildren(): Promise<ITreeNode[]>;
     abstract delete(): Promise<void>;
     abstract createItem(): T;
 }
 
 export interface ITreeNode<T extends vscode.TreeItem = vscode.TreeItem> {
-    readonly treeItem: T;
+    treeItem: T;
     readonly parent?: vscode.TreeItem;
     root: ConfigurationNode;
     getChildren(): Promise<ITreeNode[]>;
