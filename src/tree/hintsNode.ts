@@ -2,12 +2,11 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
+import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
 import { RhamtConfiguration, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
-import * as path from 'path';
 import { ConfigurationNode } from './configurationNode';
 import { HintsItem } from './hintsItem';
 import { HintNode } from './hintNode';
@@ -31,16 +30,25 @@ export class HintsNode extends AbstractNode<HintsItem> {
         this.file = file;
         this.root = root;
         this.quickfixes = this.config.getQuickfixesForResource(this.file);
-        this.treeItem = this.createItem();
-        this.listen();
     }
 
     createItem(): HintsItem {
-        return new HintsItem(this.file, this.quickfixes.length > 0);
+        this.treeItem = new HintsItem(this.file, this.quickfixes.length > 0);
+        this.treeItem.iconPath = undefined;
+        this.loading = false;
+        const unsorted = this.root.getChildNodes(this);
+        this.children = unsorted.sort(HintsNode.compareHint);
+        this.children.forEach(child => child.parentNode = this);
+        this.treeItem.refresh(this.children.length);
+        return this.treeItem;
     }
 
     delete(): Promise<void> {
         return Promise.resolve();
+    }
+
+    getLabel(): string {
+        return 'Hints';
     }
 
     public getChildren(): Promise<ITreeNode[]> {
@@ -52,21 +60,6 @@ export class HintsNode extends AbstractNode<HintsItem> {
 
     public hasMoreChildren(): boolean {
         return this.children.length > 0;
-    }
-
-    private listen(): void {
-        this.loading = true;
-        const base = [__dirname, '..', '..', '..', 'resources'];
-        this.treeItem.iconPath = {
-            light: path.join(...base, 'light', 'Loading.svg'),
-            dark: path.join(...base, 'dark', 'Loading.svg')
-        };
-        this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
-        setTimeout(() => {
-            this.treeItem.iconPath = undefined;
-            this.loading = false;
-            this.refresh(this);
-        }, 1000);
     }
 
     protected refresh(node?: ITreeNode): void {

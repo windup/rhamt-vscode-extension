@@ -8,7 +8,6 @@ import { DataProvider } from './dataProvider';
 import { HintItem } from './hintItem';
 import { IHint, RhamtConfiguration, ReportHolder, IssueContainer, IIssue, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
-import * as path from 'path';
 import { QuickfixesNode } from './quickfixesNode';
 import { ConfigurationNode } from './configurationNode';
 
@@ -32,8 +31,6 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
         this.root = root;
         this.hint = hint;
         this.quickfixes = this.hint.quickfixes;
-        this.treeItem = this.item = this.createItem();
-        this.init();
     }
 
     public getChildren(): Promise<ITreeNode[]> {
@@ -51,8 +48,28 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
         return Promise.resolve();
     }
 
+    getLabel(): string {
+        return `${this.hint.title} [rule-id: ${this.hint.ruleId}]`;
+    }
+
     createItem(): HintItem {
-        return new HintItem(this.hint);
+        this.treeItem = new HintItem(this.hint);
+        this.loading = false;
+        if (this.hint.quickfixes.length > 0) {
+            const quickfix = new QuickfixesNode(
+                this.config,
+                this.hint,
+                this.modelService,
+                this.onNodeCreateEmitter,
+                this.dataProvider,
+                this.root
+            );
+            (quickfix as any).parentNode = this;
+            this.children.push(quickfix);
+            this.treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+        }
+        this.treeItem.refresh();
+        return this.treeItem;
     }
 
     getReport(): string {
@@ -68,38 +85,5 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
         this.config.markIssueAsComplete(this.getIssue());
         (this.treeItem as HintItem).refresh();
         this.dataProvider.refresh(this);
-    }
-
-    private init(): void {
-        this.loading = true;
-        const base = [__dirname, '..', '..', '..', 'resources'];
-        this.treeItem.iconPath = {
-            light: path.join(...base, 'light', 'Loading.svg'),
-            dark: path.join(...base, 'dark', 'Loading.svg')
-        };
-        this.treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
-        super.refresh(this);
-        setTimeout(() => {
-            this.loading = false;
-            this.refresh(this);
-        }, 1000);
-    }
-
-    refresh(node?: ITreeNode): void {
-        if (this.hint.quickfixes.length > 0) {
-            const quickfix = new QuickfixesNode(
-                this.config,
-                this.hint,
-                this.modelService,
-                this.onNodeCreateEmitter,
-                this.dataProvider,
-                this.root
-            );
-            (quickfix as any).parentNode = this;
-            this.children.push(quickfix);
-            this.treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
-        }
-        this.treeItem.refresh();
-        super.refresh(node);
     }
 }

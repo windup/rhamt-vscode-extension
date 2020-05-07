@@ -25,7 +25,6 @@ export class ClassificationNode extends AbstractNode implements ReportHolder, Is
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.root = root;
         this.classification = classification;
-        this.treeItem = this.createItem();
     }
 
     getChildren(): Promise<ITreeNode[]> {
@@ -36,9 +35,13 @@ export class ClassificationNode extends AbstractNode implements ReportHolder, Is
         return Promise.resolve();
     }
 
+    getLabel(): string {
+        return this.classification.description;
+    }
+
     createItem(): ClassificationItem {
-        const item = new ClassificationItem(this.classification);
-        return item;
+        this.treeItem = new ClassificationItem(this.classification);
+        return this.treeItem as any;
     }
 
     getReport(): string {

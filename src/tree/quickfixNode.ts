@@ -25,7 +25,6 @@ export class QuickfixNode extends AbstractNode implements Quickfix.IQuickfixCont
         ) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.quickfix = quickfix;
-        this.treeItem = this.createItem();
     }
 
     getChildren(): Promise<ITreeNode[]> {
@@ -34,6 +33,10 @@ export class QuickfixNode extends AbstractNode implements Quickfix.IQuickfixCont
 
     delete(): Promise<void> {
         return Promise.resolve();
+    }
+
+    getLabel(): string {
+        return `${this.quickfix.name} [type: ${new String(this.quickfix.type).toLowerCase()}]`;
     }
 
     createItem(): QuickfixItem {

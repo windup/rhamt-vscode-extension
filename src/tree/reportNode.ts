@@ -10,9 +10,7 @@ import { ModelService } from '../model/modelService';
 import { ReportItem } from './reportItem';
 import { ConfigurationNode } from './configurationNode';
 
-export class ReportNode extends AbstractNode {
-
-    private item: ReportItem;
+export class ReportNode extends AbstractNode<ReportItem> {
 
     constructor(
         config: RhamtConfiguration,
@@ -22,7 +20,6 @@ export class ReportNode extends AbstractNode {
         root: ConfigurationNode) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.root = root;
-        this.treeItem = this.createItem();
     }
 
     getChildren(): Promise<ITreeNode[]> {
@@ -32,13 +29,17 @@ export class ReportNode extends AbstractNode {
     delete(): Promise<void> {
         return Promise.resolve();
     }
+    
+    getLabel(): string {
+        return ReportItem.LABEL;
+    }
 
     createItem(): ReportItem {
-        this.item = new ReportItem(this.config);
-        return this.item;
+        this.treeItem = new ReportItem(this.config);
+        return this.treeItem;
     }
 
     getReport(): string {
-        return this.item.getReport();
+        return this.treeItem.getReport();
     }
 }

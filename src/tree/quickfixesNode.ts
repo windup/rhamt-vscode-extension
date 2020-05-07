@@ -2,12 +2,11 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
+import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
 import { RhamtConfiguration, IHint, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
-import * as path from 'path';
 import { ConfigurationNode } from './configurationNode';
 import { QuickfixesItem } from './quickfixesItem';
 import { QuickfixNode } from './quickfixNode';
@@ -31,16 +30,23 @@ export class QuickfixesNode extends AbstractNode<QuickfixesItem> {
         this.hint = hint;
         this.root = root;
         this.quickfixes = this.hint.quickfixes;
-        this.treeItem = this.createItem();
-        this.listen();
     }
 
     createItem(): QuickfixesItem {
-        return new QuickfixesItem(this.hint);
+        this.treeItem = new QuickfixesItem(this.hint);
+        this.treeItem.iconPath = undefined;
+        this.loading = false;
+        this.loadChildren();
+        this.treeItem.refresh(this.children.length);
+        return this.treeItem;
     }
 
     delete(): Promise<void> {
         return Promise.resolve();
+    }
+
+    getLabel(): string {
+        return 'Quickfixes';
     }
 
     private loadChildren() {
@@ -71,21 +77,6 @@ export class QuickfixesNode extends AbstractNode<QuickfixesItem> {
 
     public hasMoreChildren(): boolean {
         return this.children.length > 0;
-    }
-
-    private listen(): void {
-        this.loading = true;
-        const base = [__dirname, '..', '..', '..', 'resources'];
-        this.treeItem.iconPath = {
-            light: path.join(...base, 'light', 'Loading.svg'),
-            dark: path.join(...base, 'dark', 'Loading.svg')
-        };
-        this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
-        setTimeout(() => {
-            this.treeItem.iconPath = undefined;
-            this.loading = false;
-            this.refresh(this);
-        }, 1000);
     }
 
     protected refresh(node?: ITreeNode): void {

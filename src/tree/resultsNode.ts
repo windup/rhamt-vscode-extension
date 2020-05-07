@@ -2,12 +2,11 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
+import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
 import { RhamtConfiguration } from '../model/model';
 import { ModelService } from '../model/modelService';
-import * as path from 'path';
 import { ConfigurationNode } from './configurationNode';
 import { ResultsItem } from './resultsItem';
 import { ReportNode } from './reportNode';
@@ -32,16 +31,27 @@ export class ResultsNode extends AbstractNode<ResultsItem> {
             onNodeCreateEmitter,
             dataProvider,
             root);
-        this.treeItem = this.createItem();
-        this.listen();
     }
 
     createItem(): ResultsItem {
-        return new ResultsItem();
+        this.children = [];
+        this.treeItem = new ResultsItem();
+        this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-circle medium-green' : undefined;
+        this.loading = false;
+        this.children = [this.reportNode];
+        const top = this.root.getChildNodes(this);
+        this.children = this.children.concat(top);
+        this.children.forEach(child => child.parentNode = this);
+        this.treeItem.refresh(this.config.summary.executedTimestamp);
+        return this.treeItem;
     }
 
     delete(): Promise<void> {
         return Promise.resolve();
+    }
+
+    getLabel(): string {
+        return `Analysis Results (${this.config.summary.executedTimestamp})`;
     }
 
     public getChildren(): Promise<ITreeNode[]> {
@@ -53,22 +63,6 @@ export class ResultsNode extends AbstractNode<ResultsItem> {
 
     public hasMoreChildren(): boolean {
         return this.children.length > 0;
-    }
-
-    private listen(): void {
-        this.loading = true;
-        const base = [__dirname, '..', '..', '..', 'resources'];
-        this.treeItem.iconPath = {
-            light: path.join(...base, 'light', 'Loading.svg'),
-            dark: path.join(...base, 'dark', 'Loading.svg')
-        };
-        this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
-        setTimeout(() => {
-            this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-circle medium-green' : undefined;
-            this.loading = false;
-            this.refresh(this);
-            this.dataProvider.reveal(this, true);
-        }, 1000);
     }
 
     protected refresh(node?: ITreeNode): void {

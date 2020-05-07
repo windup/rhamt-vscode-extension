@@ -2,7 +2,7 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
+import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
 import { RhamtConfiguration, IQuickFix } from '../model/model';
@@ -34,16 +34,21 @@ export class FileNode extends AbstractNode<FileItem> {
         this.file = file;
         this.root = root;
         this.quickfixes = this.config.getQuickfixesForResource(this.file);
-        this.treeItem = this.createItem();
-        this.listen();
     }
 
     createItem(): FileItem {
-        return new FileItem(this.file, this.quickfixes.length > 0);
+        this.treeItem = new FileItem(this.file, this.quickfixes.length > 0);
+        this.loading = false;
+        this.refresh();
+        return this.treeItem;
     }
 
     delete(): Promise<void> {
         return Promise.resolve();
+    }
+
+    getLabel(): string {
+        return path.basename(this.file);
     }
 
     public getChildren(): Promise<ITreeNode[]> {
@@ -57,22 +62,7 @@ export class FileNode extends AbstractNode<FileItem> {
         return this.children.length > 0;
     }
 
-    private listen(): void {
-        this.loading = true;
-        const base = [__dirname, '..', '..', '..', 'resources'];
-        this.treeItem.iconPath = {
-            light: path.join(...base, 'light', 'Loading.svg'),
-            dark: path.join(...base, 'dark', 'Loading.svg')
-        };
-        this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
-        super.refresh(this);
-        setTimeout(() => {
-            this.loading = false;
-            this.refresh(this);
-        }, 1000);
-    }
-
-    refresh(node?: ITreeNode): void {
+    refresh(): void {
         this.children = [];
         const ext = path.extname(this.file);
 
@@ -111,6 +101,5 @@ export class FileNode extends AbstractNode<FileItem> {
                 this.root));
         }
         this.treeItem.refresh();
-        super.refresh(node);
     }
 }

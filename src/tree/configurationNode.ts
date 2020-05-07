@@ -43,16 +43,21 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         dataProvider: DataProvider) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.grouping = grouping;
-        this.treeItem = this.createItem();
         this.listen();
     }
 
     createItem(): ConfigurationItem {
-        return new ConfigurationItem(this.config);
+        this.treeItem = new ConfigurationItem(this.config);
+        this.reload();
+        return this.treeItem;
     }
 
     delete(): Promise<void> {
         return Promise.resolve();
+    }
+
+    getLabel(): string {
+        return this.config.name;
     }
 
     public getChildren(): Promise<any> {
@@ -64,17 +69,16 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     private async listen(): Promise<void> {
-        await this.reload();
         this.config.onChanged.on(change => {
             if (change.type === ChangeType.MODIFIED &&
                 change.name === 'name') {
+                this.treeItem.refresh();
                 this.refresh(this);
             }
         });
     }
 
-    async reload(): Promise<void> {
-        this.clearModel();
+    reload(): void {
         const base = [__dirname, '..', '..', '..', 'resources'];
         this.treeItem.iconPath = {
             light: path.join(...base, 'light', 'Loading.svg'),
@@ -83,6 +87,8 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         if (!this.config.results) {
             this.results = [];
             this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
+            this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
+                    'fa fa-cube medium-purple' : undefined;
             super.refresh(this);
             setTimeout(() => {
                 this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
@@ -93,23 +99,44 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         }
         else {
             this.treeItem.collapsibleState = TreeItemCollapsibleState.Expanded;
-            this.results = [
-                new ResultsNode(
-                    this.config,
-                    this.modelService,
-                    this.onNodeCreateEmitter,
-                    this.dataProvider,
-                    this)
-            ];
-            await this.computeIssues();
-            super.refresh(this);
-            this.dataProvider.reveal(this, true);
+            this.results = [];
+            const base = [__dirname, '..', '..', '..', 'resources'];
+            this.treeItem.iconPath = {
+                light: path.join(...base, 'light', 'Loading.svg'),
+                dark: path.join(...base, 'dark', 'Loading.svg')
+            };
+            this.refresh(this);
             setTimeout(() => {
                 this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
                     'fa fa-cube medium-purple' : undefined;
-                this.refresh(this);
+                this.computeIssues();
+                this.results = [
+                    new ResultsNode(
+                        this.config,
+                        this.modelService,
+                        this.onNodeCreateEmitter,
+                        this.dataProvider,
+                        this)
+                ];
+                super.refresh(this);
             }, 100);
         }
+    }
+
+    refreshResults(): void {
+        this.results = [];
+        const base = [__dirname, '..', '..', '..', 'resources'];
+        this.treeItem.iconPath = {
+            light: path.join(...base, 'light', 'Loading.svg'),
+            dark: path.join(...base, 'dark', 'Loading.svg')
+        };
+        this.refresh(this);
+        setTimeout(() => {
+            this.computeIssues();
+            this.treeItem = undefined;
+            super.refresh(this);
+            super.refresh(this);
+        }, 100);
     }
 
     private clearModel(): void {

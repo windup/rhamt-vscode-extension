@@ -2,7 +2,7 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
+import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
 import { RhamtConfiguration, IQuickFix } from '../model/model';
@@ -31,16 +31,24 @@ export class FolderNode extends AbstractNode<FolderItem> {
         this.folder = folder;
         this.root = root;
         this.quickfixes = this.config.getQuickfixesForResource(this.folder);
-        this.treeItem = this.createItem();
-        this.listen();
     }
 
     createItem(): FolderItem {
-        return new FolderItem(this.folder, this.quickfixes.length > 0);
+        this.treeItem = new FolderItem(this.folder, this.quickfixes.length > 0);
+        this.loading = false;
+        this.updateIcon('default_folder.svg');
+        const unsorted = this.root.getChildNodes(this);
+        this.children = unsorted.sort(SortUtil.sort);
+        this.treeItem.refresh();
+        return this.treeItem;
     }
 
     delete(): Promise<void> {
         return Promise.resolve();
+    }
+
+    getLabel(): string {
+        return path.basename(this.folder);
     }
 
     public getChildren(): Promise<ITreeNode[]> {
@@ -60,24 +68,5 @@ export class FolderNode extends AbstractNode<FolderItem> {
             light: path.join(...base, 'light', name),
             dark: path.join(...base, 'dark', name)
         };
-    }
-
-    private listen(): void {
-        this.loading = true;
-        this.updateIcon('Loading.svg');
-        this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
-        super.refresh(this);
-        setTimeout(() => {
-            this.loading = false;
-            this.refresh(this);
-        }, 1000);
-    }
-
-    refresh(node?: ITreeNode): void {
-        this.updateIcon('default_folder.svg');
-        const unsorted = this.root.getChildNodes(this);
-        this.children = unsorted.sort(SortUtil.sort);
-        this.treeItem.refresh();
-        super.refresh(node);
     }
 }

@@ -2,14 +2,13 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { EventEmitter, TreeItemCollapsibleState } from 'vscode';
+import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
 import { RhamtConfiguration, IQuickFix, IIssueType } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { ConfigurationNode } from './configurationNode';
 import { ClassificationsItem } from './classificationsItem';
-import * as path from 'path';
 import { SortUtil } from './sortUtil';
 
 export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
@@ -30,8 +29,6 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
         this.file = file;
         this.root = root;
         this.quickfixes = this.computeQuickfixes();
-        this.treeItem = this.createItem();
-        this.listen();
     }
 
     computeQuickfixes(): IQuickFix[] {
@@ -41,11 +38,19 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
     }
 
     createItem(): ClassificationsItem {
-        return new ClassificationsItem(this.file, this.quickfixes.length > 0);
+        this.treeItem = new ClassificationsItem(this.file, this.quickfixes.length > 0);
+        this.treeItem.iconPath = undefined;
+        this.loading = false;
+        this.refresh();
+        return this.treeItem;
     }
 
     delete(): Promise<void> {
         return Promise.resolve();
+    }
+
+    getLabel(): string {
+        return 'Classifications';
     }
 
     public getChildren(): Promise<ITreeNode[]> {
@@ -59,26 +64,10 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
         return this.children.length > 0;
     }
 
-    private listen(): void {
-        this.loading = true;
-        const base = [__dirname, '..', '..', '..', 'resources'];
-        this.treeItem.iconPath = {
-            light: path.join(...base, 'light', 'Loading.svg'),
-            dark: path.join(...base, 'dark', 'Loading.svg')
-        };
-        this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
-        setTimeout(() => {
-            this.treeItem.iconPath = undefined;
-            this.loading = false;
-            this.refresh(this);
-        }, 1000);
-    }
-
-    protected refresh(node?: ITreeNode): void {
+    protected refresh(): void {
         const unsorted = this.root.getChildNodes(this);
         this.children = unsorted.sort(SortUtil.sort);
         this.children.forEach(child => child.parentNode = this);
         this.treeItem.refresh(this.children.length);
-        super.refresh(node);
     }
 }
