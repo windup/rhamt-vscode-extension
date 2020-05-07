@@ -13,8 +13,8 @@ import { RhamtConfiguration } from '../model/model';
 
 export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
-    private _onDidChangeTreeDataEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
-     _onNodeCreateEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
+    _onDidChangeTreeDataEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
+    _onNodeCreateEmitter: EventEmitter<ITreeNode> = new EventEmitter<ITreeNode>();
     private _disposables: Disposable[] = [];
     private children: ConfigurationNode[] = [];
 
@@ -28,15 +28,15 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
             this.refresh(undefined);
         }));
         this._disposables.push(commands.registerCommand('rhamt.refreshResults', item => {
-            item.reload();
+            item.refreshResults();
         }));
     }
 
     public setView(view: TreeView<any>): void {
         this.view = view;
-        this.view.onDidExpandElement(node => {
-            this.refresh(node.element);
-        });
+        // this.view.onDidExpandElement(node => {
+        //     this.refresh(node.element);
+        // });
     }
 
     public reveal(node: any, expand: boolean): void {
@@ -67,7 +67,10 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         if (node instanceof TreeItem && !node.treeItem) {
             return node;
         }
-        return node.treeItem;
+        if (node.treeItem) {
+            return node.treeItem;
+        }
+        return (node as any).createItem();
     }
 
     public async getChildren(node?: ITreeNode): Promise<any[]> {
@@ -104,7 +107,7 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
     public reload(config: RhamtConfiguration): void {
         let node = this.children.find(node => node.config.id === config.id);
         if (node) {
-            node.reload();
+            node.refreshResults();
         }
     }
 
