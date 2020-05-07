@@ -73,7 +73,6 @@ export class RhamtConfiguration {
 
     set results(results: AnalysisResults | null) {
         this._results = results;
-
     }
 
     getReport(): string {
