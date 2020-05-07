@@ -5,13 +5,15 @@
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import * as path from 'path';
 import { ReportHolder, RhamtConfiguration } from '../model/model';
+import { ModelService } from '../model/modelService';
 
 export class ReportItem extends TreeItem implements ReportHolder {
+
+    id: string = ModelService.generateUniqueId();
 
     static LABEL = 'Report';
     private config: RhamtConfiguration;
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
-
 
     constructor(config: RhamtConfiguration) {
         super(ReportItem.LABEL);

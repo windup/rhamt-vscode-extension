@@ -4,9 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import { Command, TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
 import { RhamtConfiguration } from '../model/model';
+import { ModelService } from '../model/modelService';
 
 export class ConfigurationItem extends TreeItem {
 
+    id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 

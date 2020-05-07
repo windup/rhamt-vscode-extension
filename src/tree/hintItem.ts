@@ -5,9 +5,11 @@
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { IHint, IIssue, IssueContainer } from '../model/model';
 import * as path from 'path';
+import { ModelService } from '../model/modelService';
 
 export class HintItem extends TreeItem implements IssueContainer {
 
+    id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
     private hint: IHint;

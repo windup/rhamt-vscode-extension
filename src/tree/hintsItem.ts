@@ -4,10 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
 import { Quickfix } from '../quickfix/quickfix';
+import { ModelService } from '../model/modelService';
 
 
 export class HintsItem extends TreeItem {
 
+    id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 

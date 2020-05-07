@@ -5,9 +5,11 @@
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { IClassification, IIssue, IssueContainer } from '../model/model';
 import * as path from 'path';
+import { ModelService } from '../model/modelService';
 
 export class ClassificationItem extends TreeItem implements IssueContainer {
 
+    id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
     private classification: IClassification;
