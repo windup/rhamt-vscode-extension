@@ -533,6 +533,9 @@ class ConfigClient {
     }
     bindOptions(data, config) {
         data.options.forEach((element) => this.bindOption(element, config));
+        if (!$(`#name-input`).is(":focus")) {
+            $(`#name-input`).val(config.name);
+        }
     }
     bindOption(option, config) {
         if (!option.required) {
