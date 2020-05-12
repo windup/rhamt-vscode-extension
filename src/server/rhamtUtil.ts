@@ -63,7 +63,10 @@ export class RhamtUtil {
                         }
                     });
                     try {
+                        console.time('performance:parseResults');
                         await this.loadResults(config, modelService, executedTimestamp);
+                        console.timeEnd('performance:parseResults');
+                        
                     }
                     catch (e) {
                         console.log(`Error loading analysis results: ${e}`);

@@ -112,6 +112,7 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
             const config = item.config;
             try {
+                console.time('performance:runRhamt');
                 await RhamtUtil.analyze(
                     config,
                     this.modelService,
@@ -121,6 +122,7 @@ export class RhamtExplorer {
                         this.dataProvider.reload(config);
                     },
                     () => {
+                        console.timeEnd('performance:runRhamt');
                         this.dataProvider.reload(config);
                     });
             } catch (e) {

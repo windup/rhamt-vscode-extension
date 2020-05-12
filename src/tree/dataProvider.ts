@@ -107,7 +107,9 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
     public reload(config: RhamtConfiguration): void {
         let node = this.children.find(node => node.config.id === config.id);
         if (node) {
+            console.time('performance:dataProvider:reload');
             node.refreshResults();
+            console.timeEnd('performance:dataProvider:reload');
         }
     }
 
