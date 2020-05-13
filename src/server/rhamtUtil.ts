@@ -63,9 +63,7 @@ export class RhamtUtil {
                         }
                     });
                     try {
-                        console.time('performance:parseResults');
                         await this.loadResults(config, modelService, executedTimestamp);
-                        console.timeEnd('performance:parseResults');
                         
                     }
                     catch (e) {
@@ -154,7 +152,7 @@ export class RhamtUtil {
         if (!input || input.length === 0) {
             return Promise.reject('input is missing from configuration');
         }
-        params.push(input);
+        params.push(input.join(' '));
         params.push('--output');
         const output = config.options['output'];
         if (!output || output === '') {
