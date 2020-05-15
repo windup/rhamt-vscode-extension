@@ -112,6 +112,10 @@
             {
                 "command": "rhamt.applyQuickfixes",
                 "title": "Apply All Quickfixes"
+            },
+            {
+                "command": "rhamt.previewQuickfix",
+                "title": "Preview Quickfix"
             }
         ],
         "configuration": [
@@ -226,6 +230,11 @@
                 },
                 {
                     "command": "rhamt.applyQuickfix",
+                    "when": "view == rhamtExplorerView && viewItem == quickfix",
+                    "group": "rhamt"
+                },
+                {
+                    "command": "rhamt.previewQuickfix",
                     "when": "view == rhamtExplorerView && viewItem == quickfix",
                     "group": "rhamt"
                 },

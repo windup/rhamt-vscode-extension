@@ -6,10 +6,12 @@
 import { IQuickFix } from "../model/model";
 import * as vscode from 'vscode';
 import * as os from 'os';
+import { QuickfixNode } from "../tree/quickfixNode";
 
 export class Diff {
 
-    static async openQuickfixPreview(quickfix: IQuickFix): Promise<any> {
+    static async openQuickfixPreview(item: any): Promise<any> {
+        let quickfix: IQuickFix = item instanceof QuickfixNode ? item.quickfix : item;
         const config = quickfix.issue.configuration;
         const ext = /(?:\.([^.]+))?$/.exec(quickfix.issue.file)[1];
         const original = vscode.Uri.parse(`quickfix://${config.id}/${quickfix.issue.id}${ext ? '.'.concat(ext) : ''}?${quickfix.id}#left`);
