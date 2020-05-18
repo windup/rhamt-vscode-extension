@@ -56,6 +56,7 @@ export namespace Utils {
 
             try {
                 rhamtCli = await cliResolver.findRhamtCli(modelService.outDir);
+                console.log(`Using RHAMT CLI - ${rhamtCli}`);
             }
             catch (error) {
                 promptForFAQs('Unable to find rhamt-cli executable', {outDir: modelService.outDir});
