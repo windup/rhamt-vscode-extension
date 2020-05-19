@@ -7,11 +7,11 @@ import * as os from 'os';
 const STARTED_REGEX = /.*Red Hat Application Migration Toolkit (.*)/;
 
 export class RhamtRunner {
-    static run(executable: string, data: any[], startTimeout: number,
+    static run(home: string, executable: string, data: any[], startTimeout: number,
         out: (msg: string) => void): Promise<cp.ChildProcess> {
         return new Promise<cp.ChildProcess>((resolve, reject) => {
             let started = false;
-            const process = cp.spawn(executable, data, {cwd: os.homedir()});
+            const process = cp.spawn(executable, data, {cwd: os.homedir(), env: { RHAMT_HOME: home}});
             const outputListener = (data: string | Buffer) => {
                 const line = data.toString();
                 out(line);

@@ -31,7 +31,9 @@ export class RhamtUtil {
         }, async (progress: any, token: any) => {
             return new Promise<any>(async resolve => {
                 const executable = config.rhamtExecutable;
+                console.log(`Using configuration executable - ${executable}`);
                 const windupHome = path.resolve(executable, '..', '..');
+                console.log(`Using windup home - ${windupHome}`);
                 let params = [];
                 try {
                     params = await RhamtUtil.buildParams(config, windupHome);
@@ -115,7 +117,7 @@ export class RhamtUtil {
                 };
                 try {
                     console.log(`Executing RHAMT using params: ${params.join(' ')}`);
-                    processController = await RhamtRunner.run(config.rhamtExecutable, params, START_TIMEOUT, onMessage).then(cp => {
+                    processController = await RhamtRunner.run(windupHome, config.rhamtExecutable, params, START_TIMEOUT, onMessage).then(cp => {
                         onStarted();
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
                     });
