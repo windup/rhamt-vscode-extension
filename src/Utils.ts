@@ -64,7 +64,8 @@ export namespace Utils {
             }
 
             try {
-                await findRhamtVersion(rhamtCli, javaHome);
+                const version = await findRhamtVersion(rhamtCli, javaHome);
+                console.log(`Using RHAMT version - ${version}`);
             }
             catch (error) {
                 promptForFAQs('Unable to determine rhamt-cli version: \n' + error.message, {outDir: modelService.outDir});
