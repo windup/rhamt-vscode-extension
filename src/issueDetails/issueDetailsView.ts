@@ -22,7 +22,7 @@ export class IssueDetailsView {
             this.open((item as IssueContainer).getIssue(), true);
         }));
         this.context.subscriptions.push(commands.registerCommand('rhamt.openLink', item => {
-            commands.executeCommand('rhamt.openReport', {
+            commands.executeCommand('rhamt.openReportExternal', {
                 getReport: () => {
                     return item;
                 }

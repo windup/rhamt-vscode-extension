@@ -36,7 +36,7 @@ export class ReportItem extends TreeItem implements ReportHolder {
     }
 
     public get commandId(): string {
-        return 'rhamt.openReport';
+        return 'rhamt.openReportExternal';
     }
 
     getReport(): string {
@@ -45,7 +45,7 @@ export class ReportItem extends TreeItem implements ReportHolder {
 
     public get command(): Command {
         return process.env.CHE_WORKSPACE_NAMESPACE ? undefined : {
-            command: 'rhamt.openReport',
+            command: 'rhamt.openReportExternal',
             title: '',
             arguments: [this]
         };

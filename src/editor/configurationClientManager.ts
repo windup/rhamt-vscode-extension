@@ -138,7 +138,7 @@ export class ConfigurationClientManager {
     }
 
     openReport(): void {
-        commands.executeCommand('rhamt.openReport', this.config);
+        commands.executeCommand('rhamt.openReportExternal', this.config);
     }
 
     async promptInput(): Promise<any> {

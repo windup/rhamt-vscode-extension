@@ -19,9 +19,6 @@ export class ReportView {
         this.endpoints = endpoints;
         this.reportServer = new ReportServer(this.endpoints);
         this.reportServer.start();
-        this.context.subscriptions.push(commands.registerCommand('rhamt.openReport', async item => {
-            this.openReport(item);
-        }));
         this.context.subscriptions.push(commands.registerCommand('rhamt.openReportExternal', async item => {
             this.openReport(item, true);
         }));
@@ -39,7 +36,7 @@ export class ReportView {
     }
 
     open(location: string, external?: boolean): void {
-        if (external) {
+        if (external) { 
             opn(location);
             return;
         }
