@@ -11,19 +11,28 @@ export class RhamtRunner {
         out: (msg: string) => void): Promise<cp.ChildProcess> {
         return new Promise<cp.ChildProcess>((resolve, reject) => {
             let started = false;
-            const process = cp.spawn(executable, data, {cwd: os.homedir(), env: { RHAMT_HOME: home}});
+            const rhamtProcess = cp.spawn(executable, data, {
+                cwd: os.homedir(),
+                env: Object.assign(
+                    {},
+                    process.env, 
+                    {
+                        RHAMT_HOME: ''
+                    }
+                )
+            });
             const outputListener = (data: string | Buffer) => {
                 const line = data.toString();
                 out(line);
                 if (STARTED_REGEX.exec(line) && !started) {
                     started = true;
-                    resolve(process);
+                    resolve(rhamtProcess);
                 }
             };
-            process.stdout.addListener('data', outputListener);
+            rhamtProcess.stdout.addListener('data', outputListener);
             setTimeout(() => {
                 if (!started) {
-                    process.kill();
+                    rhamtProcess.kill();
                     reject(`rhamt-cli startup time exceeded ${startTimeout}ms.`);
                 }
             }, startTimeout);
