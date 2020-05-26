@@ -237,6 +237,7 @@ class ConfigClient {
         top.appendChild(table);
         const availableOptions = option['available-options'];
         if (option['ui-type'].includes('select-many') && availableOptions && availableOptions.length > 0) {
+            availableOptions.sort();
             availableOptions.forEach((item) => {
                 table.appendChild(this.createTableRow(option, item, 'built-in', config, true));
             });
