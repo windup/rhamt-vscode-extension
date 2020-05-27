@@ -85,6 +85,20 @@
           "resin",
           "resteasy"
         ]
+      },
+      {
+        "name": "skipReports",
+        "description": "If set, RHAMT will not generate reports.",
+        "type": "Boolean",
+        "ui-type": ["single"],
+        "required": false
+      },
+      {
+        "name": "sourceMode",
+        "description": "Indicates whether the input is source code or compiled binaries (Default: Compiled).",
+        "type": "Boolean",
+        "ui-type": ["single"],
+        "required": false
       }
     ]
   }

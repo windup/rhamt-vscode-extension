@@ -161,7 +161,12 @@ export class RhamtUtil {
             return Promise.reject('output is missing from configuration');
         }
         params.push(output);
-        params.push('--sourceMode');
+        if (config.options['sourceMode']) {
+            params.push('--sourceMode');
+        }
+        if (config.options['skipReports']) {
+            params.push('--skipReports');
+        } 
         params.push('--ignorePattern');
         params.push('\\.class$');
         params.push('--windupHome');
