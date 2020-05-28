@@ -36,6 +36,7 @@ export class ReportItem extends TreeItem implements ReportHolder {
     }
 
     public get commandId(): string {
+        console.log(`reportItem::commandId`);
         return 'rhamt.openReportExternal';
     }
 
@@ -44,6 +45,7 @@ export class ReportItem extends TreeItem implements ReportHolder {
     }
 
     public get command(): Command {
+        console.log(`reportItem::command`);
         return {
             command: 'rhamt.openReportExternal',
             title: '',
