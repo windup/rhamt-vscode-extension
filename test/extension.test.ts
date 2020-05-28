@@ -20,7 +20,7 @@ suite("RHAMT Extension Tests", () => {
     test('should register all commands', async () => {
         return vscode.commands.getCommands(true).then((commands) => {
             let cmds = commands.filter(cmd => cmd.startsWith('rhamt.'));
-            assert.equal(cmds.length, 18, 'Some commands are not registered properly or a new command is not added to the test');
+            assert.equal(cmds.length, 17, 'Some commands are not registered properly or a new command is not added to the test');
         });
     });
 });
