@@ -48,7 +48,7 @@ export class QuickfixItem extends TreeItem implements IssueContainer {
     }
 
     public get command(): Command {
-        return process.env.CHE_WORKSPACE_NAMESPACE ? undefined : {
+        return {
             command: 'rhamt.previewQuickfix',
             title: '',
             arguments: [this.quickfix]
