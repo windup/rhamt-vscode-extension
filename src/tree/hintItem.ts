@@ -81,7 +81,7 @@ export class HintItem extends TreeItem implements IssueContainer {
     }
 
     public get command(): Command {
-        return process.env.CHE_WORKSPACE_NAMESPACE ? undefined : {
+        return {
             command: 'rhamt.openDoc',
             title: '',
             arguments: [this]
