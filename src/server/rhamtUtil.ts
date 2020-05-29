@@ -43,6 +43,7 @@ export class RhamtUtil {
                     return Promise.reject(e);
                 }
                 rhamtChannel.clear();
+                const skipReport = config.options['skipReports'];
                 progress.report({message: 'Executing rhamt-cli script...'});
                 let cancelled = false;
                 let resolved = false;
@@ -55,18 +56,22 @@ export class RhamtUtil {
                 const executedTimestamp = `${date.getMonth()}/${date.getDate()}/${year} @ ${timestamp}${sun}`;
                 const onComplete = async () => {
                     processController.shutdown();
-                    vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
-                        if (result === 'Open Report') {
-                            vscode.commands.executeCommand('rhamt.openReportExternal', {
-                                getReport: () => {
-                                    return config.getReport();
-                                }
-                            });
-                        }
-                    });
+                    if (!skipReport) {
+                        vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
+                            if (result === 'Open Report') {
+                                vscode.commands.executeCommand('rhamt.openReportExternal', {
+                                    getReport: () => {
+                                        return config.getReport();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        vscode.window.showInformationMessage('Analysis complete');
+                    }
                     try {
-                        await this.loadResults(config, modelService, executedTimestamp);
-                        
+                        await this.loadResults(config, modelService, executedTimestamp, skipReport);
                     }
                     catch (e) {
                         console.log(`Error loading analysis results: ${e}`);
@@ -195,10 +200,12 @@ export class RhamtUtil {
         return Promise.resolve(params);
     }
 
-    private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string): Promise<any> {
+    private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string, skippedReports: any): Promise<any> {
         try {
             const dom = await AnalysisResultsUtil.loadAndPersistIDs(config.getResultsLocation());
+            console.log(`Skipped reports: ${skippedReports}`);
             config.summary = {
+                skippedReports,
                 outputLocation: config.options['output'],
                 executedTimestamp: startedTimestamp,
                 executable: config.rhamtExecutable

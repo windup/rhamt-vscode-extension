@@ -25,12 +25,14 @@ export class ResultsNode extends AbstractNode<ResultsItem> {
         root: ConfigurationNode) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.root = root;
-        this.reportNode = new ReportNode(
-            config,
-            modelService,
-            onNodeCreateEmitter,
-            dataProvider,
-            root);
+        if (!this.config.summary.skippedReports) {
+            this.reportNode = new ReportNode(
+                config,
+                modelService,
+                onNodeCreateEmitter,
+                dataProvider,
+                root);
+        }
     }
 
     createItem(): ResultsItem {
@@ -38,7 +40,7 @@ export class ResultsNode extends AbstractNode<ResultsItem> {
         this.treeItem = new ResultsItem();
         this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-circle medium-green' : undefined;
         this.loading = false;
-        this.children = [this.reportNode];
+        this.children = this.config.summary.skippedReports ? [] : [this.reportNode];
         const top = this.root.getChildNodes(this);
         this.children = this.children.concat(top);
         this.children.forEach(child => child.parentNode = this);
@@ -66,7 +68,7 @@ export class ResultsNode extends AbstractNode<ResultsItem> {
     }
 
     protected refresh(node?: ITreeNode): void {
-        this.children = [this.reportNode];
+        this.children = this.config.summary.skippedReports ? [] : [this.reportNode]
         this.children = this.children.concat(this.root.getChildNodes(this));
         this.children.forEach(child => child.parentNode = this);
         this.treeItem.refresh(this.config.summary.executedTimestamp);

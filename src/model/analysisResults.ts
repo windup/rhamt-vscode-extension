@@ -11,6 +11,7 @@ import * as mime from 'mime-types';
 import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue, ILink, IIssueType } from './model';
 
 export interface AnalysisResultsSummary {
+    skippedReports?: boolean;
     executedTimestamp?: string;
     executionDuration?: string;
     outputLocation?: string;
