@@ -116,6 +116,10 @@ export class RhamtExplorer {
                     config,
                     this.modelService,
                     () => {
+                        const output = config.options['output'];
+                        if (output) {
+                            this.modelService.deleteOuputLocation(output);
+                        }
                         config.results = undefined;
                         config.summary = undefined;
                         this.dataProvider.reload(config);
