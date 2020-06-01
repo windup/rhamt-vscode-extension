@@ -13,11 +13,13 @@ export class ReportItem extends TreeItem implements ReportHolder {
 
     static LABEL = 'Report';
     private config: RhamtConfiguration;
+    private modelService: ModelService;
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
-    constructor(config: RhamtConfiguration) {
+    constructor(config: RhamtConfiguration, modelService: ModelService) {
         super(ReportItem.LABEL);
         this.config = config;
+        this.modelService = modelService;
     }
 
     delete(): void {
@@ -25,7 +27,7 @@ export class ReportItem extends TreeItem implements ReportHolder {
 
     public get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | undefined {
         const base = [__dirname, '..', '..', '..', 'resources'];
-        return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-line-chart medium-blue fa fa-external-link' : {
+        return process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-line-chart medium-blue' : {
             light: path.join(...base, 'light', 'file_type_log.svg'),
             dark: path.join(...base, 'dark', 'file_type_log.svg')
         };
@@ -36,8 +38,9 @@ export class ReportItem extends TreeItem implements ReportHolder {
     }
 
     public get commandId(): string {
-        console.log(`reportItem::commandId`);
-        return 'rhamt.openReportExternal';
+        return process.env.CHE_WORKSPACE_NAMESPACE ? 
+            'theia.open' : 
+            'rhamt.openReportExternal';
     }
 
     getReport(): string {
@@ -46,11 +49,17 @@ export class ReportItem extends TreeItem implements ReportHolder {
 
     public get command(): Command {
         console.log(`reportItem::command`);
-        return {
-            command: 'rhamt.openReportExternal',
-            title: '',
-            arguments: [this]
-        };
+        return process.env.CHE_WORKSPACE_NAMESPACE ? 
+            { 
+                command: 'theia.open',
+                title: '',
+                arguments: [this.modelService.getReportLocation(this.getReport())]
+            }: 
+            {
+                command: 'rhamt.openReportExternal',
+                title: '',
+                arguments: [this]
+            };
     }
 
     public get contextValue(): string {

@@ -391,4 +391,10 @@ export class ModelService {
     public getModelPersistanceLocation(): string {
         return path.join(this.outDir, 'model.json');
     }
+
+    public async getReportLocation(location: string): Promise<string> {
+        const relative = location.replace(`${this.reportEndpoints.reportsRoot()}/`, '');
+        const url = await this.reportEndpoints.reportLocation();
+        return `${url}${relative}`;
+    }
 }

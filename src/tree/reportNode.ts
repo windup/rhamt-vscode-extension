@@ -35,7 +35,7 @@ export class ReportNode extends AbstractNode<ReportItem> {
     }
 
     createItem(): ReportItem {
-        this.treeItem = new ReportItem(this.config);
+        this.treeItem = new ReportItem(this.config, this.modelService);
         return this.treeItem;
     }
 
