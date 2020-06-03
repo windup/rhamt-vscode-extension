@@ -534,11 +534,11 @@ export class AnalysisResults {
     }
 
     deleteIssue(issue: IIssue): void {
-        this.dom(issue.dom).attr('deleted', true);
+        this.dom(issue.dom).attr('deleted', "true");
     }
 
     markIssueAsComplete(issue: IIssue): void {
-        this.dom(issue.dom).attr('complete', true);
+        this.dom(issue.dom).attr('complete', "true");
     }
 
     private readLine(file: string, lineNumber: number): Promise<string> {
