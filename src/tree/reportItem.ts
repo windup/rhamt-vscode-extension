@@ -13,13 +13,11 @@ export class ReportItem extends TreeItem implements ReportHolder {
 
     static LABEL = 'Report';
     private config: RhamtConfiguration;
-    private modelService: ModelService;
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
-    constructor(config: RhamtConfiguration, modelService: ModelService) {
+    constructor(config: RhamtConfiguration) {
         super(ReportItem.LABEL);
         this.config = config;
-        this.modelService = modelService;
     }
 
     delete(): void {
@@ -38,9 +36,7 @@ export class ReportItem extends TreeItem implements ReportHolder {
     }
 
     public get commandId(): string {
-        return process.env.CHE_WORKSPACE_NAMESPACE ? 
-            'theia.open' : 
-            'rhamt.openReportExternal';
+        return 'rhamt.openReportExternal';
     }
 
     getReport(): string {
@@ -48,18 +44,11 @@ export class ReportItem extends TreeItem implements ReportHolder {
     }
 
     public get command(): Command {
-        console.log(`reportItem::command`);
-        return process.env.CHE_WORKSPACE_NAMESPACE ? 
-            { 
-                command: 'theia.open',
-                title: '',
-                arguments: [this.modelService.getReportLocation(this.getReport())]
-            }: 
-            {
-                command: 'rhamt.openReportExternal',
-                title: '',
-                arguments: [this]
-            };
+        return {
+            command: 'rhamt.openReportExternal',
+            title: '',
+            arguments: [this]
+        };
     }
 
     public get contextValue(): string {
