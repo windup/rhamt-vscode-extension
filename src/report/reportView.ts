@@ -2,10 +2,9 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { WebviewPanel, window, ViewColumn, ExtensionContext, commands } from 'vscode';
+import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, env, Uri } from 'vscode';
 import { Endpoints } from '../model/model';
 import { ReportServer } from './reportServer';
-import * as opn from 'open';
 
 export class ReportView {
 
@@ -37,7 +36,7 @@ export class ReportView {
 
     open(location: string, external?: boolean): void {
         if (external) { 
-            opn(location);
+            env.openExternal(Uri.parse(location));
             return;
         }
         if (!this.view) {
