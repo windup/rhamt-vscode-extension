@@ -4,20 +4,16 @@
  *--------------------------------------------------------------------------------------------*/
 import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, env, Uri } from 'vscode';
 import { Endpoints } from '../model/model';
-import { ReportServer } from './reportServer';
 
 export class ReportView {
 
     private view: WebviewPanel | undefined = undefined;
     private endpoints: Endpoints;
     private context: ExtensionContext;
-    private reportServer: ReportServer;
 
     constructor(context: ExtensionContext, endpoints: Endpoints) {
         this.context = context;
         this.endpoints = endpoints;
-        this.reportServer = new ReportServer(this.endpoints);
-        this.reportServer.start();
         this.context.subscriptions.push(commands.registerCommand('rhamt.openReportExternal', async item => {
             this.openReport(item, true);
         }));

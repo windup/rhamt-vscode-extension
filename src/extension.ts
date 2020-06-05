@@ -19,6 +19,7 @@ import { HintItem } from './tree/hintItem';
 import { HintNode } from './tree/hintNode';
 import { NewRulesetWizard } from './wizard/newRulesetWizard';
 import * as endpoints from './server/endpoints';
+import { ReportServer } from './report/reportServer';
 import { ConfigurationEditorSerializer } from './editor/configurationEditorSerializer';
 import { QuickfixContentProvider } from './quickfix/contentProvider';
 import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvider';
@@ -26,6 +27,8 @@ import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvide
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
 let stateLocation: string;
+let configEditorServer: ConfigurationEditorServer;
+let reportServer: ReportServer;
 
 export async function activate(context: vscode.ExtensionContext) {
     stateLocation = path.join(os.homedir(), '.rhamt', 'tooling');
@@ -40,8 +43,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const configServerController = new ConfigurationServerController(modelService, locations);
     const connectionService = new ClientConnectionService(modelService);
-    const configEditorServer = new ConfigurationEditorServer(locations, configServerController, connectionService);
+    configEditorServer = new ConfigurationEditorServer(locations, configServerController, connectionService);
     configEditorServer.start();
+    reportServer = new ReportServer(this.endpoints);
+    this.reportServer.start();
 
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
         const issue = (data as IssueContainer).getIssue();
@@ -89,4 +94,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const quickfixedProvider = new QuickfixedResourceProvider(modelService);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('quickfixed', quickfixedProvider));
+}
+
+export function deactivate() {
+    configEditorServer.dispose();
+    reportServer.dispose();
 }
