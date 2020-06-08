@@ -46,7 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
     configEditorServer = new ConfigurationEditorServer(locations, configServerController, connectionService);
     configEditorServer.start();
     reportServer = new ReportServer(this.endpoints);
-    this.reportServer.start();
+    reportServer.start();
 
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
         const issue = (data as IssueContainer).getIssue();
