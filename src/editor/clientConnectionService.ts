@@ -20,6 +20,7 @@ export class ClientConnectionService {
     connect(s: io.Socket): void {
         const id = s.handshake.query.id;
         const config = this.modelService.getConfiguration(id);
+        console.log(`client socket connection: ${id}`);
         if (config) {
             const clientId = String(this.clientIdSeq++);
             const client = new ConfigurationClient(s, clientId);
@@ -30,6 +31,8 @@ export class ClientConnectionService {
             }
             client.onDisposed.on(() => {
                 console.log(`client socket disconnected. disconnecting client from config client manager??`);
+                this.clientManagers.delete(id);
+                manager.disconnectClient(client);
             });
             manager.connectClient(client);
         }
