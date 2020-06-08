@@ -15,6 +15,7 @@ export class ConfigurationEditorServer {
 
     public app: express.Application;
     private server: http.Server;
+    private socketListener: io.Server;
     private endpoints: Endpoints;
     private controller: ConfigurationServerController;
     private controllerService: ClientConnectionService;
@@ -31,8 +32,8 @@ export class ConfigurationEditorServer {
     public start(): void {
         this.app = express();
         this.server = this.app.listen(this.endpoints.configurationPort());
-        const listener = io.listen(this.server);
-        listener.sockets.on('connection', this.connectClient.bind(this));
+        this.socketListener = io.listen(this.server);
+        this.socketListener.sockets.on('connection', this.connectClient.bind(this));
         this.configServer();
         this.routes();
     }
@@ -63,6 +64,7 @@ export class ConfigurationEditorServer {
     }
 
     public dispose(): void {
+        this.socketListener.close();
         this.server.close();
     }
   }

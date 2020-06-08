@@ -44,10 +44,18 @@ export async function activate(context: vscode.ExtensionContext) {
     const configServerController = new ConfigurationServerController(modelService, locations);
     const connectionService = new ClientConnectionService(modelService);
     configEditorServer = new ConfigurationEditorServer(locations, configServerController, connectionService);
-    configEditorServer.start();
+    try {
+        configEditorServer.start();
+    } catch (e) {
+        console.log(`Error while starting coniguration editor server: ${e}`);
+    }
     reportServer = new ReportServer(locations);
-    reportServer.start();
-
+    try {
+        reportServer.start();    
+    } catch (e) {
+        console.log(`Error while starting report server: ${e}`);
+    }
+    
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
         const issue = (data as IssueContainer).getIssue();
         detailsView.open(issue);
