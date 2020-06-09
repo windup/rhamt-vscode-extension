@@ -41,7 +41,11 @@ export class ConfigurationEditor {
                 console.log(`Error creating webview panel: ${e}`);
             }
             console.log(`ConfigruationEditor::setup`);
-            this.setupView();
+            try {
+                await this.setupView();
+            } catch (e) {
+                console.log(`Error at setupView: ${e}`);
+            }
         }
         console.log(`ConfigruationEditor::reveal`);
         this.view.reveal();
@@ -52,6 +56,7 @@ export class ConfigurationEditor {
             this.view = undefined;
             this.onEditorClosed.emit(undefined);
         });
+        console.log(`Computing configuration endpoint`);
         const location = await this.endpoints.configurationLocation(this.configuration);
         console.log(`Opening configuration at: ${location}`);
         this.view.webview.html = this.render(location);
