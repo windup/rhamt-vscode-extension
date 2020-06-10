@@ -20,7 +20,6 @@ export class ConfigurationEditor {
         this.configuration = configuration;
         this.endpoints = endpoints;
         this.context = context;
-        console.log(`ConfigruationEditor`);
         if (webview) {
             this.view = webview;
             this.setupView();
@@ -28,9 +27,7 @@ export class ConfigurationEditor {
     }
 
     async open(): Promise<void> {
-        console.log(`ConfigruationEditor::open`);
         if (!this.view) {
-            console.log(`ConfigruationEditor::createView`);
             try {
                 this.view = window.createWebviewPanel('rhamtConfigurationEditor', this.configuration.name, ViewColumn.Active, {
                     enableScripts: true,
@@ -40,14 +37,12 @@ export class ConfigurationEditor {
             } catch (e) {
                 console.log(`Error creating webview panel: ${e}`);
             }
-            console.log(`ConfigruationEditor::setup`);
             try {
                 await this.setupView();
             } catch (e) {
                 console.log(`Error at setupView: ${e}`);
             }
         }
-        console.log(`ConfigruationEditor::reveal`);
         this.view.reveal();
     }
 
@@ -56,9 +51,7 @@ export class ConfigurationEditor {
             this.view = undefined;
             this.onEditorClosed.emit(undefined);
         });
-        console.log(`Computing configuration endpoint`);
         const location = await this.endpoints.configurationLocation(this.configuration);
-        console.log(`Opening configuration at: ${location}`);
         this.view.webview.html = this.render(location);
         this.view.reveal();
     }
