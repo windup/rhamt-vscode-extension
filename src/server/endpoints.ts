@@ -43,12 +43,16 @@ export async function getEndpoints(ctx: vscode.ExtensionContext, out: string): P
         return process.env.RHAMT_REPORT_PORT || String(61435);
     };
     const reportLocation = async () => {
-        let location = await getHost(reportPort());
+        let location = process.env.RHAMT_REPORT_LOCATION;
+        if (!location) {
+            location = await getHost(reportPort());
+            if (!location.endsWith('/')) {
+                location = `${location}/`;
+            }
+            process.env.RHAMT_REPORT_LOCATION = location;
+        }
         if (!location) {
             console.error(`unable to find report location.`);
-        }
-        else if (!location.endsWith('/')) {
-            location = `${location}/`;
         }
         return location;
     };
