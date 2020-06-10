@@ -32,7 +32,12 @@ export async function getEndpoints(ctx: vscode.ExtensionContext, out: string): P
         return process.env.RHAMT_CONFIGURATION_PORT || String(61436);
     };
     const findConfigurationLocation = async () => {
-        return await getHost(configurationPort());
+        let location = process.env.RHAMT_CONFIGURATION_LOCATION;
+        if (!location) {
+            location = await getHost(configurationPort());
+            process.env.RHAMT_CONFIGURATION_LOCATION = location;
+        }
+        return location;
     };
     const reportPort = () => {
         return process.env.RHAMT_REPORT_PORT || String(61435);
