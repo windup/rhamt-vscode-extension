@@ -6,20 +6,54 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { RhamtConfiguration } from '../model/model';
 
-async function getHost(port: string): Promise<string> {
-    if (!process.env.CHE_WORKSPACE_NAMESPACE) {
-        return `http://localhost:${port}/`;
+const CONFIG_PORT = String(61436);
+const REPORT_PORT = String(61435);
+
+export interface RhamtHostInfo {
+    configurationPort: string;
+    configurationUrl: string;
+    reportPort: string;
+    reportUrl: string;
+}
+
+async function computeCheHostInfo(): Promise<RhamtHostInfo> {
+
+    const info: RhamtHostInfo = {
+        configurationPort: CONFIG_PORT,
+        configurationUrl: '',
+        reportPort: REPORT_PORT,
+        reportUrl: '',
+    };
+
+    let configurationUrl = process.env.RHAMT_CONFIGURATION_URL;
+    let reportUrl = process.env.RHAMT_REPORT_URL;
+    
+    if (configurationUrl && reportUrl) {
+        info.configurationUrl = configurationUrl;
+        info.reportUrl = reportUrl;
+        return info;
     }
+
     const workspace = await require('@eclipse-che/plugin').workspace.getCurrentWorkspace();
     const runtimeMachines = workspace!.runtime!.machines || {};
     for (let machineName of Object.keys(runtimeMachines)) {
         const machineServers = runtimeMachines[machineName].servers || {};
         if (String(machineName).includes('rhamt')) {
             for (let serverName of Object.keys(machineServers)) {
-                const url = machineServers[serverName].url!;
+                let url = machineServers[serverName].url!;
                 const portNumber = machineServers[serverName].attributes.port!;
-                if (String(portNumber) === port) {
-                    return url;
+                const port = String(portNumber);
+                if (port === info.configurationPort) {
+                    info.configurationUrl = process.env.RHAMT_CONFIGURATION_URL = url;
+                }
+                else if (port === info.reportPort) {
+                    if (!url.endsWith('/')) {
+                        url = `${url}/`;
+                    }
+                    info.reportUrl = process.env.RHAMT_REPORT_URL = url;
+                }
+                if (info.configurationUrl && info.reportUrl) {
+                    return info;
                 }
             }
         }
@@ -28,36 +62,22 @@ async function getHost(port: string): Promise<string> {
 }
 
 export async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<any> {
-    const configurationPort = () => {
-        return process.env.RHAMT_CONFIGURATION_PORT || String(61436);
-    };
     const findConfigurationLocation = async () => {
-        let location = process.env.RHAMT_CONFIGURATION_LOCATION;
-        if (!location) {
-            location = await getHost(configurationPort());
-            process.env.RHAMT_CONFIGURATION_LOCATION = location;
+        if (!process.env.CHE_WORKSPACE_NAMESPACE) {
+            return `http://localhost:${CONFIG_PORT}/`;
         }
-        return location;
-    };
-    const reportPort = () => {
-        return process.env.RHAMT_REPORT_PORT || String(61435);
+        const info = await computeCheHostInfo();
+        return info.configurationUrl;
     };
     const reportLocation = async () => {
-        let location = process.env.RHAMT_REPORT_LOCATION;
-        if (!location) {
-            location = await getHost(reportPort());
-            if (!location.endsWith('/')) {
-                location = `${location}/`;
-            }
-            process.env.RHAMT_REPORT_LOCATION = location;
+        if (!process.env.CHE_WORKSPACE_NAMESPACE) {
+            return `http://localhost:${REPORT_PORT}/`;
         }
-        if (!location) {
-            console.error(`unable to find report location.`);
-        }
-        return location;
+        const info = await computeCheHostInfo();
+        return info.reportUrl;
     };
     return {
-        reportPort,
+        reportPort: () => REPORT_PORT,
         reportLocation,
         resourcesRoot: () => {
             return vscode.Uri.file(path.join(ctx.extensionPath, 'resources')).fsPath;
@@ -68,7 +88,7 @@ export async function getEndpoints(ctx: vscode.ExtensionContext, out: string): P
         reportsRoot: () => {
             return out;
         },
-        configurationPort,
+        configurationPort: () => CONFIG_PORT,
         configurationLocation: async (config?: RhamtConfiguration): Promise<string> => {
             let location = await findConfigurationLocation();
             if (!location) {
