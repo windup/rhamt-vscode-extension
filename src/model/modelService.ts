@@ -95,7 +95,6 @@ export class ModelService {
                     });
                 }
                 else {
-                    window.showErrorMessage(`Unable to read rhamt configuration data at ${location}`);
                     this.loaded = true;
                     resolve();
                 }
