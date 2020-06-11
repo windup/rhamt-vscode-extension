@@ -2,14 +2,14 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { TreeDataProvider, Disposable, EventEmitter, Event, TreeItem, commands, TreeView, ProviderResult, ExtensionContext } from 'vscode';
+import { TreeDataProvider, Disposable, EventEmitter, Event, TreeItem, commands, TreeView, ProviderResult, ExtensionContext, window } from 'vscode';
 import { localize } from './localize';
 import * as path from 'path';
 import { ConfigurationNode, Grouping } from './configurationNode';
 import { ITreeNode } from './abstractNode';
 import { ModelService } from '../model/modelService';
 import { ResultsNode } from './resultsNode';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration, Endpoints } from '../model/model';
 
 export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
@@ -20,13 +20,12 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
     private view: TreeView<any>;
 
-    constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext) {
-        this._disposables.push(this.modelService.onModelLoaded(() => {
-            this.refresh(undefined);
-        }));
+    constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext,
+        private endpoints: Endpoints) {
         this._disposables.push(commands.registerCommand('rhamt.modelReload', () => {
             this.refresh(undefined);
         }));
+        this.endpoints.ready.then(() =>  commands.executeCommand('setContext', 'rhamtReady', true));
         this._disposables.push(commands.registerCommand('rhamt.refreshResults', item => {
             item.refreshResults();
         }));
@@ -93,17 +92,6 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         return result;
     }
 
-    public createNewConfigurationNode(config: RhamtConfiguration): ConfigurationNode {
-        const node = new ConfigurationNode(
-            config,
-            this.grouping,
-            this.modelService,
-            this._onNodeCreateEmitter,
-            this);
-        this.children.push(node);
-        return node;
-    }
-
     public reload(config: RhamtConfiguration): void {
         let node = this.children.find(node => node.config.id === config.id);
         if (node) {
@@ -161,10 +149,19 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
             };
             nodes = [item];
             (async () => setTimeout(() => {
-                this.modelService.load().catch(e => {
-                    console.log('error while loading model service.');
-                    console.log(e);
-                });
+                this.endpoints.ready.then(async () => {
+                    console.log(`Server ready. Realoading tree.`);
+                    // should we ping until we get appropriate response?
+                    try {
+                        await this.modelService.load();
+                        this.refresh();
+                    }
+                    catch (e) {
+                        console.log('error while loading model service.');
+                        console.log(e);
+                        window.showErrorMessage(`Error reloading RHAMT explorer data.`)
+                    }
+                })
             }, 500))();
         }
         return nodes;

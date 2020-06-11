@@ -4,16 +4,15 @@
  *--------------------------------------------------------------------------------------------*/
 import { RhamtModel, RhamtConfiguration, Endpoints } from './model';
 import * as fs from 'fs';
-import { rhamtEvents } from '../events';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as mkdirp from 'mkdirp';
 import { AnalysisResults, AnalysisResultsUtil } from './analysisResults';
+import { window } from 'vscode';
 
 export class ModelService {
 
     public loaded: boolean = false;
-    public onLoaded = new rhamtEvents.TypedEvent<RhamtModel>();
     private rulesets: string[] = [];
 
     constructor(
@@ -24,16 +23,6 @@ export class ModelService {
 
     public addConfiguration(config: RhamtConfiguration): void  {
         this.model.configurations.push(config);
-    }
-
-    public async eagerlyGetConfiguration(id: string): Promise<any> {
-        if (!this.loaded) {
-            await this.load().catch(e => {
-                console.log('error while loading model service.');
-                console.log(e);
-            });
-        }
-        return this.getConfiguration(id);
     }
 
     public getConfiguration(id: string): RhamtConfiguration | undefined {
@@ -94,6 +83,9 @@ export class ModelService {
 
     public load(): Promise<RhamtModel> {
         return new Promise<any>((resolve, reject) => {
+            if (this.loaded) {
+                return resolve(this.model);
+            }
             const location = this.getModelPersistanceLocation();
             fs.exists(location, exists => {
                 if (exists) {
@@ -103,8 +95,8 @@ export class ModelService {
                     });
                 }
                 else {
+                    window.showErrorMessage(`Unable to read rhamt configuration data at ${location}`);
                     this.loaded = true;
-                    this.onLoaded.emit(this.model);
                     resolve();
                 }
             });
@@ -234,7 +226,6 @@ export class ModelService {
                 }
             }
             this.loaded = true;
-            this.onLoaded.emit(this.model);
             resolve();
         });
     }
@@ -379,13 +370,6 @@ export class ModelService {
 
     static generateUniqueId(): string {
         return `-${Math.random().toString(36).substr(2, 9)}-${Math.random().toString(36).substr(2, 9)}`;
-    }
-
-    public onModelLoaded(listen: (m: RhamtModel) => void): rhamtEvents.Disposable {
-        if (this.loaded) {
-            listen(this.model);
-        }
-        return this.onLoaded.on(listen);
     }
 
     public getModelPersistanceLocation(): string {

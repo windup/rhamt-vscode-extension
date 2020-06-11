@@ -10,6 +10,7 @@ import { Grouping } from '../tree/configurationNode';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
 import { applyQuickfixes, applyQuickfix } from '../quickfix/quickfix';
+import { Endpoints } from '../model/model';
 
 export class RhamtExplorer {
 
@@ -21,7 +22,8 @@ export class RhamtExplorer {
 
     constructor(private context: vscode.ExtensionContext,
         private modelService: ModelService,
-        private configEditorService: ConfigurationEditorService) {
+        private configEditorService: ConfigurationEditorService,
+        private endpoints: Endpoints) {
         this.dataProvider = this.createDataProvider();
         this.createViewer();
         this.createCommands();
@@ -143,7 +145,11 @@ export class RhamtExplorer {
     }
 
     private createDataProvider(): DataProvider {
-        const provider: DataProvider = new DataProvider(this.grouping, this.modelService, this.context);
+        const provider: DataProvider = new DataProvider(
+            this.grouping,
+            this.modelService,
+            this.context,
+            this.endpoints);
         this.context.subscriptions.push(provider);
         return provider;
     }

@@ -10,13 +10,26 @@ export class ConfigurationEditorSerializer implements vscode.WebviewPanelSeriali
     constructor(private modelService: ModelService, private editorService: ConfigurationEditorService) {
     }
     async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
-        const configuration = await this.modelService.eagerlyGetConfiguration(state.id);
-        if (!configuration) {
-            vscode.window.showErrorMessage(`Unable to restore RHAMT configuration editor state.`);
-            webviewPanel.dispose();
+        if (!process.env.CHE_WORKSPACE_NAMESPACE) {
+            try {
+                await this.modelService.load();
+                const configuration = this.modelService.getConfiguration(state.id);
+                if (!configuration) {
+                    vscode.window.showErrorMessage(`Unable to restore RHAMT configuration editor state.`);
+                    webviewPanel.dispose();
+                }
+                else {
+                    this.editorService.openConfiguration(configuration, webviewPanel);
+                }
+            }
+            catch (e) {
+                console.log(`Error with deserializeWebviewPanel restoration: ${e}`);
+                vscode.window.showErrorMessage(`Error restoring RHAMT configuration editor.`);
+                webviewPanel.dispose();
+            }
         }
         else {
-            this.editorService.openConfiguration(configuration, webviewPanel);
+            webviewPanel.dispose();
         }
     }
 }

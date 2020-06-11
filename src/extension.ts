@@ -53,7 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
         console.log(`Error while starting report server: ${e}`);
     }
 
-    new RhamtView(context, modelService, configEditorService);
+    new RhamtView(context, modelService, configEditorService, locations);
     new ReportView(context, locations);
     detailsView = new IssueDetailsView(context, locations);
     

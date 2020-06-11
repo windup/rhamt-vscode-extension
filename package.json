@@ -154,7 +154,7 @@
             "view/title": [
                 {
                     "command": "rhamt.newConfiguration",
-                    "when": "view == rhamtExplorerView",
+                    "when": "view == rhamtExplorerView && rhamtReady",
                     "group": "navigation"
                 }
             ],

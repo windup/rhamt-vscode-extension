@@ -27,8 +27,6 @@ export class ConfigurationEditor {
     }
 
     async open(): Promise<void> {
-        console.log(`Configuration editor checking for server ready event: ${location}`);
-        await this.endpoints.ready;
         if (!this.view) {
             try {
                 this.view = window.createWebviewPanel('rhamtConfigurationEditor', this.configuration.name, ViewColumn.Active, {
@@ -54,8 +52,8 @@ export class ConfigurationEditor {
             this.onEditorClosed.emit(undefined);
         });
         const location = await this.endpoints.configurationLocation(this.configuration);
-        this.view.webview.html = this.render(location);
         console.log(`Rendering configuration editor at: ${location}`);
+        this.view.webview.html = this.render(location);
         this.view.reveal();
     }
 
@@ -70,7 +68,7 @@ export class ConfigurationEditor {
             <!DOCTYPE html>
             <html>
                 <head>
-                <meta http-equiv="Content-Security-Policy" content="">'
+                <meta http-equiv="Content-Security-Policy" content="">
                 <script>
                     (function () {
                         const vscode = acquireVsCodeApi();
