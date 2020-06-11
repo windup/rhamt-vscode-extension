@@ -184,4 +184,5 @@ export interface Endpoints {
     reportsRoot(): any;
     configurationPort(): string;
     configurationLocation(config?: RhamtConfiguration): Promise<string>;
+    ready: Promise<void>;
 }

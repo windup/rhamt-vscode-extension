@@ -30,7 +30,7 @@ export class ConfigurationEditorServer {
     }
 
     public start(): Promise<void> {
-        return new Promise<void> ((resolve, reject) => {
+        return this.endpoints.ready = new Promise<void> ((resolve, reject) => {
             this.app = express();
             this.server = this.app.listen(this.endpoints.configurationPort());
             this.server.on('listening', () => {

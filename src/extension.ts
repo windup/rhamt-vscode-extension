@@ -42,7 +42,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const connectionService = new ClientConnectionService(modelService);
     configEditorServer = new ConfigurationEditorServer(locations, configServerController, connectionService);
     try {
-        await configEditorServer.start();
+        configEditorServer.start();
     } catch (e) {
         console.log(`Error while starting coniguration editor server: ${e}`);
     }
