@@ -7,6 +7,7 @@ import * as path from 'path';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import * as io from 'socket.io';
+const request = require('request');
 import { Endpoints } from '../model/model';
 import { ConfigurationServerController } from './configurationServerController';
 import { ClientConnectionService } from './clientConnectionService';
@@ -31,13 +32,32 @@ export class ConfigurationEditorServer {
 
     public start(): Promise<void> {
         this.endpoints.isReady = false;
-        return this.endpoints.ready = new Promise<void> ((resolve, reject) => {
+        return this.endpoints.ready = new Promise<void> (async (resolve, reject) => {
             this.app = express();
+            const location = await this.endpoints.configurationLocation();
+            console.log(`location: ${location}`);
             this.server = this.app.listen(this.endpoints.configurationPort());
             this.server.on('listening', () => {
                 console.log(`Configuration server successfully started...`);
-                this.endpoints.isReady = true;
-                resolve();
+                let poll = (() => {
+                    request(`${location}ping/check`, (err, res, body) => {
+                        console.log(`Configuration server ping info`);
+                        console.log(res);
+                        if (err) { 
+                            console.log(`Error polling configuration server ${err}`);
+                            reject();
+                        }
+                        else if (res.statusCode === 200){
+                            console.log(`Configuration server startup verified. Notifying...`);
+                            this.endpoints.isReady = true;
+                            resolve();
+                        }
+                        else {
+                            console.log('Configuration server not available. Trying again...');
+                            poll();
+                        }
+                    });
+                }).bind(this)();
             });
             this.server.on('error', () => reject());
             this.socketListener = io.listen(this.server);
@@ -69,6 +89,11 @@ export class ConfigurationEditorServer {
         router.get('/:id', this.controller.get.bind(this.controller));
         router.get('/configuration/:id', this.controller.configuration.bind(this.controller));
         router.get('/rulesets/recent', this.controller.recentRulesets.bind(this.controller));
+        router.get('/ping/check', (req: any, res: express.Response, next: any) => {
+            console.log('Got the PING!');
+            
+            res.status(200).json({});
+        });
         this.app.use(router);
     }
 
