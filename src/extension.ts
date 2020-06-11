@@ -37,15 +37,12 @@ export async function activate(context: vscode.ExtensionContext) {
     const locations = await endpoints.getEndpoints(context, out);
     modelService = new ModelService(new RhamtModel(), out, locations);
     const configEditorService = new ConfigurationEditorService(locations, context);
-    new RhamtView(context, modelService, configEditorService);
-    new ReportView(context, locations);
-    detailsView = new IssueDetailsView(context, locations);
 
     const configServerController = new ConfigurationServerController(modelService, locations);
     const connectionService = new ClientConnectionService(modelService);
     configEditorServer = new ConfigurationEditorServer(locations, configServerController, connectionService);
     try {
-        configEditorServer.start();
+        await configEditorServer.start();
     } catch (e) {
         console.log(`Error while starting coniguration editor server: ${e}`);
     }
@@ -55,6 +52,10 @@ export async function activate(context: vscode.ExtensionContext) {
     } catch (e) {
         console.log(`Error while starting report server: ${e}`);
     }
+
+    new RhamtView(context, modelService, configEditorService);
+    new ReportView(context, locations);
+    detailsView = new IssueDetailsView(context, locations);
     
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
         const issue = (data as IssueContainer).getIssue();

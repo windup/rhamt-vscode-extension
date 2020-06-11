@@ -29,13 +29,17 @@ export class ConfigurationEditorServer {
         this.controllerService = controllerService;
     }
 
-    public start(): void {
-        this.app = express();
-        this.server = this.app.listen(this.endpoints.configurationPort());
-        this.socketListener = io.listen(this.server);
-        this.socketListener.sockets.on('connection', this.connectClient.bind(this));
-        this.configServer();
-        this.routes();
+    public start(): Promise<void> {
+        return new Promise<void> ((resolve, reject) => {
+            this.app = express();
+            this.server = this.app.listen(this.endpoints.configurationPort());
+            this.server.on('listening', () => resolve());
+            this.server.on('error', () => reject());
+            this.socketListener = io.listen(this.server);
+            this.socketListener.sockets.on('connection', this.connectClient.bind(this));
+            this.configServer();
+            this.routes();
+        });
     }
 
     connectClient(s: io.Socket) {
