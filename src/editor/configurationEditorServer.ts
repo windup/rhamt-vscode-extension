@@ -33,7 +33,10 @@ export class ConfigurationEditorServer {
         return new Promise<void> ((resolve, reject) => {
             this.app = express();
             this.server = this.app.listen(this.endpoints.configurationPort());
-            this.server.on('listening', () => resolve());
+            this.server.on('listening', () => {
+                console.log(`Configuration server successfully started...`);
+                resolve()
+            });
             this.server.on('error', () => reject());
             this.socketListener = io.listen(this.server);
             this.socketListener.sockets.on('connection', this.connectClient.bind(this));

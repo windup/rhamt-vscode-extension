@@ -53,6 +53,7 @@ export class ConfigurationEditor {
         });
         const location = await this.endpoints.configurationLocation(this.configuration);
         this.view.webview.html = this.render(location);
+        console.log(`Rendering configuration editor at: ${location}`);
         this.view.reveal();
     }
 
