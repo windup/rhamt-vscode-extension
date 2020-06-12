@@ -8,7 +8,6 @@ import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as mkdirp from 'mkdirp';
 import { AnalysisResults, AnalysisResultsUtil } from './analysisResults';
-import { window } from 'vscode';
 
 export class ModelService {
 
