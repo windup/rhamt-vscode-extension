@@ -1,7 +1,7 @@
 {
     "name": "rhamt-vscode-extension",
     "displayName": "Migration Toolkit",
-    "description": "Red Hat Application Migration Toolkit",
+    "description": "Migration Toolkit for Applications (MTA)",
     "version": "0.0.33",
     "license": "MIT",
     "publisher": "redhat",
