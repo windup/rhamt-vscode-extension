@@ -53,23 +53,23 @@ export namespace Utils {
                 return Promise.reject(error);
             }
 
-            progress.report({message: 'Verifying rhamt-cli'});
+            progress.report({message: 'Verifying mta-cli'});
 
             try {
                 rhamtCli = await cliResolver.findRhamtCli(modelService.outDir);
-                console.log(`Using RHAMT CLI - ${rhamtCli}`);
+                console.log(`Using MTA CLI - ${rhamtCli}`);
             }
             catch (error) {
-                promptForFAQs('Unable to find rhamt-cli executable', {outDir: modelService.outDir});
+                promptForFAQs('Unable to find mta-cli executable', {outDir: modelService.outDir});
                 return Promise.reject(error);
             }
 
             try {
                 const version = await findRhamtVersion(rhamtCli, javaHome);
-                console.log(`Using RHAMT version - ${version}`);
+                console.log(`Using MTA version - ${version}`);
             }
             catch (error) {
-                promptForFAQs('Unable to determine rhamt-cli version: \n' + error.message, {outDir: modelService.outDir});
+                promptForFAQs('Unable to determine mta-cli version: \n' + error.message, {outDir: modelService.outDir});
                 return Promise.reject(error);
             }
 
@@ -135,7 +135,7 @@ export namespace Utils {
     }
 
     export async function showDownloadCliOption(dataOut: string, context: ExtensionContext): Promise<any> {
-        const MSG = 'Unable to find RHAMT CLI';
+        const MSG = 'Unable to find MTA CLI';
         const OPTION_DOWNLOAD = 'Download';
         const OPTION_DISMISS = `Don't Show Again`;
         const choice = await window.showInformationMessage(MSG, OPTION_DOWNLOAD, OPTION_DISMISS);
@@ -148,14 +148,14 @@ export namespace Utils {
     }
 
     export async function downloadCli(dataOut: string): Promise<any> {
-        const handler = { log: msg => console.log(`rhamt-cli download message: ${msg}`) };
-        const out = path.resolve(dataOut, 'rhamt-cli');
+        const handler = { log: msg => console.log(`mta-cli download message: ${msg}`) };
+        const out = path.resolve(dataOut, 'mta-cli');
         RhamtInstaller.installCli(PREVIEW_DOWNLOAD_CLI_LOCATION, out, handler).then(home => {
-            window.showInformationMessage('rhamt-cli download complete');
-            workspace.getConfiguration().update('rhamt.executable.path', cliResolver.getRhamtExecutable(home));
+            window.showInformationMessage('mta-cli download complete');
+            workspace.getConfiguration().update('mta.executable.path', cliResolver.getRhamtExecutable(home));
         }).catch(e => {
             console.log(e);
-            window.showErrorMessage(`Error downloading rhamt-cli: ${e}`);
+            window.showErrorMessage(`Error downloading mta-cli: ${e}`);
         });
     }
 

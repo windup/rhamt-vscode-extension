@@ -1,22 +1,22 @@
-# RHAMT Extension - FAQ
+# Migration Toolkit for Application (MTA) Extension - FAQ
 
 ## Requirements
 
-### Available RHAMT executable
-You can specify the path to an installation of the `rhamt-cli` executable from witin the settings:
+### Available Migration Toolkit for Applications (MTA) executable
+You can specify the path to an installation of the `mta-cli` executable from witin the settings:
     ```
     {
-        "rhamt.executable.path": "/some-path-to-rhamt-home/bin/rhamt-cli"
+        "mta.executable.path": "/some-path-to-mta-home/bin/mta-cli"
     }
     ```
 
 #### Possible error messages
-* Unable to find `rhamt-cli` executable
-    In this case, please follow above instructions to set the `rhamt-cli` executable path.
-* Unable to determine `rhamt-cli` version.
-    In this case, please verify the `rhamt-cli` exists, is executable, and is a supported version.
+* Unable to find `mta-cli` executable
+    In this case, please follow above instructions to set the `mta-cli` executable path.
+* Unable to determine `mta-cli` version.
+    In this case, please verify the `mta-cli` exists, is executable, and is a supported version.
 
-### Available Java Runtime (required by rhamt-cli)
+### Available Java Runtime (required by mta-cli)
 
 #### Possible error messages
 * `JAVA_HOME` not correctly set.

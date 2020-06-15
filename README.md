@@ -1,4 +1,4 @@
-# Visual Studio Code RHAMT Extension
+# Migration Toolkit for Applications (MTA) Visual Studio Code Extension
 
 [![Build Status](https://travis-ci.org/windup/rhamt-vscode-extension.svg?branch=master)](https://travis-ci.org/windup/rhamt-vscode-extension)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/windup/rhamt-vscode-extension/blob/master/README.md)
@@ -7,23 +7,23 @@
 [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/downloads-short/redhat.rhamt-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension)
 ## Description
 
-The Visual Studio Code (VSCode) and Eclipse Che extension for the <b>Red Hat Application Migration Toolkit</b> (RHAMT).
+The Visual Studio Code (VSCode) and Eclipse Che extension for the <b>Migration Toolkit for Applications</b> (MTA).
 
-RHAMT (the product of the downstream project [Windup](https://github.com/windup/windup)) is a command-line Application Migration and Modernization Assessment tool.
+Migration Toolkit for Applications (MTA) (the product of the downstream project [Windup](https://github.com/windup/windup)) is a command-line Application Migration and Modernization Assessment tool.
 
-> The documentation for RHAMT can be found [here](https://developers.redhat.com/products/rhamt/overview).
+> The documentation for MTA can be found [here](https://developers.redhat.com/products/rhamt/overview).
 
 ## VSCode
 
 This extension is published [here](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension) in the Microsoft Visual Studio Marketplace.
 
-To add this extension to a VSCode installation, open VSCode, navigate to the Extensions Marketplace View, and search using the keyword `rhamt`.
+To add this extension to a VSCode installation, open VSCode, navigate to the Extensions Marketplace View, and search using the keyword `mta`.
 
 ![VSCode Extension Marketplace View](resources/rhamt_vscode_installation.png)
 
 ## Features
 
-This extension provides the ability to analyze, assess, and migrate source code (using RHAMT) from within VSCode and Eclipse Che.
+This extension provides the ability to analyze, assess, and migrate source code (using MTA) from within VSCode and Eclipse Che.
 
 The look and feel of both VSCode and Eclipse Che are very similar; therefore, the functionality demonstrated below should be consistent between the two environments.
 
@@ -55,7 +55,7 @@ To add this plugin to a Che workspace, open Che, navigate to the plugins tab, an
 
 ![Eclipse Che Plugin](resources/rhamt_che_installation.png)
 
-Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Application Migration Migration and Modernization using RHAMT` plugin.
+Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Migration Toolkit for Applications` plugin.
 
 ![Eclipse Che Plugin](resources/rhamt_che_installation_view.png)
 
@@ -70,7 +70,7 @@ Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugi
 
 This extension contributes the following settings:
 
-* `rhamt.executable.path`: The location of the rhamt-cli.
+* `mta.executable.path`: The location of the mta-cli.
 
 ## Build
 

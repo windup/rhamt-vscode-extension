@@ -354,7 +354,7 @@ export class ModelService {
     }
 
     private generateConfigurationName(): string {
-        let newName = 'rhamtConfiguration';
+        let newName = 'mtaConfiguration';
         if (this.model.exists(newName)) {
             for (let i = 0; i < 1000; i++) {
                 if (!this.model.exists(`${newName}-${i}`)) {

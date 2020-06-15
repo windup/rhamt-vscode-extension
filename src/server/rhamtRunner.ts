@@ -33,7 +33,7 @@ export class RhamtRunner {
             setTimeout(() => {
                 if (!started) {
                     rhamtProcess.kill();
-                    reject(`rhamt-cli startup time exceeded ${startTimeout}ms.`);
+                    reject(`mta-cli startup time exceeded ${startTimeout}ms.`);
                 }
             }, startTimeout);
         });

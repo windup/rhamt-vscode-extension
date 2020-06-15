@@ -22,6 +22,7 @@
     "keywords": [
         "Migration",
         "Migrate",
+        "MTA",
         "RHAMT",
         "Windup",
         "JBoss",
@@ -45,7 +46,7 @@
     "contributes": {
         "commands": [
             {
-                "category": "RHAMT",
+                "category": "Migration Toolkit for Applications (MTA)",
                 "command": "rhamt.newConfiguration",
                 "title": "New Configuration",
                 "icon": {
@@ -116,12 +117,12 @@
         ],
         "configuration": [
             {
-                "title": "Red Hat Application Migration Toolkit (RHAMT)",
+                "title": "Migration Toolkit for Applications (MTA)",
                 "properties": {
-                    "rhamt.executable.path": {
+                    "mta.executable.path": {
                         "type": "string",
                         "default": "",
-                        "description": "Specifies absolute path of rhamt-cli executable",
+                        "description": "Specifies absolute path of Migration Toolkit for Applications executable (mta-cli)",
                         "scope": "window"
                     }
                 }
@@ -131,7 +132,7 @@
             "activitybar": [
                 {
                     "id": "rhamt-explorer",
-                    "title": "RHAMT",
+                    "title": "Migration Toolkit for Applications",
                     "icon": "resources/dep.svg"
                 }
             ]

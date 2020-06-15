@@ -36,7 +36,7 @@ export class ReportView {
             return;
         }
         if (!this.view) {
-            this.view = window.createWebviewPanel('rhamtReportView', 'RHAMT Report', ViewColumn.One, {
+            this.view = window.createWebviewPanel('rhamtReportView', 'MTA Report', ViewColumn.One, {
                 enableScripts: true,
                 enableCommandUris: true,
                 retainContextWhenHidden: true

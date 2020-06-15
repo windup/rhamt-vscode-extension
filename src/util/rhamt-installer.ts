@@ -38,7 +38,7 @@ export class RhamtInstaller {
                 console.log('download & extract complete');
                 resolve(home);
             }).catch(e => {
-                console.log('error download & extract' + e);
+                console.log('error download & extract: ' + e);
                 reject({type: ChangeType.ERROR, name: 'installCliChanged', value: {url, downloadDir, e}});
             });
         });
@@ -50,7 +50,7 @@ export class RhamtInstaller {
         let localTempFilePath = '';
 
         try {
-            localTempFilePath = await RhamtInstaller.downloadFile(downloadUri, 'Downloading rhamt-cli... ', handler);
+            localTempFilePath = await RhamtInstaller.downloadFile(downloadUri, 'Downloading mta-cli... ', handler);
         } catch (err) {
             return Promise.reject(err);
         }
@@ -153,7 +153,7 @@ export class RhamtInstaller {
 
         const deferred = createDeferred();
 
-        const title = 'Extracting rhamt-cli... ';
+        const title = 'Extracting mta-cli... ';
         await window.withProgress({
             location: ProgressLocation.Window
         }, (progress: any) => {
@@ -188,9 +188,9 @@ export class RhamtInstaller {
         });
 
         const entries = fileSystem.readdirSync(downloadDir);
-        const index = entries.findIndex(index => index.startsWith('rhamt-cli'));
+        const index = entries.findIndex(index => index.startsWith('mta-cli'));
         if (index > -1) {
-            const executablePath = path.join(downloadDir, entries[index], 'bin', 'rhamt-cli');
+            const executablePath = path.join(downloadDir, entries[index], 'bin', 'mta-cli');
             await fs.chmod(executablePath, '0764');
             return Promise.resolve(path.join(downloadDir, entries[index]));
         }

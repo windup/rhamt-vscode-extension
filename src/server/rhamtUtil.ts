@@ -44,7 +44,7 @@ export class RhamtUtil {
                 }
                 rhamtChannel.clear();
                 const skipReport = config.options['skipReports'];
-                progress.report({message: 'Executing rhamt-cli script...'});
+                progress.report({message: 'Executing mta-cli script...'});
                 let cancelled = false;
                 let resolved = false;
                 let processController: RhamtProcessController;
@@ -114,20 +114,20 @@ export class RhamtUtil {
                     }
                 };
                 const onShutdown = () => {
-                    console.log('rhamt-cli shutdown');
+                    console.log('mta-cli shutdown');
                     if (!resolved) {
                         resolved = true;
                         resolve();
                     }
                 };
                 try {
-                    console.log(`Executing RHAMT using params: ${params.join(' ')}`);
+                    console.log(`Executing MTA using params: ${params.join(' ')}`);
                     processController = await RhamtRunner.run(windupHome, config.rhamtExecutable, params, START_TIMEOUT, onMessage).then(cp => {
                         onStarted();
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
                     });
                     if (cancelled) {
-                        console.log('rhamt-cli was cancelled during startup.');
+                        console.log('mta-cli was cancelled during startup.');
                         processController.shutdown();
                         return;
                     }

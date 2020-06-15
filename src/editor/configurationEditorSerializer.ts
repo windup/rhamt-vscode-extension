@@ -15,7 +15,7 @@ export class ConfigurationEditorSerializer implements vscode.WebviewPanelSeriali
                 await this.modelService.load();
                 const configuration = this.modelService.getConfiguration(state.id);
                 if (!configuration) {
-                    vscode.window.showErrorMessage(`Unable to restore RHAMT configuration editor state.`);
+                    vscode.window.showErrorMessage(`Unable to restore MTA configuration editor state.`);
                     webviewPanel.dispose();
                 }
                 else {
@@ -24,7 +24,7 @@ export class ConfigurationEditorSerializer implements vscode.WebviewPanelSeriali
             }
             catch (e) {
                 console.log(`Error with deserializeWebviewPanel restoration: ${e}`);
-                vscode.window.showErrorMessage(`Error restoring RHAMT configuration editor.`);
+                vscode.window.showErrorMessage(`Error restoring MTA configuration editor.`);
                 webviewPanel.dispose();
             }
         }

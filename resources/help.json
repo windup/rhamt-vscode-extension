@@ -43,7 +43,7 @@
       },
       {
         "name": "userRulesDirectory",
-        "description": "User Rules Directory (Search pattern: *.windup.groovy, *.windup.xml, *.rhamt.groovy and *.rhamt.xml).",
+        "description": "User Rules Directory (Search pattern: *.windup.groovy, *.windup.xml, *.mta.groovy and *.mta.xml).",
         "type": "Path",
         "ui-type": ["many", "file_or_directory", "text", "recent"],
         "placeholder": "No Directories Specified",
@@ -88,7 +88,7 @@
       },
       {
         "name": "skipReports",
-        "description": "If set, RHAMT will not generate reports.",
+        "description": "If set, MTA will not generate reports.",
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false

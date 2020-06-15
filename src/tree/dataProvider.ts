@@ -159,7 +159,7 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
                     catch (e) {
                         console.log('error while loading model service.');
                         console.log(e);
-                        window.showErrorMessage(`Error reloading RHAMT explorer data.`)
+                        window.showErrorMessage(`Error reloading MTA explorer data.`)
                     }
                 })
             }, 500))();
