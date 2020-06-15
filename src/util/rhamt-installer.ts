@@ -188,9 +188,9 @@ export class RhamtInstaller {
         });
 
         const entries = fileSystem.readdirSync(downloadDir);
-        const index = entries.findIndex(index => index.startsWith('mta-cli'));
+        const index = entries.findIndex(index => index.startsWith('rhamt-cli'));
         if (index > -1) {
-            const executablePath = path.join(downloadDir, entries[index], 'bin', 'mta-cli');
+            const executablePath = path.join(downloadDir, entries[index], 'bin', 'rhamt-cli');
             await fs.chmod(executablePath, '0764');
             return Promise.resolve(path.join(downloadDir, entries[index]));
         }
