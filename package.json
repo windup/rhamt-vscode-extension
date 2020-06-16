@@ -1,5 +1,5 @@
 {
-    "name": "mta-vscode-extension",
+    "name": "rhamt-vscode-extension",
     "displayName": "Migration Toolkit",
     "description": "Migration Toolkit for Applications (MTA)",
     "version": "0.0.34",
