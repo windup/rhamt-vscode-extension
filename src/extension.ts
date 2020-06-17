@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
-import * as os from 'os';
 import { Utils } from './Utils';
 import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
