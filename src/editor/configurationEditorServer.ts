@@ -41,13 +41,9 @@ export class ConfigurationEditorServer {
                 console.log(`Configuration server successfully started...`);
                 let poll = (() => {
                     request(`${location}ping/check`, (err, res, body) => {
-                        console.log(`Configuration server ping info`);
-                        console.log(res);
-                        if (err) { 
-                            console.log(`Error polling configuration server ${err}`);
-                            reject();
-                        }
-                        else if (res.statusCode === 200){
+                        console.log(`Configuration server ping info: ${res}`);
+                        console.log(`Ping error info: ${err}`);
+                        if (res.statusCode === 200){
                             console.log(`Configuration server startup verified. Notifying...`);
                             this.endpoints.isReady = true;
                             resolve();
