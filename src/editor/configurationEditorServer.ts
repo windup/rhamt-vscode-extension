@@ -43,7 +43,7 @@ export class ConfigurationEditorServer {
                     request(`${location}ping/check`, (err, res, body) => {
                         console.log(`Configuration server ping info: ${res}`);
                         console.log(`Ping error info: ${err}`);
-                        if (res.statusCode === 200){
+                        if (res.statusCode && res.statusCode === 200){
                             console.log(`Configuration server startup verified. Notifying...`);
                             this.endpoints.isReady = true;
                             resolve();
