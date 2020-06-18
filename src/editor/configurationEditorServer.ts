@@ -37,23 +37,31 @@ export class ConfigurationEditorServer {
             const location = await this.endpoints.configurationLocation();
             console.log(`location: ${location}`);
             this.server = this.app.listen(this.endpoints.configurationPort());
+            const doResolve = (() => {
+                console.log(`Configuration server startup verified. Notifying...`);
+                this.endpoints.isReady = true;
+                resolve();
+            }).bind(this);
             this.server.on('listening', () => {
                 console.log(`Configuration server successfully started...`);
-                let poll = (() => {
+                (function poll() {
                     request(`${location}ping/check`, (err, res, body) => {
                         console.log(`Configuration server ping info: ${res}`);
                         console.log(`Ping error info: ${err}`);
                         if (res && res.statusCode === 200){
-                            console.log(`Configuration server startup verified. Notifying...`);
-                            this.endpoints.isReady = true;
-                            resolve();
+                            doResolve();
                         }
                         else {
-                            console.log('Configuration server not available. Trying again...');
-                            poll();
+                            try {
+                                console.log('Configuration server not available. Trying again...');
+                                poll();
+                            }
+                            catch (e) {
+                                console.log(`Error polling configuration server: ${e}`);
+                            }
                         }
                     });
-                }).bind(this)();
+                })();
             });
             this.server.on('error', () => reject());
             this.socketListener = io.listen(this.server);
