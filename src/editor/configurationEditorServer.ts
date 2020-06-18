@@ -37,6 +37,7 @@ export class ConfigurationEditorServer {
             const location = await this.endpoints.configurationLocation();
             console.log(`location: ${location}`);
             this.server = this.app.listen(this.endpoints.configurationPort());
+            let cancelled = false;
             const doResolve = (() => {
                 console.log(`Configuration server startup verified. Notifying...`);
                 this.endpoints.isReady = true;
@@ -45,13 +46,20 @@ export class ConfigurationEditorServer {
             this.server.on('listening', () => {
                 console.log(`Configuration server successfully started...`);
                 (function poll() {
+                    setTimeout(() => {
+                        if (!this.endpoinpoints.isReady) {
+                            cancelled = true;
+                            console.log(`Configuration server startup timeout. Notifying...`);
+                            reject();
+                        }
+                    }, 10000);
                     request('https://www.google.com', (err, res, body) => {
                         console.log(`Configuration server ping info: ${res}`);
                         console.log(`Ping error info: ${err}`);
                         if (res && res.statusCode === 200){
                             doResolve();
                         }
-                        else {
+                        else if (!cancelled) {
                             try {
                                 console.log('Configuration server not available. Trying again...');
                                 poll();
