@@ -53,6 +53,9 @@ async function computeCheHostInfo(): Promise<RhamtHostInfo> {
                     info.reportUrl = process.env.RHAMT_REPORT_URL = url;
                 }
                 if (info.configurationUrl && info.reportUrl) {
+                    console.log(`Finished computing endpoints`);
+                    console.log(`configurationUrl: ${info.configurationUrl}`);
+                    console.log(`reportUrl: ${info.reportUrl}`);
                     return info;
                 }
             }

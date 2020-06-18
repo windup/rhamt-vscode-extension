@@ -45,7 +45,7 @@ export class ConfigurationEditorServer {
             this.server.on('listening', () => {
                 console.log(`Configuration server successfully started...`);
                 (function poll() {
-                    request(`${location}ping/check`, (err, res, body) => {
+                    request('https://www.google.com', (err, res, body) => {
                         console.log(`Configuration server ping info: ${res}`);
                         console.log(`Ping error info: ${err}`);
                         if (res && res.statusCode === 200){
