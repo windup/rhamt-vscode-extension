@@ -43,13 +43,13 @@ async function computeCheHostInfo(): Promise<RhamtHostInfo> {
                 let url = machineServers[serverName].url!;
                 const portNumber = machineServers[serverName].attributes.port!;
                 const port = String(portNumber);
+                if (!url.endsWith('/')) {
+                    url = `${url}/`;
+                }
                 if (port === info.configurationPort) {
                     info.configurationUrl = process.env.RHAMT_CONFIGURATION_URL = url;
                 }
                 else if (port === info.reportPort) {
-                    if (!url.endsWith('/')) {
-                        url = `${url}/`;
-                    }
                     info.reportUrl = process.env.RHAMT_REPORT_URL = url;
                 }
                 if (info.configurationUrl && info.reportUrl) {

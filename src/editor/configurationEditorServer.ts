@@ -34,7 +34,7 @@ export class ConfigurationEditorServer {
         this.endpoints.isReady = false;
         return this.endpoints.ready = new Promise<void> (async (resolve, reject) => {
             this.app = express();
-            const location = await this.endpoints.configurationLocation();
+            let location = await this.endpoints.configurationLocation();
             console.log(`location: ${location}`);
             this.server = this.app.listen(this.endpoints.configurationPort());
             let cancelled = false;
@@ -43,17 +43,21 @@ export class ConfigurationEditorServer {
                 this.endpoints.isReady = true;
                 resolve();
             }).bind(this);
+            const startTimer = (() => {
+                setTimeout(() => {
+                    console.log(`Configuration server start timeout. Checking for started...`);
+                    if (!this.endpoints.isReady) {
+                        cancelled = true;
+                        console.log(`Configuration server startup timeout failure. Notifying...`);
+                        reject();
+                    }
+                }, 5000);
+            }).bind(this);
             this.server.on('listening', () => {
                 console.log(`Configuration server successfully started...`);
+                startTimer();
                 (function poll() {
-                    setTimeout(() => {
-                        if (!this.endpoinpoints.isReady) {
-                            cancelled = true;
-                            console.log(`Configuration server startup timeout. Notifying...`);
-                            reject();
-                        }
-                    }, 10000);
-                    request('https://www.google.com', (err, res, body) => {
+                    request(location+'ping/check', (err, res, body) => {
                         console.log(`Configuration server ping info: ${res}`);
                         console.log(`Ping error info: ${err}`);
                         if (res && res.statusCode === 200){
@@ -71,7 +75,7 @@ export class ConfigurationEditorServer {
                     });
                 })();
             });
-            this.server.on('error', () => reject());
+            this.server.on('error', e => console.log(`Configuration server error: ${e}`));
             this.socketListener = io.listen(this.server);
             this.socketListener.sockets.on('connection', this.connectClient.bind(this));
             this.configServer();

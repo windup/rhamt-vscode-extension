@@ -159,13 +159,17 @@ export class RhamtUtil {
         if (!input || input.length === 0) {
             return Promise.reject('input is missing from configuration');
         }
-        params.push(input.join(' '));
+        let inputArray = [];
+        input.forEach(entry => {
+            inputArray.push(`"${entry}"`);
+        });
+        params.push(inputArray.join(' '));
         params.push('--output');
         const output = config.options['output'];
         if (!output || output === '') {
             return Promise.reject('output is missing from configuration');
         }
-        params.push(output);
+        params.push(`"${output}"`);
         if (config.options['sourceMode']) {
             params.push('--sourceMode');
         }
@@ -175,7 +179,7 @@ export class RhamtUtil {
         params.push('--ignorePattern');
         params.push('\\.class$');
         params.push('--windupHome');
-        params.push(windupHome);
+        params.push(`"${windupHome}"`);
         const source = config.options['source'];
         if (source && source.length > 0) {
             params.push('--source');

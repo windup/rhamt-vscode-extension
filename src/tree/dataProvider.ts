@@ -25,7 +25,9 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         this._disposables.push(commands.registerCommand('rhamt.modelReload', () => {
             this.refresh(undefined);
         }));
-        this.endpoints.ready.then(() =>  commands.executeCommand('setContext', 'rhamtReady', true));
+        this.endpoints.ready.then(() =>  commands.executeCommand('setContext', 'rhamtReady', true)).catch(e => {
+            console.log(`Error waiting for ready endpoints: ${e}`);
+        });
         this._disposables.push(commands.registerCommand('rhamt.refreshResults', item => {
             item.refreshResults();
         }));
@@ -161,7 +163,9 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
                         console.log(e);
                         window.showErrorMessage(`Error reloading MTA explorer data.`)
                     }
-                })
+                }).catch(e => {
+                    console.log(`Error waiting for ready endpoints: ${e}`);
+                });
             }, 500))();
         }
         return nodes;
