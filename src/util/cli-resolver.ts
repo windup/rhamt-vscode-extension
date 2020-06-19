@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 
 const RHAMT_VERSION = '4.3.2-SNAPSHOT';
-const RHAMT_FOLDER = `rhamt-cli-${RHAMT_VERSION}`;
+const RHAMT_FOLDER = `mta-cli-${RHAMT_VERSION}`;
 
 export function findRhamtCli(outDir: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
@@ -39,10 +39,10 @@ export function findRhamtCli(outDir: string): Promise<string> {
 
 export function getRhamtExecutable(home: string): string {
     const isWindows = process.platform === 'win32';
-    const executable = 'rhamt-cli' + (isWindows ? '.bat' : '');
+    const executable = 'mta-cli' + (isWindows ? '.bat' : '');
     return path.join(home, 'bin', executable);
 }
 
 export function findRhamtCliDownload(outDir: string): string {
-    return path.join(outDir, 'rhamt-cli', RHAMT_FOLDER);
+    return path.join(outDir, 'mta-cli', RHAMT_FOLDER);
 }
