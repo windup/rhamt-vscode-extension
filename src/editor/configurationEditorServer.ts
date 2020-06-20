@@ -51,7 +51,7 @@ export class ConfigurationEditorServer {
                         console.log(`Configuration server startup timeout failure. Notifying...`);
                         reject();
                     }
-                }, 15000);
+                }, 25000);
             }).bind(this);
             this.server.on('listening', () => {
                 console.log(`Configuration server successfully started...`);
