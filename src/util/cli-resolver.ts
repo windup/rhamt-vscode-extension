@@ -15,11 +15,11 @@ export function findRhamtCli(outDir: string): Promise<string> {
             console.log(`preference mta.executable.path found - ${rhamtPath}`);
             return resolve(rhamtPath);
         }
-        let rhamtHome = process.env['RHAMT_HOME'];
+        let rhamtHome = process.env['MTA_HOME'];
         if (rhamtHome) {
             const executable = getRhamtExecutable(rhamtHome);
-            console.log(`found mta-cli using RHAMT_HOME`);
-            console.log(`RHAMT_HOME=${rhamtHome}`);
+            console.log(`found mta-cli using MTA_HOME`);
+            console.log(`MTA_HOME=${rhamtHome}`);
             console.log(`executable=${executable}`);
             return resolve(executable);
         }
