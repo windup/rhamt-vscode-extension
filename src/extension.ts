@@ -30,7 +30,7 @@ let configEditorServer: ConfigurationEditorServer;
 let reportServer: ReportServer;
 
 export async function activate(context: vscode.ExtensionContext) {
-    stateLocation = path.join(context.storagePath, '.rhamt', 'tooling'); // path.join(os.homedir(), '.rhamt', 'tooling');
+    stateLocation = path.join(context.storagePath, '.mta', 'tooling'); // path.join(os.homedir(), '.rhamt', 'tooling');
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
     const locations = await endpoints.getEndpoints(context, out);
