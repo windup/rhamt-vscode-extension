@@ -58,8 +58,6 @@ export class ConfigurationEditorServer {
                 startTimer();
                 (function poll() {
                     request(location+'ping/check', (err, res, body) => {
-                        console.log(`Configuration server ping info: ${res}`);
-                        console.log(`Ping error info: ${err}`);
                         if (res && res.statusCode === 200){
                             doResolve();
                         }
@@ -106,8 +104,6 @@ export class ConfigurationEditorServer {
         router.get('/configuration/:id', this.controller.configuration.bind(this.controller));
         router.get('/rulesets/recent', this.controller.recentRulesets.bind(this.controller));
         router.get('/ping/check', (req: any, res: express.Response, next: any) => {
-            console.log('Got the PING!');
-            
             res.status(200).json({});
         });
         this.app.use(router);
