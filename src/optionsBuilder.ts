@@ -79,7 +79,7 @@ export class OptionsBuilder {
 
         if (!input) {
             if (!vscode.workspace.getWorkspaceFolder(undefined)) {
-                vscode.window.showErrorMessage('No workspace folders found for specifying RHAMT input.');
+                vscode.window.showErrorMessage('No workspace folders found for specifying MTA input.');
             }
             return;
         }
