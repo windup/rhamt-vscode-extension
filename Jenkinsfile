@@ -20,8 +20,8 @@ node('rhel7'){
 	stage('Package') {
 		try {
 			def packageJson = readJSON file: 'package.json'
-			sh "vsce package -o rhamt-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
-			sh "npm pack && mv rhamt-vscode-extension-${packageJson.version}.tgz rhamt-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.tgz"
+			sh "vsce package -o mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
+			sh "npm pack && mv mta-vscode-extension-${packageJson.version}.tgz mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.tgz"
 		}
 		finally {
 			archiveArtifacts artifacts: '*.vsix,**.tgz'
