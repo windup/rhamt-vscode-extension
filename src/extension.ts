@@ -30,9 +30,7 @@ let configEditorServer: ConfigurationEditorServer;
 let reportServer: ReportServer;
 
 export async function activate(context: vscode.ExtensionContext) {
-    stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling'); // path.join(os.homedir(), '.rhamt', 'tooling');
-    console.log(`context.globalStoragePath: ${context.globalStoragePath}`);
-    console.log(`context.storagePath: ${context.storagePath}`);
+    stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling');
     
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
