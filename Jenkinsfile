@@ -30,10 +30,10 @@ node('rhel7'){
 	if(params.UPLOAD_LOCATION) {
 		stage('Snapshot') {
 			def filesToPush = findFiles(glob: '**.vsix')
-			sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${filesToPush[0].path} ${UPLOAD_LOCATION}/snapshots/rhamt-vscode-extension/"
+			sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${filesToPush[0].path} ${UPLOAD_LOCATION}/snapshots/mta-vscode-extension/"
 			stash name:'vsix', includes:filesToPush[0].path
 			def tgzFilesToPush = findFiles(glob: '**.tgz')
-			sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${tgzFilesToPush[0].path} ${UPLOAD_LOCATION}/snapshots/rhamt-vscode-extension/"
+			sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${tgzFilesToPush[0].path} ${UPLOAD_LOCATION}/snapshots/mta-vscode-extension/"
 			stash name:'tgz', includes:tgzFilesToPush[0].path
 		}
 	}
@@ -56,9 +56,14 @@ node('rhel7'){
 
             stage "Promote the build to stable"
             def vsix = findFiles(glob: '**.vsix')
-            sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${vsix[0].path} ${UPLOAD_LOCATION}/stable/rhamt-vscode-extension/"
+            sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${vsix[0].path} ${UPLOAD_LOCATION}/stable/mta-vscode-extension/"
             def tgz = findFiles(glob: '**.tgz')
-            sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${tgz[0].path} ${UPLOAD_LOCATION}/stable/rhamt-vscode-extension/"
+            sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${tgz[0].path} ${UPLOAD_LOCATION}/stable/mta-vscode-extension/"
+
+			sh "npm install -g ovsx"
+			withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
+				sh 'ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension.vsix'
+			}
         }
 	}
 }
