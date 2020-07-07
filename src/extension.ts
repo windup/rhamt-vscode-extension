@@ -31,7 +31,7 @@ let reportServer: ReportServer;
 
 export async function activate(context: vscode.ExtensionContext) {
     stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling');
-    
+    console.log(`mta state location is: ${stateLocation}`);
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
     const locations = await endpoints.getEndpoints(context, out);
