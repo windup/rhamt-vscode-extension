@@ -62,7 +62,7 @@ node('rhel7'){
 
 			sh "npm install -g ovsx"
 			withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
-				sh 'ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension.vsix'
+				sh "ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
 			}
         }
 	}
