@@ -51,11 +51,7 @@ This extension is supported in [Eclipse Che](https://www.eclipse.org/che/) `7.4.
 
 To add this plugin to a Che workspace, open Che, navigate to the plugins tab, and search using the keyword `migration`.
 
-![Eclipse Che Plugin](resources/rhamt_che_installation.png)
-
 Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Migration Toolkit for Applications` plugin.
-
-![Eclipse Che Plugin](resources/rhamt_che_installation_view.png)
 
 ## Requirements
 
