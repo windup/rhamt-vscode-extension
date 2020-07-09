@@ -133,7 +133,7 @@
                 {
                     "id": "rhamt-explorer",
                     "title": "Migration Toolkit for Applications",
-                    "icon": "resources/dep.svg"
+                    "icon": "resources/mta.svg"
                 }
             ]
         },
