@@ -13,11 +13,12 @@ export class ModelService {
 
     public loaded: boolean = false;
     private rulesets: string[] = [];
+    elementData: any;
 
     constructor(
         public model: RhamtModel,
         public outDir: string,
-        public reportEndpoints: Endpoints) {
+        public endpoints: Endpoints) {
     }
 
     public addConfiguration(config: RhamtConfiguration): void  {
@@ -375,8 +376,22 @@ export class ModelService {
     }
 
     public async getReportLocation(location: string): Promise<string> {
-        const relative = location.replace(`${this.reportEndpoints.reportsRoot()}/`, '');
-        const url = await this.reportEndpoints.reportLocation();
+        const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
+        const url = await this.endpoints.reportLocation();
         return `${url}${relative}`;
+    }
+
+    async readCliMeta(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (this.elementData) resolve(this.elementData);
+            else {
+                fs.readFile(path.join(this.endpoints.resourcesRoot(), 'help.json'), (err, data: any) => {
+                    if (err) reject(err);
+                    else resolve(this.elementData = JSON.parse(data));
+                });
+            }
+        }).catch(err => {
+            console.log(`ModelService :: Error reading help.json :: ${err}`);
+        });
     }
 }

@@ -38,12 +38,13 @@ export async function activate(context: vscode.ExtensionContext) {
     modelService = new ModelService(new RhamtModel(), out, locations);
     const configEditorService = new ConfigurationEditorService(locations, context);
 
-    const configServerController = new ConfigurationServerController(modelService, locations);
+    const configServerController = new ConfigurationServerController(modelService);
     const connectionService = new ClientConnectionService(modelService);
     configEditorServer = new ConfigurationEditorServer(locations, configServerController, connectionService);
     configEditorServer.start().catch(e => console.log(`Error while starting coniguration editor server: ${e}`));
     reportServer = new ReportServer(locations);
     try {
+        await modelService.readCliMeta();
         reportServer.start();    
     } catch (e) {
         console.log(`Error while starting report server: ${e}`);

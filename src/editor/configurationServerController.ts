@@ -3,49 +3,26 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { Request, Response, NextFunction } from 'express';
-import * as fs from 'fs';
 import { ModelService } from '../model/modelService';
-import { RhamtConfiguration, Endpoints } from '../model/model';
-import * as path from 'path';
+import { RhamtConfiguration } from '../model/model';
 
 export class ConfigurationServerController {
 
     private modelService: ModelService;
-    private endpoints: Endpoints;
-    private elementData: any;
 
     constructor(
-        modelService: ModelService,
-        endpoints: Endpoints) {
+        modelService: ModelService) {
         this.modelService = modelService;
-        this.endpoints = endpoints;
-        this.readElementData();
-    }
-
-    private async readElementData(): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            if (this.elementData) resolve(this.elementData);
-            else {
-                fs.readFile(path.join(this.endpoints.resourcesRoot(), 'help.json'), (err, data: any) => {
-                    if (err) reject(err);
-                    else resolve(this.elementData = JSON.parse(data));
-                });
-            }
-        }).catch(err => {
-            console.log(`ConfigurationServerController :: Error reading help.json :: ${err}`);
-        });
     }
 
     get(req: Request, res: Response, next: NextFunction): void {
-        this.readElementData().then(data => {
-            const config = this.modelService.getConfiguration(req.params.id);
-            if (config) {
-                res.render('index', {configId: JSON.stringify(config.id), elementData: JSON.stringify(data)});
-            }
-            else {
-                ConfigurationServerController.configurationNotFound(req, res);
-            }
-        });
+        const config = this.modelService.getConfiguration(req.params.id);
+        if (config) {
+            res.render('index', {configId: JSON.stringify(config.id), elementData: JSON.stringify(this.modelService.elementData)});
+        }
+        else {
+            ConfigurationServerController.configurationNotFound(req, res);
+        }
     }
 
     configuration(req: Request, res: Response, next: NextFunction): void {
