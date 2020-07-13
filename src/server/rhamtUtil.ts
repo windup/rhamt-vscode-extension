@@ -153,9 +153,12 @@ export class RhamtUtil {
 
     private static buildParams(config: RhamtConfiguration, windupHome: string): Promise<any[]> {
         const params = [];
+        const options = config.options;
         params.push('--toolingMode');
+
+        // input
         params.push('--input');
-        const input = config.options['input'];
+        const input = options['input'];
         if (!input || input.length === 0) {
             return Promise.reject('input is missing from configuration');
         }
@@ -164,28 +167,42 @@ export class RhamtUtil {
             inputArray.push(`"${entry}"`);
         });
         params.push(inputArray.join(' '));
+
+        // output
         params.push('--output');
         const output = config.options['output'];
         if (!output || output === '') {
             return Promise.reject('output is missing from configuration');
         }
         params.push(`"${output}"`);
+
+        // sourceMode
         if (config.options['sourceMode']) {
             params.push('--sourceMode');
         }
+
+        // skipReports
         if (config.options['skipReports']) {
             params.push('--skipReports');
-        } 
+        }
+
+        // ignorePattern
         params.push('--ignorePattern');
         params.push('\\.class$');
+
+        // windupHome
         params.push('--windupHome');
         params.push(`"${windupHome}"`);
+
+        // source
         const source = config.options['source'];
         if (source && source.length > 0) {
             params.push('--source');
             params.push(source.join(' '));
         }
-        let target = config.options['target'];
+
+        // target
+        let target = options['target'];
         if (!target) {
             target = [];
         }
@@ -195,10 +212,129 @@ export class RhamtUtil {
         params.push('--target');
         params.push(target.join(' '));
 
-        let rules = config.options['userRulesDirectory'];
-        if (rules && rules.length > 0) {
+        // userRulesDirectory
+        let userRulesDirectory = options['userRulesDirectory'];
+        if (userRulesDirectory && userRulesDirectory.length > 0) {
             params.push('--userRulesDirectory');
-            params.push(rules.join(' '));
+            const pathArray = [];
+            userRulesDirectory.forEach(entry => {
+                pathArray.push(`"${entry}"`);
+            });
+            params.push(pathArray.join(' '));
+        }
+
+        // userIgnorePath
+        let userIgnorePath = options['userIgnorePath'];
+        if (userIgnorePath && userIgnorePath.length > 0) {
+            params.push('--userIgnorePath');
+            const pathArray = [];
+            userIgnorePath.forEach(entry => {
+                pathArray.push(`"${entry}"`);
+            });
+            params.push(pathArray.join(' '));
+        }
+
+        // overwrite
+        if (options['overwrite']) {
+            params.push('--overwrite');
+        }
+
+        // excludePackages
+        const excludePackages = options['excludePackages'];
+        if (excludePackages && excludePackages.length > 0) {
+            params.push('--excludePackages');
+            params.push(excludePackages.join(' '));
+        }
+
+        // mavenizeGroupId
+        const mavenizeGroupId = options['mavenizeGroupId'];
+        if (mavenizeGroupId) {
+            params.push('--mavenizeGroupId');
+            params.push(mavenizeGroupId);
+        }
+
+        // exportCSV
+        if (options['exportCSV']) {
+            params.push('--exportCSV');
+        }
+        
+        // excludeTags
+        const excludeTags = options['excludeTags'];
+        if (excludeTags && excludeTags.length > 0) {
+            params.push('--excludeTags');
+            params.push(excludeTags.join(' '));
+        }
+
+        // packages
+        const packages = options['packages'];
+        if (packages && packages.length > 0) {
+            params.push('--packages');
+            params.push(packages.join(' '));
+        }
+
+        // additionalClasspath
+        let additionalClasspath = options['additionalClasspath'];
+        if (additionalClasspath && additionalClasspath.length > 0) {
+            params.push('--additionalClasspath');
+            const pathArray = [];
+            additionalClasspath.forEach(entry => {
+                pathArray.push(`"${entry}"`);
+            });
+            params.push(pathArray.join(' '));
+        }
+
+        // disableTattletale
+        if (options['disableTattletale']) {
+            params.push('--disableTattletale');
+        }
+
+        // enableCompatibleFilesReport
+        if (options['enableCompatibleFilesReport']) {
+            params.push('--enableCompatibleFilesReport');
+        }
+
+        // includeTags
+        const includeTags = options['includeTags'];
+        if (includeTags && includeTags.length > 0) {
+            params.push('--includeTags');
+            params.push(includeTags.join(' '));
+        }
+
+        // online
+        if (options['online']) {
+            params.push('--online');
+        }
+
+        // enableClassNotFoundAnalysis
+        if (options['enableClassNotFoundAnalysis']) {
+            params.push('--enableClassNotFoundAnalysis');
+        }
+
+        // enableTattletale
+        if (options['enableTattletale']) {
+            params.push('--enableTattletale');
+        }
+
+        // explodedApp
+        if (options['explodedApp']) {
+            params.push('--explodedApp');
+        }
+
+        // keepWorkDirs
+        if (options['keepWorkDirs']) {
+            params.push('--keepWorkDirs');
+        }
+
+        // mavenize
+        if (options['mavenize']) {
+            params.push('--mavenize');
+        }
+
+        // inputApplicationName
+        const inputApplicationName = options['inputApplicationName'];
+        if (inputApplicationName) {
+            params.push('--inputApplicationName');
+            params.push(inputApplicationName);
         }
 
         return Promise.resolve(params);
