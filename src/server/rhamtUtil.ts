@@ -225,13 +225,9 @@ export class RhamtUtil {
 
         // userIgnorePath
         let userIgnorePath = options['userIgnorePath'];
-        if (userIgnorePath && userIgnorePath.length > 0) {
+        if (userIgnorePath) {
             params.push('--userIgnorePath');
-            const pathArray = [];
-            userIgnorePath.forEach(entry => {
-                pathArray.push(`"${entry}"`);
-            });
-            params.push(pathArray.join(' '));
+            params.push(`${userIgnorePath}`);
         }
 
         // overwrite
