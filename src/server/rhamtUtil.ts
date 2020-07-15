@@ -227,7 +227,7 @@ export class RhamtUtil {
         let userIgnorePath = options['userIgnorePath'];
         if (userIgnorePath) {
             params.push('--userIgnorePath');
-            params.push(`${userIgnorePath}`);
+            params.push(`"${userIgnorePath}"`);
         }
 
         // overwrite
