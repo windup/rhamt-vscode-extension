@@ -286,13 +286,6 @@
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false
-      },
-      {
-        "name": "inputApplicationName",
-        "description": "This represents the full name of a given application.",
-        "type": "String",
-        "ui-type": ["single"],
-        "required": false
       }
     ]
   }
