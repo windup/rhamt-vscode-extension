@@ -20,8 +20,8 @@ node('rhel7'){
 	stage('Package') {
 		try {
 			def packageJson = readJSON file: 'package.json'
-			sh "vsce package -o mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
-			sh "npm pack && mv mta-vscode-extension-${packageJson.version}.tgz mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.tgz"
+			sh "vsce package -o rhamt-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
+			sh "npm pack && mv rhamt-vscode-extension-${packageJson.version}.tgz rhamt-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.tgz"
 		}
 		finally {
 			archiveArtifacts artifacts: '*.vsix,**.tgz'
@@ -30,10 +30,10 @@ node('rhel7'){
 	if(params.UPLOAD_LOCATION) {
 		stage('Snapshot') {
 			def filesToPush = findFiles(glob: '**.vsix')
-			sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${filesToPush[0].path} ${UPLOAD_LOCATION}/snapshots/mta-vscode-extension/"
+			sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${filesToPush[0].path} ${UPLOAD_LOCATION}/snapshots/rhamt-vscode-extension/"
 			stash name:'vsix', includes:filesToPush[0].path
 			def tgzFilesToPush = findFiles(glob: '**.tgz')
-			sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${tgzFilesToPush[0].path} ${UPLOAD_LOCATION}/snapshots/mta-vscode-extension/"
+			sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${tgzFilesToPush[0].path} ${UPLOAD_LOCATION}/snapshots/rhamt-vscode-extension/"
 			stash name:'tgz', includes:tgzFilesToPush[0].path
 		}
 	}
@@ -56,9 +56,9 @@ node('rhel7'){
 
             stage "Promote the build to stable"
             def vsix = findFiles(glob: '**.vsix')
-            sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${vsix[0].path} ${UPLOAD_LOCATION}/stable/mta-vscode-extension/"
+            sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${vsix[0].path} ${UPLOAD_LOCATION}/stable/rhamt-vscode-extension/"
             def tgz = findFiles(glob: '**.tgz')
-            sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${tgz[0].path} ${UPLOAD_LOCATION}/stable/mta-vscode-extension/"
+            sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${tgz[0].path} ${UPLOAD_LOCATION}/stable/rhamt-vscode-extension/"
 
 			sh "npm install -g ovsx"
 			withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
