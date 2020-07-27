@@ -17,7 +17,7 @@ node('rhel7'){
 		sh "npm run vscode:prepublish"
 
 		withCredentials([[$class: 'StringBinding', credentialsId: 'vscode_java_marketplace', variable: 'TOKEN']]) {
-			sh "vsce unpublish -p ${OVSX_TOKEN} redhat.mta-vscode-extension"
+			sh "vsce unpublish -p ${TOKEN} redhat.mta-vscode-extension"
 		}
 	}
 
