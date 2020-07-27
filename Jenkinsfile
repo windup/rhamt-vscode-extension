@@ -15,10 +15,6 @@ node('rhel7'){
 	stage('Build') {
 		sh "npm install"
 		sh "npm run vscode:prepublish"
-
-		withCredentials([[$class: 'StringBinding', credentialsId: 'vscode_java_marketplace', variable: 'TOKEN']]) {
-			sh "vsce unpublish -p ${TOKEN} redhat.mta-vscode-extension"
-		}
 	}
 
 	stage('Package') {
