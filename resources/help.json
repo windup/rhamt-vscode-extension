@@ -102,7 +102,7 @@
       },
       {
         "name": "userIgnorePath",
-        "description": "A path to the list of path patterns to skip during execution. If it points to a directory, all contained files named '*rhamt-ignore.txt' or '*windup-ignore.txt' will be considered as such list.",
+        "description": "A path to the list of path patterns to skip during execution. If it points to a directory, all contained files named '*mta-ignore.txt' or '*windup-ignore.txt' will be considered as such list.",
         "type": "File",
         "ui-type": ["file_or_directory"],
         "placeholder": "No Files or Directories Specified",
@@ -125,7 +125,7 @@
       },
       {
         "name": "mavenizeGroupId",
-        "description": "Used in conjunction with the `mavenize` option. All pom.xml files will use this value as their <groupId>. If the parameter is omitted, RHAMT tries to guess some value based on the application, but this guess may be wrong. Last resort default value is 'com.mycompany.mavenized'.",
+        "description": "Used in conjunction with the `mavenize` option. All pom.xml files will use this value as their <groupId>. If the parameter is omitted, MTA tries to guess some value based on the application, but this guess may be wrong. Last resort default value is 'com.mycompany.mavenized'.",
         "type": "String",
         "ui-type": ["single"],
         "required": false
@@ -201,7 +201,7 @@
       },
       {
         "name": "enableCompatibleFilesReport",
-        "description": "If set, RHAMT will generate a report of 'Compatible Files'. Keep in mind that generating this report may take a long time for large applications.",
+        "description": "If set, MTA will generate a report of 'Compatible Files'. Keep in mind that generating this report may take a long time for large applications.",
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false
@@ -275,7 +275,7 @@
       },
       {
         "name": "keepWorkDirs",
-        "description": "If set, RHAMT will not delete the temporary working files, like graph database and unzipped archives. Debugging purposes.",
+        "description": "If set, MTA will not delete the temporary working files, like graph database and unzipped archives. Debugging purposes.",
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false
