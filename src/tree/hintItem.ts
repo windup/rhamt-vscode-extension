@@ -89,7 +89,7 @@ export class HintItem extends TreeItem implements IssueContainer {
     }
 
     public get contextValue(): string {
-        return this.hint.quickfixes.length > 0 ? 'issue-quickfix-container' : 'issue';
+        return (this.hint.quickfixes.length > 0 && !process.env.CHE_WORKSPACE_NAMESPACE)  ? 'issue-quickfix-container' : 'issue';
     }
 
     public refresh(): void {
