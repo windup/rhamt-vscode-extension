@@ -53,6 +53,8 @@ To add this plugin to a Che workspace, open Che, navigate to the plugins tab, an
 
 Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Migration Toolkit for Applications` plugin.
 
+We also provide a [Devfile](https://raw.githubusercontent.com/windup/rhamt-che-demo/master/devfile.yaml), which can be used to setup a workspace.
+
 ## Requirements
 
 * Java Platform, `JRE version 8+` with `JAVA_HOME` environment variable 
