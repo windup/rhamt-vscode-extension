@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/windup/rhamt-vscode-extension.svg?branch=master)](https://travis-ci.org/windup/rhamt-vscode-extension)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/windup/rhamt-vscode-extension/blob/master/README.md)
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.rhamt-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension)
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/installs/redhat.rhamt-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension)
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/downloads-short/redhat.rhamt-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension)
+[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension)
+[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/installs/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension)
+[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/downloads-short/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension)
 ## Description
 
 The Visual Studio Code (VSCode) and Eclipse Che extension for the <b>Migration Toolkit for Applications</b> (MTA).
