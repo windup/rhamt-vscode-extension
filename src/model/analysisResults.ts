@@ -16,8 +16,6 @@ export interface AnalysisResultsSummary {
     executionDuration?: string;
     outputLocation?: string;
     executable?: string;
-    hintCount?: number;
-    classificationCount?: number;
     quickfixes?: any;
 }
 
