@@ -222,7 +222,7 @@ export class AnalysisResults {
                 case 'issue-category': {
                     const node = child.children[0];
                     if (node) {
-                        hint.category = node.children[0].nodeValue;
+                        hint.category = node.nodeValue;
                     }
                     break;
                 }
@@ -493,9 +493,6 @@ export class AnalysisResults {
                         });
                         classification.links.push(link);
                     });
-                    break;
-                }
-                case 'quickfixes': {
                     break;
                 }
                 case 'rule-id': {
