@@ -277,6 +277,9 @@ export class ModelService {
             if (config.summary && config.results) {
                 try {
                     data.summary.quickfixes = this.computeQuickfixData(config);
+                    data.summary.hintCount = config.summary.hintCount;
+                    data.summary.classificationCount = config.summary.classificationCount;
+                    data.summary.quickfixCount = config.summary.quickfixes.length;
                     await this.saveAnalysisResults(config);
                 }
                 catch (e) {
@@ -321,10 +324,14 @@ export class ModelService {
         let elements = [];
         elements = elements.concat(config.results.model.hints);
         elements = elements.concat(config.results.model.classifications);
+        let count = 0;
         elements.forEach(element => {
-            result[element.id] = {
-                originalLineSource: element.originalLineSource,
-                quickfixedLines: element.quickfixedLines
+            if (element.quickfixes.length > 0) {
+                console.log(`quickfixCount: ${++count}`);
+                result[element.id] = {
+                    originalLineSource: element.originalLineSource,
+                    quickfixedLines: element.quickfixedLines
+                }
             }
         });
         return result

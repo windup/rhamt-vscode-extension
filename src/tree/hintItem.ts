@@ -2,6 +2,7 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+// @ts-nocheck
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { IHint, IIssue, IssueContainer } from '../model/model';
 import * as path from 'path';
@@ -86,9 +87,9 @@ export class HintItem extends TreeItem implements IssueContainer {
             title: '',
             arguments: [this]
         };
-    }
+    }  
 
-    public get contextValue(): string {
+    get contextValue(): string {
         return (this.hint.quickfixes.length > 0 && !process.env.CHE_WORKSPACE_NAMESPACE)  ? 'issue-quickfix-container' : 'issue';
     }
 

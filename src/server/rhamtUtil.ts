@@ -338,6 +338,8 @@ export class RhamtUtil {
 
     private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string, skippedReports: any): Promise<any> {
         try {
+            // TODO: We need these set up steps in IntelliJ
+            // open results.xml, set IDs, save to disk
             const dom = await AnalysisResultsUtil.loadAndPersistIDs(config.getResultsLocation());
             console.log(`Skipped reports: ${skippedReports}`);
             config.summary = {
@@ -346,14 +348,19 @@ export class RhamtUtil {
                 executedTimestamp: startedTimestamp,
                 executable: config.rhamtExecutable
             };
+            // open results.xml, load hints/classifications, read quickfix lines
             config.results = new AnalysisResults(dom, config);
             await config.results.init();
+            // setup quickfix data to be saved in model.json
             config.summary.quickfixes = modelService.computeQuickfixData(config);
+            config.summary.hintCount = config.results.model.hints.length;
+            config.summary.classificationCount = config.results.model.classifications.length;
         }
         catch (e) {
             return Promise.reject(`Error loading analysis results from (${config.getResultsLocation()}): ${e}`);
         }
         try {
+            // save model with new analysis results and quickfix info
             await modelService.save();
         }
         catch (e) {

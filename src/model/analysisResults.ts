@@ -17,6 +17,9 @@ export interface AnalysisResultsSummary {
     outputLocation?: string;
     executable?: string;
     quickfixes?: any;
+    hintCount?: number,
+    classificationCount?: number;
+    quickfixCount?: number;
 }
 
 export class AnalysisResultsUtil {
