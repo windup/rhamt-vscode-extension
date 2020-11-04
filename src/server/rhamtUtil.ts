@@ -187,8 +187,8 @@ export class RhamtUtil {
         }
 
         // ignorePattern
-        params.push('--ignorePattern');
-        params.push('\\.class$');
+        // params.push('--ignorePattern');
+        // params.push('\\.class$');
 
         // windupHome
         params.push('--windupHome');
@@ -332,6 +332,9 @@ export class RhamtUtil {
             params.push('--inputApplicationName');
             params.push(inputApplicationName);
         }
+
+        console.log("Console: " + params);
+        
 
         return Promise.resolve(params);
     }
