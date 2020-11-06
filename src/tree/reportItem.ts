@@ -2,6 +2,7 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+// @ts-nocheck
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import * as path from 'path';
 import { ReportHolder, RhamtConfiguration } from '../model/model';

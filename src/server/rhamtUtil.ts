@@ -121,7 +121,7 @@ export class RhamtUtil {
                     }
                 };
                 try {
-                    console.log(`Executing MTA using params: ${params.join(' ')}`);
+                    console.log(`Executing MTA using params: ${params}`);
                     processController = await RhamtRunner.run(windupHome, config.rhamtExecutable, params, START_TIMEOUT, onMessage).then(cp => {
                         onStarted();
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
@@ -198,7 +198,9 @@ export class RhamtUtil {
         const source = config.options['source'];
         if (source && source.length > 0) {
             params.push('--source');
-            params.push(source.join(' '));
+            source.forEach((i: any) => {
+                params.push(i);
+            });
         }
 
         // target
@@ -210,7 +212,9 @@ export class RhamtUtil {
             target.push('eap7');
         }
         params.push('--target');
-        params.push(target.join(' '));
+        target.forEach((i: any) => {
+            params.push(i);
+        });
 
         // userRulesDirectory
         let userRulesDirectory = options['userRulesDirectory'];
@@ -334,7 +338,6 @@ export class RhamtUtil {
         }
 
         console.log("Console: " + params);
-        
 
         return Promise.resolve(params);
     }
