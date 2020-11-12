@@ -15,7 +15,7 @@ Migration Toolkit for Applications (MTA) (the product of the downstream project 
 
 ## VSCode
 
-This extension is published [here](https://marketplace.visualstudio.com/items?itemName=redhat.rhamt-vscode-extension) in the Microsoft Visual Studio Marketplace.
+This extension is published [here](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension) in the Microsoft Visual Studio Marketplace.
 
 ![VSCode Extension Marketplace View](resources/mta_vscode_installation.png)
 

@@ -122,7 +122,7 @@
                     "mta.executable.path": {
                         "type": "string",
                         "default": "",
-                        "description": "Specifies absolute path of Migration Toolkit for Applications executable (mta-cli)",
+                        "description": "Specifies absolute path to the Migration Toolkit for Applications executable (e.g., /path/to/mta/bin/mta-cli)",
                         "scope": "window"
                     }
                 }
