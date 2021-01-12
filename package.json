@@ -2,7 +2,7 @@
     "name": "mta-vscode-extension",
     "displayName": "Migration Toolkit for Applications",
     "description": "Migration Toolkit for Applications (MTA)",
-    "version": "0.0.58",
+    "version": "0.0.59",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
@@ -44,8 +44,7 @@
     },
     "main": "./out/src/extension",
     "contributes": {
-        "commands": [
-            {
+        "commands": [{
                 "category": "Migration Toolkit for Applications (MTA)",
                 "command": "rhamt.newConfiguration",
                 "title": "New Configuration",
@@ -115,52 +114,41 @@
                 "title": "Preview Quickfix"
             }
         ],
-        "configuration": [
-            {
-                "title": "Migration Toolkit for Applications (MTA)",
-                "properties": {
-                    "mta.executable.path": {
-                        "type": "string",
-                        "default": "",
-                        "description": "Specifies absolute path to the Migration Toolkit for Applications executable (e.g., /path/to/mta/bin/mta-cli)",
-                        "scope": "window"
-                    }
+        "configuration": [{
+            "title": "Migration Toolkit for Applications (MTA)",
+            "properties": {
+                "mta.executable.path": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Specifies absolute path to the Migration Toolkit for Applications executable (e.g., /path/to/mta/bin/mta-cli)",
+                    "scope": "window"
                 }
             }
-        ],
+        }],
         "viewsContainers": {
-            "activitybar": [
-                {
-                    "id": "rhamt-explorer",
-                    "title": "Migration Toolkit for Applications",
-                    "icon": "resources/mta.svg"
-                }
-            ]
+            "activitybar": [{
+                "id": "rhamt-explorer",
+                "title": "Migration Toolkit for Applications",
+                "icon": "resources/mta.svg"
+            }]
         },
         "views": {
-            "rhamt-explorer": [
-                {
-                    "id": "rhamtExplorerView",
-                    "name": "Explorer"
-                }
-            ]
+            "rhamt-explorer": [{
+                "id": "rhamtExplorerView",
+                "name": "Explorer"
+            }]
         },
-        "snippets": [
-            {
-                "language": "xml",
-                "path": "./rule-snippets/xml.json"
-            }
-        ],
+        "snippets": [{
+            "language": "xml",
+            "path": "./rule-snippets/xml.json"
+        }],
         "menus": {
-            "view/title": [
-                {
-                    "command": "rhamt.newConfiguration",
-                    "when": "view == rhamtExplorerView && rhamtReady",
-                    "group": "navigation"
-                }
-            ],
-            "view/item/context": [
-                {
+            "view/title": [{
+                "command": "rhamt.newConfiguration",
+                "when": "view == rhamtExplorerView && rhamtReady",
+                "group": "navigation"
+            }],
+            "view/item/context": [{
                     "command": "rhamt.runConfiguration",
                     "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration",
                     "group": "rhamt"
