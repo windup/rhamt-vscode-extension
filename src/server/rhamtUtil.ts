@@ -85,6 +85,8 @@ export class RhamtUtil {
                 const monitor = new ProgressMonitor(progress, onComplete);
                 let startedProgress = false;
                 const onMessage = (data: string) => {
+                    console.log(`Output: ` + data);
+                    rhamtChannel.print(data);
                     if (data.includes(PROGRESS)) {
                         const trimmed = data.trim();
                         const split = trimmed.split(PROGRESS);
