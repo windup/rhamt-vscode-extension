@@ -22,7 +22,7 @@ import { ReportServer } from './report/reportServer';
 import { ConfigurationEditorSerializer } from './editor/configurationEditorSerializer';
 import { QuickfixContentProvider } from './quickfix/contentProvider';
 import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvider';
-import { homedir } from 'os';
+// import { homedir } from 'os';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -31,9 +31,16 @@ let configEditorServer: ConfigurationEditorServer;
 let reportServer: ReportServer;
 
 export async function activate(context: vscode.ExtensionContext) {
-    // stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling');
-    stateLocation = path.join(homedir(), '.mta', 'tooling');
+    // stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling', 'vscode');
+    // stateLocation = path.join(homedir(), '.mta', 'tooling', 'vscode');
+    stateLocation = path.join(context.storagePath, '.mta', 'tooling', 'vscode');
     console.log(`mta state location is: ${stateLocation}`);
+
+    console.log(context.storagePath);
+    console.log(context.globalStoragePath);
+    console.log(context.workspaceState);
+    console.log(context.extensionPath);
+    
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
     const locations = await endpoints.getEndpoints(context, out);
