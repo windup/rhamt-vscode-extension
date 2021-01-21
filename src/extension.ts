@@ -33,7 +33,8 @@ let reportServer: ReportServer;
 export async function activate(context: vscode.ExtensionContext) {
     // stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling', 'vscode');
     // stateLocation = path.join(homedir(), '.mta', 'tooling', 'vscode');
-    stateLocation = path.resolve(context.storagePath, '..', '.mta', 'tooling', 'vscode');
+    // stateLocation = path.resolve(context.storagePath, '..', '.mta', 'tooling', 'vscode');
+    stateLocation = path.resolve('home', 'theia', 'rhamt'); // /home/theia/rhamt)
     console.log(`mta state location is: ${stateLocation}`);
 
     console.log(context.storagePath);
