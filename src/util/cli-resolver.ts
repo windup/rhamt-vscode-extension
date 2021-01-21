@@ -5,7 +5,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-const RHAMT_VERSION = '5.1.1.Alpha1';
+const RHAMT_VERSION = '5.1.1.Final';
 const RHAMT_FOLDER = `mta-cli-${RHAMT_VERSION}`;
 
 export function findRhamtCli(outDir: string): Promise<string> {
