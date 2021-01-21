@@ -22,7 +22,6 @@ import { ReportServer } from './report/reportServer';
 import { ConfigurationEditorSerializer } from './editor/configurationEditorSerializer';
 import { QuickfixContentProvider } from './quickfix/contentProvider';
 import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvider';
-// import { homedir } from 'os';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -32,7 +31,7 @@ let reportServer: ReportServer;
 
 export async function activate(context: vscode.ExtensionContext) {
     if (vscode.env.appName === "Eclipse Che") {
-        stateLocation = path.join('home', 'theia', 'rhamt', 'redhat.rhamt-vscode-extension');
+        stateLocation = path.resolve('home', 'theia', 'rhamt', 'redhat.rhamt-vscode-extension');
     }
     else {
         stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling', 'vscode');
