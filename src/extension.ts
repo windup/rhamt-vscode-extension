@@ -31,7 +31,7 @@ let reportServer: ReportServer;
 
 export async function activate(context: vscode.ExtensionContext) {
     if (vscode.env.appName === "Eclipse Che") {
-        stateLocation = path.join('/home', 'theia', 'rhamt', 'redhat.mta-vscode-extension');
+        stateLocation = path.join('/home', 'theia', 'mta', 'redhat.mta-vscode-extension');
     }
     else {
         stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling', 'vscode');
