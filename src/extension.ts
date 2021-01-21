@@ -31,16 +31,14 @@ let configEditorServer: ConfigurationEditorServer;
 let reportServer: ReportServer;
 
 export async function activate(context: vscode.ExtensionContext) {
-    // stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling', 'vscode');
-    // stateLocation = path.join(homedir(), '.mta', 'tooling', 'vscode');
-    // stateLocation = path.resolve(context.storagePath, '..', '.mta', 'tooling', 'vscode');
-    stateLocation = path.resolve('home', 'theia', 'rhamt'); // /home/theia/rhamt)
+    if (vscode.env.appName === "Eclipse Che") {
+        stateLocation = path.resolve('home', 'theia', 'rhamt');
+    }
+    else {
+        stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling', 'vscode');
+    }
+    
     console.log(`mta state location is: ${stateLocation}`);
-
-    console.log(context.storagePath);
-    console.log(context.globalStoragePath);
-    console.log(context.workspaceState);
-    console.log(context.extensionPath);
     
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
