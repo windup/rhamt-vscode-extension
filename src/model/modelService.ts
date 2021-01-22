@@ -18,6 +18,7 @@ export class ModelService {
     constructor(
         public model: RhamtModel,
         public outDir: string,
+        public outputLocation: string,
         public endpoints: Endpoints) {
     }
 
@@ -43,6 +44,7 @@ export class ModelService {
         config.name = name;
         config.options['output'] = path.resolve(this.outDir, config.id);
         config.options['sourceMode'] = true;
+        config.options['generateOutputLocation'] = path.resolve(this.outputLocation, config.id);
         return config;
     }
 

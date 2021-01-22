@@ -27,15 +27,18 @@ import * as os from 'os';
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
 let stateLocation: string;
+let outputLocation: string;
 let configEditorServer: ConfigurationEditorServer;
 let reportServer: ReportServer;
 
 export async function activate(context: vscode.ExtensionContext) {
     if (vscode.env.appName === "Eclipse Che") {
-        stateLocation = path.join(os.homedir()); //path.join('/home', 'theia', 'mta', 'redhat.mta-vscode-extension');
+        stateLocation = path.join('/home', 'theia', 'mta', 'redhat.mta-vscode-extension');
+        outputLocation = path.join(os.homedir(), 'mta', 'output');
     }
     else {
         stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling', 'vscode');
+        outputLocation = stateLocation;
     }
     
     console.log(`mta state location is: ${stateLocation}`);
@@ -43,7 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation, 'data');
     const locations = await endpoints.getEndpoints(context, out);
-    modelService = new ModelService(new RhamtModel(), out, locations);
+    modelService = new ModelService(new RhamtModel(), out, outputLocation, locations);
     const configEditorService = new ConfigurationEditorService(locations, context);
 
     const configServerController = new ConfigurationServerController(modelService);

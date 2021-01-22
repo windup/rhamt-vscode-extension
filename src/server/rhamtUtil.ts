@@ -12,6 +12,7 @@ import * as path from 'path';
 import { AnalysisResultsUtil, AnalysisResults } from '../model/analysisResults';
 import { ModelService } from '../model/modelService';
 import { rhamtChannel } from '../util/console';
+import * as fs from 'fs-extra';
 const PROGRESS = ':progress:';
 const START_TIMEOUT = 60000;
 const START_PROGRESS = 'Using user rules dir:';
@@ -56,6 +57,17 @@ export class RhamtUtil {
                 const executedTimestamp = `${date.getMonth()}/${date.getDate()}/${year} @ ${timestamp}${sun}`;
                 const onComplete = async () => {
                     processController.shutdown();
+                    if (config.options['ouput'] != config.options['generateOutputLocation']) {
+                        progress.report({message: 'Gathering results...'});
+                        try {
+                            fs.moveSync(config.options['generateOutputLocation'], config.options['ouput']);  
+                            // fs. rmdirSync(config.options['generateOutputLocation']);                  
+                        }
+                        catch (e) {
+                            console.log(`Error moving results: ${e}`);
+                            vscode.window.showErrorMessage(e);
+                        }
+                    }
                     if (!skipReport) {
                         vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
                             if (result === 'Open Report') {
@@ -172,7 +184,7 @@ export class RhamtUtil {
 
         // output
         params.push('--output');
-        const output = config.options['output'];
+        const output = config.options['generateOutputLocation'];
         if (!output || output === '') {
             return Promise.reject('output is missing from configuration');
         }
