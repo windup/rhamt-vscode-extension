@@ -22,6 +22,7 @@ import { ReportServer } from './report/reportServer';
 import { ConfigurationEditorSerializer } from './editor/configurationEditorSerializer';
 import { QuickfixContentProvider } from './quickfix/contentProvider';
 import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvider';
+import * as os from 'os';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -31,7 +32,7 @@ let reportServer: ReportServer;
 
 export async function activate(context: vscode.ExtensionContext) {
     if (vscode.env.appName === "Eclipse Che") {
-        stateLocation = path.join('/home', 'theia'); //, 'mta', 'redhat.mta-vscode-extension');
+        stateLocation = path.join(os.homedir()); //path.join('/home', 'theia', 'mta', 'redhat.mta-vscode-extension');
     }
     else {
         stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling', 'vscode');
