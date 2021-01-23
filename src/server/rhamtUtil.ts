@@ -57,7 +57,10 @@ export class RhamtUtil {
                 const executedTimestamp = `${date.getMonth()}/${date.getDate()}/${year} @ ${timestamp}${sun}`;
                 const onComplete = async () => {
                     processController.shutdown();
+                    console.log(`config output: ${config.options['output']}`);
+                    console.log(`config generated location: ${config.options['generateOutputLocation']}`);
                     if (config.options['ouput'] != config.options['generateOutputLocation']) {
+                        console.log('moving results...');
                         progress.report({message: 'Gathering results...'});
                         try {
                             fs.moveSync(config.options['generateOutputLocation'], config.options['ouput']);  
