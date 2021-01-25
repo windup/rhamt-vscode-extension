@@ -67,7 +67,11 @@ export class RhamtUtil {
                             console.log(config.options['generateOutputLocation']);
                             console.log(typeof config.options['output']);
                             console.log(typeof config.options['generateOutputLocation']);
-                            fs.moveSync(config.options['generateOutputLocation'], config.options['ouput']);  
+                            const output: string = config.options['output'];
+                            const generated: string = config.options['generateOutputLocation'];
+                            console.log(output);
+                            console.log(generated);
+                            fs.moveSync(generated, output);  
                             // fs. rmdirSync(config.options['generateOutputLocation']);                  
                         }
                         catch (e) {
