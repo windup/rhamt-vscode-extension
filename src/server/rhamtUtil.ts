@@ -71,7 +71,7 @@ export class RhamtUtil {
                             const generated: string = config.options['generateOutputLocation'];
                             console.log(output);
                             console.log(generated);
-                            fs.moveSync(generated, output);  
+                            fs.moveSync(generated, output, {overwrite: true});  
                             // fs. rmdirSync(config.options['generateOutputLocation']);                  
                         }
                         catch (e) {
