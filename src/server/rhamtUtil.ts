@@ -63,6 +63,10 @@ export class RhamtUtil {
                         console.log('moving results...');
                         progress.report({message: 'Gathering results...'});
                         try {
+                            console.log(config.options['output']);
+                            console.log(config.options['generateOutputLocation']);
+                            console.log(typeof config.options['output']);
+                            console.log(typeof config.options['generateOutputLocation']);
                             fs.moveSync(config.options['generateOutputLocation'], config.options['ouput']);  
                             // fs. rmdirSync(config.options['generateOutputLocation']);                  
                         }
