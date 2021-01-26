@@ -57,22 +57,13 @@ export class RhamtUtil {
                 const executedTimestamp = `${date.getMonth()}/${date.getDate()}/${year} @ ${timestamp}${sun}`;
                 const onComplete = async () => {
                     processController.shutdown();
-                    console.log(`config output: ${config.options['output']}`);
-                    console.log(`config generated location: ${config.options['generateOutputLocation']}`);
                     if (config.options['ouput'] != config.options['generateOutputLocation']) {
-                        console.log('moving results...');
+                        console.log('Gathering results...');
                         progress.report({message: 'Gathering results...'});
                         try {
-                            console.log(config.options['output']);
-                            console.log(config.options['generateOutputLocation']);
-                            console.log(typeof config.options['output']);
-                            console.log(typeof config.options['generateOutputLocation']);
                             const output: string = config.options['output'];
                             const generated: string = config.options['generateOutputLocation'];
-                            console.log(output);
-                            console.log(generated);
-                            fs.moveSync(generated, output, {overwrite: true});  
-                            // fs. rmdirSync(config.options['generateOutputLocation']);                  
+                            fs.moveSync(generated, output, {overwrite: true});           
                         }
                         catch (e) {
                             console.log(`Error moving results: ${e}`);
@@ -108,8 +99,6 @@ export class RhamtUtil {
                 const monitor = new ProgressMonitor(progress, onComplete);
                 let startedProgress = false;
                 const onMessage = (data: string) => {
-                    console.log(`Output: ` + data);
-                    rhamtChannel.print(data);
                     if (data.includes(PROGRESS)) {
                         const trimmed = data.trim();
                         const split = trimmed.split(PROGRESS);
