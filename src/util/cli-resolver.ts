@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs-extra';
 
 const RHAMT_VERSION = '5.1.1.Final';
 const RHAMT_FOLDER = `mta-cli-${RHAMT_VERSION}`;
@@ -24,7 +25,8 @@ export function findRhamtCli(outDir: string): Promise<string> {
             return resolve(executable);
         }
         rhamtHome = findRhamtCliDownload(outDir);
-        if (rhamtHome) {
+
+        if (fs.existsSync(rhamtHome)) {
             console.log(`mta-cli download found at - ${rhamtHome}`);
             const executable = getRhamtExecutable(rhamtHome);
             console.log(`mta-cli executable - ${executable}`);
