@@ -149,9 +149,14 @@ export namespace Utils {
     export async function downloadCli(dataOut: string): Promise<any> {
         const handler = { log: msg => console.log(`mta-cli download message: ${msg}`) };
         const out = path.resolve(dataOut, 'mta-cli');
-        RhamtInstaller.installCli(PREVIEW_DOWNLOAD_CLI_LOCATION, out, handler).then(home => {
+        RhamtInstaller.installCli(PREVIEW_DOWNLOAD_CLI_LOCATION, out, handler).then(async () => {
             window.showInformationMessage('mta-cli download complete');
-            workspace.getConfiguration().update('mta.executable.path', cliResolver.getRhamtExecutable(home));
+            const home = cliResolver.findRhamtCliDownload(dataOut);
+            const cli = cliResolver.getRhamtExecutable(home);
+            if (fse.existsSync(cli)) {
+                await fse.chmod(cli, '0764');
+            }
+            workspace.getConfiguration().update('mta.executable.path', cli);
         }).catch(e => {
             console.log(e);
             window.showErrorMessage(`Error downloading mta-cli: ${e}`);
