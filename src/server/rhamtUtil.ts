@@ -93,7 +93,7 @@ export class RhamtUtil {
                     }
                     onAnalysisComplete();
                     if (!resolved) {
-                        resolve();
+                        resolve(undefined);
                     }
                 };
                 const monitor = new ProgressMonitor(progress, onComplete);
@@ -131,7 +131,7 @@ export class RhamtUtil {
                     console.log('mta-cli shutdown');
                     if (!resolved) {
                         resolved = true;
-                        resolve();
+                        resolve(undefined);
                     }
                 };
                 try {
@@ -157,7 +157,7 @@ export class RhamtUtil {
                     }
                     if (!resolved) {
                         resolved = true;
-                        resolve();
+                        resolve(undefined);
                     }
                 });
                 progress.report({ message: 'Preparing analysis configuration...' });
