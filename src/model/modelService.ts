@@ -98,14 +98,14 @@ export class ModelService {
                 }
                 else {
                     this.loaded = true;
-                    resolve();
+                    resolve(this.model);
                 }
             });
         });
     }
 
-    public reload(): Promise<any> {
-        return new Promise<any> ((resolve, reject) => {
+    public reload(): Promise<void> {
+        return new Promise<void> ((resolve, reject) => {
             const parse = async data => {
                 if (data.byteLength > 0) {
                     const newConfigs = [];
@@ -202,8 +202,8 @@ export class ModelService {
         return allRulesets;
     }
 
-    private parse(data: any): Promise<any> {
-        return new Promise<any>(async (resolve, reject) => {
+    private parse(data: any): Promise<void> {
+        return new Promise<void>(async (resolve, reject) => {
             if (data.byteLength > 0) {
                 let configs: any;
                 try {
