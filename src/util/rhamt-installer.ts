@@ -8,7 +8,6 @@ import * as fs from 'fs-extra';
 import { Disposable, ProgressLocation, window } from 'vscode';
 import * as tmp from 'tmp';
 const requestProgress = require('request-progress');
-import * as path from 'path';
 import { createDeferred } from './async';
 import { ChangeType } from '../model/model';
 
@@ -32,11 +31,11 @@ export class InstallHandler {
 
 export class RhamtInstaller {
 
-    static installCli(url: string, downloadDir: string, handler: InstallHandler): Promise<any> {
-        return new Promise<any> ((resolve, reject) => {
-            RhamtInstaller.downloadRhamt(url, downloadDir, handler).then(home => {
+    static installCli(url: string, downloadDir: string, handler: InstallHandler): Promise<void> {
+        return new Promise<void> ((resolve, reject) => {
+            RhamtInstaller.downloadRhamt(url, downloadDir, handler).then(() => {
                 console.log('download & extract complete');
-                resolve(home);
+                resolve();
             }).catch(e => {
                 console.log('error download & extract: ' + e);
                 reject({type: ChangeType.ERROR, name: 'installCliChanged', value: {url, downloadDir, e}});
@@ -44,7 +43,7 @@ export class RhamtInstaller {
         });
     }
 
-    private static async downloadRhamt(url: string, downloadDir: string, handler: InstallHandler): Promise<string> {
+    private static async downloadRhamt(url: string, downloadDir: string, handler: InstallHandler): Promise<void> {
         const downloadUri = url;
         const timer: Watch = new Watch();
         let localTempFilePath = '';
@@ -57,15 +56,14 @@ export class RhamtInstaller {
 
         timer.reset();
 
-        let home = '';
         try {
-            home = await RhamtInstaller.unpackArchive(downloadDir, localTempFilePath, handler);
+            await RhamtInstaller.unpackArchive(downloadDir, localTempFilePath, handler);
         } catch (err) {
             return Promise.reject(err);
         } finally {
             await RhamtInstaller.deleteFile(localTempFilePath);
         }
-        return Promise.resolve(home);
+        return Promise.resolve();
     }
 
     private static deleteFile(filename: string): Promise<void> {
@@ -148,7 +146,7 @@ export class RhamtInstaller {
         return tempFile.filePath;
     }
 
-    private static async unpackArchive(downloadDir: string, tempFilePath: string, handler: InstallHandler): Promise<string> {
+    private static async unpackArchive(downloadDir: string, tempFilePath: string, handler: InstallHandler): Promise<void> {
         handler.log('Unpacking archive... ');
 
         const deferred = createDeferred();
@@ -186,17 +184,7 @@ export class RhamtInstaller {
             });
             return deferred.promise;
         });
-
-        const entries = fileSystem.readdirSync(downloadDir);
-        const index = entries.findIndex(index => index.startsWith('mta-cli'));
-        if (index > -1) {
-            const executablePath = path.join(downloadDir, entries[index], 'bin', 'mta-cli');
-            await fs.chmod(executablePath, '0764');
-            return Promise.resolve(path.join(downloadDir, entries[index]));
-        }
-        else {
-            return Promise.reject();
-        }
+        return Promise.resolve();
     }
 
     private static async doDownloadFile(uri: string): Promise<requestTypes.Request> {
