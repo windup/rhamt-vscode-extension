@@ -26,6 +26,7 @@
           "cloud-readiness",
           "jbpm",
           "quarkus",
+          "quarkus1",
           "drools",
           "fsw",
           "eap7",
