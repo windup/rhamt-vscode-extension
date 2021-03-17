@@ -76,12 +76,17 @@ class SocketWrapper {
 exports.SocketWrapper = SocketWrapper;
 class ConfigClient {
     constructor(host, id, elementData, form) {
+        // const url = `${window.location.protocol}//${host}?id=${id}`;
         const url = `${host}?id=${id}`;
         this.store = new RhamtConfigurationStore(host, id);
         this._services = new Services(this.store);
         this.elementData = elementData;
         this.form = form;
-        this._socket = new SocketWrapper(io.connect(url));
+        const tempUrl = new URL(url);
+        console.log(`host: ${host}`);
+        console.log(`url: ${url}`);
+        console.log(`pathname: ${tempUrl.pathname}`);
+        this._socket = new SocketWrapper(io.connect(url, {path: tempUrl.pathname}));
         this._socket.onServerMessage('connect', () => {
         });
         this._socket.onServerMessage('disconnect', () => {
