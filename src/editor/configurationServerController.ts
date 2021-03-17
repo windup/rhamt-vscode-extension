@@ -9,6 +9,7 @@ import { RhamtConfiguration } from '../model/model';
 export class ConfigurationServerController {
 
     private modelService: ModelService;
+    location: String;
 
     constructor(
         modelService: ModelService) {
@@ -18,7 +19,17 @@ export class ConfigurationServerController {
     get(req: Request, res: Response, next: NextFunction): void {
         const config = this.modelService.getConfiguration(req.params.id);
         if (config) {
-            res.render('index', {configId: JSON.stringify(config.id), elementData: JSON.stringify(this.modelService.elementData)});
+            if (!this.location.endsWith('/')) {
+                this.location = `${location}/`;
+            }
+            res.render(
+                'index',
+                {
+                    configId: JSON.stringify(config.id),
+                    elementData: JSON.stringify(this.modelService.elementData),
+                    base: this.location
+                }
+            );
         }
         else {
             ConfigurationServerController.configurationNotFound(req, res);

@@ -36,6 +36,7 @@ export class ConfigurationEditorServer {
             this.app = express();
             let location = await this.endpoints.configurationLocation();
             console.log(`location: ${location}`);
+            this.controller.location = location;
             this.server = this.app.listen(this.endpoints.configurationPort());
             let cancelled = false;
             const doResolve = (() => {
