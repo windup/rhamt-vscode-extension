@@ -86,7 +86,7 @@ class ConfigClient {
         console.log(`host: ${host}`);
         console.log(`url: ${url}`);
         console.log(`pathname: ${tempUrl.pathname}`);
-        this._socket = new SocketWrapper(io.connect(url, {path: tempUrl.pathname}));
+        this._socket = new SocketWrapper(io.connect(url, {path: tempUrl.pathname + '/socket.io'}));
         this._socket.onServerMessage('connect', () => {
         });
         this._socket.onServerMessage('disconnect', () => {
