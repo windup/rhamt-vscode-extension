@@ -27,7 +27,8 @@ export class ConfigurationServerController {
                 {
                     configId: JSON.stringify(config.id),
                     elementData: JSON.stringify(this.modelService.elementData),
-                    base: this.location
+                    base: this.location,
+                    hostUrl: JSON.stringify(this.location)
                 }
             );
         }

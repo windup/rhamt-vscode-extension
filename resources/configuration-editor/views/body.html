@@ -81,7 +81,7 @@
         <script>
           $(document).ready(function () {
             
-            var configClient = new ConfigClient(window.location.host, configId, elementData, $('#elementForm'), document);
+            var configClient = new ConfigClient(hostUrl, configId, elementData, $('#elementForm'), document);
 
             function bindCommonElements() {
                 $('#configurationName').keyup(function(e){
