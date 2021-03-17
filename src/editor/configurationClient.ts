@@ -46,9 +46,13 @@ export class ConfigurationClient {
             this.onUpdateCli.emit(msg);
         });
         this.socket.on('addOptionValue', (msg: any) => {
+            console.log(`socket :: addOptionValue - ${msg}`);
+            console.log(msg);
             this.onAddOptionValue.emit({option: msg.option, value: msg.value});
         });
         this.socket.on('updateOption', (msg: any) => {
+            console.log(`socket :: updateOption - ${msg}`);
+            console.log(msg);
             this.onUpdateOption.emit({name: msg.name, value: msg.value});
         });
         this.socket.on('openReport', (msg: any) => {
