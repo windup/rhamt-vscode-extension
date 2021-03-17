@@ -59,7 +59,8 @@ class SocketWrapper {
     constructor(_socket) {
         this._socket = _socket;
         this._socket.on('error', function onSocketError(e) {
-            console.log('WebSocket Error ' + error);
+            console.log('WebSocket Error ' + e);
+            console.log(e);
         });
     }
     onServerMessage(message, fn) {
