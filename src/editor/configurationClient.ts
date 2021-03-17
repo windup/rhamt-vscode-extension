@@ -32,6 +32,9 @@ export class ConfigurationClient {
     }
 
     listen(): void {
+        this.socket.on('connect_failed', function() {
+            document.write("Sorry, there seems to be an issue with the connection!");
+         })
         this.socket.on('disconnect', () => {
             console.log('ConfigurationClient received event from client :: disconnect -> triggering disposed()???');
             this.onDisposed.emit(undefined);

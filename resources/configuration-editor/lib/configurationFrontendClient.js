@@ -58,9 +58,14 @@ class RhamtConfigurationStore {
 class SocketWrapper {
     constructor(_socket) {
         this._socket = _socket;
+        this._socket.on('error', function onSocketError(e) {
+            console.log('WebSocket Error ' + error);
+        });
     }
     onServerMessage(message, fn) {
         return this._socket.on(message, (...args) => {
+            console.log(`Message from socket server: ${message}.`);
+            console.log(...args);
             try {
                 fn(...args);
             }
@@ -83,10 +88,16 @@ class ConfigClient {
         this.elementData = elementData;
         this.form = form;
         const tempUrl = new URL(url);
+        let connectUrl = tempUrl.pathname;
+        if (!connectUrl.endsWith('/')) {
+            connectUrl = `${location}/`;
+        }
+        connectUrl = connectUrl + 'socket.io'
         console.log(`host: ${host}`);
         console.log(`url: ${url}`);
         console.log(`pathname: ${tempUrl.pathname}`);
-        this._socket = new SocketWrapper(io.connect(url, {path: tempUrl.pathname + '/socket.io'}));
+        console.log(`connectUrl: ${connectUrl}`);
+        this._socket = new SocketWrapper(io.connect(url, {path: connectUrl}));
         this._socket.onServerMessage('connect', () => {
         });
         this._socket.onServerMessage('disconnect', () => {
