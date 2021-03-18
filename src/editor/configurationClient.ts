@@ -33,7 +33,7 @@ export class ConfigurationClient {
 
     listen(): void {
         this.socket.on('connect_failed', function() {
-            document.write("Sorry, there seems to be an issue with the connection!");
+            console.log("connection_failed");
          })
         this.socket.on('disconnect', () => {
             console.log('ConfigurationClient received event from client :: disconnect -> triggering disposed()???');
@@ -49,13 +49,9 @@ export class ConfigurationClient {
             this.onUpdateCli.emit(msg);
         });
         this.socket.on('addOptionValue', (msg: any) => {
-            console.log(`socket :: addOptionValue - ${msg}`);
-            console.log(msg);
             this.onAddOptionValue.emit({option: msg.option, value: msg.value});
         });
         this.socket.on('updateOption', (msg: any) => {
-            console.log(`socket :: updateOption - ${msg}`);
-            console.log(msg);
             this.onUpdateOption.emit({name: msg.name, value: msg.value});
         });
         this.socket.on('openReport', (msg: any) => {

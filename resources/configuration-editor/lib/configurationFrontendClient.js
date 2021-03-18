@@ -82,7 +82,6 @@ class SocketWrapper {
 exports.SocketWrapper = SocketWrapper;
 class ConfigClient {
     constructor(host, id, elementData, form) {
-        // const url = `${window.location.protocol}//${host}?id=${id}`;
         const url = `${host}?id=${id}`;
         this.store = new RhamtConfigurationStore(host, id);
         this._services = new Services(this.store);
@@ -93,13 +92,9 @@ class ConfigClient {
         if (!connectPath.endsWith('/')) {
             connectPath = `${location}/`;
         }
-        connectPath = connectPath + 'socket.io'
-        console.log(`host: ${host}`);
-        console.log(`url: ${url}`);
-        console.log(`pathname: ${tempUrl.pathname}`);
-        console.log(`connectUrl: ${connectPath}`);
+        connectPath = connectPath + 'socket.io';
         this._socket = new SocketWrapper(io.connect(
-            tempUrl.origin/*url*/, {path: connectPath, query: {"id": id}})
+            tempUrl.origin, {path: connectPath, query: {"id": id}})
         );
         this._socket.onServerMessage('connect', () => {
         });
