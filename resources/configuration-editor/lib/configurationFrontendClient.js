@@ -89,16 +89,18 @@ class ConfigClient {
         this.elementData = elementData;
         this.form = form;
         const tempUrl = new URL(url);
-        let connectUrl = tempUrl.pathname;
-        if (!connectUrl.endsWith('/')) {
-            connectUrl = `${location}/`;
+        let connectPath = tempUrl.pathname;
+        if (!connectPath.endsWith('/')) {
+            connectPath = `${location}/`;
         }
-        connectUrl = connectUrl + 'socket.io'
+        connectPath = connectPath + 'socket.io'
         console.log(`host: ${host}`);
         console.log(`url: ${url}`);
         console.log(`pathname: ${tempUrl.pathname}`);
-        console.log(`connectUrl: ${connectUrl}`);
-        this._socket = new SocketWrapper(io.connect(url, {path: connectUrl}));
+        console.log(`connectUrl: ${connectPath}`);
+        this._socket = new SocketWrapper(io.connect(
+            tempUrl.origin/*url*/, {path: connectPath, query: {"id": id}})
+        );
         this._socket.onServerMessage('connect', () => {
         });
         this._socket.onServerMessage('disconnect', () => {
