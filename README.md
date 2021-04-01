@@ -1,6 +1,5 @@
 # Migration Toolkit for Applications (MTA) Visual Studio Code Extension
 
-[![Build Status](https://travis-ci.org/windup/rhamt-vscode-extension.svg?branch=master)](https://travis-ci.org/windup/rhamt-vscode-extension)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/windup/rhamt-vscode-extension/blob/master/README.md)
 [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension)
 [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/installs/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension)
