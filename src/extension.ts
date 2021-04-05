@@ -44,7 +44,7 @@ export async function activate(context: vscode.ExtensionContext) {
     console.log(`mta state location is: ${stateLocation}`);
     
     await Utils.loadPackageInfo(context);
-    const out = path.join(stateLocation, 'data');
+    const out = path.join(stateLocation);
     const locations = await endpoints.getEndpoints(context, out);
     modelService = new ModelService(new RhamtModel(), out, outputLocation, locations);
     const configEditorService = new ConfigurationEditorService(locations, context);
