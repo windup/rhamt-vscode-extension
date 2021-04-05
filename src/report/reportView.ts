@@ -24,6 +24,9 @@ export class ReportView {
         if (!location) {
             return window.showErrorMessage(`Unable to find report on filesystem`);
         }
+        console.log(`report: ${location}`);
+        console.log(`this.endpoints.reportsRoot() - ${this.endpoints.reportsRoot()}`);
+        
         const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
         const url = await this.endpoints.reportLocation();
         const report = `${url}${relative}`;
