@@ -4,16 +4,19 @@
  *--------------------------------------------------------------------------------------------*/
 import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, env, Uri } from 'vscode';
 import { Endpoints } from '../model/model';
+import { ModelService } from '../model/modelService';
 
 export class ReportView {
 
     private view: WebviewPanel | undefined = undefined;
     private endpoints: Endpoints;
     private context: ExtensionContext;
+    private modelService: ModelService;
 
-    constructor(context: ExtensionContext, endpoints: Endpoints) {
+    constructor(context: ExtensionContext, endpoints: Endpoints, modelService: ModelService) {
         this.context = context;
         this.endpoints = endpoints;
+        this.modelService = modelService;
         this.context.subscriptions.push(commands.registerCommand('rhamt.openReportExternal', async item => {
             this.openReport(item, true);
         }));
@@ -29,7 +32,8 @@ export class ReportView {
         
         
         // const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
-        const relative = location.replace(`${item.config.options['output']}/`, '');
+        // const relative = location.replace(`${item.config.options['output']}/`, '');
+        const relative = location.replace(`${this.modelService.outDir}/`, '');
         console.log(`relative: ` + relative);
         
         const url = await this.endpoints.reportLocation();
