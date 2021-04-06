@@ -27,10 +27,11 @@ export class ReportView {
         console.log(`report: ${location}`);
         console.log(`this.endpoints.reportsRoot() - ${this.endpoints.reportsRoot()}`);
         
-        const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
+        
+        // const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
+        const relative = location.replace(`${item.config.options['output']}/`, '');
         console.log(`relative: ` + relative);
         
-
         const url = await this.endpoints.reportLocation();
         const report = `${url}${relative}`;
 
