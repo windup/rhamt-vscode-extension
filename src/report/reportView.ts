@@ -4,19 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, env, Uri } from 'vscode';
 import { Endpoints } from '../model/model';
-import { ModelService } from '../model/modelService';
+import * as path from 'path';
 
 export class ReportView {
 
     private view: WebviewPanel | undefined = undefined;
     private endpoints: Endpoints;
     private context: ExtensionContext;
-    private modelService: ModelService;
 
-    constructor(context: ExtensionContext, endpoints: Endpoints, modelService: ModelService) {
+    constructor(context: ExtensionContext, endpoints: Endpoints) {
         this.context = context;
         this.endpoints = endpoints;
-        this.modelService = modelService;
         this.context.subscriptions.push(commands.registerCommand('rhamt.openReportExternal', async item => {
             this.openReport(item, true);
         }));
@@ -28,13 +26,12 @@ export class ReportView {
             return window.showErrorMessage(`Unable to find report on filesystem`);
         }
         console.log(`report: ${location}`);
-        console.log(`this.endpoints.reportsRoot() - ${this.endpoints.reportsRoot()}`);
         
-        
-        // const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
-        // const relative = location.replace(`${item.config.options['output']}/`, '');
-        const relative = location.replace(`${this.modelService.outDir}/`, '');
-        console.log(`relative: ` + relative);
+        const segments = location.split(path.sep);
+        const index = segments.indexOf(item.config.id);
+        const relative = segments.splice(index, index).join(path.sep);
+
+        console.log(`report path: ${relative}`);
         
         const url = await this.endpoints.reportLocation();
         const report = `${url}${relative}`;

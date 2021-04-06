@@ -62,7 +62,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }
 
     new RhamtView(context, modelService, configEditorService, locations);
-    new ReportView(context, locations, modelService);
+    new ReportView(context, locations);
     detailsView = new IssueDetailsView(context, locations);
     
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
