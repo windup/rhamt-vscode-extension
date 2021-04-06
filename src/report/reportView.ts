@@ -28,8 +28,14 @@ export class ReportView {
         console.log(`this.endpoints.reportsRoot() - ${this.endpoints.reportsRoot()}`);
         
         const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
+        console.log(`relative: ` + relative);
+        
+
         const url = await this.endpoints.reportLocation();
         const report = `${url}${relative}`;
+
+        console.log(`url: ${report}`);
+        
         this.open(report, external);
     }
 
