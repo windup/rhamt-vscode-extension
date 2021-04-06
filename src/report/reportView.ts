@@ -5,6 +5,7 @@
 import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, env, Uri } from 'vscode';
 import { Endpoints } from '../model/model';
 import * as path from 'path';
+import { ReportItem } from '../tree/reportItem';
 
 export class ReportView {
 
@@ -26,6 +27,13 @@ export class ReportView {
             return window.showErrorMessage(`Unable to find report on filesystem`);
         }
         console.log(`report: ${location}`);
+
+        console.log("Item:");
+        console.log("item instanceof ReportItem: " + (item instanceof ReportItem));
+        console.log(item);
+        console.log("constructor: " + item.constructor)
+        
+        
         
         const segments = location.split(path.sep);
         const index = segments.indexOf(item.config.id);
