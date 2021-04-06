@@ -63,6 +63,10 @@ export class RhamtUtil {
                         try {
                             const output: string = config.options['output'];
                             const generated: string = config.options['generateOutputLocation'];
+                            
+                            console.log(`generated: ${generated}`);
+                            console.log(`output: ${output}`);
+                                                        
                             fs.moveSync(generated, output, {overwrite: true});           
                         }
                         catch (e) {
