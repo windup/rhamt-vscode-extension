@@ -33,8 +33,6 @@ export class ReportView {
         console.log(item);
         console.log("constructor: " + item.constructor)
         
-        
-        
         const segments = location.split(path.sep);
         const index = segments.indexOf(item.config.id);
         const relative = segments.splice(index, index).join(path.sep);

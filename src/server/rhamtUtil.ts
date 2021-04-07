@@ -78,6 +78,7 @@ export class RhamtUtil {
                         vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
                             if (result === 'Open Report') {
                                 vscode.commands.executeCommand('rhamt.openReportExternal', {
+                                    config,
                                     getReport: () => {
                                         return config.getReport();
                                     }
