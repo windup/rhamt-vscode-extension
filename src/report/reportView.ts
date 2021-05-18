@@ -31,7 +31,7 @@ export class ReportView {
         const index = segments.indexOf(item.config.id);
         const relative = segments.splice(index, index).join(path.sep);
 
-        console.log(`report report path: ${relative}`);
+        console.log(`report path: ${relative}`);
         
         const url = await this.endpoints.reportLocation();
         const report = `${url}${relative}`;

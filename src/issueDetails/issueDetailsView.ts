@@ -6,6 +6,7 @@ import { WebviewPanel, window, ViewColumn, ExtensionContext, commands } from 'vs
 import { Endpoints, IIssue, IssueContainer } from '../model/model';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
+import { ModelService } from '../model/modelService';
 
 export class IssueDetailsView {
 
@@ -15,16 +16,21 @@ export class IssueDetailsView {
     private endpoints: Endpoints;
     private context: ExtensionContext;
 
-    constructor(context: ExtensionContext, endpoints: Endpoints) {
+    constructor(context: ExtensionContext, endpoints: Endpoints, modelService: ModelService) {
         this.context = context;
         this.endpoints = endpoints;
         this.context.subscriptions.push(commands.registerCommand('rhamt.openIssueDetails', async item => {
             this.open((item as IssueContainer).getIssue(), true);
         }));
         this.context.subscriptions.push(commands.registerCommand('rhamt.openLink', item => {
+            const encoded = item.split("::");
+            const configId = encoded[0];
+            const report = encoded[1];
+            const config = modelService.getConfiguration(configId);
             commands.executeCommand('rhamt.openReportExternal', {
+                config,
                 getReport: () => {
-                    return item;
+                    return report;
                 }
             });
         }));
@@ -59,8 +65,10 @@ export class IssueDetailsView {
         const reports = path.join(config.options['output'], 'reports', path.sep);
         let report = '';
         if (issue.report && issue.report.startsWith(reports)) {
-            report = issue.report.replace(reports, '');
-            report = `<a class="report-link" href="command:rhamt.openLink?%22${issue.report}%22">Open Report</a>`;
+            // report = issue.report.replace(reports, '');
+            report = issue.report;
+            const encodedPath = config.id + "::" + report;
+            report = `<a class="report-link" href="command:rhamt.openLink?%22${encodedPath}%22">Open Report</a>`;
         }
         const showdown = require('showdown');
         const converter = new showdown.Converter();
