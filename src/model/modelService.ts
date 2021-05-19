@@ -45,6 +45,7 @@ export class ModelService {
         config.options['output'] = path.resolve(this.outDir, config.id);
         config.options['sourceMode'] = true;
         config.options['generateOutputLocation'] = path.resolve(this.outputLocation, config.id);
+        config.options['target'] = ['eap7'];
         return config;
     }
 
