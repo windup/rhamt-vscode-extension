@@ -41,6 +41,7 @@ export class RhamtUtil {
                 }
                 catch (e) {
                     vscode.window.showErrorMessage(`Error: ${e}`);
+                    RhamtUtil.updateRunEnablement(true);
                     return Promise.reject(e);
                 }
                 rhamtChannel.clear();
@@ -57,6 +58,7 @@ export class RhamtUtil {
                 const executedTimestamp = `${date.getMonth()}/${date.getDate()}/${year} @ ${timestamp}${sun}`;
                 const onComplete = async () => {
                     processController.shutdown();
+                    RhamtUtil.updateRunEnablement(true);
                     if (config.options['ouput'] != config.options['generateOutputLocation']) {
                         console.log('Gathering results...');
                         progress.report({message: 'Gathering results...'});
@@ -134,6 +136,7 @@ export class RhamtUtil {
                 };
                 const onShutdown = () => {
                     console.log('mta-cli shutdown');
+                    RhamtUtil.updateRunEnablement(true);
                     if (!resolved) {
                         resolved = true;
                         resolve(undefined);
@@ -157,6 +160,7 @@ export class RhamtUtil {
                 }
                 token.onCancellationRequested(() => {
                     cancelled = true;
+                    RhamtUtil.updateRunEnablement(true);
                     if (processController) {
                         processController.shutdown();
                     }
@@ -168,6 +172,10 @@ export class RhamtUtil {
                 progress.report({ message: 'Preparing analysis configuration...' });
             });
         });
+    }
+
+    static updateRunEnablement(enabled: boolean): void {
+        vscode.commands.executeCommand('setContext', 'mta-cli:enabled', enabled);
     }
 
     private static buildParams(config: RhamtConfiguration, windupHome: string): Promise<any[]> {

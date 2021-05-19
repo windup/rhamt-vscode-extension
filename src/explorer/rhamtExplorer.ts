@@ -114,6 +114,7 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
             const config = item.config;
             try {
+                RhamtUtil.updateRunEnablement(false);
                 await RhamtUtil.analyze(
                     config,
                     this.modelService,
@@ -127,13 +128,16 @@ export class RhamtExplorer {
                         this.dataProvider.reload(config);
                     },
                     () => {
+                        RhamtUtil.updateRunEnablement(true);
                         this.dataProvider.reload(config);
                     });
             } catch (e) {
                 console.log(e);
                 vscode.window.showErrorMessage(`Error running analysis - ${e}`);
+                RhamtUtil.updateRunEnablement(true);
             }
         }));
+        RhamtUtil.updateRunEnablement(true);
     }
 
     private createViewer(): vscode.TreeView<any> {
