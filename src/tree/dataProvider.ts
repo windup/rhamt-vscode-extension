@@ -156,6 +156,9 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
                     // should we ping until we get appropriate response?
                     try {
                         await this.modelService.load();
+                        if (this.modelService.model.configurations.length === 0) {
+                            commands.executeCommand('rhamt.newConfiguration');
+                        }
                         this.refresh();
                     }
                     catch (e) {
