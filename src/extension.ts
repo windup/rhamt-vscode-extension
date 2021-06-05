@@ -7,7 +7,7 @@ import { Utils } from './Utils';
 import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
 import { ModelService } from './model/modelService';
-import { RhamtModel, IssueContainer } from './model/model';
+import { RhamtModel, IssueContainer, Endpoints } from './model/model';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
 import { ConfigurationEditorServer } from './editor/configurationEditorServer';
@@ -53,13 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const connectionService = new ClientConnectionService(modelService);
     configEditorServer = new ConfigurationEditorServer(locations, configServerController, connectionService);
     configEditorServer.start().catch(e => console.log(`Error while starting coniguration editor server: ${e}`));
-    reportServer = new ReportServer(locations);
-    try {
-        await modelService.readCliMeta();
-        reportServer.start();    
-    } catch (e) {
-        console.log(`Error while starting report server: ${e}`);
-    }
+    reportServer = await Private.createReportServer(locations);
 
     new RhamtView(context, modelService, configEditorService, locations);
     new ReportView(context, locations);
@@ -116,4 +110,17 @@ export async function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
     configEditorServer.dispose();
     reportServer.dispose();
+}
+
+namespace Private {
+    export async function createReportServer(endpoints: Endpoints): Promise<ReportServer> {
+        const reportServer = new ReportServer(endpoints);
+        try {
+            await modelService.readCliMeta();
+            reportServer.start();    
+        } catch (e) {
+            console.log(`Error while starting report server: ${e}`);
+        }
+        return reportServer;
+    }
 }
