@@ -6,7 +6,9 @@
 [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/downloads-short/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension)
 ## Description
 
-The Visual Studio Code (VSCode) and Eclipse Che extension for the <b>Migration Toolkit for Applications</b> (MTA).
+Welcome to Red Hat's application migration tooling!
+
+This is the Visual Studio Code (VSCode) extension for the <b>Migration Toolkit for Applications</b> (MTA).
 
 Migration Toolkit for Applications (MTA) (the product of the downstream project [Windup](https://github.com/windup/windup)) is a command-line Application Migration and Modernization Assessment tool.
 
