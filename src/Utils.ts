@@ -20,7 +20,7 @@ const findJava = require('find-java-home');
 // const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v5.0.1-SNAPSHOT/mta-cli-5.0.1-SNAPSHOT-offline.zip';
 const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://repo.maven.apache.org/maven2/org/jboss/windup/mta-cli/5.1.4.Final/mta-cli-5.1.4.Final-offline.zip';
 // const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://oss.sonatype.org/content/repositories/snapshots/org/jboss/windup/mta-cli/5.1.4-SNAPSHOT/mta-cli-5.1.4-20210429.124817-43-offline.zip';
-
+// const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v0.0.4-alpha/rhamt-cli-4.3.2-SNAPSHOT-offline.zip';
 const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
@@ -164,6 +164,4 @@ export namespace Utils {
             window.showErrorMessage(`Error downloading mta-cli: ${e}`);
         });
     }
-
-    // const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v0.0.4-alpha/rhamt-cli-4.3.2-SNAPSHOT-offline.zip';
 }
