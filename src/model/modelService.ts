@@ -327,10 +327,10 @@ export class ModelService {
         let elements = [];
         elements = elements.concat(config.results.model.hints);
         elements = elements.concat(config.results.model.classifications);
-        let count = 0;
+        // let count = 0;
         elements.forEach(element => {
             if (element.quickfixes.length > 0) {
-                console.log(`quickfixCount: ${++count}`);
+                // console.log(`quickfixCount: ${++count}`);
                 result[element.id] = {
                     originalLineSource: element.originalLineSource,
                     quickfixedLines: element.quickfixedLines
@@ -364,7 +364,7 @@ export class ModelService {
         });
     }
 
-    private generateConfigurationName(): string {
+    public generateConfigurationName(): string {
         let newName = 'mtaConfiguration';
         if (this.model.exists(newName)) {
             for (let i = 0; i < 1000; i++) {
