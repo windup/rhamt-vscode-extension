@@ -16,9 +16,13 @@ export class ClassificationItem extends TreeItem implements IssueContainer {
     private classification: IClassification;
 
     constructor(classification: IClassification) {
-        super(classification.description);
+        super(ClassificationItem.getLabel(classification));
         this.classification = classification;
         this.refresh();
+    }
+
+    private static getLabel(classification: IClassification) {
+        return classification.description ? classification.description : classification.title;
     }
 
     delete(): void {
@@ -79,6 +83,6 @@ export class ClassificationItem extends TreeItem implements IssueContainer {
 
     public refresh(): void {
         this.iconPath = this.getIconPath();
-        this.label = this.classification.description;
+        this.label = ClassificationItem.getLabel(this.classification);
     }
 }
