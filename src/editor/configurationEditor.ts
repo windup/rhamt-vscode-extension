@@ -5,7 +5,7 @@
 import { rhamtEvents } from '../events';
 import { WebviewPanel, window, ViewColumn, Uri, ExtensionContext } from 'vscode';
 import * as path from 'path';
-import { Endpoints, RhamtConfiguration } from '../model/model';
+import { ChangeType, Endpoints, RhamtConfiguration } from '../model/model';
 
 export class ConfigurationEditor {
 
@@ -46,9 +46,25 @@ export class ConfigurationEditor {
         this.view.reveal();
     }
 
+    updateTitle(title: string) {
+        if (this.view) {
+            this.view.title = title;
+            this.view.reveal;
+        }
+    }
+
     private async setupView(): Promise<void> {
+        const changeListener = change => {
+            if (this.view) {
+                if (change.type === ChangeType.MODIFIED && change.name === 'name') {
+                    this.updateTitle(this.configuration.name);
+                }
+            }
+        };
+        this.configuration.onChanged.on(changeListener);
         this.view.onDidDispose(() => {
             this.view = undefined;
+            this.configuration.onChanged.off(changeListener);
             this.onEditorClosed.emit(undefined);
         });
         const location = await this.endpoints.configurationLocation(this.configuration);

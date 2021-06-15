@@ -73,7 +73,11 @@ export class ConfigurationClientManager {
         });
         client.onUpdateOption.on(async data => {
             if (data.name === 'name') {
-                this.config.name = data.value;
+                let newName = data.value;
+                if (!newName) {
+                    newName = this.modelService.generateConfigurationName();
+                }
+                this.config.name = newName;
                 this.config.onChanged.emit({type: ChangeType.MODIFIED, name: 'name', value: data.name});
             }
             else if (!data.value) {
