@@ -531,8 +531,22 @@ class ConfigClient {
         widget.style.border = '1px solid rgb(77, 78, 78)';
         widget.style.borderRadius = '0px';
         widget.style.verticalAlign = 'top';
+        let previous = undefined;
         widget.onkeyup = () => {
-            this.updateOption({ name: option.name, value: widget.value });
+            const newValue = widget.value;
+            // if user previously cleared the name, and it's still emtpy, ignore
+            if (previous != undefined && previous === '' && newValue === '') {
+                return;
+            }
+            // if user previously cleared the name, strip leading whitesapce, ensure not empty
+            if (previous != undefined && previous === '') {
+                if (newValue.trimStart().length === 0) {
+                    // user entered empty space, and that's it
+                    return;
+                }
+            }
+            previous = newValue;
+            this.updateOption({ name: option.name, value: newValue });
         };
         top.appendChild(widget);
         if (option.type === 'File') {
