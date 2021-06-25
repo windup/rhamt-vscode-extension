@@ -172,7 +172,7 @@
                 },
                 {
                     "command": "rhamt.openReportExternal",
-                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i",
+                    "when": "view == rhamtExplorerView && viewItem =~ /hasReport/i",
                     "group": "rhamt@1"
                 },
                 {
