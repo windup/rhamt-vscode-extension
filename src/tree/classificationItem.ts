@@ -78,7 +78,7 @@ export class ClassificationItem extends TreeItem implements IssueContainer {
     }
 
     public get contextValue(): string {
-        return 'issue';
+        return this.classification.report ? 'issue-hasReport' : 'issue';
     }
 
     public refresh(): void {
