@@ -11,9 +11,11 @@ import { ModelService } from '../src/model/modelService';
 suite('RHAMT / Model', () => {
 
     let modelService: ModelService;
+    const outDir = __dirname;
+    const outputLocation = __dirname;
 
     setup(() => {
-        modelService = new ModelService(new RhamtModel(), __dirname, __dirname, getReportEndpoints(__dirname));
+        modelService = new ModelService(new RhamtModel(), outDir, outputLocation, getReportEndpoints(__dirname));
     });
 
     test('configuration name', () => {
@@ -55,5 +57,10 @@ suite('RHAMT / Model', () => {
         assert.ok(modelService.model.configurations.length == 1);
         modelService.deleteConfiguration(config);
         assert.ok(modelService.model.configurations.length == 0);
+    });
+
+    test('configuration output path', () => {
+        const config = modelService.createConfiguration();
+        assert.equal(config.options['output'], path.resolve(outDir, config.id));
     });
 });
