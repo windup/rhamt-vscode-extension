@@ -169,7 +169,7 @@ export class RhamtUtil {
                         resolve(undefined);
                     }
                 });
-                progress.report({ message: 'Preparing analysis configuration...' });
+                progress.report({ message: 'Preparing analysis...' });
             });
         });
     }
@@ -189,11 +189,9 @@ export class RhamtUtil {
         if (!input || input.length === 0) {
             return Promise.reject('input is missing from configuration');
         }
-        let inputArray = [];
         input.forEach(entry => {
-            inputArray.push(`"${entry}"`);
+            params.push(`"${entry}"`);
         });
-        params.push(inputArray.join(' '));
 
         // output
         params.push('--output');
