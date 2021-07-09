@@ -225,7 +225,7 @@ export class AnalysisResults {
                 case 'issue-category': {
                     const node = child.children[0];
                     if (node) {
-                        hint.category = node.nodeValue;
+                        hint.category = await this.computeCategory(child);
                     }
                     break;
                 }
@@ -282,6 +282,20 @@ export class AnalysisResults {
         }
 
         return quickfixes;
+    }
+
+    private async computeCategory(ele: CheerioElement) {
+        for (const child of ele.children) {
+            switch (child.name) {
+                case 'categoryID': {
+                    const node = child.children[0];
+                    if (node) {
+                        return node.nodeValue;
+                    }
+                }
+            }
+        }
+        return '';
     }
 
     private async computeQuickfix(ele: CheerioElement, issue: IIssue): Promise<IQuickFix> {
@@ -465,7 +479,7 @@ export class AnalysisResults {
                 case 'issue-category': {
                     const node = child.children[0];
                     if (node) {
-                        classification.category = node.children[0].nodeValue;
+                        classification.category = await this.computeCategory(child);
                     }
                     break;
                 }
