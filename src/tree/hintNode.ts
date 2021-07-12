@@ -55,7 +55,7 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
     createItem(): HintItem {
         this.treeItem = new HintItem(this.hint);
         this.loading = false;
-        if (this.hint.quickfixes.length > 0 && !process.env.CHE_WORKSPACE_NAMESPACE) {
+        if (this.hint.quickfixes.length > 0) {
             const quickfix = new QuickfixesNode(
                 this.config,
                 this.hint,
