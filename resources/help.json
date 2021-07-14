@@ -268,13 +268,6 @@
         "required": false
       },
       {
-        "name": "enableTattletale",
-        "description": "If set, a Tattletale report will be generated for each application.",
-        "type": "Boolean",
-        "ui-type": ["single"],
-        "required": false
-      },
-      {
         "name": "explodedApp",
         "description": "If the input path points to a directory, it should be treated as an unzipped application, instead of a directory containing applications (default).",
         "type": "Boolean",
