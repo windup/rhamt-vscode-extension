@@ -93,6 +93,10 @@ export class RhamtConfiguration {
         this._results.markIssueAsComplete(issue);
     }
 
+    markQuickfixApplied(quickfix: IQuickFix): void {
+        this._results.markQuickfixApplied(quickfix);
+    }
+
     getQuickfixesForResource(resource: string): IQuickFix[] {
         let quickfixes = [];
         if (this._results) {
@@ -153,6 +157,8 @@ export interface IQuickFix extends IUniqueElement {
     transformationId: string;
     name: string;
     file: string;
+    quickfixApplied: boolean;
+    dom: any;
 }
 
 export interface ReportHolder {

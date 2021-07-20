@@ -96,6 +96,11 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', async (item) => {
             try {
                 await applyQuickfix(item.quickfix);
+                item.quickfixApplied();
+                this.modelService.saveAnalysisResults(item.config).catch(e => {
+                    console.log(`Error saving analysis results after quickfix: ${e}`);
+                    vscode.window.showErrorMessage(e);
+                });
             }
             catch (e) {
                 console.log(`Error applying quickfix - ${e}`);

@@ -299,6 +299,8 @@ export class AnalysisResults {
     }
 
     private async computeQuickfix(ele: CheerioElement, issue: IIssue): Promise<IQuickFix> {
+        const applied = this.dom(ele).attr('quickfixApplied');
+        const quickfixApplied = applied ? JSON.parse(applied) : false;
         const quickfix: IQuickFix = {
             file: issue.file,
             issue,
@@ -308,7 +310,9 @@ export class AnalysisResults {
             replacementString: '',
             searchString: '',
             transformationId: '',
-            type: 'REPLACE'
+            type: 'REPLACE',
+            quickfixApplied: quickfixApplied,
+            dom: ele
         };
         ele.children.forEach((child, i) => {
             switch (child.name) {
@@ -551,6 +555,10 @@ export class AnalysisResults {
 
     markIssueAsComplete(issue: IIssue): void {
         this.dom(issue.dom).attr('complete', "true");
+    }
+
+    markQuickfixApplied(quickfix: IQuickFix): void {
+        this.dom(quickfix.dom).attr('quickfixApplied', "true");
     }
 
     private readLine(file: string, lineNumber: number): Promise<string> {

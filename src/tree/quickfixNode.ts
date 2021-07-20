@@ -54,4 +54,11 @@ export class QuickfixNode extends AbstractNode implements Quickfix.IQuickfixCont
     getQuickfixes(): IQuickFix[] {
         return [this.quickfix];
     }
+
+    quickfixApplied(): void {
+        this.quickfix.quickfixApplied = true;
+        this.config.markQuickfixApplied(this.quickfix);
+        (this.item as QuickfixItem).refresh();
+        this.dataProvider.refresh(this);
+    }
 }
