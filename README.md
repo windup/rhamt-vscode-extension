@@ -48,7 +48,7 @@ Use the generated reports to better understand and assess the migration efforts.
 
 ## Eclipse Che
 
-This extension is supported in [Eclipse Che](https://www.eclipse.org/che/) `7.4.0` or higher.
+This extension is supported in [Eclipse Che](https://www.eclipse.org/che/).
 
 To add this plugin to a Che workspace, open Che, navigate to the plugins tab, and search using the keyword `migration`.
 
