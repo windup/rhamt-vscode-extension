@@ -2,7 +2,7 @@
     "name": "mta-vscode-extension",
     "displayName": "Migration Toolkit for Applications",
     "description": "Migration Toolkit for Applications (MTA)",
-    "version": "0.0.74",
+    "version": "0.0.75",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
@@ -207,12 +207,12 @@
                 },
                 {
                     "command": "rhamt.applyQuickfix",
-                    "when": "view == rhamtExplorerView && viewItem == quickfix",
+                    "when": "view == rhamtExplorerView && viewItem =~ /hasQuickfix/i",
                     "group": "rhamt"
                 },
                 {
                     "command": "rhamt.previewQuickfix",
-                    "when": "view == rhamtExplorerView && viewItem == quickfix",
+                    "when": "view == rhamtExplorerView && viewItem =~ /hasQuickfix/i",
                     "group": "rhamt"
                 },
                 {
