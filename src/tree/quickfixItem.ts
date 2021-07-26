@@ -62,7 +62,9 @@ export class QuickfixItem extends TreeItem implements IssueContainer {
     }
 
     public get contextValue(): string {
-        return Quickfix.TYPE;
+        const hasQuickix = this.quickfix.quickfixApplied ? '' : '-hasQuickfix';
+        return Quickfix.TYPE + hasQuickix;
+        // return Quickfix.TYPE;
     }
 
     public refresh(): void {
