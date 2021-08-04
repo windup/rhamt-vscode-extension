@@ -131,6 +131,7 @@ export class RhamtUtil {
                                 startedProgress = true;
                             }
                             rhamtChannel.print(data);
+                            rhamtChannel.print('\n');
                         }
                     }
                 };
