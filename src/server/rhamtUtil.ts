@@ -112,7 +112,7 @@ export class RhamtUtil {
                         split.forEach(element => {
                             if (element) {
                                 const raw = element.replace(PROGRESS, '').trim();
-                                if (raw.includes('{"op":"') && !raw.includes('"op":"logMessage"')) {
+                                if (raw.includes('{"op":"') /* && !raw.includes('"op":"logMessage"') */) {
                                     try {
                                         const json = JSON.parse(raw);
                                         monitor.handleMessage(json);
@@ -156,7 +156,8 @@ export class RhamtUtil {
                     }
                 } catch (e) {
                     console.log(e);
-                    progress.report({message: `Error: ${e}`});
+                    // progress.report({message: `Error: ${e}`});
+                    onShutdown();
                     return Promise.reject();
                 }
                 token.onCancellationRequested(() => {

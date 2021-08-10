@@ -2,6 +2,8 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+import { rhamtChannel } from '../util/console';
+
 export class ProgressMonitor {
 
     private started: boolean = false;
@@ -57,6 +59,8 @@ export class ProgressMonitor {
     }
 
     public logMessage(message: string) {
+        rhamtChannel.print(message);
+        rhamtChannel.print('\n');
     }
 
     public beginTask(task: string, total: number) {
@@ -79,6 +83,8 @@ export class ProgressMonitor {
     }
 
     public subTask(name: string): void {
+        rhamtChannel.print(name);
+        rhamtChannel.print('\n');
     }
 
     public worked(worked: number) {
