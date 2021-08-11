@@ -145,7 +145,7 @@ export class RhamtUtil {
                 };
                 try {
                     console.log(`Executing MTA using params: ${params}`);
-                    processController = await RhamtRunner.run(windupHome, config.rhamtExecutable, params, START_TIMEOUT, onMessage).then(cp => {
+                    processController = await RhamtRunner.run(windupHome, config.rhamtExecutable, params, START_TIMEOUT, onMessage, onShutdown).then(cp => {
                         onStarted();
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
                     });

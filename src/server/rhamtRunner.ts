@@ -8,7 +8,7 @@ const STARTED_REGEX = /.*Migration Toolkit for Applications (.*)/;
 
 export class RhamtRunner {
     static run(home: string, executable: string, data: any[], startTimeout: number,
-        out: (msg: string) => void): Promise<cp.ChildProcess> {
+        out: (msg: string) => void, onShutdown: () => void): Promise<cp.ChildProcess> {
         return new Promise<cp.ChildProcess>((resolve, reject) => {
             let started = false;
             const rhamtProcess = cp.spawn(executable, data, {
@@ -20,6 +20,12 @@ export class RhamtRunner {
                         MTA_HOME: ''
                     }
                 )
+            });
+            rhamtProcess.on('error', () => {
+                onShutdown();
+            });
+            rhamtProcess.on('close', () => {
+                onShutdown();
             });
             const outputListener = (data: string | Buffer) => {
                 const line = data.toString();
