@@ -156,7 +156,6 @@ export class RhamtUtil {
                     }
                 } catch (e) {
                     console.log(e);
-                    // progress.report({message: `Error: ${e}`});
                     onShutdown();
                     return Promise.reject();
                 }
@@ -371,7 +370,6 @@ export class RhamtUtil {
 
     private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string, skippedReports: any): Promise<any> {
         try {
-            // TODO: We need these set up steps in IntelliJ
             // open results.xml, set IDs, save to disk
             const dom = await AnalysisResultsUtil.loadAndPersistIDs(config.getResultsLocation());
             console.log(`Skipped reports: ${skippedReports}`);
