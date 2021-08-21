@@ -53,7 +53,7 @@
                                 <div style="position: relative; right: -10px;">
                                 <div style="margin-left: 10px;">                                 
                               <div class="d-flex" style="margin-top: 15px;">
-                                  <div class="" style="width: 60%">
+                                  <div class="" style="width: 80%">
                                       <form id='elementForm'>
                                       </form>
                                   </div>
@@ -78,9 +78,10 @@
               </div>
             </div>
           </div>
+
         <script>
           $(document).ready(function () {
-            
+            $('body').css('color', textColor);
             var configClient = new ConfigClient(hostUrl, configId, elementData, $('#elementForm'), document);
 
             function bindCommonElements() {
