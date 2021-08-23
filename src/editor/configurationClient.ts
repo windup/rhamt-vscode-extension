@@ -36,7 +36,7 @@ export class ConfigurationClient {
             console.log("connection_failed");
          })
         this.socket.on('disconnect', () => {
-            console.log('ConfigurationClient received event from client :: disconnect -> triggering disposed()???');
+            console.log('ConfigurationClient received event from client :: disconnect -> triggering disposed...');
             this.onDisposed.emit(undefined);
         });
         this.socket.on('updateName', (msg: any) => {
@@ -88,6 +88,10 @@ export class ConfigurationClient {
 
     notifyAnalyzing(): void {
         this.socket.emit('analysisStarted');
+    }
+
+    notifyThemeChanged(theme: string): void {
+        this.socket.emit('themeChanged', JSON.stringify(theme));
     }
 
     analysisComplete(config: RhamtConfiguration): void {

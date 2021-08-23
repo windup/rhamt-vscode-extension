@@ -44,6 +44,12 @@ export class ConfigurationClientManager {
     notifyErrorStartingAnalysis(e: any): void {
     }
 
+    notifyThemeChanged(theme: string): void {
+        this.clients.forEach(client => {
+            client.notifyThemeChanged(theme);
+        });
+    }
+
     connectClient(client: ConfigurationClient): void {
         this.clients.set(client.id, client);
         this.initClient(client);
