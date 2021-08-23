@@ -137,9 +137,10 @@ class ConfigClient {
         });
         this._socket.onServerMessage('themeChanged', (data) => {
             const theme = JSON.parse(data);
-            // TODO: Use the theme colors (eg #ccccccc or something similar)  
-            const color = theme === 'dark' ? 'white' : 'black';
+            const color = theme === 'dark' ? '#cccccc' : 'black';
             $('body').css('color', color);
+            const background = theme === 'dark' ? 'rgb(30, 30, 30)' : 'white';
+            $('body').css('background-color', background);
         });
         this._socket.onServerMessage('updateName', (data) => {
         });
