@@ -135,6 +135,12 @@ class ConfigClient {
             });
             this.bindOption(option, this.store.config);
         });
+        this._socket.onServerMessage('themeChanged', (data) => {
+            const theme = JSON.parse(data);
+            // TODO: Use the theme colors (eg #ccccccc or something similar)  
+            const color = theme === 'dark' ? 'white' : 'black';
+            $('body').css('color', color);
+        });
         this._socket.onServerMessage('updateName', (data) => {
         });
         this._socket.onServerMessage('recentRuleset', (data) => {
