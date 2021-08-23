@@ -22,6 +22,7 @@ export class ConfigurationServerController {
             if (!this.location.endsWith('/')) {
                 this.location = `${location}/`;
             }
+            // TODO: Get current theme, pass to client via themeColor, and setup variable w/in index.jade.
             res.render(
                 'index',
                 {
