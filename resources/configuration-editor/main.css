@@ -5,6 +5,10 @@ body {
     margin: 0;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, HelveticaNeue-Light, Ubuntu, Droid Sans, sans-serif;
+
+    /* TODO: Remove background&color once we can compute the current theme and apply it at initial rendering of index */
+    background-color: rgb(30, 30, 30);
+    color: #cccccc;
 }
 
 .code {
