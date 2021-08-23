@@ -14,7 +14,7 @@
     },
     "bugs": "https://github.com/windup/rhamt-vscode-extension/issues",
     "engines": {
-        "vscode": "^1.44.0"
+        "vscode": "^1.59.1"
     },
     "categories": [
         "Other"
@@ -116,41 +116,52 @@
                 "title": "Preview Quickfix"
             }
         ],
-        "configuration": [{
-            "title": "Migration Toolkit for Applications (MTA)",
-            "properties": {
-                "mta.executable.path": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Specifies absolute path to the Migration Toolkit for Applications executable (e.g., /path/to/mta/bin/mta-cli)",
-                    "scope": "window"
+        "configuration": [
+            {
+                "title": "Migration Toolkit for Applications (MTA)",
+                "properties": {
+                    "mta.executable.path": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Specifies absolute path to the Migration Toolkit for Applications executable (e.g., /path/to/mta/bin/mta-cli)",
+                        "scope": "window"
+                    }
                 }
             }
-        }],
+        ],
         "viewsContainers": {
-            "activitybar": [{
-                "id": "rhamt-explorer",
-                "title": "Migration Toolkit for Applications",
-                "icon": "resources/mta.svg"
-            }]
+            "activitybar": [
+                {
+                    "id": "rhamt-explorer",
+                    "title": "Migration Toolkit for Applications",
+                    "icon": "resources/mta.svg"
+                }
+            ]
         },
         "views": {
-            "rhamt-explorer": [{
-                "id": "rhamtExplorerView",
-                "name": "Explorer"
-            }]
+            "rhamt-explorer": [
+                {
+                    "id": "rhamtExplorerView",
+                    "name": "Explorer"
+                }
+            ]
         },
-        "snippets": [{
-            "language": "xml",
-            "path": "./rule-snippets/xml.json"
-        }],
+        "snippets": [
+            {
+                "language": "xml",
+                "path": "./rule-snippets/xml.json"
+            }
+        ],
         "menus": {
-            "view/title": [{
-                "command": "rhamt.newConfiguration",
-                "when": "view == rhamtExplorerView",
-                "group": "navigation"
-            }],
-            "view/item/context": [{
+            "view/title": [
+                {
+                    "command": "rhamt.newConfiguration",
+                    "when": "view == rhamtExplorerView",
+                    "group": "navigation"
+                }
+            ],
+            "view/item/context": [
+                {
                     "command": "rhamt.runConfiguration",
                     "when": "view == rhamtExplorerView && viewItem == rhamtConfiguration",
                     "group": "rhamt"
