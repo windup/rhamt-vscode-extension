@@ -16,11 +16,7 @@ const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
 
-// const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://oss.sonatype.org/content/groups/public/org/jboss/windup/mta-cli/5.0.0.Final/mta-cli-5.0.0.Final-offline.zip';
-// const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v5.0.1-SNAPSHOT/mta-cli-5.0.1-SNAPSHOT-offline.zip';
 const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://repo.maven.apache.org/maven2/org/jboss/windup/mta-cli/5.2.0.Final/mta-cli-5.2.0.Final-offline.zip';
-// const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://oss.sonatype.org/content/repositories/snapshots/org/jboss/windup/mta-cli/5.1.4-SNAPSHOT/mta-cli-5.1.4-20210429.124817-43-offline.zip';
-// const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://github.com/johnsteele/windup/releases/download/v0.0.4-alpha/rhamt-cli-4.3.2-SNAPSHOT-offline.zip';
 const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
@@ -66,6 +62,7 @@ export namespace Utils {
             }
 
             try {
+                console.log(`verifying mta-cli --version`);
                 const version = await findRhamtVersion(rhamtCli, javaHome);
                 console.log(`Using MTA version - ${version}`);
             }
@@ -107,9 +104,11 @@ export namespace Utils {
             child_process.exec(
                 `"${rhamtCli}" --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
                     if (error) {
-                        reject(error);
+                        console.log(`error while executing mta-cli --version`);
+                        console.log(error);
+                        return reject(error);
                     } else {
-                        resolve(parseVersion(_stdout));
+                        return resolve(parseVersion(_stdout));
                     }
                 });
         });
