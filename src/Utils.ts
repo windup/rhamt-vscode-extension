@@ -126,9 +126,12 @@ export namespace Utils {
         return path.join(extensions.getExtension(getExtensionId())!.extensionPath, ...args);
     }
 
-    export async function checkCli(dataOut: string, context: ExtensionContext): Promise<any> {
+    export async function checkCli(dataOut: string, context: ExtensionContext, autoDownload?: boolean): Promise<any> {
         await cliResolver.findRhamtCli(dataOut).catch(() => {
-            if (!context.workspaceState.get(IGNORE_RHAMT_DOWNLOAD)) {
+            if (autoDownload) {
+                Utils.downloadCli(dataOut);
+            }
+            else if (!context.workspaceState.get(IGNORE_RHAMT_DOWNLOAD)) {
                 Utils.showDownloadCliOption(dataOut, context);
             }
         });
@@ -160,7 +163,13 @@ export namespace Utils {
             workspace.getConfiguration().update('mta.executable.path', cli);
         }).catch(e => {
             console.log(e);
-            window.showErrorMessage(`Error downloading mta-cli: ${e}`);
+            const error = e.value.e;
+            if (error && error.cancelled) {
+                window.showInformationMessage(`mta-cli download cancelled.`);
+            }
+            else {
+                window.showErrorMessage(`Error downloading mta-cli: ${e}`);
+            }
         });
     }
 }

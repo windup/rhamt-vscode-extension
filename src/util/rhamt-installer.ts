@@ -5,7 +5,7 @@
 import * as requestTypes from 'request';
 import * as fileSystem from 'fs';
 import * as fs from 'fs-extra';
-import { Disposable, ProgressLocation, window } from 'vscode';
+import { CancellationToken, Disposable, ProgressLocation, window } from 'vscode';
 import * as tmp from 'tmp';
 const requestProgress = require('request-progress');
 import { createDeferred } from './async';
@@ -120,9 +120,14 @@ export class RhamtInstaller {
         });
 
         await window.withProgress({
-            location: ProgressLocation.Window
-        }, async progress => {
+            location: ProgressLocation.Notification,
+            cancellable: true
+        }, async (progress, token: CancellationToken) => {
             const req = await RhamtInstaller.doDownloadFile(uri);
+            token.onCancellationRequested(() => {
+                req.abort();
+                deferred.reject({cancelled: true})
+            });
             requestProgress(req)
                 .on('progress', (state: any) => {
                     const received = Math.round(state.size.transferred / 1024);

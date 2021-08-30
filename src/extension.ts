@@ -89,8 +89,8 @@ export async function activate(context: vscode.ExtensionContext) {
         new NewRulesetWizard(modelService).open();
     }); 
     context.subscriptions.push(newRulesetDisposable);
-
-    Utils.checkCli(modelService.outDir, context);
+    const download = (!Private.isChe() && !Private.isVSCode());
+    Utils.checkCli(modelService.outDir, context, download);
 
     vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer(modelService, configEditorService));
 
@@ -115,5 +115,11 @@ namespace Private {
             console.log(`Error while starting report server: ${e}`);
         }
         return reportServer;
+    }
+    export function isChe(): boolean {
+        return vscode.env.appName === "Eclipse Che";
+    }
+    export function isVSCode(): boolean {
+        return vscode.env.appName === "Visual Studio Code";
     }
 }
