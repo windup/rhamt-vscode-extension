@@ -9,7 +9,7 @@ import { ConfigurationNode, Grouping } from './configurationNode';
 import { ITreeNode } from './abstractNode';
 import { ModelService } from '../model/modelService';
 import { ResultsNode } from './resultsNode';
-import { RhamtConfiguration, Endpoints } from '../model/model';
+import { RhamtConfiguration } from '../model/model';
 
 export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
@@ -20,14 +20,11 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
     private view: TreeView<any>;
 
-    constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext,
-        private endpoints: Endpoints) {
+    constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext) {
         this._disposables.push(commands.registerCommand('rhamt.modelReload', () => {
             this.refresh(undefined);
         }));
-        this.endpoints.ready.then(() =>  commands.executeCommand('setContext', 'rhamtReady', true)).catch(e => {
-            console.log(`Error waiting for ready endpoints: ${e}`);
-        });
+        commands.executeCommand('setContext', 'rhamtReady', true);
         this._disposables.push(commands.registerCommand('rhamt.refreshResults', item => {
             item.refreshResults();
         }));
@@ -150,25 +147,19 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
                 dark:  path.join(...base, 'dark', 'Loading.svg')
             };
             nodes = [item];
-            (async () => setTimeout(() => {
-                this.endpoints.ready.then(async () => {
-                    console.log(`Server ready. Realoading tree.`);
-                    // should we ping until we get appropriate response?
-                    try {
-                        await this.modelService.load();
-                        if (this.modelService.model.configurations.length === 0) {
-                            commands.executeCommand('rhamt.newConfiguration');
-                        }
-                        this.refresh();
+            (async () => setTimeout(async () => {
+                try {
+                    await this.modelService.load();
+                    if (this.modelService.model.configurations.length === 0) {
+                        commands.executeCommand('rhamt.newConfiguration');
                     }
-                    catch (e) {
-                        console.log('error while loading model service.');
-                        console.log(e);
-                        window.showErrorMessage(`Error reloading MTA explorer data.`)
-                    }
-                }).catch(e => {
-                    console.log(`Error waiting for ready endpoints: ${e}`);
-                });
+                    this.refresh();
+                }
+                catch (e) {
+                    console.log('error while loading model service.');
+                    console.log(e);
+                    window.showErrorMessage(`Error reloading MTA explorer data.`)
+                }
             }, 500))();
         }
         return nodes;

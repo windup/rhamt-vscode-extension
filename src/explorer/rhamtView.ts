@@ -6,14 +6,12 @@ import * as vscode from 'vscode';
 import { RhamtExplorer } from './rhamtExplorer';
 import { ModelService } from '../model/modelService';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
-import { Endpoints } from '../model/model';
 
 export class RhamtView {
 
     constructor(private context: vscode.ExtensionContext,
         private modelService: ModelService,
-        private configEditorService: ConfigurationEditorService,
-        private endpoints: Endpoints) {
+        private configEditorService: ConfigurationEditorService) {
         this.createExplorer();
     }
 
@@ -21,7 +19,6 @@ export class RhamtView {
         return new RhamtExplorer(
             this.context,
             this.modelService,
-            this.configEditorService,
-            this.endpoints);
+            this.configEditorService);
     }
 }

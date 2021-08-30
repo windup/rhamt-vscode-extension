@@ -11,8 +11,6 @@ import { RhamtModel, IssueContainer, Endpoints } from './model/model';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
 import { ConfigurationEditorServer } from './editor/configurationEditorServer';
-import { ConfigurationServerController } from './editor/configurationServerController';
-import { ClientConnectionService } from './editor/clientConnectionService';
 import { ConfigurationEditorService } from './editor/configurationEditorService';
 import { HintItem } from './tree/hintItem';
 import { HintNode } from './tree/hintNode';
@@ -47,15 +45,11 @@ export async function activate(context: vscode.ExtensionContext) {
     const out = path.join(stateLocation);
     const locations = await endpoints.getEndpoints(context, out);
     modelService = new ModelService(new RhamtModel(), out, outputLocation, locations);
-    const configEditorService = new ConfigurationEditorService(locations, context);
-
-    const configServerController = new ConfigurationServerController(modelService);
-    const connectionService = new ClientConnectionService(modelService);
-    configEditorServer = new ConfigurationEditorServer(locations, configServerController, connectionService);
-    configEditorServer.start().catch(e => console.log(`Error while starting coniguration editor server: ${e}`));
+    const configEditorService = new ConfigurationEditorService(context, modelService);
+    await modelService.readCliMeta();
     reportServer = await Private.createReportServer(locations);
 
-    new RhamtView(context, modelService, configEditorService, locations);
+    new RhamtView(context, modelService, configEditorService);
     new ReportView(context, locations);
     detailsView = new IssueDetailsView(context, locations, modelService);
     
@@ -116,7 +110,6 @@ namespace Private {
     export async function createReportServer(endpoints: Endpoints): Promise<ReportServer> {
         const reportServer = new ReportServer(endpoints);
         try {
-            await modelService.readCliMeta();
             reportServer.start();    
         } catch (e) {
             console.log(`Error while starting report server: ${e}`);
