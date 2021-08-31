@@ -374,9 +374,12 @@ function renderSingleOption(option, config) {
     const widget = document.createElement('input');
     widget.id = `${option.name}-input`;
     widget.classList.add('form-control', 'form-input', 'input-sm');
-    widget.style.backgroundColor = 'hsla(0, 0%, 50%, .17)';
-    widget.style.border = '1px solid rgb(77, 78, 78)';
-    widget.style.borderRadius = '0px';
+    widget.classList.add('input');
+    widget.style.bacgkgroundColor = 'inherit;'
+    widget.style.width = "100%";
+    // widget.style.backgroundColor = 'hsla(0, 0%, 50%, .17)';
+    // widget.style.border = '1px solid rgb(77, 78, 78)';
+    // widget.style.borderRadius = '0px';
     widget.style.verticalAlign = 'top';
     let previous = undefined;
     widget.onkeyup = () => {

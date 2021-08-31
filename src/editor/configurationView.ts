@@ -191,15 +191,15 @@ export class ConfigurationView {
                 <div class="part editor" style="position: relative; height: 100%;">
                   <div class="content" style="height:100%;">                  
                       <div class="overlay-container" style="position: absolute; width: 100%; z-index: 10000; height: 100%; display: none;">
-                        <div class="defineKeybindingWidget" style="width: 400px; height: 110px; background-color: rgb(37, 37, 38); box-shadow: rgb(0, 0, 0) 0px 2px 8px; position: unset; margin: auto; margin-top: 150px;">
+                        <div class="defineKeybindingWidget" style="width: 400px; height: 110px; background-color: var(--vscode-editor-background); box-shadow: rgb(0, 0, 0) 0px 2px 8px; position: unset; margin: auto; margin-top: 150px;">
                           <div style="text-align: center;">Enter desired value and then press ENTER.</div>
                           <div class="settings-header-widget">
                             <div class="settings-search-container">
                               <div class="settings-search-input">
-                                <div class="monaco-inputbox idle" style="background-color: rgb(60, 60, 60); color: rgb(204, 204, 204); width: unset;">
+                                <div class="monaco-inputbox idle" style="width: unset;">
                                   <div class="wrapper">
                                     <input id='editDialogInput' class="input" autocorrect="off" autocapitalize="off" spellcheck="false" type="text"
-                                      wrap="off" aria-label="Press desired key combination and then press ENTER." aria-live="off" style="background-color: rgb(60, 60, 60); color: rgb(204, 204, 204); padding: 4px;">                                  
+                                      wrap="off" aria-label="Press desired key combination and then press ENTER." aria-live="off" style="cpadding: 4px;">                                  
                                   </div>
                                 </div>
                               </div>
@@ -211,16 +211,16 @@ export class ConfigurationView {
                         </div>
                       </div>
                       <div class="recent-container" style="position: absolute; width: 100%; z-index: 10000; height: 100%; display: none;">
-                        <div class="defineKeybindingWidget" style="width: 550px; background-color: rgb(37, 37, 38); box-shadow: rgb(0, 0, 0) 0px 2px 8px; position: unset; margin: auto; margin-top: 150px;">
+                        <div class="defineKeybindingWidget" style="width: 550px; background-color: var(--vscode-editor-background); box-shadow: rgb(0, 0, 0) 0px 2px 8px; position: unset; margin: auto; margin-top: 150px;">
                           <div id="select-recent-label" style="text-align: center;">Select rulesets and then press ENTER.</div>
                           <div class="settings-header-widget" style="  height: 110px; overflow: auto;">
                             <div class="settings-search-container">
                               <div class="settings-search-input">
-                                <div class="monaco-inputbox idle" style="border: none; color: rgb(204, 204, 204); width: unset; outline-style: none;">
+                                <div class="monaco-inputbox idle" style="border: none; width: unset; outline-style: none;">
                                   <div class="wrapper">
                                     <div class="recent-wrapper">
                                       <div id="no-rulesets-placeholder" style="display: none; margin-top: 40px;">No recent rulesets.</div>
-                                      <table id="recent-table" style="margin-top: 10px; text-align: left; width: 100%; background-color: rgb(37, 37, 38);" class="recent-table">
+                                      <table id="recent-table" style="margin-top: 10px; text-align: left; width: 100%;" class="recent-table">
                                       </table>
                                     </div>
                                   </div>
