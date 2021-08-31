@@ -89,8 +89,8 @@ export async function activate(context: vscode.ExtensionContext) {
         new NewRulesetWizard(modelService).open();
     }); 
     context.subscriptions.push(newRulesetDisposable);
-    const download = (!Private.isChe() && !Private.isVSCode());
-    Utils.checkCli(modelService.outDir, context, download);
+    // const download = (!Private.isChe() && !Private.isVSCode());
+    Utils.checkCli(modelService.outDir, context, true);
 
     vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer(modelService, configEditorService));
 
