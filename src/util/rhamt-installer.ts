@@ -10,6 +10,7 @@ import * as tmp from 'tmp';
 const requestProgress = require('request-progress');
 import { createDeferred } from './async';
 import { ChangeType } from '../model/model';
+import * as rimraf from 'rimraf';
 
 export type TemporaryFile = { filePath: string } & Disposable;
 
@@ -61,7 +62,9 @@ export class RhamtInstaller {
         } catch (err) {
             return Promise.reject(err);
         } finally {
-            await RhamtInstaller.deleteFile(localTempFilePath);
+            try {
+                await RhamtInstaller.deleteFile(localTempFilePath);
+            } catch (e) {}
         }
         return Promise.resolve();
     }
@@ -70,6 +73,10 @@ export class RhamtInstaller {
         const deferred = createDeferred<void>();
         fs.unlink(filename, err => err ? deferred.reject(err) : deferred.resolve());
         return deferred.promise;
+    }
+
+    private static deleteDir(path: string): void {
+        rimraf.sync(path);
     }
 
     private static createTemporaryFile(extension: string): Promise<TemporaryFile> {
@@ -109,7 +116,6 @@ export class RhamtInstaller {
     private static async downloadFile(uri: string, title: string, handler: InstallHandler): Promise<string> {
         handler.log(`Downloading ${uri}... `);
         const tempFile = await RhamtInstaller.createTemporaryFile(downloadFileExtension);
-
         const deferred = createDeferred();
         const fileStream = RhamtInstaller.createWriteStream(tempFile.filePath);
         fileStream.on('finish', () => {
@@ -153,19 +159,23 @@ export class RhamtInstaller {
 
     private static async unpackArchive(downloadDir: string, tempFilePath: string, handler: InstallHandler): Promise<void> {
         handler.log('Unpacking archive... ');
-
         const deferred = createDeferred();
-
         const title = 'Extracting mta-cli... ';
         await window.withProgress({
-            location: ProgressLocation.Window
-        }, (progress: any) => {
+            location: ProgressLocation.Notification,
+            cancellable: true
+        }, (progress, token: CancellationToken) => {
             const StreamZip = require('node-stream-zip');
             const zip = new StreamZip({
                 file: tempFilePath,
                 storeEntries: true
             });
-
+            token.onCancellationRequested(() => {
+                zip.close();
+                RhamtInstaller.deleteFile(tempFilePath);
+                RhamtInstaller.deleteDir(downloadDir);
+                deferred.reject({cancelled: true})
+            });
             let totalFiles = 0;
             let extractedFiles = 0;
             zip.on('ready', async () => {
