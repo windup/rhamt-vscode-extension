@@ -58,7 +58,7 @@ export namespace Utils {
             }
             catch (error) {
                 promptForFAQs('Unable to find mta-cli executable', {outDir: modelService.outDir});
-                return Promise.reject(error);
+                return Promise.reject({error, notified: true});
             }
 
             try {

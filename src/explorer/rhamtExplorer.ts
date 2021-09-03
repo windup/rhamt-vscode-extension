@@ -136,7 +136,9 @@ export class RhamtExplorer {
                     });
             } catch (e) {
                 console.log(e);
-                vscode.window.showErrorMessage(`Error running analysis - ${e}`);
+                if (!e.notified) {
+                    vscode.window.showErrorMessage(`Error running analysis - ${e}`);
+                }
                 RhamtUtil.updateRunEnablement(true);
             }
         }));
