@@ -6,11 +6,9 @@ import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { IIssue, IQuickFix, IssueContainer } from '../model/model';
 import * as path from 'path';
 import { Quickfix } from '../quickfix/quickfix';
-import { ModelService } from '../model/modelService';
 
 export class QuickfixItem extends TreeItem implements IssueContainer {
 
-    id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
 
     private quickfix: IQuickFix;

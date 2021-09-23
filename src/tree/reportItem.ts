@@ -10,8 +10,6 @@ import { ModelService } from '../model/modelService';
 
 export class ReportItem extends TreeItem implements ReportHolder {
 
-    id: string = ModelService.generateUniqueId();
-
     static LABEL = 'Report';
     private config: RhamtConfiguration;
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;

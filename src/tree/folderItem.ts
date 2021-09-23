@@ -5,11 +5,9 @@
 import { TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
 import * as path from 'path';
 import { Quickfix } from '../quickfix/quickfix';
-import { ModelService } from '../model/modelService';
 
 export class FolderItem extends TreeItem {
 
-    id: string = ModelService.generateUniqueId();
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
