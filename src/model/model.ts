@@ -100,12 +100,12 @@ export class RhamtConfiguration {
     getQuickfixesForResource(resource: string): IQuickFix[] {
         let quickfixes = [];
         if (this._results) {
-            this._results.model.hints.filter(hint => {
+            this._results.model.hints.forEach(hint => {
                 if (hint.file === resource || hint.file.includes(resource)) {
                     quickfixes = quickfixes.concat(hint.quickfixes)
                 }
             });
-            this._results.model.classifications.filter(classification => {
+            this._results.model.classifications.forEach(classification => {
                 if (classification.file === resource || classification.file.includes(resource)) {
                     quickfixes = quickfixes.concat(classification.quickfixes)
                 }
