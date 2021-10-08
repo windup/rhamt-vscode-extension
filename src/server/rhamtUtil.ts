@@ -92,7 +92,7 @@ export class RhamtUtil {
                         vscode.window.showInformationMessage('Analysis complete');
                     }
                     try {
-                        await this.loadResults(config, modelService, executedTimestamp, skipReport);
+                        await this.loadResults(config, modelService, executedTimestamp, date.toLocaleTimeString(), skipReport);
                     }
                     catch (e) {
                         console.log(`Error loading analysis results: ${e}`);
@@ -368,7 +368,7 @@ export class RhamtUtil {
         return Promise.resolve(params);
     }
 
-    private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string, skippedReports: any): Promise<any> {
+    private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string, timestampRaw: string, skippedReports: any): Promise<any> {
         try {
             // open results.xml, set IDs, save to disk
             const dom = await AnalysisResultsUtil.loadAndPersistIDs(config.getResultsLocation());
@@ -377,7 +377,8 @@ export class RhamtUtil {
                 skippedReports,
                 outputLocation: config.options['output'],
                 executedTimestamp: startedTimestamp,
-                executable: config.rhamtExecutable
+                executable: config.rhamtExecutable,
+                executedTimestampRaw: timestampRaw
             };
             // open results.xml, load hints/classifications, read quickfix lines
             config.results = new AnalysisResults(dom, config);
