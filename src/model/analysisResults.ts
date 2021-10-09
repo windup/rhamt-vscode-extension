@@ -20,7 +20,8 @@ export interface AnalysisResultsSummary {
     hintCount?: number,
     classificationCount?: number;
     quickfixCount?: number;
-    executedTimestampRaw?: string
+    executedTimestampRaw?: string,
+    active?: boolean
 }
 
 export class AnalysisResultsUtil {

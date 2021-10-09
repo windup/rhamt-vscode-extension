@@ -2,7 +2,7 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { RhamtModel, RhamtConfiguration, Endpoints } from './model';
+import { RhamtModel, RhamtConfiguration, Endpoints, IHint } from './model';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as fse from 'fs-extra';
@@ -403,5 +403,33 @@ export class ModelService {
         }).catch(err => {
             console.log(`ModelService :: Error reading help.json :: ${err}`);
         });
+    }
+
+    public getHintsForDecoration(): IHint[] {
+        if (this.model.configurations.length == 0) return [];
+        let configs = this.model.configurations.filter(config => {
+            return config.summary && config.summary.executedTimestampRaw;
+        });
+        if (configs.length === 0) {
+            const config = this.model.configurations.find(config => config.results != null);
+            return config == undefined ? [] : config.results.model.hints;
+        }
+        const activeConfig = configs.find(config => config.summary.active);
+        if (activeConfig) {
+            return activeConfig.results.model.hints;
+        }
+        let mostRecentConfig = configs[0];
+        let mostRecentTimestamp = new Date(mostRecentConfig.summary.executedTimestampRaw);
+        for (const config of configs) {
+            if (mostRecentConfig.id === config.id) continue;
+            if (config.summary.executedTimestampRaw) {
+                const executedTimestamp = new Date(config.summary.executedTimestampRaw);
+                if (mostRecentTimestamp < executedTimestamp) {
+                    mostRecentConfig = config;
+                    mostRecentTimestamp = executedTimestamp;
+                }
+            }
+        }
+        return mostRecentConfig.results.model.hints;
     }
 }
