@@ -97,6 +97,6 @@ export class HintItem extends TreeItem implements IssueContainer {
 
     public refresh(): void {
         this.iconPath = this.getIconPath();
-        this.label = `${this.hint.title} [rule-id: ${this.hint.ruleId}]`;
+        this.label = `${this.hint.title} [line: ${this.hint.lineNumber}] [rule: ${this.hint.ruleId}]`;
     }
 }

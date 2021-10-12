@@ -113,6 +113,14 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         this.refresh(undefined);
     }
 
+    public refreshLabel(config: RhamtConfiguration): void {
+        let node = this.children.find(node => node.config.id === config.id);
+        if (node) {
+            node.treeItem.refresh();
+            this.refresh(node);
+        }
+    }
+
     private async populateRootNodes(): Promise<any[]> {
 
         let nodes: any[];
