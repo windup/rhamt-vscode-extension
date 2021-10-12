@@ -10,6 +10,8 @@ import { Grouping } from '../tree/configurationNode';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
 import { applyQuickfixes, applyQuickfix } from '../quickfix/quickfix';
+import { refreshOpenEditors } from '../source/markers';
+import { RhamtConfiguration } from '../model/model';
 
 export class RhamtExplorer {
 
@@ -114,7 +116,36 @@ export class RhamtExplorer {
                 vscode.window.showErrorMessage(`Error applying quickfixes ${e}`);
             }
         }));
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.activate', async (item) => {
+            try {
+                const config = item.config as RhamtConfiguration;
+                config.summary.active = config.summary.activatedExplicity = true;
+                this.deactivateOtherConfigurations(config);
+                this.dataProvider.refreshLabel(config);
+                refreshOpenEditors(this.modelService);
+                await this.saveModel();
+            }
+            catch (e) {
+                console.log(`Error activating configuration - ${e}`);
+                vscode.window.showErrorMessage(`Error activating configuration ${e}`);
+            }
+        }));
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.deactivate', async (item) => {
+            try {
+                const config = item.config as RhamtConfiguration;
+                config.summary.active = config.summary.activatedExplicity = false;
+                this.deactivateOtherConfigurations(config);
+                this.dataProvider.refreshLabel(config);
+                refreshOpenEditors(this.modelService);
+                this.saveModel();
+            }
+            catch (e) {
+                console.log(`Error unactivating configuration - ${e}`);
+                vscode.window.showErrorMessage(`Error unactivating configuration ${e}`);
+            }
+        }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
+            // TODO: Set buy indicator on configuration being ran, and update it accordingly if cancelled, errored, or finished.
             const config = item.config;
             try {
                 RhamtUtil.updateRunEnablement(false);
@@ -130,9 +161,12 @@ export class RhamtExplorer {
                         config.summary = undefined;
                         this.dataProvider.reload(config);
                     },
-                    () => {
+                    async () => {
+                        this.deactivateOtherConfigurations(config);
                         RhamtUtil.updateRunEnablement(true);
                         this.dataProvider.reload(config);
+                        refreshOpenEditors(this.modelService);
+                        this.saveModel();
                     });
             } catch (e) {
                 console.log(e);
@@ -144,6 +178,31 @@ export class RhamtExplorer {
         }));
         RhamtUtil.updateRunEnablement(true);
     }
+
+    private async saveModel(): Promise<void> {
+        try {
+            // save analysis results, quickfix info, active analysis, etc.
+            await this.modelService.save();
+        }
+        catch (e) {
+            console.log(`Error saving analysis results: ${e}`);
+            return Promise.reject(`Error saving analysis results: ${e}`);
+        }
+    }
+
+    private deactivateOtherConfigurations(ignoreConfig: RhamtConfiguration): void {
+        this.modelService.model.configurations.forEach(config => {
+            if (ignoreConfig.id !== config.id) {
+                const summary = config.summary;
+                if (summary && summary.executedTimestampRaw && summary.active) {
+                    summary.active = false;
+                    this.dataProvider.refreshLabel(config);
+                }
+            }
+        });
+    }
+
+
 
     private createViewer(): vscode.TreeView<any> {
         const treeDataProvider = this.dataProvider;

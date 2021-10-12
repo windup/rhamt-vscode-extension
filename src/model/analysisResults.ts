@@ -21,7 +21,8 @@ export interface AnalysisResultsSummary {
     classificationCount?: number;
     quickfixCount?: number;
     executedTimestampRaw?: string,
-    active?: boolean
+    active?: boolean,
+    activatedExplicity?: boolean
 }
 
 export class AnalysisResultsUtil {
