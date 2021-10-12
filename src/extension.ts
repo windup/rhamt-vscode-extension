@@ -21,6 +21,7 @@ import { ConfigurationEditorSerializer } from './editor/configurationEditorSeria
 import { QuickfixContentProvider } from './quickfix/contentProvider';
 import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvider';
 import * as os from 'os';
+import { initMarkerSupport } from './source/markers';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -52,6 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
     new RhamtView(context, modelService, configEditorService);
     new ReportView(context, locations);
     detailsView = new IssueDetailsView(context, locations, modelService);
+    initMarkerSupport(context, modelService);
     
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
         const issue = (data as IssueContainer).getIssue();
@@ -102,6 +104,7 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
+    modelService.save();
     configEditorServer.dispose();
     reportServer.dispose();
 }
