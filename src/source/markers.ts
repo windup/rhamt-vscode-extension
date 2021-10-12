@@ -34,12 +34,18 @@ export function initMarkerSupport(context: vscode.ExtensionContext, modelService
     context.subscriptions.push(
 		vscode.workspace.onDidCloseTextDocument(doc => mtaDiagnostics.delete(doc.uri))
 	);
+
+    refreshOpenEditors(modelService);
+}
+
+export function refreshOpenEditors(modelService: ModelService): void {
+    vscode.window.visibleTextEditors.forEach(editor => refreshHints(editor.document, modelService));
 }
 
 export function refreshHints(doc: vscode.TextDocument, modelService: ModelService): void {
 	const diagnostics: vscode.Diagnostic[] = [];
     mtaDiagnostics.delete(doc.uri);
-    modelService.getHintsForDecoration().filter(issue => issue.file === doc.uri.fsPath).forEach(issue => {
+    modelService.getActiveHints().filter(issue => issue.file === doc.uri.fsPath).forEach(issue => {
         const diagnostic = createDiagnostic(doc, issue);
         if (diagnostic) {
             diagnostics.push(diagnostic);

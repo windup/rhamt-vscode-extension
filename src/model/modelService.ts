@@ -405,7 +405,7 @@ export class ModelService {
         });
     }
 
-    public getHintsForDecoration(): IHint[] {
+    public getActiveHints(): IHint[] {
         if (this.model.configurations.length == 0) return [];
         let configs = this.model.configurations.filter(config => {
             return config.summary && config.summary.executedTimestampRaw;
@@ -414,22 +414,27 @@ export class ModelService {
             const config = this.model.configurations.find(config => config.results != null);
             return config == undefined ? [] : config.results.model.hints;
         }
-        const activeConfig = configs.find(config => config.summary.active);
-        if (activeConfig) {
-            return activeConfig.results.model.hints;
-        }
-        let mostRecentConfig = configs[0];
-        let mostRecentTimestamp = new Date(mostRecentConfig.summary.executedTimestampRaw);
-        for (const config of configs) {
-            if (mostRecentConfig.id === config.id) continue;
-            if (config.summary.executedTimestampRaw) {
-                const executedTimestamp = new Date(config.summary.executedTimestampRaw);
-                if (mostRecentTimestamp < executedTimestamp) {
-                    mostRecentConfig = config;
-                    mostRecentTimestamp = executedTimestamp;
-                }
-            }
-        }
-        return mostRecentConfig.results.model.hints;
+        let hints: IHint[] = [];
+        configs.filter(config => config.summary.active).forEach(config => {
+            hints = hints.concat(config.results.model.hints);
+        });
+        return hints;
+        // const activeConfig = configs.find(config => config.summary.active);
+        // if (activeConfig) {
+        //     return activeConfig.results.model.hints;
+        // }
+        // let mostRecentConfig = activeConfigs[0];
+        // let mostRecentTimestamp = new Date(mostRecentConfig.summary.executedTimestampRaw);
+        // for (const config of configs) {
+        //     if (mostRecentConfig.id === config.id) continue;
+        //     if (config.summary.executedTimestampRaw) {
+        //         const executedTimestamp = new Date(config.summary.executedTimestampRaw);
+        //         if (mostRecentTimestamp < executedTimestamp) {
+        //             mostRecentConfig = config;
+        //             mostRecentTimestamp = executedTimestamp;
+        //         }
+        //     }
+        // }
+        // return mostRecentConfig.results.model.hints;
     }
 }
