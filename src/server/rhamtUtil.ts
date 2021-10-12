@@ -92,7 +92,7 @@ export class RhamtUtil {
                         vscode.window.showInformationMessage('Analysis complete');
                     }
                     try {
-                        await this.loadResults(config, modelService, executedTimestamp, date.toLocaleTimeString(), skipReport);
+                        await this.loadResults(config, modelService, executedTimestamp, date.toString(), skipReport);
                     }
                     catch (e) {
                         console.log(`Error loading analysis results: ${e}`);
@@ -378,7 +378,8 @@ export class RhamtUtil {
                 outputLocation: config.options['output'],
                 executedTimestamp: startedTimestamp,
                 executable: config.rhamtExecutable,
-                executedTimestampRaw: timestampRaw
+                executedTimestampRaw: timestampRaw,
+                active: true
             };
             // open results.xml, load hints/classifications, read quickfix lines
             config.results = new AnalysisResults(dom, config);
@@ -390,14 +391,6 @@ export class RhamtUtil {
         }
         catch (e) {
             return Promise.reject(`Error loading analysis results from (${config.getResultsLocation()}): ${e}`);
-        }
-        try {
-            // save model with new analysis results and quickfix info
-            await modelService.save();
-        }
-        catch (e) {
-            console.log(`Error saving analysis results: ${e}`);
-            return Promise.reject(`Error saving analysis results: ${e}`);
         }
     }
 }
