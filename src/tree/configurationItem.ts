@@ -31,10 +31,18 @@ export class ConfigurationItem extends TreeItem {
     }
 
     public get contextValue(): string {
-        return 'rhamtConfiguration';
+        let results = this.config.results ? '-hasResults' : '';
+        if (results) {
+            results += this.config.summary.active ? '-isActive' : '-notActive';
+        }
+        return 'rhamtConfiguration' + results;
     }
 
     public refresh(): void {
-        this.label = this.config.name;
+        let text = this.config.name;
+        if (this.config.summary && this.config.summary.active) {
+            text += ` (active)`;
+        }
+        this.label = text;
     }
 }
