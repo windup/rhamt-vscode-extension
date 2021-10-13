@@ -22,6 +22,7 @@ import { QuickfixContentProvider } from './quickfix/contentProvider';
 import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvider';
 import * as os from 'os';
 import { initMarkerSupport } from './source/markers';
+import { initQuickfixSupport } from './source/quickfix';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -54,6 +55,7 @@ export async function activate(context: vscode.ExtensionContext) {
     new ReportView(context, locations);
     detailsView = new IssueDetailsView(context, locations, modelService);
     initMarkerSupport(context, modelService);
+    initQuickfixSupport(context, modelService);
     
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
         const issue = (data as IssueContainer).getIssue();

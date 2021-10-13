@@ -437,4 +437,10 @@ export class ModelService {
         // }
         // return mostRecentConfig.results.model.hints;
     }
+
+    public findHint(configId: string, hintId: string): IHint | undefined {
+        const config = this.model.configurations.find(config => config.id === configId);
+        if (!config || !config.results) return undefined;
+        return config.results.model.hints.find(hint => hint.id === hintId);
+    }
 }
