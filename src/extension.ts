@@ -57,26 +57,33 @@ export async function activate(context: vscode.ExtensionContext) {
     initMarkerSupport(context, modelService);
     initQuickfixSupport(context, modelService);
     
-    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', data => {
+    context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', async (data) => {
         const issue = (data as IssueContainer).getIssue();
         detailsView.open(issue);
-        vscode.workspace.openTextDocument(vscode.Uri.file(issue.file)).then(async doc => {
-            const editor = await vscode.window.showTextDocument(doc);
-            let item: HintItem;
-            if (data instanceof HintNode) {
-                item = (data as HintNode).item;
-            }
-            else if (data instanceof HintItem) {
-                item = data;
-            }
-            if (item) {
+        let item: HintItem;
+        if (data instanceof HintNode) {
+            item = (data as HintNode).item;
+        }
+        else if (data instanceof HintItem) {
+            item = data;
+        }
+        const uri = vscode.Uri.file(issue.file);
+        try {
+            await vscode.commands.executeCommand('vscode.open', uri);
+        } catch (e) {
+            console.log(`Error while opening file: ${e}`);
+            vscode.window.showErrorMessage(e);
+            return;
+        }
+        if (item) {
+            vscode.window.visibleTextEditors.filter(editor => editor.document.uri.fsPath === uri.fsPath).forEach(editor => {
                 editor.selection = new vscode.Selection(
                     new vscode.Position(item.getLineNumber(), item.getColumn()),
                     new vscode.Position(item.getLineNumber(), item.getLength())
                 );
                 editor.revealRange(new vscode.Range(item.getLineNumber(), 0, item.getLineNumber() + 1, 0), vscode.TextEditorRevealType.InCenter);
-            }
-        });
+            });
+        }
     }));
 
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(doc => {
