@@ -6,10 +6,11 @@ import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
 import { HintItem } from './hintItem';
-import { IHint, RhamtConfiguration, ReportHolder, IssueContainer, IIssue, IQuickFix } from '../model/model';
+import { IHint, RhamtConfiguration, ReportHolder, IssueContainer, IIssue, IQuickFix, ChangeType } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { QuickfixesNode } from './quickfixesNode';
 import { ConfigurationNode } from './configurationNode';
+import { refreshOpenEditors } from '../source/markers';
 
 export class HintNode extends AbstractNode<HintItem> implements ReportHolder, IssueContainer {
 
@@ -31,6 +32,7 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
         this.root = root;
         this.hint = hint;
         this.quickfixes = this.hint.quickfixes;
+        this.listen();
     }
 
     public getChildren(): Promise<ITreeNode[]> {
@@ -80,10 +82,21 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
         return this.hint;
     }
 
-    setComplete(): void {
-        this.hint.complete = true;
-        this.config.markIssueAsComplete(this.getIssue());
+    setComplete(complete: boolean): void {
+        this.getIssue().complete = complete;
+        this.config.markIssueAsComplete(this.getIssue(), complete);
         (this.treeItem as HintItem).refresh();
         this.dataProvider.refresh(this);
+        refreshOpenEditors(this.modelService, this.getIssue().file);
+    }
+
+    private async listen(): Promise<void> {
+        const listener = change => {
+            const container = this.quickfixes.find(quickfix => quickfix.id === change.value);
+            if (change.type === ChangeType.QUICKFIX_APPLIED && container) {
+                this.setComplete(true);
+            }
+        };
+        this.config.onChanged.on(listener);
     }
 }

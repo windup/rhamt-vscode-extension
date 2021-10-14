@@ -96,6 +96,10 @@
                 "title": "Mark as Complete"
             },
             {
+                "command": "rhamt.markIssueAsIncomplete",
+                "title": "Mark as Incomplete"
+            },
+            {
                 "command": "rhamt.deleteResults",
                 "title": "Delete"
             },
@@ -122,6 +126,10 @@
             {
                 "command": "rhamt.deactivate",
                 "title": "Deactivate Analysis"
+            },
+            {
+                "command": "rhamt.markAsUnapplied",
+                "title": "Mark quickfix as Unapplied"
             }
         ],
         "configuration": [
@@ -216,7 +224,12 @@
                 },
                 {
                     "command": "rhamt.markIssueAsComplete",
-                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i",
+                    "when": "view == rhamtExplorerView && viewItem =~ /isIncomplete/i",
+                    "group": "rhamt@3"
+                },
+                {
+                    "command": "rhamt.markIssueAsIncomplete",
+                    "when": "view == rhamtExplorerView && viewItem =~ /isComplete/i",
                     "group": "rhamt@3"
                 },
                 {
@@ -227,6 +240,11 @@
                 {
                     "command": "rhamt.applyQuickfix",
                     "when": "view == rhamtExplorerView && viewItem =~ /hasQuickfix/i",
+                    "group": "rhamt"
+                },
+                {
+                    "command": "rhamt.markAsUnapplied",
+                    "when": "view == rhamtExplorerView && viewItem =~ /quickfixApplied/i",
                     "group": "rhamt"
                 },
                 {

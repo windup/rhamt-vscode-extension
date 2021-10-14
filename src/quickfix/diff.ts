@@ -61,13 +61,16 @@ export class Diff {
             const lineNumber = issue.lineNumber-1;
             const original = issue.originalLineSource;
             const text = document.getText(new vscode.Range(lineNumber, 0, lineNumber, original.length));
-            if (text !== original) {
+            if (text === original) {
                 let edit = new vscode.WorkspaceEdit();
                 edit.insert(file, new vscode.Position(lineNumber, 0), os.EOL);
                 await vscode.workspace.applyEdit(edit);
                 edit = new vscode.WorkspaceEdit();
-                const replacement = quickfix.newLine;
-                edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, replacement.length), replacement);
+                const newline = quickfix.newLine;
+                edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, newline.length), newline);
+                if (!newline) {
+                    vscode.window.showErrorMessage(`Newline is missing from hint.`);
+                }
                 return vscode.workspace.applyEdit(edit);
             }
             return Promise.resolve(true);

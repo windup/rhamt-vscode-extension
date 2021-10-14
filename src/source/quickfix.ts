@@ -37,11 +37,11 @@ export class QuickfixProvider implements vscode.CodeActionProvider  {
                 {
                     config: hint.configuration,
                     quickfix,
-                    quickfixApplied: () => {
-                        quickfix.quickfixApplied = true;
-                        hint.configuration.markQuickfixApplied(quickfix);
-                        hint.complete = true;
-                        hint.configuration.markIssueAsComplete(hint);
+                    applyQuickfix: (applied: boolean) => {
+                        quickfix.quickfixApplied = applied;
+                        hint.configuration.markQuickfixApplied(quickfix, applied);
+                        hint.complete = applied;
+                        hint.configuration.markIssueAsComplete(hint, applied);
                         hint.configuration.onChanged.emit({
                             type: ChangeType.QUICKFIX_APPLIED,
                             name: 'quickfix',

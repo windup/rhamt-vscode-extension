@@ -359,10 +359,8 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         }
     }
 
-    markIssueAsComplete(node: any): void {
+    setComplete(node: any, complete: boolean): void {
         const container = node as IssueContainer;
-        const issue = container.getIssue();
-        this.config.markIssueAsComplete(issue);
-        container.setComplete();
+        container.setComplete(complete);
     }
 }

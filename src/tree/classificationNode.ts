@@ -52,9 +52,9 @@ export class ClassificationNode extends AbstractNode implements ReportHolder, Is
         return this.classification;
     }
 
-    setComplete(): void {
-        this.classification.complete = true;
-        this.config.markIssueAsComplete(this.getIssue());
+    setComplete(complete: boolean): void {
+        this.getIssue().complete = complete;
+        this.config.markIssueAsComplete(this.getIssue(), complete);
         (this.treeItem as ClassificationItem).refresh();
         this.dataProvider.refresh(this);
     }

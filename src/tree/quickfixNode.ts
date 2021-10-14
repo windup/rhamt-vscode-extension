@@ -10,6 +10,7 @@ import { RhamtConfiguration, IIssue, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { QuickfixItem } from './quickfixItem';
 import { Quickfix } from '../quickfix/quickfix';
+import { HintNode } from './hintNode';
 
 export class QuickfixNode extends AbstractNode implements Quickfix.IQuickfixContainer  {
 
@@ -55,10 +56,15 @@ export class QuickfixNode extends AbstractNode implements Quickfix.IQuickfixCont
         return [this.quickfix];
     }
 
-    quickfixApplied(): void {
-        this.quickfix.quickfixApplied = true;
-        this.config.markQuickfixApplied(this.quickfix);
+    applyQuickfix(applied: boolean): void {
+        this.quickfix.quickfixApplied = applied;
+        this.config.markQuickfixApplied(this.quickfix, applied);
+        const hintNode = (this as any).parentNode.parentNode as HintNode;
+        hintNode.setComplete(applied);
+    }
+
+    protected refresh(node?: ITreeNode): void {
         (this.item as QuickfixItem).refresh();
-        this.dataProvider.refresh(this);
+        super.refresh(node);
     }
 }
