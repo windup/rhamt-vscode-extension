@@ -36,6 +36,7 @@ export namespace ChangeType {
     export const COMPLETE = 6;
     export const STARTED = 7;
     export const CLONING = 8;
+    export const QUICKFIX_APPLIED = 9;
 }
 
 export interface CloneUpdate {
@@ -89,12 +90,12 @@ export class RhamtConfiguration {
         this._results.deleteIssue(issue);
     }
 
-    markIssueAsComplete(issue: IIssue): void {
-        this._results.markIssueAsComplete(issue);
+    markIssueAsComplete(issue: IIssue, complete: boolean): void {
+        this._results.markIssueAsComplete(issue, complete);
     }
 
-    markQuickfixApplied(quickfix: IQuickFix): void {
-        this._results.markQuickfixApplied(quickfix);
+    markQuickfixApplied(quickfix: IQuickFix, applied: boolean): void {
+        this._results.markQuickfixApplied(quickfix, applied);
     }
 
     getQuickfixesForResource(resource: string): IQuickFix[] {
@@ -167,7 +168,7 @@ export interface ReportHolder {
 
 export interface IssueContainer {
     getIssue?: () => IIssue;
-    setComplete?: () => void;
+    setComplete?: (complete: boolean) => void;
 }
 
 export interface IHint extends IIssue {

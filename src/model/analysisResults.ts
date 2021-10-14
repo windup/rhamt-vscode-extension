@@ -556,12 +556,22 @@ export class AnalysisResults {
         this.dom(issue.dom).attr('deleted', "true");
     }
 
-    markIssueAsComplete(issue: IIssue): void {
-        this.dom(issue.dom).attr('complete', "true");
+    markIssueAsComplete(issue: IIssue, complete: boolean): void {
+        if (complete) {
+            this.dom(issue.dom).attr('complete', "true");
+        }
+        else {
+            this.dom(issue.dom).removeAttr('complete');
+        }
     }
 
-    markQuickfixApplied(quickfix: IQuickFix): void {
-        this.dom(quickfix.dom).attr('quickfixApplied', "true");
+    markQuickfixApplied(quickfix: IQuickFix, applied: boolean): void {
+        if (applied) {
+            this.dom(quickfix.dom).attr('quickfixApplied', "true");
+        }
+        else {
+            this.dom(quickfix.dom).removeAttr('quickfixApplied');
+        }
     }
 
     private readLine(file: string, lineNumber: number): Promise<string> {

@@ -407,9 +407,7 @@ export class ModelService {
 
     public getActiveHints(): IHint[] {
         if (this.model.configurations.length == 0) return [];
-        let configs = this.model.configurations.filter(config => {
-            return config.summary && config.summary.executedTimestampRaw;
-        });
+        let configs = this.model.configurations.filter(config => config.summary != undefined);
         if (configs.length === 0) {
             const config = this.model.configurations.find(config => config.results != null);
             return config == undefined ? [] : config.results.model.hints;

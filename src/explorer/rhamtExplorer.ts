@@ -55,7 +55,14 @@ export class RhamtExplorer {
             }
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.markIssueAsComplete', item => {
-            item.root.markIssueAsComplete(item);
+            item.root.setComplete(item, true);
+            this.modelService.saveAnalysisResults(item.root.config).catch(e => {
+                console.log(`Error saving analysis results: ${e}`);
+                vscode.window.showErrorMessage(e);
+            });
+        }));
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.markIssueAsIncomplete', item => {
+            item.root.setComplete(item, false);
             this.modelService.saveAnalysisResults(item.root.config).catch(e => {
                 console.log(`Error saving analysis results: ${e}`);
                 vscode.window.showErrorMessage(e);
@@ -96,7 +103,20 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', async (item) => {
             try {
                 await applyQuickfix(item.quickfix);
-                item.quickfixApplied();
+                item.applyQuickfix(true);
+                this.modelService.saveAnalysisResults(item.config).catch(e => {
+                    console.log(`Error saving analysis results after quickfix: ${e}`);
+                    vscode.window.showErrorMessage(e);
+                });
+            }
+            catch (e) {
+                console.log(`Error applying quickfix - ${e}`);
+                vscode.window.showErrorMessage(`Error applying quickfix ${e}`);
+            }
+        }));
+        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.markAsUnapplied', async (item) => {
+            try {
+                item.applyQuickfix(false);
                 this.modelService.saveAnalysisResults(item.config).catch(e => {
                     console.log(`Error saving analysis results after quickfix: ${e}`);
                     vscode.window.showErrorMessage(e);
@@ -120,7 +140,7 @@ export class RhamtExplorer {
             try {
                 const config = item.config as RhamtConfiguration;
                 config.summary.active = config.summary.activatedExplicity = true;
-                this.deactivateOtherConfigurations(config);
+                // this.deactivateOtherConfigurations(config);
                 this.dataProvider.refreshLabel(config);
                 refreshOpenEditors(this.modelService);
                 await this.saveModel();
@@ -134,7 +154,7 @@ export class RhamtExplorer {
             try {
                 const config = item.config as RhamtConfiguration;
                 config.summary.active = config.summary.activatedExplicity = false;
-                this.deactivateOtherConfigurations(config);
+                // this.deactivateOtherConfigurations(config);
                 this.dataProvider.refreshLabel(config);
                 refreshOpenEditors(this.modelService);
                 this.saveModel();
@@ -162,7 +182,7 @@ export class RhamtExplorer {
                         this.dataProvider.reload(config);
                     },
                     async () => {
-                        this.deactivateOtherConfigurations(config);
+                        // this.deactivateOtherConfigurations(config);
                         RhamtUtil.updateRunEnablement(true);
                         this.dataProvider.reload(config);
                         refreshOpenEditors(this.modelService);
@@ -190,19 +210,17 @@ export class RhamtExplorer {
         }
     }
 
-    private deactivateOtherConfigurations(ignoreConfig: RhamtConfiguration): void {
-        this.modelService.model.configurations.forEach(config => {
-            if (ignoreConfig.id !== config.id) {
-                const summary = config.summary;
-                if (summary && summary.executedTimestampRaw && summary.active) {
-                    summary.active = false;
-                    this.dataProvider.refreshLabel(config);
-                }
-            }
-        });
-    }
-
-
+    // private deactivateOtherConfigurations(ignoreConfig: RhamtConfiguration): void {
+    //     this.modelService.model.configurations.forEach(config => {
+    //         if (ignoreConfig.id !== config.id) {
+    //             const summary = config.summary;
+    //             if (summary && summary.active) {
+    //                 summary.active = false;
+    //                 this.dataProvider.refreshLabel(config);
+    //             }
+    //         }
+    //     });
+    // }
 
     private createViewer(): vscode.TreeView<any> {
         const treeDataProvider = this.dataProvider;
