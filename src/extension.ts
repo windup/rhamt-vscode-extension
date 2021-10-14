@@ -68,12 +68,19 @@ export async function activate(context: vscode.ExtensionContext) {
             item = data;
         }
         const uri = vscode.Uri.file(issue.file);
-        try {
-            await vscode.commands.executeCommand('vscode.open', uri);
-        } catch (e) {
-            console.log(`Error while opening file: ${e}`);
-            vscode.window.showErrorMessage(e);
-            return;
+
+        let activeEditor = vscode.window.visibleTextEditors.find(editor => editor.document.uri.fsPath === uri.fsPath);
+        if (!activeEditor) {
+            try {
+                await vscode.commands.executeCommand('vscode.open', uri);
+            } catch (e) {
+                console.log(`Error while opening file: ${e}`);
+                vscode.window.showErrorMessage(e);
+                return;
+            }
+        } 
+        else {
+            await vscode.window.showTextDocument(activeEditor.document, {viewColumn: activeEditor.viewColumn});
         }
         if (item) {
             vscode.window.visibleTextEditors.filter(editor => editor.document.uri.fsPath === uri.fsPath).forEach(editor => {
