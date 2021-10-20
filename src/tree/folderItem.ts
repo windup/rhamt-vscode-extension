@@ -8,7 +8,7 @@ import { Quickfix } from '../quickfix/quickfix';
 
 export class FolderItem extends TreeItem {
 
-    collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
+    collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.Expanded;
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
     private folder: string;
@@ -23,7 +23,7 @@ export class FolderItem extends TreeItem {
 
     public refresh(): void {
         this.label = path.basename(this.folder);
-        this.collapsibleState = TreeItemCollapsibleState.Collapsed;
+        this.collapsibleState = TreeItemCollapsibleState.Expanded;
     }
 
     public get contextValue(): string {

@@ -184,6 +184,8 @@ export class RhamtExplorer {
                     async () => {
                         // this.deactivateOtherConfigurations(config);
                         RhamtUtil.updateRunEnablement(true);
+                        const configNode = this.dataProvider.getConfigurationNode(config);
+                        configNode.expand();
                         this.dataProvider.reload(config);
                         refreshOpenEditors(this.modelService);
                         this.saveModel();
@@ -225,6 +227,11 @@ export class RhamtExplorer {
     private createViewer(): vscode.TreeView<any> {
         const treeDataProvider = this.dataProvider;
         const viewer = vscode.window.createTreeView('rhamtExplorerView', { treeDataProvider });
+        // viewer.onDidExpandElement(e => {
+        //     console.log(e.element);
+        //     if (e.element instanceof FolderNode) {
+        //     }
+        // });
         this.context.subscriptions.push(viewer);
         this.dataProvider.setView(viewer);
         return viewer;

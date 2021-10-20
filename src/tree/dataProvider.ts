@@ -91,6 +91,10 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         return result;
     }
 
+    public getConfigurationNode(config: RhamtConfiguration): ConfigurationNode | undefined {
+        return this.children.find(node => node.config.id === config.id);
+    }
+
     public reload(config: RhamtConfiguration): void {
         let node = this.children.find(node => node.config.id === config.id);
         if (node) {

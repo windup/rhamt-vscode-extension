@@ -98,7 +98,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             return;
         }
         else {
-            this.treeItem.collapsibleState = TreeItemCollapsibleState.Expanded;
+            this.treeItem.collapsibleState = TreeItemCollapsibleState.Collapsed;
             this.results = [];
             const base = [__dirname, '..', '..', '..', 'resources'];
             this.treeItem.iconPath = {
@@ -362,5 +362,9 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     setComplete(node: any, complete: boolean): void {
         const container = node as IssueContainer;
         container.setComplete(complete);
+    }
+
+    expand(): void {
+        this.treeItem.collapsibleState = TreeItemCollapsibleState.Expanded;
     }
 }
