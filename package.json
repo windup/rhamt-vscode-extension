@@ -61,11 +61,13 @@
             {
                 "command": "rhamt.runConfiguration",
                 "title": "Run",
-                "enablement": "mta-cli:enabled"
+                "enablement": "mta-cli:enabled",
+                "icon": "$(run)"
             },
             {
                 "command": "rhamt.deleteConfiguration",
-                "title": "Delete"
+                "title": "Delete",
+                "icon": "$(trash)"
             },
             {
                 "command": "rhamt.openConfiguration",
@@ -183,9 +185,19 @@
                     "group": "rhamt"
                 },
                 {
+                    "command": "rhamt.runConfiguration",
+                    "when": "view == rhamtExplorerView && viewItem =~ /rhamtConfiguration/i",
+                    "group": "inline"
+                },
+                {
                     "command": "rhamt.deleteConfiguration",
                     "when": "view == rhamtExplorerView && viewItem =~ /rhamtConfiguration/i",
-                    "group": "rhamt"
+                    "group": "z"
+                },
+                {
+                    "command": "rhamt.deleteConfiguration",
+                    "when": "view == rhamtExplorerView && viewItem =~ /rhamtConfiguration/i",
+                    "group": "inline"
                 },
                 {
                     "command": "rhamt.openConfiguration",
@@ -260,12 +272,12 @@
                 {
                     "command": "rhamt.activate",
                     "when": "view == rhamtExplorerView && viewItem =~ /hasResults-notActive/i",
-                    "group": "rhamt"
+                    "group": "inline"
                 },
                 {
                     "command": "rhamt.deactivate",
                     "when": "view == rhamtExplorerView && viewItem =~ /hasResults-isActive/i",
-                    "group": "rhamt"
+                    "group": "inline"
                 }
             ]
         }

@@ -42,6 +42,10 @@ export class ConfigurationItem extends TreeItem {
         let text = this.config.name;
         if (this.config.summary && this.config.summary.active) {
             text += ` (active)`;
+            this.collapsibleState = TreeItemCollapsibleState.Expanded;
+        } 
+        else {
+            this.collapsibleState = TreeItemCollapsibleState.None;
         }
         this.label = text;
     }
