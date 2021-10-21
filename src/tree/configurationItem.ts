@@ -39,14 +39,21 @@ export class ConfigurationItem extends TreeItem {
     }
 
     public refresh(): void {
-        let text = this.config.name;
+        let label = this.config.name;
+        let highlights: [number, number][] = undefined;
         if (this.config.summary && this.config.summary.active) {
-            text += ` (active)`;
+            const start = label.length;
+            const activeLabel = '(active)';
+            label += ` ${activeLabel}`;
             this.collapsibleState = TreeItemCollapsibleState.Expanded;
+            highlights = [[start + 2, start + activeLabel.length]];
         } 
         else {
             this.collapsibleState = TreeItemCollapsibleState.None;
+            if (!this.config.summary) {
+                label += ` (unanalyzed)`;
+            }
         }
-        this.label = text;
+        this.label = { label, highlights };
     }
 }
