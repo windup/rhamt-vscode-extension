@@ -2,13 +2,13 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { Command, TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
+import { Command, ThemeIcon, TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
 import { RhamtConfiguration } from '../model/model';
 
 export class ConfigurationItem extends TreeItem {
 
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
-    iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
+    iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | ThemeIcon | undefined;
 
     config: RhamtConfiguration;
 
@@ -39,21 +39,32 @@ export class ConfigurationItem extends TreeItem {
     }
 
     public refresh(): void {
+        this.iconPath = this.getIcon();
         let label = this.config.name;
-        let highlights: [number, number][] = undefined;
+        this.description = '';
+        // let highlights: [number, number][] = undefined;
         if (this.config.summary && this.config.summary.active) {
-            const start = label.length;
-            const activeLabel = '(active)';
-            label += ` ${activeLabel}`;
+            // const start = label.length;
+            // const activeLabel = '(active)';
+            // label += ` ${activeLabel}`;
             this.collapsibleState = TreeItemCollapsibleState.Expanded;
-            highlights = [[start + 2, start + activeLabel.length]];
+            // highlights = [[start + 2, start + activeLabel.length]];
+            this.description = '(active)';
         } 
         else {
             this.collapsibleState = TreeItemCollapsibleState.None;
             if (!this.config.summary) {
-                label += ` (unanalyzed)`;
+                // label += ` (unanalyzed)`;
+                this.description = '(unanalyzed)';
             }
         }
-        this.label = { label, highlights };
+        this.label = { label /*, highlights */};
+    }
+
+    getIcon(): ThemeIcon {
+        if (this.config.results && this.config.summary.active) {
+            return new ThemeIcon('circle-large-filled');
+        }
+        return new ThemeIcon('circle-large-outline');
     }
 }
