@@ -140,8 +140,7 @@ export class RhamtExplorer {
             try {
                 const config = item.config as RhamtConfiguration;
                 config.summary.active = config.summary.activatedExplicity = true;
-                // this.deactivateOtherConfigurations(config);
-                this.dataProvider.refreshLabel(config);
+                this.refreshConfigurations();
                 refreshOpenEditors(this.modelService);
                 await this.saveModel();
             }
@@ -154,8 +153,7 @@ export class RhamtExplorer {
             try {
                 const config = item.config as RhamtConfiguration;
                 config.summary.active = config.summary.activatedExplicity = false;
-                // this.deactivateOtherConfigurations(config);
-                this.dataProvider.refreshLabel(config);
+                this.refreshConfigurations();
                 refreshOpenEditors(this.modelService);
                 this.saveModel();
             }
@@ -212,17 +210,10 @@ export class RhamtExplorer {
         }
     }
 
-    // private deactivateOtherConfigurations(ignoreConfig: RhamtConfiguration): void {
-    //     this.modelService.model.configurations.forEach(config => {
-    //         if (ignoreConfig.id !== config.id) {
-    //             const summary = config.summary;
-    //             if (summary && summary.active) {
-    //                 summary.active = false;
-    //                 this.dataProvider.refreshLabel(config);
-    //             }
-    //         }
-    //     });
-    // }
+
+    private refreshConfigurations(): void {
+        this.dataProvider.refreshRoots();
+    }
 
     private createViewer(): vscode.TreeView<any> {
         const treeDataProvider = this.dataProvider;

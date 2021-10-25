@@ -88,11 +88,11 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             this.results = [];
             this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
             this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
-                    'fa fa-cube medium-purple' : undefined;
+                    'fa fa-cube medium-purple' : this.treeItem.getIcon();
             super.refresh(this);
             setTimeout(() => {
                 this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
-                    'fa fa-cube medium-purple' : undefined;
+                    'fa fa-cube medium-purple' : this.treeItem.getIcon();
                 super.refresh(this);
             }, 100);
             return;
@@ -108,7 +108,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
             this.refresh(this);
             setTimeout(() => {
                 this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
-                    'fa fa-cube medium-purple' : undefined;
+                    'fa fa-cube medium-purple' : this.treeItem.getIcon();
                 this.computeIssues();
                 this.results = [
                     new ResultsNode(

@@ -125,6 +125,13 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         }
     }
 
+    public refreshRoots(): void {
+        this.children.filter(c => c instanceof ConfigurationNode).forEach(node => {
+            node.treeItem.refresh();
+        });
+        this.refresh(undefined);
+    }
+
     private async populateRootNodes(): Promise<any[]> {
 
         let nodes: any[];
