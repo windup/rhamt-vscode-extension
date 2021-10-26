@@ -23,6 +23,7 @@ import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvide
 import * as os from 'os';
 import { initMarkerSupport } from './source/markers';
 import { initQuickfixSupport } from './source/quickfix';
+import { LensProvider } from './source/lensProvider';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -117,6 +118,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const quickfixedProvider = new QuickfixedResourceProvider(modelService);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('quickfixed', quickfixedProvider));
+    vscode.languages.registerCodeLensProvider("*", new LensProvider(modelService));
 }
 
 export function deactivate() {

@@ -41,7 +41,7 @@ export class IssueDetailsView {
             return;
         }
         if (!this.view) {
-            this.view = window.createWebviewPanel('rhamtIssueDetails', 'Issue Details', ViewColumn.One, {
+            this.view = window.createWebviewPanel('rhamtIssueDetails', 'Issue Details', ViewColumn.Beside, {
                 enableScripts: true,
                 enableCommandUris: true,
                 retainContextWhenHidden: true
@@ -54,7 +54,7 @@ export class IssueDetailsView {
         this.view.webview.html = await this.render(issue);
 
         if (reveal) {
-            this.view.reveal(ViewColumn.One);
+            this.view.reveal();
         }
     }
 
