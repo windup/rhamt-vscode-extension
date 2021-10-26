@@ -56,7 +56,7 @@ Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugi
 
 ## Requirements
 
-* Java Platform, `JRE version 8+` with `JAVA_HOME` environment variable 
+* Java Platform, `JRE version 11` with `JAVA_HOME` environment variable 
 * A minimum of `4 GB RAM`; 8 GB recommended
 
 > Tip: The mta-cli can be installed from within VSCode once the extension has been installed.
