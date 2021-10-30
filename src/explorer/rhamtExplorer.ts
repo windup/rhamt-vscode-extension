@@ -177,10 +177,9 @@ export class RhamtExplorer {
                         }
                         config.results = undefined;
                         config.summary = undefined;
-                        this.dataProvider.reload(config);
+                        this.dataProvider.refreshRoots();
                     },
                     async () => {
-                        // this.deactivateOtherConfigurations(config);
                         RhamtUtil.updateRunEnablement(true);
                         const configNode = this.dataProvider.getConfigurationNode(config);
                         configNode.expand();
