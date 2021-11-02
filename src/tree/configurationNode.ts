@@ -367,4 +367,12 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     expand(): void {
         this.treeItem.collapsibleState = TreeItemCollapsibleState.Expanded;
     }
+
+    setBusyAnalyzing(busyAnalyzing: boolean): void {
+        const currentlyBusyAnalyzing = this.treeItem.busyAnalyzing;
+        this.treeItem.setBusyAnalyzing(busyAnalyzing);
+        if (!busyAnalyzing && currentlyBusyAnalyzing) {
+            this.refresh();
+        }
+    }
 }

@@ -11,6 +11,7 @@ export class ConfigurationItem extends TreeItem {
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | ThemeIcon | undefined;
 
     config: RhamtConfiguration;
+    busyAnalyzing = false;
 
     constructor(config: RhamtConfiguration) {
         super('Loading...');
@@ -43,7 +44,11 @@ export class ConfigurationItem extends TreeItem {
         let label = this.config.name;
         this.description = '';
         // let highlights: [number, number][] = undefined;
-        if (this.config.summary && this.config.summary.active) {
+        if (this.busyAnalyzing) {
+            this.description = '(analyzing...)';
+            return;
+        }
+        else if (this.config.summary && this.config.summary.active) {
             // const start = label.length;
             // const activeLabel = '(active)';
             // label += ` ${activeLabel}`;
@@ -62,9 +67,16 @@ export class ConfigurationItem extends TreeItem {
     }
 
     getIcon(): ThemeIcon {
-        if (this.config.results && this.config.summary.active) {
+        if (!this.config.results && this.busyAnalyzing) {
+            return new ThemeIcon('sync~spin');
+        }
+        else if (this.config.results && this.config.summary.active) {
             return new ThemeIcon('circle-large-filled');
         }
         return new ThemeIcon('circle-large-outline');
+    }
+
+    setBusyAnalyzing(busyAnalyzing: boolean): void {
+        this.busyAnalyzing = busyAnalyzing;
     }
 }

@@ -13,13 +13,14 @@ import { AnalysisResultsUtil, AnalysisResults } from '../model/analysisResults';
 import { ModelService } from '../model/modelService';
 import { rhamtChannel } from '../util/console';
 import * as fs from 'fs-extra';
+import { DataProvider } from '../tree/dataProvider';
 const PROGRESS = ':progress:';
 const START_TIMEOUT = 60000;
 const START_PROGRESS = 'Using user rules dir:';
 
 export class RhamtUtil {
 
-    static async analyze(config: RhamtConfiguration, modelService: ModelService, onStarted: () => void, onAnalysisComplete: () => void): Promise<RhamtProcessController> {
+    static async analyze(dataProvider: DataProvider, config: RhamtConfiguration, modelService: ModelService, onStarted: () => void, onAnalysisComplete: () => void): Promise<RhamtProcessController> {
         try {
             await Utils.initConfiguration(config, modelService);
         } catch (e) {
@@ -41,7 +42,7 @@ export class RhamtUtil {
                 }
                 catch (e) {
                     vscode.window.showErrorMessage(`Error: ${e}`);
-                    RhamtUtil.updateRunEnablement(true);
+                    RhamtUtil.updateRunEnablement(true, dataProvider, config);
                     return Promise.reject(e);
                 }
                 rhamtChannel.clear();
@@ -58,7 +59,7 @@ export class RhamtUtil {
                 const executedTimestamp = `${date.getMonth()}/${date.getDate()}/${year} @ ${timestamp}${sun}`;
                 const onComplete = async () => {
                     processController.shutdown();
-                    RhamtUtil.updateRunEnablement(true);
+                    RhamtUtil.updateRunEnablement(true, dataProvider, config);
                     if (config.options['ouput'] != config.options['generateOutputLocation']) {
                         console.log('Gathering results...');
                         progress.report({message: 'Gathering results...'});
@@ -137,7 +138,7 @@ export class RhamtUtil {
                 };
                 const onShutdown = () => {
                     console.log('mta-cli shutdown');
-                    RhamtUtil.updateRunEnablement(true);
+                    RhamtUtil.updateRunEnablement(true, dataProvider, config);
                     if (!resolved) {
                         resolved = true;
                         resolve(undefined);
@@ -161,7 +162,7 @@ export class RhamtUtil {
                 }
                 token.onCancellationRequested(() => {
                     cancelled = true;
-                    RhamtUtil.updateRunEnablement(true);
+                    RhamtUtil.updateRunEnablement(true, dataProvider, config);
                     if (processController) {
                         processController.shutdown();
                     }
@@ -175,8 +176,12 @@ export class RhamtUtil {
         });
     }
 
-    static updateRunEnablement(enabled: boolean): void {
-        vscode.commands.executeCommand('setContext', 'mta-cli:enabled', enabled);
+    static updateRunEnablement(enabled: boolean, dataProvider: DataProvider, config: RhamtConfiguration | null): void {
+        if (config != null) {
+            const node = dataProvider.getConfigurationNode(config);
+            node.setBusyAnalyzing(!enabled);
+        }
+        vscode.commands.executeCommand('setContext', 'mta-cli-enabled', enabled);
     }
 
     private static buildParams(config: RhamtConfiguration, windupHome: string): Promise<any[]> {

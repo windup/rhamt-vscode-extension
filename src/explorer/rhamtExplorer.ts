@@ -16,6 +16,7 @@ import { RhamtConfiguration } from '../model/model';
 export class RhamtExplorer {
 
     private dataProvider: DataProvider;
+
     private grouping: Grouping = {
         groupByFile: true,
         groupBySeverity: false
@@ -166,8 +167,9 @@ export class RhamtExplorer {
             // TODO: Set buy indicator on configuration being ran, and update it accordingly if cancelled, errored, or finished.
             const config = item.config;
             try {
-                RhamtUtil.updateRunEnablement(false);
+                RhamtUtil.updateRunEnablement(false, this.dataProvider, config);
                 await RhamtUtil.analyze(
+                    this.dataProvider,
                     config,
                     this.modelService,
                     () => {
@@ -180,7 +182,7 @@ export class RhamtExplorer {
                         this.dataProvider.refreshRoots();
                     },
                     async () => {
-                        RhamtUtil.updateRunEnablement(true);
+                        RhamtUtil.updateRunEnablement(true, this.dataProvider, config);
                         const configNode = this.dataProvider.getConfigurationNode(config);
                         configNode.expand();
                         this.dataProvider.reload(config);
@@ -192,10 +194,11 @@ export class RhamtExplorer {
                 if (!e.notified) {
                     vscode.window.showErrorMessage(`Error running analysis - ${e}`);
                 }
-                RhamtUtil.updateRunEnablement(true);
+                RhamtUtil.updateRunEnablement(true, this.dataProvider, config);
+                this.dataProvider.reload(config);
             }
         }));
-        RhamtUtil.updateRunEnablement(true);
+        RhamtUtil.updateRunEnablement(true, this.dataProvider, null);
     }
 
     private async saveModel(): Promise<void> {
