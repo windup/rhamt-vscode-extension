@@ -61,7 +61,7 @@
             {
                 "command": "rhamt.runConfiguration",
                 "title": "Run",
-                "enablement": "mta-cli:enabled",
+                "enablement": "mta-cli-enabled",
                 "icon": "$(run)"
             },
             {
