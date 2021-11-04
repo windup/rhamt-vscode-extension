@@ -185,7 +185,6 @@ export class RhamtExplorer {
                         RhamtUtil.updateRunEnablement(true, this.dataProvider, config);
                         const configNode = this.dataProvider.getConfigurationNode(config);
                         configNode.expand();
-                        this.dataProvider.reload(config);
                         refreshOpenEditors(this.modelService);
                         this.saveModel();
                     });

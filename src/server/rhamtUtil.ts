@@ -60,16 +60,14 @@ export class RhamtUtil {
                 const onComplete = async () => {
                     processController.shutdown();
                     RhamtUtil.updateRunEnablement(true, dataProvider, config);
-                    if (config.options['ouput'] != config.options['generateOutputLocation']) {
+                    const output: string = config.options['output'];
+                    const generated: string = config.options['generateOutputLocation'];
+                    console.log(`generated: ${generated.trim()}`);
+                    console.log(`output   : ${output.trim()}`);
+                    if (generated.trim() !== output.trim()) {
                         console.log('Gathering results...');
                         progress.report({message: 'Gathering results...'});
-                        try {
-                            const output: string = config.options['output'];
-                            const generated: string = config.options['generateOutputLocation'];
-                            
-                            console.log(`generated: ${generated}`);
-                            console.log(`output: ${output}`);
-                                                        
+                        try {                                                        
                             fs.moveSync(generated, output, {overwrite: true});           
                         }
                         catch (e) {

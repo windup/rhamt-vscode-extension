@@ -94,7 +94,7 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
         const listener = change => {
             const container = this.quickfixes.find(quickfix => quickfix.id === change.value);
             if (change.type === ChangeType.QUICKFIX_APPLIED && container) {
-                this.setComplete(true);
+                if (this.treeItem) this.setComplete(true);
             }
         };
         this.config.onChanged.on(listener);

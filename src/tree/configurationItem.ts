@@ -44,9 +44,9 @@ export class ConfigurationItem extends TreeItem {
         let label = this.config.name;
         this.description = '';
         // let highlights: [number, number][] = undefined;
-        if (this.busyAnalyzing) {
+        if (this.busyAnalyzing && !(this.config.summary && this.config.summary.active)) {
             this.description = '(analyzing...)';
-            return;
+            this.collapsibleState = TreeItemCollapsibleState.None;
         }
         else if (this.config.summary && this.config.summary.active) {
             // const start = label.length;
