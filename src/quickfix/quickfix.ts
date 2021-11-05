@@ -28,4 +28,8 @@ export namespace Quickfix {
     export interface IQuickfixContainer extends IssueContainer {
         getQuickfixes(): IQuickFix[];
     }
+
+    export async function applyAllQuickfixes(item: any): Promise<any> {
+        return Promise.resolve();
+    }
 }
