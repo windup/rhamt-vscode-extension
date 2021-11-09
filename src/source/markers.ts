@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
+import { window, ThemeColor } from 'vscode';
 import { IHint } from '../model/model';
 import { ModelService } from '../model/modelService';
 
@@ -11,9 +12,9 @@ export const MTA_HINT = 'MTA';
 export class MarkerService {
 
     private mtaDiagnostics = vscode.languages.createDiagnosticCollection("mta");
-    // private unfixedHintDecorationType = window.createTextEditorDecorationType({
-    //     backgroundColor: new ThemeColor('editor.stackFrameHighlightBackground')
-    // });
+    private unfixedHintDecorationType = window.createTextEditorDecorationType({
+        backgroundColor: new ThemeColor('editor.stackFrameHighlightBackground')
+    });
 
     constructor(
         private context: vscode.ExtensionContext, 
@@ -74,22 +75,22 @@ export class MarkerService {
 
     private refreshHints(doc: vscode.TextDocument, editor?: vscode.TextEditor): void {
         const diagnostics: vscode.Diagnostic[] = [];
-        // const decorations = [new vscode.Range(0, 0, 0, 0)];
+        const decorations = [new vscode.Range(0, 0, 0, 0)];
         this.mtaDiagnostics.delete(doc.uri);
         this.modelService.getActiveHints().filter(issue => doc.uri.fsPath === issue.file).forEach(issue => {
             const diagnostic = this.createDiagnostic(doc, issue);
             if (diagnostic) {
                 diagnostics.push(diagnostic);
-                // const lineNumber = issue.lineNumber-1;
-                // const range = new vscode.Range(lineNumber, issue.column, lineNumber, issue.length+issue.column);
-                // decorations.push(range);
+                const lineNumber = issue.lineNumber-1;
+                const range = new vscode.Range(lineNumber, issue.column, lineNumber, issue.length+issue.column);
+                decorations.push(range);
             }
         });
         if (diagnostics.length > 0) {
             this.mtaDiagnostics.set(doc.uri, diagnostics);
         }
         if (editor) {
-            // editor.setDecorations(this.unfixedHintDecorationType, decorations);
+            editor.setDecorations(this.unfixedHintDecorationType, decorations);
         }
     }
 

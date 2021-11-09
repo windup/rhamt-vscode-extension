@@ -10,7 +10,7 @@ import { MTA_HINT } from './markers';
 
 export function initQuickfixSupport(context: vscode.ExtensionContext, modelService: ModelService): void {
     context.subscriptions.push(
-		vscode.languages.registerCodeActionsProvider('java', new QuickfixProvider(modelService), {
+		vscode.languages.registerCodeActionsProvider('*', new QuickfixProvider(modelService), {
 			providedCodeActionKinds: [vscode.CodeActionKind.QuickFix]
 		}));
 }
