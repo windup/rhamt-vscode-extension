@@ -179,7 +179,8 @@ export class AnalysisResults {
             hint: '',
             configuration: this.config,
             dom: ele,
-            complete: false
+            complete: false,
+            origin: ''
         };
         if (this.dom(ele).attr('complete')) {
             hint.complete = true;
@@ -228,7 +229,7 @@ export class AnalysisResults {
                 case 'issue-category': {
                     const node = child.children[0];
                     if (node) {
-                        hint.category = await this.computeCategory(child);
+                        hint.category = await this.computeCategory(child, hint);
                     }
                     break;
                 }
@@ -287,18 +288,25 @@ export class AnalysisResults {
         return quickfixes;
     }
 
-    private async computeCategory(ele: CheerioElement) {
+    private async computeCategory(ele: CheerioElement, issue: IIssue) {
+        let category = '';
         for (const child of ele.children) {
             switch (child.name) {
                 case 'categoryID': {
                     const node = child.children[0];
                     if (node) {
-                        return node.nodeValue;
+                        category = node.nodeValue;
+                    }
+                }
+                case 'origin': {
+                    const node = child.children[0];
+                    if (node) {
+                        issue.origin = node.nodeValue;
                     }
                 }
             }
         }
-        return '';
+        return category;
     }
 
     private async computeQuickfix(ele: CheerioElement, issue: IIssue): Promise<IQuickFix> {
@@ -439,7 +447,8 @@ export class AnalysisResults {
             category: '',
             configuration: this.config,
             dom: ele,
-            complete: false
+            complete: false,
+            origin: ''
         };
         if (this.dom(ele).attr('complete')) {
             classification.complete = true;
@@ -492,7 +501,7 @@ export class AnalysisResults {
                 case 'issue-category': {
                     const node = child.children[0];
                     if (node) {
-                        classification.category = await this.computeCategory(child);
+                        classification.category = await this.computeCategory(child, classification);
                     }
                     break;
                 }

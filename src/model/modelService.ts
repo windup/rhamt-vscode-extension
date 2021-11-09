@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as mkdirp from 'mkdirp';
+import * as vscode from 'vscode';
 import { AnalysisResults, AnalysisResultsUtil } from './analysisResults';
 
 export class ModelService {
@@ -43,6 +44,12 @@ export class ModelService {
         config.id = ModelService.generateUniqueId();
         config.name = name;
         config.options['output'] = path.resolve(this.outDir, config.id);
+        try {
+            const defaultInput = vscode.workspace!.workspaceFolders![0].uri.fsPath;
+            config.options['input'] = [defaultInput];
+        } catch (e) {
+            // no-op
+        }
         config.options['sourceMode'] = true;
         config.options['generateOutputLocation'] = path.resolve(this.outputLocation, config.id);
         config.options['target'] = ['eap7'];

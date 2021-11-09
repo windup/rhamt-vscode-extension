@@ -21,7 +21,7 @@ import { ConfigurationEditorSerializer } from './editor/configurationEditorSeria
 import { QuickfixContentProvider } from './quickfix/contentProvider';
 import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvider';
 import * as os from 'os';
-import { initMarkerSupport } from './source/markers';
+import { MarkerService } from './source/markers';
 import { initQuickfixSupport } from './source/quickfix';
 import { LensProvider } from './source/lensProvider';
 
@@ -52,10 +52,20 @@ export async function activate(context: vscode.ExtensionContext) {
     await modelService.readCliMeta();
     reportServer = await Private.createReportServer(locations);
 
-    new RhamtView(context, modelService, configEditorService);
+    const markerService = new MarkerService(context, modelService);
+    const lensProvider = new LensProvider(context, modelService);
+    new RhamtView(context, modelService, configEditorService, markerService, lensProvider);
     new ReportView(context, locations);
     detailsView = new IssueDetailsView(context, locations, modelService);
-    initMarkerSupport(context, modelService);
+
+    // const statusBar = new StatusBar();
+    // const decorationsProvider = new DecorationsProvider(modelService, statusBar);
+    // const toggleMtaHintsCommand = vscode.commands.registerCommand(
+    //     StatusBar.toggleMtaHintsCommand,
+    //   () => decorationsProvider.toggleHints()
+    // );
+    // context.subscriptions.push(vscode.Disposable.from(toggleMtaHintsCommand));
+
     initQuickfixSupport(context, modelService);
     
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', async (data) => {
@@ -95,13 +105,14 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(doc => {
-        if (doc.fileName === modelService.getModelPersistanceLocation()) {
-            modelService.reload().then(() => {
-                vscode.commands.executeCommand('rhamt.modelReload');
-            }).catch(e => {
-                vscode.window.showErrorMessage(`Error reloading configurations - ${e}`);
-            });
-        }
+        // Why reload every time?
+        // if (doc.fileName === modelService.getModelPersistanceLocation()) {
+        //     modelService.reload().then(() => {
+        //         vscode.commands.executeCommand('rhamt.modelReload');
+        //     }).catch(e => {
+        //         vscode.window.showErrorMessage(`Error reloading configurations - ${e}`);
+        //     });
+        // }
     }));
 
     const newRulesetDisposable = vscode.commands.registerCommand('rhamt.newRuleset', async () => {
@@ -118,7 +129,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const quickfixedProvider = new QuickfixedResourceProvider(modelService);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('quickfixed', quickfixedProvider));
-    vscode.languages.registerCodeLensProvider("*", new LensProvider(modelService));
+
+    vscode.languages.registerCodeLensProvider("*", lensProvider);
+    // const hintDecorationProvider = new HintDecorationProvider(modelService);
+    // vscode.window.registerFileDecorationProvider()
 }
 
 export function deactivate() {

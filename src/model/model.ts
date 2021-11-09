@@ -141,6 +141,7 @@ export interface IIssue extends IUniqueElement {
     configuration: RhamtConfiguration;
     dom: any;
     complete: boolean;
+    origin: string;
 }
 
 export enum IIssueType {

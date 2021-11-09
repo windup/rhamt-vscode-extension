@@ -10,7 +10,6 @@ import { IHint, RhamtConfiguration, ReportHolder, IssueContainer, IIssue, IQuick
 import { ModelService } from '../model/modelService';
 import { QuickfixesNode } from './quickfixesNode';
 import { ConfigurationNode } from './configurationNode';
-import { refreshOpenEditors } from '../source/markers';
 
 export class HintNode extends AbstractNode<HintItem> implements ReportHolder, IssueContainer {
 
@@ -87,7 +86,7 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
         this.config.markIssueAsComplete(this.getIssue(), complete);
         (this.treeItem as HintItem).refresh();
         this.dataProvider.refresh(this);
-        refreshOpenEditors(this.modelService, this.getIssue().file);
+        this.root.markerService.refreshOpenEditors(this.getIssue().file);
     }
 
     private async listen(): Promise<void> {

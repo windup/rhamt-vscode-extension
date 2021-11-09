@@ -17,6 +17,7 @@ import { HintsNode } from './hintsNode';
 import { ClassificationsNode } from './classificationsNode';
 import { SortUtil } from './sortUtil';
 import { ResultsNode } from './resultsNode';
+import { MarkerService } from '../source/markers';
 
 export interface Grouping {
     groupByFile: boolean;
@@ -40,7 +41,8 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         grouping: Grouping,
         modelService: ModelService,
         onNodeCreateEmitter: EventEmitter<ITreeNode>,
-        dataProvider: DataProvider) {
+        dataProvider: DataProvider,
+        public markerService: MarkerService) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.grouping = grouping;
         this.listen();
@@ -365,8 +367,12 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     expand(): void {
-        this.treeItem.collapsibleState = TreeItemCollapsibleState.Expanded;
+        this.expanded();
         this.refresh();
+    }
+
+    expanded(): void {
+        this.treeItem.collapsibleState = TreeItemCollapsibleState.Expanded;
     }
 
     setBusyAnalyzing(busyAnalyzing: boolean): void {

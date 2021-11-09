@@ -8,13 +8,20 @@ export class LensProvider implements vscode.CodeLensProvider {
     public readonly onDidChangeCodeLenses: vscode.Event<void> = this._onDidChangeCodeLenses.event;
     private modelService: ModelService;
 
-    constructor(modelService: ModelService) {
+    constructor(private context: vscode.ExtensionContext, modelService: ModelService) {
         this.modelService = modelService;
+        this.context.subscriptions.push(
+            vscode.workspace.onDidChangeTextDocument(e => this.refresh()));
+    }
+
+    public refresh(): void {
+        this._onDidChangeCodeLenses.fire();
     }
 
     public provideCodeLenses(doc: vscode.TextDocument, token: vscode.CancellationToken): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
         const codeLenses = [];
         this.modelService.getActiveHints().filter(issue => doc.uri.fsPath === issue.file).forEach(issue => {
+            if (issue.complete) return;
             const lineNumber = issue.lineNumber-1;
             const lineOfText = doc.lineAt(lineNumber);
             if (lineOfText.isEmptyOrWhitespace || (issue.originalLineSource && lineOfText.text !== issue.originalLineSource)) {

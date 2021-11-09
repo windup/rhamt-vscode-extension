@@ -10,6 +10,7 @@ import { ITreeNode } from './abstractNode';
 import { ModelService } from '../model/modelService';
 import { ResultsNode } from './resultsNode';
 import { RhamtConfiguration } from '../model/model';
+import { MarkerService } from '../source/markers';
 
 export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
@@ -20,7 +21,8 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
     private view: TreeView<any>;
 
-    constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext) {
+    constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext,
+        private markerService: MarkerService) {
         this._disposables.push(commands.registerCommand('rhamt.modelReload', () => {
             this.refresh(undefined);
         }));
@@ -151,7 +153,8 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
                         this.grouping,
                         this.modelService,
                         this._onNodeCreateEmitter,
-                        this);
+                        this,
+                        this.markerService);
                     this.children.push(node);
                 }
                 return node;

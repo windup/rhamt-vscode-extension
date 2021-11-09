@@ -10,8 +10,9 @@ import { Grouping } from '../tree/configurationNode';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
 import { applyQuickfixes, applyQuickfix, Quickfix } from '../quickfix/quickfix';
-import { refreshOpenEditors } from '../source/markers';
 import { RhamtConfiguration } from '../model/model';
+import { MarkerService } from '../source/markers';
+import { LensProvider } from '../source/lensProvider';
 
 export class RhamtExplorer {
 
@@ -24,7 +25,9 @@ export class RhamtExplorer {
 
     constructor(private context: vscode.ExtensionContext,
         private modelService: ModelService,
-        private configEditorService: ConfigurationEditorService) {
+        private configEditorService: ConfigurationEditorService,
+        private markerService: MarkerService,
+        private lensProvider: LensProvider) {
         this.dataProvider = this.createDataProvider();
         this.createViewer();
         this.createCommands();
@@ -154,8 +157,12 @@ export class RhamtExplorer {
             try {
                 const config = item.config as RhamtConfiguration;
                 config.summary.active = config.summary.activatedExplicity = true;
+                // Expand doesn't work, if the configuration has been manually collapsed, it doesn't get expanded.
+                const configNode = this.dataProvider.getConfigurationNode(config);
+                configNode.expand();
                 this.refreshConfigurations();
-                refreshOpenEditors(this.modelService);
+                this.lensProvider.refresh();
+                this.markerService.refreshOpenEditors();
                 await this.saveModel();
             }
             catch (e) {
@@ -168,7 +175,8 @@ export class RhamtExplorer {
                 const config = item.config as RhamtConfiguration;
                 config.summary.active = config.summary.activatedExplicity = false;
                 this.refreshConfigurations();
-                refreshOpenEditors(this.modelService);
+                this.lensProvider.refresh();
+                this.markerService.refreshOpenEditors();
                 this.saveModel();
             }
             catch (e) {
@@ -196,9 +204,11 @@ export class RhamtExplorer {
                     },
                     async () => {
                         RhamtUtil.updateRunEnablement(true, this.dataProvider, config);
+                        // Expand doesn't work, if the configuration has been manually collapsed, it doesn't get expanded.
                         const configNode = this.dataProvider.getConfigurationNode(config);
                         configNode.expand();
-                        refreshOpenEditors(this.modelService);
+                        this.dataProvider.refreshRoots();
+                        this.markerService.refreshOpenEditors();
                         this.saveModel();
                     });
             } catch (e) {
@@ -246,7 +256,8 @@ export class RhamtExplorer {
         const provider: DataProvider = new DataProvider(
             this.grouping,
             this.modelService,
-            this.context);
+            this.context,
+            this.markerService);
         this.context.subscriptions.push(provider);
         return provider;
     }

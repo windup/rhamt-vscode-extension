@@ -2,7 +2,7 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { WebviewPanel, window, ViewColumn, ExtensionContext, commands } from 'vscode';
+import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, Uri } from 'vscode';
 import { Endpoints, IIssue, IssueContainer } from '../model/model';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
@@ -33,6 +33,15 @@ export class IssueDetailsView {
                     return report;
                 }
             });
+        }));
+        this.context.subscriptions.push(commands.registerCommand('rhamt.openRuleset', async item => {
+            try {
+                await commands.executeCommand('vscode.open', Uri.file(item));
+            } catch (e) {
+                console.log(`Error while opening ruleset: ${e}`);
+                window.showErrorMessage(e);
+                return;
+            }
         }));
     }
 
@@ -88,7 +97,11 @@ export class IssueDetailsView {
         body += '<h3>Level of Effort</h3>';
         body += issue.effort ? issue.effort : noDetails;
         body += '<h3>Rule ID</h3>';
-        body += issue.ruleId ? issue.ruleId : noDetails;
+        let ruleInfo = issue.ruleId;
+        // if (issue.origin && issue.ruleId) {
+        //     ruleInfo =  `<a class="report-link" href="command:rhamt.openRuleset?%22${issue.origin}%22">${issue.ruleId}</a>`;
+        // }
+        body += ruleInfo ? ruleInfo : noDetails;
         body += '<h3>More Information</h3>';
         if (issue.links.length === 0) {
             body += noDetails;
