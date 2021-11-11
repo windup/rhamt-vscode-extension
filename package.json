@@ -103,7 +103,7 @@
             },
             {
                 "command": "rhamt.deleteResults",
-                "title": "Delete"
+                "title": "Delete Analysis Results"
             },
             {
                 "command": "rhamt.newRuleset",

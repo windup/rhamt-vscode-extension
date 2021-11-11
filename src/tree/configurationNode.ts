@@ -49,8 +49,9 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     createItem(): ConfigurationItem {
+        console.log('ConfigurationNode :: createItem()');
         this.treeItem = new ConfigurationItem(this.config);
-        this.reload();
+        this.loadResults();
         return this.treeItem;
     }
 
@@ -74,71 +75,23 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         this.config.onChanged.on(change => {
             if (change.type === ChangeType.MODIFIED &&
                 change.name === 'name') {
-                this.treeItem.refresh();
                 this.refresh(this);
             }
         });
     }
 
-    reload(): void {
-        const base = [__dirname, '..', '..', '..', 'resources'];
-        this.treeItem.iconPath = {
-            light: path.join(...base, 'light', 'Loading.svg'),
-            dark: path.join(...base, 'dark', 'Loading.svg')
-        };
-        if (!this.config.results) {
-            this.results = [];
-            this.treeItem.collapsibleState = TreeItemCollapsibleState.None;
-            this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
-                    'fa fa-cube medium-purple' : this.treeItem.getIcon();
-            super.refresh(this);
-            setTimeout(() => {
-                this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
-                    'fa fa-cube medium-purple' : this.treeItem.getIcon();
-                super.refresh(this);
-            }, 100);
-            return;
-        }
-        else {
-            this.treeItem.collapsibleState = TreeItemCollapsibleState.Collapsed;
-            this.results = [];
-            const base = [__dirname, '..', '..', '..', 'resources'];
-            this.treeItem.iconPath = {
-                light: path.join(...base, 'light', 'Loading.svg'),
-                dark: path.join(...base, 'dark', 'Loading.svg')
-            };
-            this.refresh(this);
-            setTimeout(() => {
-                this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 
-                    'fa fa-cube medium-purple' : this.treeItem.getIcon();
-                this.computeIssues();
-                this.results = [
-                    new ResultsNode(
-                        this.config,
-                        this.modelService,
-                        this.onNodeCreateEmitter,
-                        this.dataProvider,
-                        this)
-                ];
-                super.refresh(this);
-            }, 100);
-        }
-    }
-
-    refreshResults(): void {
-        this.results = [];
-        const base = [__dirname, '..', '..', '..', 'resources'];
-        this.treeItem.iconPath = {
-            light: path.join(...base, 'light', 'Loading.svg'),
-            dark: path.join(...base, 'dark', 'Loading.svg')
-        };
-        this.refresh(this);
-        setTimeout(() => {
+    public loadResults(): void {
+        if (this.config.results) {
             this.computeIssues();
-            this.treeItem = undefined;
-            super.refresh(this);
-            super.refresh(this);
-        }, 100);
+            this.results = [
+                new ResultsNode(
+                    this.config,
+                    this.modelService,
+                    this.onNodeCreateEmitter,
+                    this.dataProvider,
+                    this)
+            ];
+        }
     }
 
     private clearModel(): void {
@@ -270,7 +223,7 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         return children;
     }
 
-    protected refresh(node?: ITreeNode): void {
+    refresh(node?: ITreeNode): void {
         this.treeItem.refresh();
         super.refresh(node);
     }
@@ -366,10 +319,6 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         container.setComplete(complete);
     }
 
-    expand(): void {
-        this.expanded();
-        this.refresh();
-    }
 
     expanded(): void {
         this.treeItem.collapsibleState = TreeItemCollapsibleState.Expanded;

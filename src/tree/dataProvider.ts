@@ -28,7 +28,9 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         }));
         commands.executeCommand('setContext', 'rhamtReady', true);
         this._disposables.push(commands.registerCommand('rhamt.refreshResults', item => {
-            item.refreshResults();
+            item.loadResults();
+            this.refreshRoots();
+            this.reveal(item, true);
         }));
     }
 
@@ -95,13 +97,6 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
     public getConfigurationNode(config: RhamtConfiguration): ConfigurationNode | undefined {
         return this.children.find(node => node.config.id === config.id);
-    }
-
-    public reload(config: RhamtConfiguration): void {
-        let node = this.children.find(node => node.config.id === config.id);
-        if (node) {
-            node.refreshResults();
-        }
     }
 
     public async refresh(node?: ITreeNode): Promise<void> {

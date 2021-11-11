@@ -6,13 +6,13 @@ import * as vscode from 'vscode';
 import { DataProvider } from '../tree/dataProvider';
 import { ModelService } from '../model/modelService';
 import { RhamtUtil } from '../server/rhamtUtil';
-import { Grouping } from '../tree/configurationNode';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
 import { applyQuickfixes, applyQuickfix, Quickfix } from '../quickfix/quickfix';
 import { RhamtConfiguration } from '../model/model';
 import { MarkerService } from '../source/markers';
 import { LensProvider } from '../source/lensProvider';
+import { Grouping } from '../tree/configurationNode';
 
 export class RhamtExplorer {
 
@@ -79,7 +79,7 @@ export class RhamtExplorer {
             }
             item.config.results = undefined;
             item.config.summary = undefined;
-            this.dataProvider.reload(item.config);
+            this.refreshConfigurations();
         }));
         this.context.subscriptions.push(vscode.commands.registerCommand('rhamt.newConfiguration', async () => {
             const config = this.modelService.createConfiguration();
@@ -157,10 +157,9 @@ export class RhamtExplorer {
             try {
                 const config = item.config as RhamtConfiguration;
                 config.summary.active = config.summary.activatedExplicity = true;
-                // Expand doesn't work, if the configuration has been manually collapsed, it doesn't get expanded.
                 const configNode = this.dataProvider.getConfigurationNode(config);
-                configNode.expand();
                 this.refreshConfigurations();
+                this.dataProvider.reveal(configNode, true);
                 this.lensProvider.refresh();
                 this.markerService.refreshOpenEditors();
                 await this.saveModel();
@@ -187,6 +186,7 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
             // TODO: Set buy indicator on configuration being ran, and update it accordingly if cancelled, errored, or finished.
             const config = item.config;
+            // TODO: refactor - move to separate service object that others can reference.
             try {
                 RhamtUtil.updateRunEnablement(false, this.dataProvider, config);
                 await RhamtUtil.analyze(
@@ -200,14 +200,14 @@ export class RhamtExplorer {
                         }
                         config.results = undefined;
                         config.summary = undefined;
-                        this.dataProvider.refreshRoots();
+                        this.refreshConfigurations();
                     },
                     async () => {
                         RhamtUtil.updateRunEnablement(true, this.dataProvider, config);
-                        // Expand doesn't work, if the configuration has been manually collapsed, it doesn't get expanded.
                         const configNode = this.dataProvider.getConfigurationNode(config);
-                        configNode.expand();
-                        this.dataProvider.refreshRoots();
+                        configNode.loadResults();
+                        this.refreshConfigurations();
+                        this.dataProvider.reveal(configNode, true);
                         this.markerService.refreshOpenEditors();
                         this.saveModel();
                     });
@@ -217,7 +217,7 @@ export class RhamtExplorer {
                     vscode.window.showErrorMessage(`Error running analysis - ${e}`);
                 }
                 RhamtUtil.updateRunEnablement(true, this.dataProvider, config);
-                this.dataProvider.reload(config);
+                this.refreshConfigurations();
             }
         }));
         RhamtUtil.updateRunEnablement(true, this.dataProvider, null);

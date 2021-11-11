@@ -38,7 +38,6 @@ export class ResultsNode extends AbstractNode<ResultsItem> {
     createItem(): ResultsItem {
         this.children = [];
         this.treeItem = new ResultsItem();
-        this.treeItem.iconPath = process.env.CHE_WORKSPACE_NAMESPACE ? 'fa fa-circle medium-green' : undefined;
         this.loading = false;
         this.children = this.config.summary.skippedReports ? [] : [this.reportNode];
         const top = this.root.getChildNodes(this);
