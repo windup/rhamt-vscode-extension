@@ -24,6 +24,7 @@ import * as os from 'os';
 import { MarkerService } from './source/markers';
 import { initQuickfixSupport } from './source/quickfix';
 import { LensProvider } from './source/lensProvider';
+import { FileItem } from './tree/fileItem';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -69,6 +70,10 @@ export async function activate(context: vscode.ExtensionContext) {
     initQuickfixSupport(context, modelService);
     
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', async (data) => {
+        if (data instanceof FileItem) {
+            openFile(vscode.Uri.file(data.file));
+            return;
+        }
         const issue = (data as IssueContainer).getIssue();
         detailsView.open(issue);
         let item: HintItem;
@@ -79,20 +84,7 @@ export async function activate(context: vscode.ExtensionContext) {
             item = data;
         }
         const uri = vscode.Uri.file(issue.file);
-
-        let activeEditor = vscode.window.visibleTextEditors.find(editor => editor.document.uri.fsPath === uri.fsPath);
-        if (!activeEditor) {
-            try {
-                await vscode.commands.executeCommand('vscode.open', uri);
-            } catch (e) {
-                console.log(`Error while opening file: ${e}`);
-                vscode.window.showErrorMessage(e);
-                return;
-            }
-        } 
-        else {
-            await vscode.window.showTextDocument(activeEditor.document, {viewColumn: activeEditor.viewColumn});
-        }
+        await openFile(uri);
         if (item) {
             vscode.window.visibleTextEditors.filter(editor => editor.document.uri.fsPath === uri.fsPath).forEach(editor => {
                 editor.selection = new vscode.Selection(
@@ -133,6 +125,22 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerCodeLensProvider("*", lensProvider);
     // const hintDecorationProvider = new HintDecorationProvider(modelService);
     // vscode.window.registerFileDecorationProvider()
+}
+
+export async function openFile(uri: vscode.Uri): Promise<void> {
+    let activeEditor = vscode.window.visibleTextEditors.find(editor => editor.document.uri.fsPath === uri.fsPath);
+    if (!activeEditor) {
+        try {
+            await vscode.commands.executeCommand('vscode.open', uri);
+        } catch (e) {
+            console.log(`Error while opening file: ${e}`);
+            vscode.window.showErrorMessage(e);
+            return;
+        }
+    } 
+    else {
+        await vscode.window.showTextDocument(activeEditor.document, {viewColumn: activeEditor.viewColumn});
+    }
 }
 
 export function deactivate() {
