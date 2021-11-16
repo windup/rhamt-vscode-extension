@@ -16,7 +16,8 @@ const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
 
-const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://repo.maven.apache.org/maven2/org/jboss/windup/mta-cli/5.2.0.Final/mta-cli-5.2.0.Final-offline.zip';
+const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://oss.sonatype.org/content/groups/public/org/jboss/windup/mta-cli/5.2.1-SNAPSHOT/mta-cli-5.2.1-20211115.063852-96-no-index.zip';
+ // 'https://repo.maven.apache.org/maven2/org/jboss/windup/mta-cli/5.2.0.Final/mta-cli-5.2.0.Final-offline.zip';
 const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
