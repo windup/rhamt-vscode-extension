@@ -5,12 +5,19 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import { RhamtConfiguration } from '../model/model';
 
 const RHAMT_VERSION = '5.2.1-SNAPSHOT';
 const RHAMT_FOLDER = `mta-cli-${RHAMT_VERSION}`;
 
-export function findRhamtCli(outDir: string): Promise<string> {
+export function findRhamtCli(outDir: string, config?: RhamtConfiguration): Promise<string> {
     return new Promise<string>((resolve, reject) => {
+        if (config) {
+            const configCli = config.options['mta-cli'] as string;
+            if (configCli) {
+                return resolve(configCli.trim());
+            }
+        }
         const rhamtPath = vscode.workspace.getConfiguration('mta.executable').get<string>('path');
         if (rhamtPath) {
             console.log(`preference mta.executable.path found - ${rhamtPath}`);

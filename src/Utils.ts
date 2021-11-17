@@ -54,7 +54,7 @@ export namespace Utils {
             progress.report({message: 'Verifying mta-cli'});
 
             try {
-                rhamtCli = await cliResolver.findRhamtCli(modelService.outDir);
+                rhamtCli = await cliResolver.findRhamtCli(modelService.outDir, config);
                 console.log(`Using MTA CLI - ${rhamtCli}`);
             }
             catch (error) {
