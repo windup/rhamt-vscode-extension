@@ -2,7 +2,7 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
+import { Command, TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
 import * as path from 'path';
 import { Quickfix } from '../quickfix/quickfix';
 
@@ -11,7 +11,7 @@ export class FileItem extends TreeItem {
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
-    private file: string;
+    file: string;
     private hasQuickfixes: boolean;
     
     constructor(file: string, hasQuickfixes: boolean) {
@@ -29,4 +29,12 @@ export class FileItem extends TreeItem {
     public get contextValue(): string {
         return this.hasQuickfixes ? Quickfix.CONTAINER : undefined;
     }
+
+    public get command(): Command {
+        return {
+            command: 'rhamt.openDoc',
+            title: '',
+            arguments: [this]
+        };
+    }  
 }
