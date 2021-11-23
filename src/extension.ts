@@ -97,14 +97,13 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(doc => {
-        // Why reload every time?
-        // if (doc.fileName === modelService.getModelPersistanceLocation()) {
-        //     modelService.reload().then(() => {
-        //         vscode.commands.executeCommand('rhamt.modelReload');
-        //     }).catch(e => {
-        //         vscode.window.showErrorMessage(`Error reloading configurations - ${e}`);
-        //     });
-        // }
+        if (doc.fileName === modelService.getModelPersistanceLocation()) {
+            modelService.reload().then(() => {
+                vscode.commands.executeCommand('rhamt.modelReload');
+            }).catch(e => {
+                vscode.window.showErrorMessage(`Error reloading configurations - ${e}`);
+            });
+        }
     }));
 
     const newRulesetDisposable = vscode.commands.registerCommand('rhamt.newRuleset', async () => {
