@@ -7,15 +7,13 @@ import { RhamtExplorer } from './rhamtExplorer';
 import { ModelService } from '../model/modelService';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { MarkerService } from '../source/markers';
-import { LensProvider } from '../source/lensProvider';
 
 export class RhamtView {
 
     constructor(private context: vscode.ExtensionContext,
         private modelService: ModelService,
         private configEditorService: ConfigurationEditorService,
-        private markerService: MarkerService,
-        private lensProvider: LensProvider) {
+        private markerService: MarkerService) {
         this.createExplorer();
     }
 
@@ -24,7 +22,6 @@ export class RhamtView {
             this.context,
             this.modelService,
             this.configEditorService,
-            this.markerService,
-            this.lensProvider);
+            this.markerService);
     }
 }

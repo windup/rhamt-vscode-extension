@@ -11,7 +11,7 @@ import { Diff } from '../quickfix/diff';
 import { applyQuickfixes, applyQuickfix, Quickfix } from '../quickfix/quickfix';
 import { RhamtConfiguration } from '../model/model';
 import { MarkerService } from '../source/markers';
-import { LensProvider } from '../source/lensProvider';
+// import { LensProvider } from '../source/lensProvider';
 import { Grouping } from '../tree/configurationNode';
 
 export class RhamtExplorer {
@@ -26,8 +26,7 @@ export class RhamtExplorer {
     constructor(private context: vscode.ExtensionContext,
         private modelService: ModelService,
         private configEditorService: ConfigurationEditorService,
-        private markerService: MarkerService,
-        private lensProvider: LensProvider) {
+        private markerService: MarkerService) {
         this.dataProvider = this.createDataProvider();
         this.createViewer();
         this.createCommands();
@@ -160,7 +159,6 @@ export class RhamtExplorer {
                 const configNode = this.dataProvider.getConfigurationNode(config);
                 this.refreshConfigurations();
                 this.dataProvider.reveal(configNode, true);
-                this.lensProvider.refresh();
                 this.markerService.refreshOpenEditors();
                 await this.saveModel();
             }
@@ -174,7 +172,6 @@ export class RhamtExplorer {
                 const config = item.config as RhamtConfiguration;
                 config.summary.active = config.summary.activatedExplicity = false;
                 this.refreshConfigurations();
-                this.lensProvider.refresh();
                 this.markerService.refreshOpenEditors();
                 this.saveModel();
             }

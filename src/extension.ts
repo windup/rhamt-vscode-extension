@@ -23,7 +23,6 @@ import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvide
 import * as os from 'os';
 import { MarkerService } from './source/markers';
 import { initQuickfixSupport } from './source/quickfix';
-import { LensProvider } from './source/lensProvider';
 import { FileItem } from './tree/fileItem';
 
 let detailsView: IssueDetailsView;
@@ -54,8 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
     reportServer = await Private.createReportServer(locations);
 
     const markerService = new MarkerService(context, modelService);
-    const lensProvider = new LensProvider(context, modelService);
-    new RhamtView(context, modelService, configEditorService, markerService, lensProvider);
+    new RhamtView(context, modelService, configEditorService, markerService);
     new ReportView(context, locations);
     detailsView = new IssueDetailsView(context, locations, modelService);
 
@@ -121,7 +119,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const quickfixedProvider = new QuickfixedResourceProvider(modelService);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('quickfixed', quickfixedProvider));
 
-    vscode.languages.registerCodeLensProvider("*", lensProvider);
+    // vscode.languages.registerCodeLensProvider("*", lensProvider);
     // const hintDecorationProvider = new HintDecorationProvider(modelService);
     // vscode.window.registerFileDecorationProvider()
 }
