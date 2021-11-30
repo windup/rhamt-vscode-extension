@@ -12,7 +12,7 @@
         "description": "Path to mta-cli executable.",
         "type": "File",
         "ui-type": ["file"],
-        "required": true
+        "required": false
       },
       {
         "name": "input",
