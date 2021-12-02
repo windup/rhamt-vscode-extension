@@ -99,7 +99,8 @@
           "jonas",
           "resin",
           "resteasy",
-          "thorntail"
+          "thorntail",
+          "openjdk"
         ]
       },
       {
