@@ -3,18 +3,36 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
-import { IQuickFix, IssueContainer } from '../model/model';
+import { IHint, IQuickFix, IssueContainer } from '../model/model';
 import * as fs from 'fs-extra';
 import { Diff } from './diff';
 
 export async function applyQuickfixes(quickfixes: IQuickFix[]): Promise<any> {
-    for (let quickfix of quickfixes) {
+    const sortedQuickfixes = quickfixes.sort(compareQuickfix);
+    for (let quickfix of sortedQuickfixes) {
         await applyQuickfix(quickfix);
     }
 }
 
+
+function compareQuickfix(node1: IQuickFix, node2: IQuickFix): number {
+    const one = (node1.issue as IHint).lineNumber;
+    const other = (node2.issue as IHint).lineNumber;
+    const a = one || 0;
+    const b = other || 0;
+    if (a !== b) {
+        return a < b ? -1 : 1;
+    }
+    return 0;
+}
+
 export async function applyQuickfix(quickfix: IQuickFix): Promise<any> {
     const config = quickfix.issue.configuration;
+    quickfix.issue.complete = true;
+    quickfix.quickfixApplied = true;
+    config.markQuickfixApplied(quickfix, true);
+    config.markIssueAsComplete(quickfix.issue, true);
+
     const file = vscode.Uri.parse(`quickfixed://${config.id}/${quickfix.issue.id}?${quickfix.id}`);
     const doc = await vscode.workspace.openTextDocument(file);
     await Diff.writeQuickfix(file, quickfix, quickfix.issue, doc);
