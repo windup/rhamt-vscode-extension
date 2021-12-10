@@ -7,6 +7,7 @@ import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import { IHint, IIssue, IssueContainer } from '../model/model';
 import * as path from 'path';
 import { ModelService } from '../model/modelService';
+import { Quickfix } from '../quickfix/quickfix';
 
 export class HintItem extends TreeItem implements IssueContainer {
 
