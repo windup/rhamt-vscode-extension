@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
-import { ChangeType } from '../model/model';
+import { ChangeType, IQuickFix } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { MTA_HINT } from './markers';
 
@@ -39,18 +39,7 @@ export class QuickfixProvider implements vscode.CodeActionProvider  {
             arguments: [
                 {
                     config: hint.configuration,
-                    quickfix,
-                    applyQuickfix: (applied: boolean) => {
-                        quickfix.quickfixApplied = applied;
-                        hint.configuration.markQuickfixApplied(quickfix, applied);
-                        hint.complete = applied;
-                        hint.configuration.markIssueAsComplete(hint, applied);
-                        hint.configuration.onChanged.emit({
-                            type: ChangeType.QUICKFIX_APPLIED,
-                            name: 'quickfix',
-                            value: quickfix.id
-                        });
-                    }
+                    quickfix
                 }
             ]
         };
@@ -78,3 +67,16 @@ export class QuickfixProvider implements vscode.CodeActionProvider  {
 		return fix;
 	}
 }
+
+export function doApplyQuickfix(quickfix: IQuickFix) {
+    quickfix.quickfixApplied = true;
+    quickfix.issue.configuration.markQuickfixApplied(quickfix, true);
+    quickfix.issue.complete = true;
+    quickfix.issue.configuration.markIssueAsComplete(quickfix.issue, true);
+    quickfix.issue.configuration.onChanged.emit({
+        type: ChangeType.QUICKFIX_APPLIED,
+        name: 'quickfix',
+        value: quickfix.id
+    });
+}
+

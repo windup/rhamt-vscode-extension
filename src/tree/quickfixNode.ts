@@ -6,11 +6,10 @@
 import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration, IIssue, IQuickFix } from '../model/model';
+import { RhamtConfiguration, IIssue, IQuickFix, ChangeType } from '../model/model';
 import { ModelService } from '../model/modelService';
 import { QuickfixItem } from './quickfixItem';
 import { Quickfix } from '../quickfix/quickfix';
-import { HintNode } from './hintNode';
 
 export class QuickfixNode extends AbstractNode implements Quickfix.IQuickfixContainer  {
 
@@ -26,6 +25,7 @@ export class QuickfixNode extends AbstractNode implements Quickfix.IQuickfixCont
         ) {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.quickfix = quickfix;
+        this.listen();
     }
 
     getChildren(): Promise<ITreeNode[]> {
@@ -41,7 +41,7 @@ export class QuickfixNode extends AbstractNode implements Quickfix.IQuickfixCont
     }
 
     createItem(): QuickfixItem {
-        this.item = new QuickfixItem(this.quickfix);
+        this.item = this.treeItem = new QuickfixItem(this.quickfix);
         return this.item;
     }
 
@@ -56,15 +56,21 @@ export class QuickfixNode extends AbstractNode implements Quickfix.IQuickfixCont
         return [this.quickfix];
     }
 
-    applyQuickfix(applied: boolean): void {
-        this.quickfix.quickfixApplied = applied;
-        this.config.markQuickfixApplied(this.quickfix, applied);
-        const hintNode = (this as any).parentNode.parentNode as HintNode;
-        hintNode.setComplete(applied);
-    }
-
     protected refresh(node?: ITreeNode): void {
         (this.item as QuickfixItem).refresh();
         super.refresh(node);
+    }
+
+    private async listen(): Promise<void> {
+        const listener = change => {
+            const container = this.quickfix.id === change.value;
+            if (change.type === ChangeType.QUICKFIX_APPLIED && container) {
+                if (this.treeItem) {
+                    // parent hintNode also listens and refreshes itslef
+                    (this.item as QuickfixItem).refresh();
+                }
+            }
+        };
+        this.config.onChanged.on(listener);
     }
 }
