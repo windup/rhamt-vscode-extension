@@ -8,7 +8,7 @@ import { ModelService } from '../model/modelService';
 import { RhamtUtil } from '../server/rhamtUtil';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
-import { applyQuickfixes, applyQuickfix } from '../quickfix/quickfix';
+import { applyQuickfixes } from '../quickfix/quickfix';
 import { RhamtConfiguration } from '../model/model';
 import { MarkerService } from '../source/markers';
 import { Grouping } from '../tree/configurationNode';
@@ -111,20 +111,6 @@ export class RhamtExplorer {
                     console.log(`Error saving analysis results after quickfix: ${e}`);
                     vscode.window.showErrorMessage(e);
                 });
-            }
-            catch (e) {
-                console.log(`Error applying quickfix - ${e}`);
-                vscode.window.showErrorMessage(`Error applying quickfix ${e}`);
-            }
-        }));
-        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.markAsUnapplied', async (item) => {
-            try {
-                // TODO item.applyQuickfix has been removed
-                // item.applyQuickfix(false);
-                // this.modelService.saveAnalysisResults(item.config).catch(e => {
-                //     console.log(`Error saving analysis results after quickfix: ${e}`);
-                //     vscode.window.showErrorMessage(e);
-                // });
             }
             catch (e) {
                 console.log(`Error applying quickfix - ${e}`);

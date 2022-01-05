@@ -128,10 +128,6 @@
             {
                 "command": "rhamt.deactivate",
                 "title": "Deactivate Analysis"
-            },
-            {
-                "command": "rhamt.markAsUnapplied",
-                "title": "Mark quickfix as Unapplied"
             }
         ],
         "configuration": [
@@ -252,11 +248,6 @@
                 {
                     "command": "rhamt.applyQuickfix",
                     "when": "view == rhamtExplorerView && viewItem =~ /hasQuickfix/i",
-                    "group": "rhamt"
-                },
-                {
-                    "command": "rhamt.markAsUnapplied",
-                    "when": "view == rhamtExplorerView && viewItem =~ /quickfixApplied/i",
                     "group": "rhamt"
                 },
                 {
