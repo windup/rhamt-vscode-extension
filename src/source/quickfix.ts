@@ -68,11 +68,11 @@ export class QuickfixProvider implements vscode.CodeActionProvider  {
 	}
 }
 
-export function doApplyQuickfix(quickfix: IQuickFix) {
-    quickfix.quickfixApplied = true;
-    quickfix.issue.configuration.markQuickfixApplied(quickfix, true);
-    quickfix.issue.complete = true;
-    quickfix.issue.configuration.markIssueAsComplete(quickfix.issue, true);
+export function doApplyQuickfix(quickfix: IQuickFix, applied: boolean = true) {
+    quickfix.quickfixApplied = applied;
+    quickfix.issue.configuration.markQuickfixApplied(quickfix, applied);
+    quickfix.issue.complete = applied;
+    quickfix.issue.configuration.markIssueAsComplete(quickfix.issue, applied);
     quickfix.issue.configuration.onChanged.emit({
         type: ChangeType.QUICKFIX_APPLIED,
         name: 'quickfix',

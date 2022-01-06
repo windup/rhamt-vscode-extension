@@ -107,6 +107,7 @@ export class RhamtExplorer {
                 await applyQuickfixes([item.quickfix]);
                 this.markerService.refreshOpenEditors(item.quickfix.issue.file);
                 this.dataProvider.refreshLabel(item.config);
+                await Diff.updateQuickfixDiffEditor(item);
                 this.modelService.saveAnalysisResults(item.config).catch(e => {
                     console.log(`Error saving analysis results after quickfix: ${e}`);
                     vscode.window.showErrorMessage(e);
