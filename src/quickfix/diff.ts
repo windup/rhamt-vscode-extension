@@ -109,10 +109,5 @@ export class Diff {
                 vscode.window.showErrorMessage(msg);
             }
         }
-        else {
-            const msg = `could not find diff editor for quickfix file`;
-            console.log(msg);
-            vscode.window.showErrorMessage(msg);
-        }
     }
 }
