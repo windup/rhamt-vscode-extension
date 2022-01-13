@@ -71,12 +71,19 @@ export class HintsNode extends AbstractNode<HintsItem> {
     }
 
     static compareHint(node1: ITreeNode, node2: ITreeNode): number {
-        const one = (node1 as HintNode).hint.lineNumber;
-        const other = (node2 as HintNode).hint.lineNumber;
-        const a = one || 0;
-        const b = other || 0;
+        const a = (node1 as HintNode).hint.lineNumber || 0;
+        const b = (node2 as HintNode).hint.lineNumber || 0;
+        // sort by line number
         if (a !== b) {
             return a < b ? -1 : 1;
+        }
+        // if same line, sort by column
+        else {
+            let col1 = (node1 as HintNode).hint.column || 0;
+            let col2 = (node2 as HintNode).hint.column || 0;
+            if (col1 !== col2) {
+                return col1 < col2 ? -1 : 1;
+            }
         }
         return 0;
     }
