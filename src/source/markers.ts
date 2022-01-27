@@ -98,7 +98,7 @@ export class MarkerService {
         if (issue.complete) return undefined;
         const lineNumber = issue.lineNumber-1;
         const lineOfText = doc.lineAt(lineNumber);
-        if (lineOfText.isEmptyOrWhitespace /*|| (issue.originalLineSource && lineOfText.text !== issue.originalLineSource)*/) {
+        if (lineOfText.isEmptyOrWhitespace) {
             return undefined;
         }
         const diagnostic = new vscode.Diagnostic(

@@ -26,10 +26,6 @@ export class LensProvider implements vscode.CodeLensProvider {
         this.modelService.getActiveHints().filter(issue => doc.uri.fsPath === issue.file).forEach(issue => {
             if (issue.complete) return;
             const lineNumber = issue.lineNumber-1;
-            // const lineOfText = doc.lineAt(lineNumber);
-            // if (lineOfText.isEmptyOrWhitespace || (issue.originalLineSource && lineOfText.text !== issue.originalLineSource)) {
-            //     return undefined;
-            // }
             const range = new vscode.Range(lineNumber, issue.column, lineNumber, issue.length+issue.column);
             const lens = new vscode.CodeLens(range);
             lens.command = {
