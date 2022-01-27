@@ -129,8 +129,8 @@ export interface IIssue extends IUniqueElement {
     type: IIssueType;
     title: string;
     quickfixes: IQuickFix[];
-    quickfixedLines: { [index: string]: any };
-    originalLineSource: string;
+    // quickfixedLines: { [index: string]: any };
+    // originalLineSource: string;
     file: string;
     severity: string;
     ruleId: string;

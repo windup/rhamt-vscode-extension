@@ -169,8 +169,6 @@ export class AnalysisResults {
             title: '',
             links: [],
             report: '',
-            originalLineSource: '',
-            quickfixedLines: {},
             lineNumber: 0,
             column: 0,
             length: 0,
@@ -371,49 +369,9 @@ export class AnalysisResults {
                 }
             }
         });
-
-        // If quickfixes have already been read and persisted
-        if (this.config.summary.quickfixes) {
-            const originalLineSource = this.config.summary.quickfixes[issue.id].originalLineSource;
-            const quickfixedLine = this.config.summary.quickfixes[issue.id].quickfixedLines[quickfix.id];
-            issue.originalLineSource = issue.originalLineSource || originalLineSource;
-            issue.quickfixedLines[quickfix.id] = quickfixedLine;
-            return quickfix;
-        }
-
-        // Otherwise, read the quickfix data to be serialized later on
-        if ((issue as any).lineNumber) {
-            const hint = issue as IHint;
-            // const type = mime.lookup(hint.file);
-            // TODO: This will ignore .properties files and others that we might want to support.
-            // if (type && type.startsWith('text')) {
-                if (!hint.originalLineSource) {
-                    hint.originalLineSource = 'unable to parse file';
-                    try {
-                        hint.originalLineSource = await this.readLine(hint.file, hint.lineNumber);
-                    }
-                    catch (e) {
-                        console.log('error reading file to compute quickfix info: ' + hint.file);
-                    }
-                }
-                if (quickfix.type === 'REPLACE') {
-                    const quickfixedLine = this.replace(
-                        hint.originalLineSource,
-                        quickfix.searchString,
-                        quickfix.replacementString);
-                    hint.quickfixedLines[quickfix.id] = quickfixedLine;
-                }
-            // }
-            // else {
-            //     console.log(`unable to read mime type ${type} of file - ${hint.file}`);
-            // }
-        }
         return quickfix;
     }
 
-    private replace(origin, search, replacement): string {
-        return origin.replace(search, replacement);
-    }
 
     private async getClassifications(): Promise<IClassification[]> {
         const classifications: IClassification[] = [];
@@ -434,8 +392,6 @@ export class AnalysisResults {
             type: IIssueType.Classification,
             id,
             quickfixes: [],
-            quickfixedLines: {},
-            originalLineSource: '',
             file: '',
             severity: '',
             ruleId: '',
@@ -588,8 +544,16 @@ export class AnalysisResults {
             this.dom(quickfix.dom).removeAttr('quickfixApplied');
         }
     }
+}
 
-    private readLine(file: string, lineNumber: number): Promise<string> {
+export namespace AnalysisResults {
+    
+    export interface Model {
+        hints: IHint[];
+        classifications: IClassification[];
+    }
+
+    export function readLine(file: string, lineNumber: number): Promise<string> {
         return new Promise<string>(resolve => {
             const input = fs.createReadStream(file);
             var myInterface = readline.createInterface({ input });
@@ -602,13 +566,5 @@ export class AnalysisResults {
                 }
             });
         });
-    }
-}
-
-export namespace AnalysisResults {
-    
-    export interface Model {
-        hints: IHint[];
-        classifications: IClassification[];
     }
 }

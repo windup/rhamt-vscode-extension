@@ -2,10 +2,11 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { IQuickFix } from "../model/model";
+import { IHint, IQuickFix } from "../model/model";
 import * as vscode from 'vscode';
 import * as os from 'os';
 import { QuickfixNode } from "../tree/quickfixNode";
+import { AnalysisResults } from "../model/analysisResults";
 
 export class Diff {
 
@@ -41,7 +42,7 @@ export class Diff {
             vscode.window.showErrorMessage(msg);
             return;
         }
-        const written = await Diff.writeQuickfix(modified, quickfix, quickfix.issue, textEditor.document);
+        const written = await Diff.writeQuickfix(modified, quickfix, quickfix.issue as IHint, textEditor.document);
         if (!written) {
             const msg = `could not write quickfix file`;
             console.log(msg);
@@ -50,16 +51,21 @@ export class Diff {
         return textEditor;
     }
 
-    static async writeQuickfix(file: vscode.Uri, quickfix: IQuickFix, issue: any, document: vscode.TextDocument): Promise<boolean> {
+    static async writeQuickfix(file: vscode.Uri, quickfix: IQuickFix, issue: IHint, document: vscode.TextDocument): Promise<boolean> {
         if (quickfix.type === 'REPLACE' && issue.lineNumber) {
             let edit = new vscode.WorkspaceEdit();
-            const lineNumber = issue.lineNumber-1;
-            const end = document.lineAt(lineNumber).range.end;
-            edit.delete(file, new vscode.Range(lineNumber, 0, lineNumber, end.character));
+            let lineNumber = issue.lineNumber;
+            const line = await AnalysisResults.readLine(quickfix.file, lineNumber);
+            const content = line.substring(issue.column, issue.column + issue.length);
+            const start = line.substring(0, issue.column);
+            const end = line.substring(issue.column + issue.length, line.length);
+            const newLine = start + content.replace(quickfix.searchString, quickfix.replacementString) + end;
+            lineNumber = issue.lineNumber - 1;
+            const endLine = document.lineAt(lineNumber).range.end;
+            edit.delete(file, new vscode.Range(lineNumber, 0, lineNumber, endLine.character));
             await vscode.workspace.applyEdit(edit);
             edit = new vscode.WorkspaceEdit();
-            const replacement = issue.quickfixedLines[quickfix.id];
-            edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, replacement.length), replacement);
+            edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, newLine.length), newLine);
             return vscode.workspace.applyEdit(edit);
         }
         else if (quickfix.type === 'DELETE_LINE' && issue.lineNumber) {
@@ -71,21 +77,16 @@ export class Diff {
         }
         else if (quickfix.type === 'INSERT_LINE' && issue.lineNumber) {
             const lineNumber = issue.lineNumber-1;
-            const original = issue.originalLineSource;
-            const text = document.getText(new vscode.Range(lineNumber, 0, lineNumber, original.length));
-            if (text === original) {
-                let edit = new vscode.WorkspaceEdit();
-                edit.insert(file, new vscode.Position(lineNumber, 0), os.EOL);
-                await vscode.workspace.applyEdit(edit);
-                edit = new vscode.WorkspaceEdit();
-                const newline = quickfix.newLine;
-                edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, newline.length), newline);
-                if (!newline) {
-                    vscode.window.showErrorMessage(`Newline is missing from hint.`);
-                }
-                return vscode.workspace.applyEdit(edit);
+            let edit = new vscode.WorkspaceEdit();
+            edit.insert(file, new vscode.Position(lineNumber, 0), os.EOL);
+            await vscode.workspace.applyEdit(edit);
+            edit = new vscode.WorkspaceEdit();
+            const newline = quickfix.newLine;
+            edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, newline.length), newline);
+            if (!newline) {
+                vscode.window.showErrorMessage(`Newline is missing from hint.`);
             }
-            return Promise.resolve(true);
+            return vscode.workspace.applyEdit(edit);
         }
     }
 
