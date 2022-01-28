@@ -85,13 +85,7 @@ export namespace Quickfix {
         // Sort quickfixes based off their column index
         const sortedQuickfixes = siblingQuickfixes.sort(Quickfix.compareQuickfix);
 
-        let changeLength = 0;
-        if (appliedQuickfix.replacementString.length > appliedQuickfix.searchString.length) {
-            changeLength = appliedQuickfix.replacementString.length - appliedQuickfix.searchString.length;
-        }
-        else {
-            changeLength = appliedQuickfix.searchString.length - appliedQuickfix.replacementString.length;
-        }
+        let changeLength = appliedQuickfix.searchString.length - appliedQuickfix.replacementString.length;
 
         // If no change in string length we don't impact other quickfixes.
         if (changeLength === 0) return undefined;
@@ -106,13 +100,9 @@ export namespace Quickfix {
             const quickfixHint = quickfix.issue as IHint;
             const quickfixColumn = quickfixHint.column;
             if (quickfixColumn <= 0) continue;
-
-            // There will be a change because changeLength and quickfixColumn will not be `0`.
-            // Positive column change adds, negative column change will be subtracted.
-            quickfixHint.column = quickfixColumn + changeLength;
+            quickfixHint.column = quickfixColumn + -changeLength;
             changedQuickfixes.push(quickfix);
         }
-
         return changedQuickfixes;
     }
 
