@@ -7,9 +7,11 @@ node('rhel7'){
 	}
 
 	stage('Install requirements') {
-		def nodeHome = tool 'nodejs-12.13.1'
+		def nodeHome = tool 'nodejs-lts'
 		env.PATH="${env.PATH}:${nodeHome}/bin"
-		sh 'npm install -g typescript "vsce@<2"'
+		sh "npm install --global yarn"
+		sh "npm install --global typescript"
+		sh "npm install --global vsce"
 	}
 
 	stage('Build') {
