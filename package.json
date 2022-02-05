@@ -36,6 +36,7 @@
         "onWebviewPanel:rhamtConfigurationEditor"
     ],
     "scripts": {
+        "preinstall": "npx npm-force-resolutions",
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
