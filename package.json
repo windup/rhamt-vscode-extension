@@ -14,8 +14,7 @@
     },
     "bugs": "https://github.com/windup/rhamt-vscode-extension/issues",
     "engines": {
-        "npm": ">=7.0.0",
-        "vscode": "^1.52.0"
+        "vscode": "^1.59.1"
     },
     "categories": [
         "Other"
@@ -37,7 +36,6 @@
         "onWebviewPanel:rhamtConfigurationEditor"
     ],
     "scripts": {
-        "preinstall": "npx npm-force-resolutions",
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
@@ -277,12 +275,12 @@
     },
     "devDependencies": {
         "@types/chai": "^4.1.7",
-        "@types/cheerio": "^0.22.10",
+        "@types/cheerio": "0.22.10",
+        "@types/fs-extra": "^7.0.0",
         "@types/mocha": "^5.2.6",
         "@types/node": "^7.0.43",
         "@types/sinon": "^5.0.7",
         "@types/sinon-chai": "^3.2.2",
-        "@types/fs-extra": "^7.0.0",
         "@types/socket.io": "^1.4.36",
         "@types/socket.io-client": "^1.4.32",
         "chai": "^4.2.0",
@@ -296,7 +294,7 @@
     "dependencies": {
         "@eclipse-che/plugin": "latest",
         "@types/jquery": "^3.3.30",
-        "cheerio": "^1.0.0-rc.3",
+        "cheerio": "1.0.0-rc.3",
         "express": "^4.17.1",
         "find-java-home": "^1.2.2",
         "fs-extra": "^8.0.1",
