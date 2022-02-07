@@ -43,7 +43,7 @@ node('rhel8'){
 	}
 }
 
-node('rhel7'){
+node('rhel8'){
 	if(publishToMarketPlace.equals('true')){
 		timeout(time:5, unit:'DAYS') {
 			input message:'Approve deployment?', submitter: 'josteele'
