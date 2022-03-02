@@ -50,7 +50,8 @@
           "resteasy",
           "rhr",
           "eapxp",
-          "openjdk11"
+          "openjdk11",
+          "openliberty"
         ],
         "editable": true
       },
