@@ -20,6 +20,7 @@ This extension is published [here](https://marketplace.visualstudio.com/items?it
 
 ![VSCode Extension Marketplace View](resources/mta_vscode_installation.png)
 
+
 ## Features
 
 This extension provides the ability to analyze, assess, and migrate source code (using MTA) from within VSCode and Eclipse Che.
