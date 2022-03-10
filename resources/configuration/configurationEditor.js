@@ -77,7 +77,8 @@ function renderManyOption(option, config) {
     const note = document.createElement('p');
     note.classList.add('note');
     note.id = 'help-text-for-checkbox';
-    note.textContent = option.description;
+    // note.textContent = option.description;
+    note.innerHTML = option.description;
     wrapper.appendChild(note);
     const details = document.createElement('span');
     details.id = `${option.name}-details`;
@@ -219,9 +220,17 @@ function createTableRow(option, item, group, config, bind) {
     const content = document.createElement('div');
     content.classList.add('option-content');
     wrapper.appendChild(content);
+
+    const newFeatures = option['new-features'];
     const title = document.createElement('span');
-    title.textContent = item;
+    if (newFeatures && newFeatures.includes(item)) {
+        title.innerHTML = item + '<span class="newFeatureTag"> new</span>';
+    }
+    else {
+        title.textContent = item;
+    }
     content.appendChild(title);
+
     return row;
 }
 

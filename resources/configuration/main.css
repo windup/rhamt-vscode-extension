@@ -414,3 +414,24 @@ input {
     position: absolute;
     z-index: 10;
 }
+
+.newFeatureTag {
+    /* background-color: #D63F26; */
+    background-color: #107c10;
+    color: #FFFFFF;
+}
+
+.newFeatureTag {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-right: 10px;
+    padding-left: 8px;
+    padding-bottom: 2px;
+    border-radius: 2px;
+    font-style: italic;
+    font-size: 12px;
+    font-weight: 500;
+    vertical-align: top;
+
+    font-family: wf_segoe-ui, Helvetica Neue, Helvetica, Arial, Verdana;
+}
