@@ -20,6 +20,12 @@ This extension is published [here](https://marketplace.visualstudio.com/items?it
 
 ![VSCode Extension Marketplace View](resources/mta_vscode_installation.png)
 
+## Currently Released Version
+
+Version	0.0.91
+References version 5.2.1.Final of the mta-cli
+Released on	7/28/2020
+
 ## Features
 
 This extension provides the ability to analyze, assess, and migrate source code (using MTA) from within VSCode and Eclipse Che.
