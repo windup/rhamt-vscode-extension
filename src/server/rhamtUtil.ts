@@ -193,6 +193,13 @@ export class RhamtUtil {
         if (!input || input.length === 0) {
             return Promise.reject('input is missing from configuration');
         }
+
+        for (let input of options['input']) {
+            if (!fs.existsSync(input)) {
+                Promise.reject(`input does not exist: ${input}`);
+            }
+        }
+    
         input.forEach(entry => {
             params.push(`"${entry}"`);
         });
