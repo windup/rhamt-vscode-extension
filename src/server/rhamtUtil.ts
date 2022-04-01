@@ -38,6 +38,7 @@ export class RhamtUtil {
                 console.log(`Using windup home - ${windupHome}`);
                 let params = [];
                 try {
+                    progress.report({message: 'Verifying configuration'});
                     params = await RhamtUtil.buildParams(config, windupHome);
                 }
                 catch (e) {

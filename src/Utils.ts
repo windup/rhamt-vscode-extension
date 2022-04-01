@@ -74,9 +74,6 @@ export namespace Utils {
                 return Promise.reject(error);
             }
 
-            progress.report({message: 'Verifying input'});
-            
-
             config.rhamtExecutable = rhamtCli;
             config.options['jvm'] = javaHome;
             return config;
