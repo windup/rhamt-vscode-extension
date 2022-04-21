@@ -195,9 +195,9 @@ export class RhamtUtil {
             return Promise.reject('input is missing from configuration');
         }
 
-        for (let input of options['input']) {
-            if (!fs.existsSync(input)) {
-                Promise.reject(`input does not exist: ${input}`);
+        for (let anInput of input) {
+            if (!fs.existsSync(anInput)) {
+                return Promise.reject(`input does not exist: ${anInput}`);
             }
         }
     
