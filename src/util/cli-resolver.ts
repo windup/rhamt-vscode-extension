@@ -7,7 +7,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import { RhamtConfiguration } from '../model/model';
 
-const RHAMT_VERSION = '5.3.0.Alpha3';
+const RHAMT_VERSION = '5.3.0.Final';
 const RHAMT_FOLDER = `mta-cli-${RHAMT_VERSION}`;
 
 export function findRhamtCli(outDir: string, config?: RhamtConfiguration): Promise<string> {
