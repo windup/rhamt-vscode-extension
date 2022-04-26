@@ -24,8 +24,11 @@ This extension is published [here](https://marketplace.visualstudio.com/items?it
 
 * Version	0.0.91
 * References version 5.2.1.Final of the mta-cli
-* Released on	7/28/2020
-* This extension can be manually downloaded from [here](https://download.jboss.org/jbosstools/adapters/snapshots/mta-vscode-extension/mta-vscode-extension-0.0.91-334.vsix)
+
+## Current Development Release
+
+* Version	0.0.93
+* References version 5.3.0.Alpha3 of the mta-cli
 
 ## Features
 
