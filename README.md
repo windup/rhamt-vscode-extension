@@ -22,13 +22,8 @@ This extension is published [here](https://marketplace.visualstudio.com/items?it
 
 ## Current Release
 
-* Version	0.0.91
-* References version 5.2.1.Final of the mta-cli
-
-## Current Development Release
-
-* Version	0.0.93
-* References version 5.3.0.Alpha3 of the mta-cli
+* Version	0.0.96
+* References version 5.3.0.Final of the mta-cli
 
 ## Features
 
