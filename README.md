@@ -22,7 +22,7 @@ This extension is published [here](https://marketplace.visualstudio.com/items?it
 
 ## Current Release
 
-* Version	0.0.96
+* Version	0.0.98
 * References version 5.3.0.Final of the mta-cli
 
 ## Features
