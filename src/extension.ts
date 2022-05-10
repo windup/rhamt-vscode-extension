@@ -24,6 +24,7 @@ import * as os from 'os';
 import { MarkerService } from './source/markers';
 import { initQuickfixSupport } from './source/quickfix';
 import { FileItem } from './tree/fileItem';
+import * as git from './source/git';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -122,6 +123,8 @@ export async function activate(context: vscode.ExtensionContext) {
     // vscode.languages.registerCodeLensProvider("*", lensProvider);
     // const hintDecorationProvider = new HintDecorationProvider(modelService);
     // vscode.window.registerFileDecorationProvider()
+
+    git.init(context);
 }
 
 export async function openFile(uri: vscode.Uri): Promise<void> {
