@@ -294,6 +294,13 @@ export class ConfigurationView {
     }
 
     private addOptionValue(data: any): void {
+        const optionName = data.option.name;
+        const value = data.value as string;
+
+        if (optionName === 'input' && value.includes('github.com')) {
+            vscode.commands.executeCommand('rhamt.downloadGitRepo', {repo: value});
+        }
+
         const values = this.configuration.options[data.option.name];
         if (values) {
             this.configuration.options[data.option.name] = values.concat(data.value);
