@@ -212,7 +212,7 @@ function createTableRow(option, item, group, config, bind) {
     input.type = 'checkbox';
     $(input).data('option-item', item);
     wrapper.appendChild(input);
-    if (bind) {
+        if (bind) {
         input.onclick = () => {
             updateSelectManyOption(option, item, input.checked, config);
         };
@@ -303,6 +303,7 @@ function createAddButton() {
     addButton.style.width = 'auto';
     addButton.style.padding = '2px 14px';
     addButton.textContent = 'Add';
+    addButton.style.textDecoration = 'none';
     return addButton;
 }
 
@@ -501,6 +502,7 @@ function bindDynamicTable(option, config) {
             const container = document.createElement('ul');
             container.classList.add('actions-container');
             bar.append(container);
+
             const editItem = document.createElement('li');
             editItem.classList.add('action-item');
             container.append(editItem);
@@ -511,6 +513,7 @@ function bindDynamicTable(option, config) {
             editAction.onclick = () => {
                 showEditDialog(option.name, undefined, { currentValue: item });
             };
+
             const deleteItem = document.createElement('li');
             deleteItem.classList.add('action-item');
             container.append(deleteItem);
@@ -521,6 +524,17 @@ function bindDynamicTable(option, config) {
             deleteAction.onclick = () => {
                 doDeleteItem(option, item, config);
             };
+
+            const cloning = config.options['cloning'];
+            if (cloning && cloning.includes(item)) {
+                const cloningItem = document.createElement('li');
+                cloningItem.classList.add('action-item', 'cloning-item');
+                container.append(cloningItem);
+                const cloningAction = document.createElement('span');
+                cloningAction.classList.add('action-label', 'cloning-action', 'sr-only');
+                cloningItem.append(cloningAction);
+            }
+
             const col1 = document.createElement('div');
             col1.classList.add('row-text');
             col1.textContent = item;
