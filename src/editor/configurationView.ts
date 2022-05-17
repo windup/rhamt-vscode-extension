@@ -26,6 +26,7 @@ export class ConfigurationView {
         this.configuration = configuration;
         this.modelService = modelService;
         this.context = context;
+        this.configuration.options['cloning'] = [];
         if (webview) {
             this.view = webview;
             this.setupView();
@@ -125,6 +126,7 @@ export class ConfigurationView {
         const styleUri = this.view.webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'resources', 'configuration', 'main.css'));
         const jsUri = this.view.webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'resources', 'configuration', 'configurationEditor.js'));
         const jqueryUri = this.view.webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'resources', 'configuration', 'jquery-3.3.1.min.js'));
+        const bootstrap = this.view.webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'resources', 'configuration', 'bootstrap.5.1.3.min.css'));
         return `
             <!DOCTYPE html>
             <html>
@@ -136,6 +138,7 @@ export class ConfigurationView {
                     </script>
                     <script src="${jqueryUri}"></script>
                     <link href="${styleUri}" rel="stylesheet" />
+                    <link rel="stylesheet" href="${bootstrap}" >
                 </head>
                 <body>
                     <div style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%">
@@ -293,14 +296,7 @@ export class ConfigurationView {
         this.save();
     }
 
-    private addOptionValue(data: any): void {
-        const optionName = data.option.name;
-        const value = data.value as string;
-
-        if (optionName === 'input' && value.includes('github.com')) {
-            vscode.commands.executeCommand('rhamt.downloadGitRepo', {repo: value});
-        }
-
+    private addOptionValue(data: any) {
         const values = this.configuration.options[data.option.name];
         if (values) {
             this.configuration.options[data.option.name] = values.concat(data.value);
@@ -308,12 +304,63 @@ export class ConfigurationView {
         else {
             this.configuration.options[data.option.name] = [data.value];
         }
+
+        // cloning...
+        const optionName = data.option.name;
+        const value = data.value as string;
+        let cloning = false;
+        if (optionName === 'input' && value.includes('github.com/')) {
+            cloning = true;
+            console.log('execute clone repository: ' + value);
+            const values = this.configuration.options['cloning'];
+            if (values) {
+                this.configuration.options['cloning'] = values.concat(data.value);
+            }
+            else {
+                this.configuration.options['cloning'] = [data.value];
+            }
+        }
+
         this.postMessage({
             command: 'updateOption',
             option: data.option,
             options: this.configuration.options
         });
+
+        // cloning...
+        if (cloning) {
+            if (vscode.workspace.workspaceFolders) {
+                const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+                const folderName = data.value.substring(data.value.lastIndexOf('/') + 1);
+                const cloneCommand = {repo: data.value, folderName, config: this.configuration, workspaceFolder};
+                vscode.commands.executeCommand('rhamt.downloadGitRepo', cloneCommand).then((result:any) => {
+                    // the clone failed or succeeeded, we do nothing different, remove from active 
+                    // cloning list and update UI.
+                    const values = this.configuration.options['cloning'];
+                    const index = values.indexOf(result.repo);
+                    if (index > -1) {
+                        delete values[index];
+                        this.configuration.options['cloning'] = values;
+                    }
+                    setTimeout(() => {
+                        this.postMessage({
+                            command: 'updateOption',
+                            option: data.option,
+                            options: this.configuration.options
+                        });
+                    }, 1000);
+                });
+            }
+            else {
+                const msg = `Cannot find workspace folder to clone into.`;
+                console.log(msg);
+                vscode.window.showErrorMessage(msg);
+            }
+        }
+
         this.save();
+
+        return Promise.resolve();
     }
 
     private async promptExternal(option: any): Promise<void> {
