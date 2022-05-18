@@ -334,13 +334,57 @@ export class ConfigurationView {
                 const folderName = data.value.substring(data.value.lastIndexOf('/') + 1);
                 const cloneCommand = {repo: data.value, folderName, config: this.configuration, workspaceFolder};
                 vscode.commands.executeCommand('rhamt.downloadGitRepo', cloneCommand).then((result:any) => {
-                    // the clone failed or succeeeded, we do nothing different, remove from active 
-                    // cloning list and update UI.
-                    const values = this.configuration.options['cloning'];
-                    const index = values.indexOf(result.repo);
-                    if (index > -1) {
-                        delete values[index];
-                        this.configuration.options['cloning'] = values;
+
+                    // remove url from list of cloning urls, also delete duplicates
+                    const cloningValues = this.configuration.options['cloning'];
+                    let cloningIndex = cloningValues.indexOf(result.repo);
+                    while (cloningIndex > -1) {
+                        cloningValues.splice(cloningIndex, 1);
+                        cloningIndex = cloningValues.indexOf(result.repo); 
+                    }
+
+                    const inputValues = this.configuration.options['input'];
+                    const location = path.join(result.workspaceFolder, result.folderName);
+
+                    // if error cloning, remove url from input list, also delete duplicates
+                    if (result.error) {
+                        let index = inputValues.indexOf(result.repo);
+                        while (index > -1) {
+                            inputValues.splice(index, 1);
+                            index = inputValues.indexOf(result.repo);
+                        }
+
+                        // add it to input if not already exists
+                        index = inputValues.indexOf(location);
+                        if (index === -1) {
+                            inputValues.push(location);
+                        }
+                    }
+                    else {
+                        // delete other duplicate input locations
+                        let duplicateIndex = inputValues.indexOf(location);
+                        while (duplicateIndex > -1) {
+                            inputValues.splice(duplicateIndex, 1);
+                            duplicateIndex = inputValues.indexOf(location);
+                        }
+
+                        let repoUrlIndex = inputValues.indexOf(result.repo);
+                        if (repoUrlIndex > -1) {
+                            // tag original, so we don't delete it
+                            const newInput = location + '-og';
+                            inputValues[repoUrlIndex] = newInput;
+
+                            // delete other duplicates
+                            repoUrlIndex = inputValues.indexOf(result.repo);
+                            while(repoUrlIndex > -1) {
+                                inputValues.splice(repoUrlIndex, 1);
+                                repoUrlIndex = inputValues.indexOf(result.repo);
+                            }
+
+                            // remove temp tag
+                            repoUrlIndex = inputValues.indexOf(newInput);
+                            inputValues[repoUrlIndex] = location;
+                        }
                     }
                     setTimeout(() => {
                         this.postMessage({
