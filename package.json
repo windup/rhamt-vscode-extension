@@ -7,7 +7,7 @@
     "publisher": "redhat",
     "author": "Red Hat",
     "preview": true,
-    "icon": "resources/mta.png",
+    "icon": "resources/migration_toolkit.png",
     "repository": {
         "type": "git",
         "url": "https://github.com/windup/rhamt-vscode-extension"
@@ -148,7 +148,7 @@
                 {
                     "id": "rhamt-explorer",
                     "title": "MTA",
-                    "icon": "resources/mta.svg"
+                    "icon": "resources/migration_toolkit.png"
                 }
             ]
         },
