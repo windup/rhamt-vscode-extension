@@ -10,8 +10,10 @@ export function init(context: vscode.ExtensionContext) {
         const workspaceFolder = data.workspaceFolder;
         const result = {
             repo,
+            workspaceFolder,
             folderName,
-            configuration: data.config
+            configuration: data.config,
+            error: false
         }
         try {
             const location = path.join(workspaceFolder, folderName);
@@ -20,8 +22,11 @@ export function init(context: vscode.ExtensionContext) {
             console.log(stderr);
         }
         catch (e) {
+            result.error = true;
             if (e.message.includes('already exists and is not an empty directory')) {
-                vscode.window.showInformationMessage(`${folderName} already exists in workspace.`);
+                console.log(`Error cloning repo: ${e}`);
+                console.log(`${folderName} already exists in workspace.`);
+                // vscode.window.showInformationMessage(`${folderName} already exists in workspace.`);
             }   
             else {
                 console.log(`Error cloning repo: ${e}`);
