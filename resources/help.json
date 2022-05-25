@@ -29,7 +29,7 @@
         "type": "String",
         "ui-type": ["select-many", "text"],
         "required": true,
-        "new-features": ["enableTransactionAnalysis"],
+        "new-features": ["enableTransactionAnalysis", "openliberty", "jakarta-ee"],
         "available-options": [
           "cloud-readiness",
           "jbpm",
