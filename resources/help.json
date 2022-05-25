@@ -29,7 +29,7 @@
         "type": "String",
         "ui-type": ["select-many", "text"],
         "required": true,
-        "new-features": ["openliberty", "jakarta-ee"],
+        "new-features": ["enableTransactionAnalysis"],
         "available-options": [
           "cloud-readiness",
           "jbpm",
@@ -37,6 +37,7 @@
           "drools",
           "fsw",
           "eap7",
+          "enableTransactionAnalysis",
           "hibernate",
           "java-ee",
           "eap6",
