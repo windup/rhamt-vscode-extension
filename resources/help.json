@@ -29,7 +29,7 @@
         "type": "String",
         "ui-type": ["select-many", "text"],
         "required": true,
-        "new-features": ["enableTransactionAnalysis", "openliberty", "jakarta-ee"],
+        "new-features": ["openliberty", "jakarta-ee"],
         "available-options": [
           "cloud-readiness",
           "jbpm",
@@ -37,7 +37,6 @@
           "drools",
           "fsw",
           "eap7",
-          "enableTransactionAnalysis",
           "hibernate",
           "java-ee",
           "eap6",
@@ -274,6 +273,13 @@
       {
         "name": "enableClassNotFoundAnalysis",
         "description": "Enable analysis of Java files that are not available on the Classpath. This should be left off if some classes will be unavailable at analysis time.",
+        "type": "Boolean",
+        "ui-type": ["single"],
+        "required": false
+      },
+      {
+        "name": "enableTransactionAnalysis",
+        "description": "Enable Data-intensive Validity Analyzer (Diva)",
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false
