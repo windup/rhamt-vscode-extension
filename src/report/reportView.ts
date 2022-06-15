@@ -5,6 +5,7 @@
 import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, env, Uri } from 'vscode';
 import { Endpoints } from '../model/model';
 import * as path from 'path';
+import { MTA } from '../extension';
 
 export class ReportView {
 
@@ -26,19 +27,25 @@ export class ReportView {
             return window.showErrorMessage(`Unable to find report on filesystem`);
         }
         console.log(`report: ${location}`);
-        
-        const segments = location.split(path.sep);
-        const index = segments.indexOf(item.config.id);
-        const relative = segments.splice(index, index).join(path.sep);
 
-        console.log(`report path: ${relative}`);
-        
-        const url = await this.endpoints.reportLocation();
-        const report = `${url}${relative}`;
+        if (!MTA.isChe()) {
+            this.open(location, external);
+        }
 
-        console.log(`url: ${report}`);
-        
-        this.open(report, external);
+        else {
+            const segments = location.split(path.sep);
+            const index = segments.indexOf(item.config.id);
+            const relative = segments.splice(index, index).join(path.sep);
+    
+            console.log(`report path: ${relative}`);
+            
+            const url = await this.endpoints.reportLocation();
+            const report = `${url}${relative}`;
+    
+            console.log(`url: ${report}`);
+            
+            this.open(report, external);
+        }
     }
 
     open(location: string, external?: boolean): void {

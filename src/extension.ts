@@ -31,7 +31,7 @@ let modelService: ModelService;
 let stateLocation: string;
 let outputLocation: string;
 let configEditorServer: ConfigurationEditorServer;
-let reportServer: ReportServer;
+let reportServer: ReportServer | undefined = undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
     if (vscode.env.appName === "Eclipse Che") {
@@ -51,7 +51,9 @@ export async function activate(context: vscode.ExtensionContext) {
     modelService = new ModelService(new RhamtModel(), out, outputLocation, locations);
     const configEditorService = new ConfigurationEditorService(context, modelService);
     await modelService.readCliMeta();
-    reportServer = await Private.createReportServer(locations);
+    if (MTA.isChe()) {
+        reportServer = await MTA.createReportServer(locations);
+    }
 
     const markerService = new MarkerService(context, modelService);
     new RhamtView(context, modelService, configEditorService, markerService);
@@ -146,10 +148,12 @@ export async function openFile(uri: vscode.Uri): Promise<void> {
 export function deactivate() {
     modelService.save();
     configEditorServer.dispose();
-    reportServer.dispose();
+    if (MTA.isChe()) {
+        reportServer.dispose();
+    }
 }
 
-namespace Private {
+export namespace MTA {
     export async function createReportServer(endpoints: Endpoints): Promise<ReportServer> {
         const reportServer = new ReportServer(endpoints);
         try {
