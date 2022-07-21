@@ -31,6 +31,8 @@
         "required": true,
         "new-features": ["openliberty", "jakarta-ee"],
         "available-options": [
+          "azure-apservice",
+          "azure-aks",
           "cloud-readiness",
           "jbpm",
           "quarkus",
@@ -51,6 +53,7 @@
           "rhr",
           "eapxp",
           "openjdk11",
+          "openjdk17",
           "openliberty"
         ],
         "editable": true
@@ -85,6 +88,7 @@
           "glassfish",
           "java",
           "orion",
+          "openjdk11",
           "eap",
           "camel",
           "hibernate-search",
