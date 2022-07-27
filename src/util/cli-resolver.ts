@@ -8,7 +8,7 @@ import * as fs from 'fs-extra';
 import { RhamtConfiguration } from '../model/model';
 
 const RHAMT_VERSION = '5.3.1-SNAPSHOT';
-const RHAMT_FOLDER = `mtr-cli-${RHAMT_VERSION}`;
+const RHAMT_FOLDER = `mta-cli-${RHAMT_VERSION}`;
 
 export function findRhamtCli(outDir: string, config?: RhamtConfiguration): Promise<string> {
     return new Promise<string>((resolve, reject) => {
@@ -23,7 +23,7 @@ export function findRhamtCli(outDir: string, config?: RhamtConfiguration): Promi
             console.log(`preference mtr.executable.path found - ${rhamtPath}`);
             return resolve(rhamtPath);
         }
-        let rhamtHome = process.env['MTR_HOME'];
+        let rhamtHome = process.env['MTA_HOME'];
         if (rhamtHome) {
             const executable = getRhamtExecutable(rhamtHome);
             console.log(`found mtr-cli using MTR_HOME`);
@@ -48,10 +48,10 @@ export function findRhamtCli(outDir: string, config?: RhamtConfiguration): Promi
 
 export function getRhamtExecutable(home: string): string {
     const isWindows = process.platform === 'win32';
-    const executable = 'mtr-cli' + (isWindows ? '.bat' : '');
+    const executable = 'mta-cli' + (isWindows ? '.bat' : '');
     return path.join(home, 'bin', executable);
 }
 
 export function findRhamtCliDownload(outDir: string): string {
-    return path.join(outDir, 'mtr-cli', RHAMT_FOLDER);
+    return path.join(outDir, 'mta-cli', RHAMT_FOLDER);
 }

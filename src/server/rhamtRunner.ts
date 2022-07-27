@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as cp from 'child_process';
 import * as os from 'os';
-const STARTED_REGEX = /.*Migration Toolkit for Runtimes (.*)/;
+const STARTED_REGEX = /.*Migration Toolkit for Applications (.*)/;
 
 export class RhamtRunner {
     static run(home: string, executable: string, data: any[], startTimeout: number,
@@ -17,7 +17,7 @@ export class RhamtRunner {
                     {},
                     process.env, 
                     {
-                        MTR_HOME: ''
+                        MTA_HOME: ''
                     }
                 )
             });

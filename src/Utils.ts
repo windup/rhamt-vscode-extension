@@ -16,7 +16,7 @@ const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
 
-const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://oss.sonatype.org/content/groups/public/org/jboss/windup/mtr-cli/5.3.1-SNAPSHOT/mtr-cli-5.3.1-20220427.065741-1-no-index.zip';
+const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://oss.sonatype.org/content/groups/public/org/jboss/windup/mta-cli/5.3.1-SNAPSHOT/mta-cli-5.3.1-20220427.065741-1-no-index.zip';
 const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
