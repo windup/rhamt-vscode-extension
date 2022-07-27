@@ -50,7 +50,7 @@ export class ModelService {
         } catch (e) {
             // no-op
         }
-        config.options['mta-cli'] = this.getRecentMtaCli();
+        config.options['mtr-cli'] = this.getRecentMtaCli();
         config.options['sourceMode'] = true;
         config.options['generateOutputLocation'] = path.resolve(this.outputLocation, config.id);
         config.options['target'] = ['eap7'];
@@ -215,7 +215,7 @@ export class ModelService {
         let cli = '';
         const configs = this.model.configurations;
         for (var i = configs.length - 1; i >= 0; i--) {
-            const cli = configs[i].options['mta-cli'];
+            const cli = configs[i].options['mtr-cli'];
             if (cli) {
                 return cli;
             }
@@ -383,7 +383,7 @@ export class ModelService {
     }
 
     public generateConfigurationName(): string {
-        let newName = 'mtaConfiguration';
+        let newName = 'mtrConfiguration';
         if (this.model.exists(newName)) {
             for (let i = 0; i < 1000; i++) {
                 if (!this.model.exists(`${newName}-${i}`)) {

@@ -1,22 +1,22 @@
-# Migration Toolkit for Application (MTA) Extension - FAQ
+# Migration Toolkit for Runtimes (MTR) Extension - FAQ
 
 ## Requirements
 
-### Available Migration Toolkit for Applications (MTA) executable
-You can specify the path to an installation of the `mta-cli` executable from witin the settings:
+### Available Migration Toolkit for Runtimes (MTR) executable
+You can specify the path to an installation of the `mtr-cli` executable from witin the settings:
     ```
     {
-        "mta.executable.path": "/some-path-to-mta-home/bin/mta-cli"
+        "mtr.executable.path": "/some-path-to-mtr-home/bin/mtr-cli"
     }
     ```
 
 #### Possible error messages
-* Unable to find `mta-cli` executable
-    In this case, please follow above instructions to set the `mta-cli` executable path.
-* Unable to determine `mta-cli` version.
-    In this case, please verify the `mta-cli` exists, is executable, and is a supported version.
+* Unable to find `mtr-cli` executable
+    In this case, please follow above instructions to set the `mtr-cli` executable path.
+* Unable to determine `mtr-cli` version.
+    In this case, please verify the `mtr-cli` exists, is executable, and is a supported version.
 
-### Available Java Runtime (required by mta-cli)
+### Available Java Runtime (required by mtr-cli)
 
 #### Possible error messages
 * `JAVA_HOME` not correctly set.

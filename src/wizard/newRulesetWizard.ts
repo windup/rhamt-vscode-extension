@@ -16,7 +16,7 @@ export class NewRulesetWizard {
     }
 
     async open (): Promise<any> {
-        const fileName = await vscode.window.showInputBox({value: 'custom-ruleset.mta.xml', placeHolder: 'File name', valueSelection: [0, 14]});
+        const fileName = await vscode.window.showInputBox({value: 'custom-ruleset.mtr.xml', placeHolder: 'File name', valueSelection: [0, 14]});
         if (vscode.workspace.workspaceFolders) {    
             const root = vscode.workspace.workspaceFolders[0].uri.fsPath;
             const file = path.join(root, fileName);

@@ -50,7 +50,7 @@ export class RhamtInstaller {
         let localTempFilePath = '';
 
         try {
-            localTempFilePath = await RhamtInstaller.downloadFile(downloadUri, 'Downloading mta-cli... ', handler);
+            localTempFilePath = await RhamtInstaller.downloadFile(downloadUri, 'Downloading mtr-cli... ', handler);
         } catch (err) {
             return Promise.reject(err);
         }
@@ -160,7 +160,7 @@ export class RhamtInstaller {
     private static async unpackArchive(downloadDir: string, tempFilePath: string, handler: InstallHandler): Promise<void> {
         handler.log('Unpacking archive... ');
         const deferred = createDeferred();
-        const title = 'Extracting mta-cli... ';
+        const title = 'Extracting mtr-cli... ';
         await window.withProgress({
             location: ProgressLocation.Notification,
             cancellable: true

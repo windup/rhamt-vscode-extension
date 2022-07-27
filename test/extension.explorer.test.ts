@@ -17,7 +17,7 @@ suite('RHAMT / Issue Explorer', () => {
     });
 
     test('model service', () => {
-        const name = 'mtaConfiguration';
+        const name = 'mtrConfiguration';
         const config = modelService.createConfigurationWithName(name);
         assert.equal(config.name, name);
     });

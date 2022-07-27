@@ -35,15 +35,15 @@ let reportServer: ReportServer | undefined = undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
     if (vscode.env.appName === "Eclipse Che") {
-        stateLocation = path.join('/home', 'theia', 'mta', 'redhat.mta-vscode-extension');
+        stateLocation = path.join('/home', 'theia', 'mtr', 'redhat.mtr-vscode-extension');
         outputLocation = path.join(os.homedir(), 'output');
     }
     else {
-        stateLocation = path.join(context.globalStoragePath, '.mta', 'tooling', 'vscode');
+        stateLocation = path.join(context.globalStoragePath, '.mtr', 'tooling', 'vscode');
         outputLocation = stateLocation;
     }
 
-    console.log(`mta state location is: ${stateLocation}`);
+    console.log(`mtr state location is: ${stateLocation}`);
     
     await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation);
@@ -51,8 +51,8 @@ export async function activate(context: vscode.ExtensionContext) {
     modelService = new ModelService(new RhamtModel(), out, outputLocation, locations);
     const configEditorService = new ConfigurationEditorService(context, modelService);
     await modelService.readCliMeta();
-    if (MTA.isChe()) {
-        reportServer = await MTA.createReportServer(locations);
+    if (MTR.isChe()) {
+        reportServer = await MTR.createReportServer(locations);
     }
 
     const markerService = new MarkerService(context, modelService);
@@ -148,12 +148,12 @@ export async function openFile(uri: vscode.Uri): Promise<void> {
 export function deactivate() {
     modelService.save();
     configEditorServer.dispose();
-    if (MTA.isChe()) {
+    if (MTR.isChe()) {
         reportServer.dispose();
     }
 }
 
-export namespace MTA {
+export namespace MTR {
     export async function createReportServer(endpoints: Endpoints): Promise<ReportServer> {
         const reportServer = new ReportServer(endpoints);
         try {

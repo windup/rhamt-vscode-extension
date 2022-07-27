@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as cp from 'child_process';
 import * as os from 'os';
-const STARTED_REGEX = /.*Migration Toolkit for Applications (.*)/;
+const STARTED_REGEX = /.*Migration Toolkit for Runtimes (.*)/;
 
 export class RhamtRunner {
     static run(home: string, executable: string, data: any[], startTimeout: number,
@@ -17,7 +17,7 @@ export class RhamtRunner {
                     {},
                     process.env, 
                     {
-                        MTA_HOME: ''
+                        MTR_HOME: ''
                     }
                 )
             });
@@ -39,7 +39,7 @@ export class RhamtRunner {
             setTimeout(() => {
                 if (!started) {
                     rhamtProcess.kill();
-                    reject(`mta-cli startup time exceeded ${startTimeout}ms.`);
+                    reject(`mtr-cli startup time exceeded ${startTimeout}ms.`);
                 }
             }, startTimeout);
         });

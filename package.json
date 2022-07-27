@@ -1,7 +1,7 @@
 {
-    "name": "mta-vscode-extension",
-    "displayName": "Migration Toolkit for Applications",
-    "description": "Migration Toolkit for Applications (MTA)",
+    "name": "mtr-vscode-extension",
+    "displayName": "Migration Toolkit for Runtimes",
+    "description": "Migration Toolkit for Runtimes (MTR)",
     "version": "0.0.98",
     "license": "MIT",
     "publisher": "redhat",
@@ -22,7 +22,7 @@
     "keywords": [
         "Migration",
         "Migrate",
-        "MTA",
+        "MTR",
         "RHAMT",
         "Windup",
         "JBoss",
@@ -46,7 +46,7 @@
     "contributes": {
         "commands": [
             {
-                "category": "Migration Toolkit for Applications (MTA)",
+                "category": "Migration Toolkit for Runtimes (MTR)",
                 "command": "rhamt.newConfiguration",
                 "title": "New Configuration",
                 "icon": {
@@ -61,7 +61,7 @@
             {
                 "command": "rhamt.runConfiguration",
                 "title": "Run",
-                "enablement": "mta-cli-enabled",
+                "enablement": "mtr-cli-enabled",
                 "icon": "$(run)"
             },
             {
@@ -132,12 +132,12 @@
         ],
         "configuration": [
             {
-                "title": "Migration Toolkit for Applications (MTA)",
+                "title": "Migration Toolkit for Runtimes (MTR)",
                 "properties": {
-                    "mta.executable.path": {
+                    "mtr.executable.path": {
                         "type": "string",
                         "default": "",
-                        "description": "Specifies absolute path to the Migration Toolkit for Applications executable (e.g., /path/to/mta/bin/mta-cli)",
+                        "description": "Specifies absolute path to the Migration Toolkit for Runtimes executable (e.g., /path/to/mtr/bin/mtr-cli)",
                         "scope": "window"
                     }
                 }
@@ -147,7 +147,7 @@
             "activitybar": [
                 {
                     "id": "rhamt-explorer",
-                    "title": "MTA",
+                    "title": "MTR",
                     "icon": "resources/migration_toolkit.png"
                 }
             ]
