@@ -152,7 +152,7 @@ export namespace Utils {
 
     export async function downloadCli(dataOut: string): Promise<any> {
         const handler = { log: msg => console.log(`mtr-cli download message: ${msg}`) };
-        const out = path.resolve(dataOut, 'mtr-cli');
+        const out = path.resolve(dataOut, 'mta-cli');
         RhamtInstaller.installCli(PREVIEW_DOWNLOAD_CLI_LOCATION, out, handler).then(async () => {
             window.showInformationMessage('mtr-cli download complete');
             const home = cliResolver.findRhamtCliDownload(dataOut);
