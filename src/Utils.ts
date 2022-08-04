@@ -16,7 +16,7 @@ const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
 
-const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://oss.sonatype.org/content/groups/public/org/jboss/windup/mta-cli/5.3.1-SNAPSHOT/mta-cli-5.3.1-20220427.065741-1-no-index.zip';
+const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://oss.sonatype.org/content/repositories/snapshots/org/jboss/windup/windup-cli/5.3.1-SNAPSHOT/windup-cli-5.3.1-20220727.060008-1-no-index.zip';
 const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
@@ -50,24 +50,24 @@ export namespace Utils {
                 return Promise.reject(error);
             }
 
-            progress.report({message: 'Verifying mtr-cli'});
+            progress.report({message: 'Verifying windup-cli'});
 
             try {
                 rhamtCli = await cliResolver.findRhamtCli(modelService.outDir, config);
-                console.log(`Using MTR CLI - ${rhamtCli}`);
+                console.log(`Using Windup CLI - ${rhamtCli}`);
             }
             catch (error) {
-                promptForFAQs('Unable to find mtr-cli executable', {outDir: modelService.outDir});
+                promptForFAQs('Unable to find windup-cli executable', {outDir: modelService.outDir});
                 return Promise.reject({error, notified: true});
             }
 
             try {
-                console.log(`verifying mtr-cli --version`);
+                console.log(`verifying windup-cli --version`);
                 const version = await findRhamtVersion(rhamtCli, javaHome);
-                console.log(`Using MTR version - ${version}`);
+                console.log(`Using Windup version - ${version}`);
             }
             catch (error) {
-                promptForFAQs('Unable to determine mtr-cli version: \n' + error.message, {outDir: modelService.outDir});
+                promptForFAQs('Unable to determine windup-cli version: \n' + error.message, {outDir: modelService.outDir});
                 return Promise.reject(error);
             }
 
@@ -104,7 +104,7 @@ export namespace Utils {
             child_process.exec(
                 `"${rhamtCli}" --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
                     if (error) {
-                        console.log(`error while executing mtr-cli --version`);
+                        console.log(`error while executing windup-cli --version`);
                         console.log(error);
                         return reject(error);
                     } else {
@@ -138,7 +138,7 @@ export namespace Utils {
     }
 
     export async function showDownloadCliOption(dataOut: string, context: ExtensionContext): Promise<any> {
-        const MSG = 'Unable to find MTR CLI';
+        const MSG = 'Unable to find Windup CLI';
         const OPTION_DOWNLOAD = 'Download';
         const OPTION_DISMISS = `Don't Show Again`;
         const choice = await window.showInformationMessage(MSG, OPTION_DOWNLOAD, OPTION_DISMISS);
@@ -151,24 +151,24 @@ export namespace Utils {
     }
 
     export async function downloadCli(dataOut: string): Promise<any> {
-        const handler = { log: msg => console.log(`mtr-cli download message: ${msg}`) };
-        const out = path.resolve(dataOut, 'mta-cli');
+        const handler = { log: msg => console.log(`windup-cli download message: ${msg}`) };
+        const out = path.resolve(dataOut, 'windup-cli');
         RhamtInstaller.installCli(PREVIEW_DOWNLOAD_CLI_LOCATION, out, handler).then(async () => {
-            window.showInformationMessage('mtr-cli download complete');
+            window.showInformationMessage('windup-cli download complete');
             const home = cliResolver.findRhamtCliDownload(dataOut);
             const cli = cliResolver.getRhamtExecutable(home);
             if (fse.existsSync(cli)) {
                 await fse.chmod(cli, '0764');
             }
-            workspace.getConfiguration().update('mtr.executable.path', cli);
+            workspace.getConfiguration().update('mtr.windup.executable.path', cli);
         }).catch(e => {
             console.log(e);
             const error = e.value.e;
             if (error && error.cancelled) {
-                window.showInformationMessage(`mtr-cli download cancelled.`);
+                window.showInformationMessage(`windup-cli download cancelled.`);
             }
             else {
-                window.showErrorMessage(`Error downloading mtr-cli: ${e}`);
+                window.showErrorMessage(`Error downloading windup-cli: ${e}`);
             }
         });
     }

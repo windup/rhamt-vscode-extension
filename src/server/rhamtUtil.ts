@@ -48,7 +48,7 @@ export class RhamtUtil {
                 }
                 rhamtChannel.clear();
                 const skipReport = config.options['skipReports'];
-                progress.report({message: 'Executing mtr-cli script...'});
+                progress.report({message: 'Executing windup-cli script...'});
                 let cancelled = false;
                 let resolved = false;
                 let processController: RhamtProcessController;
@@ -136,7 +136,7 @@ export class RhamtUtil {
                     }
                 };
                 const onShutdown = () => {
-                    console.log('mtr-cli shutdown');
+                    console.log('windup-cli shutdown');
                     RhamtUtil.updateRunEnablement(true, dataProvider, config);
                     if (!resolved) {
                         resolved = true;
@@ -144,13 +144,13 @@ export class RhamtUtil {
                     }
                 };
                 try {
-                    console.log(`Executing MTR using params: ${params}`);
+                    console.log(`Executing Windup using params: ${params}`);
                     processController = await RhamtRunner.run(windupHome, config.rhamtExecutable, params, START_TIMEOUT, onMessage, onShutdown).then(cp => {
                         onStarted();
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
                     });
                     if (cancelled) {
-                        console.log('mtr-cli was cancelled during startup.');
+                        console.log('windup-cli was cancelled during startup.');
                         processController.shutdown();
                         return;
                     }
@@ -180,7 +180,7 @@ export class RhamtUtil {
             const node = dataProvider.getConfigurationNode(config);
             node.setBusyAnalyzing(!enabled);
         }
-        vscode.commands.executeCommand('setContext', 'mtr-cli-enabled', enabled);
+        vscode.commands.executeCommand('setContext', 'windup-cli-enabled', enabled);
     }
 
     private static buildParams(config: RhamtConfiguration, windupHome: string): Promise<any[]> {

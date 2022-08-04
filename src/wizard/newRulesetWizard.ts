@@ -16,7 +16,7 @@ export class NewRulesetWizard {
     }
 
     async open (): Promise<any> {
-        const fileName = await vscode.window.showInputBox({value: 'custom-ruleset.mtr.xml', placeHolder: 'File name', valueSelection: [0, 14]});
+        const fileName = await vscode.window.showInputBox({value: 'custom-ruleset.windup.xml', placeHolder: 'File name', valueSelection: [0, 14]});
         if (vscode.workspace.workspaceFolders) {    
             const root = vscode.workspace.workspaceFolders[0].uri.fsPath;
             const file = path.join(root, fileName);
@@ -35,7 +35,7 @@ export class NewRulesetWizard {
         }
     }
 
-    async writeFile(file: string, template: string): Promise<any> {
+    async writeFile(file: string, template: string): Promise<void> {
         return new Promise((resolve, reject) => {
             fs.writeFile(file, template, null, e => {
                 if (e) reject(e);

@@ -61,7 +61,7 @@
             {
                 "command": "rhamt.runConfiguration",
                 "title": "Run",
-                "enablement": "mtr-cli-enabled",
+                "enablement": "windup-cli-enabled",
                 "icon": "$(run)"
             },
             {
@@ -134,10 +134,10 @@
             {
                 "title": "Migration Toolkit for Runtimes (MTR)",
                 "properties": {
-                    "mtr.executable.path": {
+                    "mtr.windup.executable.path": {
                         "type": "string",
                         "default": "",
-                        "description": "Specifies absolute path to the Migration Toolkit for Runtimes executable (e.g., /path/to/mtr/bin/mtr-cli)",
+                        "description": "Specifies absolute path to the Windup executable (e.g., /path/to/windup/bin/windup-cli)",
                         "scope": "window"
                     }
                 }

@@ -2,21 +2,21 @@
 
 ## Requirements
 
-### Available Migration Toolkit for Runtimes (MTR) executable
-You can specify the path to an installation of the `mtr-cli` executable from witin the settings:
+### Available Windup executable
+You can specify the path to an installation of the `windup-cli` executable from witin the settings:
     ```
     {
-        "mtr.executable.path": "/some-path-to-mtr-home/bin/mtr-cli"
+        "mtr.windup.executable.path": "/some-path-to-windup-home/bin/windup-cli"
     }
     ```
 
 #### Possible error messages
-* Unable to find `mtr-cli` executable
-    In this case, please follow above instructions to set the `mtr-cli` executable path.
-* Unable to determine `mtr-cli` version.
-    In this case, please verify the `mtr-cli` exists, is executable, and is a supported version.
+* Unable to find `windup-cli` executable
+    In this case, please follow above instructions to set the `windup-cli` executable path.
+* Unable to determine `windup-cli` version.
+    In this case, please verify the `windup-cli` exists, is executable, and is a supported version.
 
-### Available Java Runtime (required by mtr-cli)
+### Available Java Runtime (required by windup-cli)
 
 #### Possible error messages
 * `JAVA_HOME` not correctly set.

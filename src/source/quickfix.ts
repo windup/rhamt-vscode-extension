@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
 import { ModelService } from '../model/modelService';
-import { MTR_HINT } from './markers';
+import { HINT } from './markers';
 
 export function initQuickfixSupport(context: vscode.ExtensionContext, modelService: ModelService): void {
     context.subscriptions.push(
@@ -20,7 +20,7 @@ export class QuickfixProvider implements vscode.CodeActionProvider  {
 
 	provideCodeActions(document: vscode.TextDocument, range: vscode.Range | vscode.Selection, context: vscode.CodeActionContext, token: vscode.CancellationToken): vscode.CodeAction[] {
 		return context.diagnostics
-			.filter(diagnostic => diagnostic.code.toString().includes(MTR_HINT))
+			.filter(diagnostic => diagnostic.code.toString().includes(HINT))
 			.map(diagnostic => this.createFix(document, range, diagnostic));
 	}
 
@@ -33,7 +33,7 @@ export class QuickfixProvider implements vscode.CodeActionProvider  {
         const quickfix = hint.quickfixes[0];
         if (quickfix.quickfixApplied) return undefined;
         const command: vscode.Command = {
-            title: `unknown mtr quickfix`,
+            title: `unknown quickfix`,
             command: 'rhamt.applyQuickfix',
             arguments: [
                 {

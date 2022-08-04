@@ -182,7 +182,7 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
                 catch (e) {
                     console.log('error while loading model service.');
                     console.log(e);
-                    window.showErrorMessage(`Error reloading MTR explorer data.`)
+                    window.showErrorMessage(`Error reloading explorer data.`)
                 }
             }, 500))();
         }

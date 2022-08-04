@@ -7,11 +7,11 @@ import { window, ThemeColor } from 'vscode';
 import { IHint } from '../model/model';
 import { ModelService } from '../model/modelService';
 
-export const MTR_HINT = 'MTR';
+export const HINT = 'MTR';
 
 export class MarkerService {
 
-    private mtrDiagnostics = vscode.languages.createDiagnosticCollection("mtr");
+    private diagnostics = vscode.languages.createDiagnosticCollection("windup");
     private unfixedHintDecorationType = window.createTextEditorDecorationType({
         backgroundColor: new ThemeColor('editor.stackFrameHighlightBackground')
     });
@@ -24,7 +24,7 @@ export class MarkerService {
 
     private initMarkerSupport(): void {
         const context = this.context;
-        context.subscriptions.push(this.mtrDiagnostics);
+        context.subscriptions.push(this.diagnostics);
         context.subscriptions.push(
             vscode.window.onDidChangeActiveTextEditor(editor => {
                 this.refreshHints(editor.document, editor);
@@ -36,7 +36,7 @@ export class MarkerService {
             vscode.workspace.onDidOpenTextDocument(doc => this.refreshHints(doc)));
         context.subscriptions.push(
             vscode.workspace.onDidCloseTextDocument(doc => {
-                this.mtrDiagnostics.delete(doc.uri);
+                this.diagnostics.delete(doc.uri);
             }
         ));
         this.refreshOpenEditors();
@@ -76,7 +76,7 @@ export class MarkerService {
     private refreshHints(doc: vscode.TextDocument, editor?: vscode.TextEditor): void {
         const diagnostics: vscode.Diagnostic[] = [];
         const decorations = [new vscode.Range(0, 0, 0, 0)];
-        this.mtrDiagnostics.delete(doc.uri);
+        this.diagnostics.delete(doc.uri);
         this.modelService.getActiveHints().filter(issue => doc.uri.fsPath === issue.file).forEach(issue => {
             const diagnostic = this.createDiagnostic(doc, issue);
             if (diagnostic) {
@@ -87,7 +87,7 @@ export class MarkerService {
             }
         });
         if (diagnostics.length > 0) {
-            this.mtrDiagnostics.set(doc.uri, diagnostics);
+            this.diagnostics.set(doc.uri, diagnostics);
         }
         if (editor) {
             editor.setDecorations(this.unfixedHintDecorationType, decorations);
@@ -106,7 +106,7 @@ export class MarkerService {
             issue.title,
             this.convertSeverity(issue)
         );
-        diagnostic.code = `${MTR_HINT} :: ${issue.configuration.id} :: ${issue.id}`;
+        diagnostic.code = `${HINT} :: ${issue.configuration.id} :: ${issue.id}`;
         return diagnostic;
     }
 

@@ -5,7 +5,7 @@
 import * as vscode from 'vscode';
 
 class RhamtChannelImpl {
-    private readonly channel: vscode.OutputChannel = vscode.window.createOutputChannel('MTR');
+    private readonly channel: vscode.OutputChannel = vscode.window.createOutputChannel('Windup');
     print(text: string) {
         this.channel.append(text);
         this.channel.show();

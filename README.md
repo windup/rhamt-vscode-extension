@@ -23,7 +23,7 @@ This extension is published [here](https://marketplace.visualstudio.com/items?it
 ## Current Release
 
 * Version	0.0.98
-* References version 5.3.0.Final of the mtr-cli
+* References version 5.3.0.Final of the windup-cli
 
 ## Features
 
@@ -64,13 +64,13 @@ Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugi
 * Java Platform, `JRE version 11` with `JAVA_HOME` environment variable 
 * A minimum of `4 GB RAM`; 8 GB recommended
 
-> Tip: The mtr-cli can be installed from within VSCode once the extension has been installed.
+> Tip: The windup-cli can be installed from within VSCode once the extension has been installed.
 
 ## Extension Settings
 
 This extension contributes the following settings:
 
-* `mtr.executable.path`: The location of the mtr-cli.
+* `mtr.windup.executable.path`: The location of the windup-cli.
 
 ## Build
 

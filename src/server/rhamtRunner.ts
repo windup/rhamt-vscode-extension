@@ -17,7 +17,7 @@ export class RhamtRunner {
                     {},
                     process.env, 
                     {
-                        MTA_HOME: ''
+                        WINDUP_HOME: ''
                     }
                 )
             });
@@ -39,7 +39,7 @@ export class RhamtRunner {
             setTimeout(() => {
                 if (!started) {
                     rhamtProcess.kill();
-                    reject(`mtr-cli startup time exceeded ${startTimeout}ms.`);
+                    reject(`windup-cli startup time exceeded ${startTimeout}ms.`);
                 }
             }, startTimeout);
         });

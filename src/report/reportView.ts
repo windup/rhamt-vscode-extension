@@ -5,7 +5,7 @@
 import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, env, Uri } from 'vscode';
 import { Endpoints } from '../model/model';
 import * as path from 'path';
-import { MTR } from '../extension';
+import { Windup } from '../extension';
 
 export class ReportView {
 
@@ -28,7 +28,7 @@ export class ReportView {
         }
         console.log(`report: ${location}`);
 
-        if (!MTR.isChe()) {
+        if (!Windup.isChe()) {
             this.open(location, external);
         }
 
@@ -54,7 +54,7 @@ export class ReportView {
             return;
         }
         if (!this.view) {
-            this.view = window.createWebviewPanel('rhamtReportView', 'MTR Report', ViewColumn.One, {
+            this.view = window.createWebviewPanel('rhamtReportView', 'Windup Report', ViewColumn.One, {
                 enableScripts: true,
                 enableCommandUris: true,
                 retainContextWhenHidden: true
