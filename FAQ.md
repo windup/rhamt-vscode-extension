@@ -1,4 +1,4 @@
-# Migration Toolkit for Runtimes (MTR) Extension - FAQ
+# Migration Toolkit for Applications (MTA) Extension - FAQ
 
 ## Requirements
 

@@ -35,7 +35,7 @@ let reportServer: ReportServer | undefined = undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
     if (vscode.env.appName === "Eclipse Che") {
-        stateLocation = path.join('/home', 'theia', 'windup', 'redhat.mtr-vscode-extension');
+        stateLocation = path.join('/home', 'theia', 'windup', 'redhat.mta-vscode-extension');
         outputLocation = path.join(os.homedir(), 'output');
     }
     else {
