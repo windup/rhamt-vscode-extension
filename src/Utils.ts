@@ -16,7 +16,7 @@ const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
 
-const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://oss.sonatype.org/content/repositories/snapshots/org/jboss/windup/windup-cli/6.0.1-SNAPSHOT/windup-cli-6.0.1-20220810.064711-1-no-index.zip';
+const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.0.0.Final/windup-cli-6.0.0.Final-no-index.zip';
 const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
