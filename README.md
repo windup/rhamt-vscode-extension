@@ -20,11 +20,6 @@ This extension is published [here](https://marketplace.visualstudio.com/items?it
 
 ![VSCode Extension Marketplace View](resources/mtr_vscode_installation.png)
 
-## Current Release
-
-* Version	0.0.98
-* References version 5.3.0.Final of the windup-cli
-
 ## Features
 
 This extension provides the ability to analyze, assess, and migrate source code (using MTR) from within VSCode and Eclipse Che.
