@@ -6,7 +6,7 @@
 You can specify the path to an installation of the `windup-cli` executable from witin the settings:
     ```
     {
-        "mtr.windup.executable.path": "/some-path-to-windup-home/bin/windup-cli"
+        "windup.executable.path": "/some-path-to-windup-home/bin/windup-cli"
     }
     ```
 

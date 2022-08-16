@@ -23,6 +23,6 @@ export async function promptForFAQs(message: string, downloadCli?: { outDir: str
         vscode.commands.executeCommand('markdown.showPreview', vscode.Uri.file(faqPath));
     }
     else if (choiceForDetails === OPTION_OPEN_SETTINGS) {
-        vscode.commands.executeCommand('workbench.action.openSettings', 'mtr.windup.executable.path');
+        vscode.commands.executeCommand('workbench.action.openSettings', 'windup.executable.path');
     }
 }

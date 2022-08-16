@@ -20,7 +20,7 @@ export function findRhamtCli(outDir: string, config?: RhamtConfiguration): Promi
         }
         const rhamtPath = vscode.workspace.getConfiguration('windup.executable').get<string>('path');
         if (rhamtPath) {
-            console.log(`preference mtr.windup.executable.path found - ${rhamtPath}`);
+            console.log(`preference windup.executable.path found - ${rhamtPath}`);
             return resolve(rhamtPath);
         }
         let rhamtHome = process.env['WINDUP_HOME'];

@@ -134,7 +134,7 @@
             {
                 "title": "Migration Toolkit for Runtimes (MTR)",
                 "properties": {
-                    "mtr.windup.executable.path": {
+                    "windup.executable.path": {
                         "type": "string",
                         "default": "",
                         "description": "Specifies absolute path to the Windup executable (e.g., /path/to/windup/bin/windup-cli)",

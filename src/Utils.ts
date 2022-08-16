@@ -160,7 +160,7 @@ export namespace Utils {
             if (fse.existsSync(cli)) {
                 await fse.chmod(cli, '0764');
             }
-            workspace.getConfiguration().update('mtr.windup.executable.path', cli);
+            workspace.getConfiguration().update('windup.executable.path', cli);
         }).catch(e => {
             console.log(e);
             const error = e.value.e;

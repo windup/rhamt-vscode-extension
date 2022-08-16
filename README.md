@@ -70,7 +70,7 @@ Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugi
 
 This extension contributes the following settings:
 
-* `mtr.windup.executable.path`: The location of the windup-cli.
+* `windup.executable.path`: The location of the windup-cli.
 
 ## Build
 
