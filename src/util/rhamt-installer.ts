@@ -11,6 +11,7 @@ const requestProgress = require('request-progress');
 import { createDeferred } from './async';
 import { ChangeType } from '../model/model';
 import * as rimraf from 'rimraf';
+import { Utils } from '../Utils';
 
 export type TemporaryFile = { filePath: string } & Disposable;
 
@@ -50,7 +51,7 @@ export class RhamtInstaller {
         let localTempFilePath = '';
 
         try {
-            localTempFilePath = await RhamtInstaller.downloadFile(downloadUri, 'Downloading windup... ', handler);
+            localTempFilePath = await RhamtInstaller.downloadFile(downloadUri, `Downloading ${Utils.CLI_FOLDER}... `, handler);
         } catch (err) {
             return Promise.reject(err);
         }
@@ -160,7 +161,7 @@ export class RhamtInstaller {
     private static async unpackArchive(downloadDir: string, tempFilePath: string, handler: InstallHandler): Promise<void> {
         handler.log('Unpacking archive... ');
         const deferred = createDeferred();
-        const title = 'Extracting windup... ';
+        const title = `Extracting ${Utils.CLI_FOLDER}... `;
         await window.withProgress({
             location: ProgressLocation.Notification,
             cancellable: true
@@ -187,6 +188,10 @@ export class RhamtInstaller {
                     if (err) {
                         deferred.reject(err);
                     } else {
+                        // rename the extract folder
+                        // const dirs = fs.readdirSync(downloadDir);
+                        // const folder = dirs[0];
+                        // fs.renameSync(path.join(downloadDir, folder), path.join(downloadDir, 'cli'))
                         deferred.resolve();
                     }
                     zip.close();

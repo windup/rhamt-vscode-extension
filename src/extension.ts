@@ -34,18 +34,20 @@ let configEditorServer: ConfigurationEditorServer;
 let reportServer: ReportServer | undefined = undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
+
+    await Utils.loadPackageInfo(context);
+
     if (vscode.env.appName === "Eclipse Che") {
-        stateLocation = path.join('/home', 'theia', 'windup', 'redhat.mta-vscode-extension');
+        stateLocation = path.join('/home', 'theia', 'mta', 'redhat.mta-vscode-extension');
         outputLocation = path.join(os.homedir(), 'output');
     }
     else {
-        stateLocation = path.join(context.globalStoragePath, '.windup', 'tooling', 'vscode');
+        stateLocation = path.join(context.globalStoragePath, '.'+Utils.PRODUCT_THEME, 'tooling', 'vscode');
         outputLocation = stateLocation;
     }
 
-    console.log(`windup state location is: ${stateLocation}`);
+    console.log(`state location is: ${stateLocation}`);
     
-    await Utils.loadPackageInfo(context);
     const out = path.join(stateLocation);
     const locations = await endpoints.getEndpoints(context, out);
     modelService = new ModelService(new RhamtModel(), out, outputLocation, locations);

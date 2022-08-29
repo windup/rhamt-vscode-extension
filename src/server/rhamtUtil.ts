@@ -35,7 +35,7 @@ export class RhamtUtil {
                 const executable = config.rhamtExecutable;
                 console.log(`Using configuration executable - ${executable}`);
                 const windupHome = path.resolve(executable, '..', '..');
-                console.log(`Using windup home - ${windupHome}`);
+                console.log(`Using CLI home - ${windupHome}`);
                 let params = [];
                 try {
                     progress.report({message: 'Verifying configuration'});
@@ -48,7 +48,7 @@ export class RhamtUtil {
                 }
                 rhamtChannel.clear();
                 const skipReport = config.options['skipReports'];
-                progress.report({message: 'Executing windup-cli script...'});
+                progress.report({message: 'Starting cli...'});
                 let cancelled = false;
                 let resolved = false;
                 let processController: RhamtProcessController;
@@ -136,7 +136,7 @@ export class RhamtUtil {
                     }
                 };
                 const onShutdown = () => {
-                    console.log('windup-cli shutdown');
+                    console.log('cli shutdown');
                     RhamtUtil.updateRunEnablement(true, dataProvider, config);
                     if (!resolved) {
                         resolved = true;
@@ -150,14 +150,15 @@ export class RhamtUtil {
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
                     });
                     if (cancelled) {
-                        console.log('windup-cli was cancelled during startup.');
+                        console.log('cli was cancelled during startup.');
                         processController.shutdown();
                         return;
                     }
                 } catch (e) {
+                    console.log('Error executing cli');
                     console.log(e);
                     onShutdown();
-                    return Promise.reject();
+                    // return Promise.reject();
                 }
                 token.onCancellationRequested(() => {
                     cancelled = true;
@@ -180,7 +181,7 @@ export class RhamtUtil {
             const node = dataProvider.getConfigurationNode(config);
             node.setBusyAnalyzing(!enabled);
         }
-        vscode.commands.executeCommand('setContext', 'windup-cli-enabled', enabled);
+        vscode.commands.executeCommand('setContext', 'cli-enabled', enabled);
     }
 
     private static buildParams(config: RhamtConfiguration, windupHome: string): Promise<any[]> {

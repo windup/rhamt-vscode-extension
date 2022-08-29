@@ -8,8 +8,8 @@
         "required": true
       },
       {
-        "name": "windup-cli",
-        "description": "Path to windup-cli executable.",
+        "name": "cli",
+        "description": "Path to cli executable.",
         "type": "File",
         "ui-type": ["file"],
         "required": false
@@ -110,7 +110,7 @@
       },
       {
         "name": "skipReports",
-        "description": "If set, Windup will not generate reports.",
+        "description": "If set, reports will not be generated.",
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false
@@ -147,7 +147,7 @@
       },
       {
         "name": "mavenizeGroupId",
-        "description": "Used in conjunction with the `mavenize` option. All pom.xml files will use this value as their <groupId>. If the parameter is omitted, Windup tries to guess some value based on the application, but this guess may be wrong. Last resort default value is 'com.mycompany.mavenized'.",
+        "description": "Used in conjunction with the `mavenize` option. All pom.xml files will use this value as their <groupId>. If the parameter is omitted, the CLI tries to guess some value based on the application, but this guess may be wrong. Last resort default value is 'com.mycompany.mavenized'.",
         "type": "String",
         "ui-type": ["single"],
         "required": false
@@ -223,7 +223,7 @@
       },
       {
         "name": "enableCompatibleFilesReport",
-        "description": "If set, Windup will generate a report of 'Compatible Files'. Keep in mind that generating this report may take a long time for large applications.",
+        "description": "If set, 'Compatible Files' report will be generated. Keep in mind that generating this report may take a long time for large applications.",
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false
@@ -297,7 +297,7 @@
       },
       {
         "name": "keepWorkDirs",
-        "description": "If set, Windup will not delete the temporary working files, like graph database and unzipped archives. Debugging purposes.",
+        "description": "If set, temporary working files will not be deleted (like graph database and unzipped archives). For debugging purposes.",
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false

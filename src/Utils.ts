@@ -16,18 +16,27 @@ const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
 
-const PREVIEW_DOWNLOAD_CLI_LOCATION = 'https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.0.0.Final/windup-cli-6.0.0.Final-no-index.zip';
 const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
 
-    let EXTENSION_PUBLISHER: string;
-    let EXTENSION_NAME: string;
+    export let PRODUCT_THEME: string;
+    export let CLI_SCRIPT: string;
+    export let CLI_VERSION: string;
+    export let CLI_FOLDER: string;
+    export let DOWNLOAD_CLI_LOCATION: string;
+
+    export let EXTENSION_PUBLISHER: string;
+    export let EXTENSION_NAME: string;
 
     export async function loadPackageInfo(context: ExtensionContext): Promise<void> {
-        const { publisher, name } = await fse.readJSON(context.asAbsolutePath('./package.json'));
+        const { publisher, name, cliDownloadLocation, cliScript, cliFolder, productTheme } = await fse.readJSON(context.asAbsolutePath('./package.json'));
         EXTENSION_PUBLISHER = publisher;
         EXTENSION_NAME = name;
+        DOWNLOAD_CLI_LOCATION = cliDownloadLocation;
+        CLI_SCRIPT = cliScript;
+        CLI_FOLDER = cliFolder;
+        PRODUCT_THEME = productTheme;
     }
 
     export async function initConfiguration(config: RhamtConfiguration, modelService: ModelService): Promise<void> {
@@ -50,31 +59,42 @@ export namespace Utils {
                 return Promise.reject(error);
             }
 
-            progress.report({message: 'Verifying windup-cli'});
+            progress.report({message: 'Verifying cli'});
 
             try {
-                rhamtCli = await cliResolver.findRhamtCli(modelService.outDir, config);
-                console.log(`Using Windup CLI - ${rhamtCli}`);
+                rhamtCli = await resolveCli(modelService, config, javaHome);
             }
-            catch (error) {
-                promptForFAQs('Unable to find windup-cli executable', {outDir: modelService.outDir});
-                return Promise.reject({error, notified: true});
+            catch (e) {
+                console.log(e);
+                promptForFAQs('Unable to determine cli version', {outDir: modelService.outDir});
+                return Promise.reject(e);
             }
-
-            try {
-                console.log(`verifying windup-cli --version`);
-                const version = await findRhamtVersion(rhamtCli, javaHome);
-                console.log(`Using Windup version - ${version}`);
-            }
-            catch (error) {
-                promptForFAQs('Unable to determine windup-cli version: \n' + error.message, {outDir: modelService.outDir});
-                return Promise.reject(error);
-            }
-
             config.rhamtExecutable = rhamtCli;
             config.options['jvm'] = javaHome;
             return config;
         });
+    }
+
+    export async function resolveCli(modelService: ModelService, config: RhamtConfiguration, javaHome: string): Promise<string> {
+        let rhamtCli = '';
+        try {
+            rhamtCli = await cliResolver.findRhamtCli(modelService.outDir, config);
+            console.log(`Using CLI - ${rhamtCli}`);
+        }
+        catch (error) {
+            // promptForFAQs('Unable to find cli executable', {outDir: modelService.outDir});
+            return Promise.reject({error, notified: true});
+        }
+        try {
+            console.log(`verifying cli --version`);
+            const version = await findRhamtVersion(rhamtCli, javaHome);
+            console.log(`Using version - ${version}`);
+        }
+        catch (error) {
+            promptForFAQs('Unable to determine cli version: \n' + error.message, {outDir: modelService.outDir});
+            return Promise.reject(error);
+        }
+        return rhamtCli;
     }
 
     export function findJavaHome(): Promise<string> {
@@ -104,7 +124,7 @@ export namespace Utils {
             child_process.exec(
                 `"${rhamtCli}" --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
                     if (error) {
-                        console.log(`error while executing windup-cli --version`);
+                        console.log(`error while executing --version`);
                         console.log(error);
                         return reject(error);
                     } else {
@@ -138,7 +158,7 @@ export namespace Utils {
     }
 
     export async function showDownloadCliOption(dataOut: string, context: ExtensionContext): Promise<any> {
-        const MSG = 'Unable to find Windup CLI';
+        const MSG = 'Unable to find CLI';
         const OPTION_DOWNLOAD = 'Download';
         const OPTION_DISMISS = `Don't Show Again`;
         const choice = await window.showInformationMessage(MSG, OPTION_DOWNLOAD, OPTION_DISMISS);
@@ -151,24 +171,24 @@ export namespace Utils {
     }
 
     export async function downloadCli(dataOut: string): Promise<any> {
-        const handler = { log: msg => console.log(`windup-cli download message: ${msg}`) };
-        const out = path.resolve(dataOut, 'windup-cli');
-        RhamtInstaller.installCli(PREVIEW_DOWNLOAD_CLI_LOCATION, out, handler).then(async () => {
-            window.showInformationMessage('windup-cli download complete');
+        const handler = { log: msg => console.log(`cli download message: ${msg}`) };
+        const out = dataOut; // path.resolve(dataOut, 'cli');
+        RhamtInstaller.installCli(Utils.DOWNLOAD_CLI_LOCATION, out, handler).then(async () => {
+            window.showInformationMessage('Download Complete');
             const home = cliResolver.findRhamtCliDownload(dataOut);
-            const cli = cliResolver.getRhamtExecutable(home);
+            const cli = cliResolver.getDownloadExecutableName(home);
             if (fse.existsSync(cli)) {
                 await fse.chmod(cli, '0764');
             }
-            workspace.getConfiguration().update('windup.executable.path', cli);
+            workspace.getConfiguration().update('cli.executable.path', cli);
         }).catch(e => {
             console.log(e);
             const error = e.value.e;
             if (error && error.cancelled) {
-                window.showInformationMessage(`windup-cli download cancelled.`);
+                window.showInformationMessage(`cli download cancelled.`);
             }
             else {
-                window.showErrorMessage(`Error downloading windup-cli: ${e}`);
+                window.showErrorMessage(`Error downloading cli: ${e}`);
             }
         });
     }

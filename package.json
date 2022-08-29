@@ -5,6 +5,10 @@
     "version": "0.0.99",
     "license": "MIT",
     "publisher": "redhat",
+    "productTheme": "mta",
+    "cliScript": "windup-cli",
+    "cliFolder": "windup-cli-6.0.0.Final",
+    "cliDownloadLocation": "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.0.0.Final/windup-cli-6.0.0.Final-no-index.zip",
     "author": "Red Hat",
     "preview": true,
     "icon": "resources/migration_toolkit.png",
@@ -25,6 +29,7 @@
         "MTA",
         "RHAMT",
         "Windup",
+        "MTR",
         "JBoss",
         "Analyze"
     ],
@@ -61,7 +66,7 @@
             {
                 "command": "rhamt.runConfiguration",
                 "title": "Run",
-                "enablement": "windup-cli-enabled",
+                "enablement": "cli-enabled",
                 "icon": "$(run)"
             },
             {
@@ -132,12 +137,12 @@
         ],
         "configuration": [
             {
-                "title": "Migration Toolkit for Applications (MTA)",
+                "title": "CLI for Windup, MTR, or MTA",
                 "properties": {
-                    "windup.executable.path": {
+                    "cli.executable.path": {
                         "type": "string",
                         "default": "",
-                        "description": "Specifies absolute path to the Windup executable (e.g., /path/to/windup/bin/windup-cli)",
+                        "description": "Specifies absolute path to the executable (e.g., /path/to/cli)",
                         "scope": "window"
                     }
                 }

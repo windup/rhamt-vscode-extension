@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as cp from 'child_process';
 import * as os from 'os';
-const STARTED_REGEX = /.*Migration Toolkit for Applications (.*)/;
+const STARTED_REGEX = /.*CLI, version (.*)/;
 
 export class RhamtRunner {
     static run(home: string, executable: string, data: any[], startTimeout: number,
@@ -16,9 +16,9 @@ export class RhamtRunner {
                 env: Object.assign(
                     {},
                     process.env, 
-                    {
-                        WINDUP_HOME: ''
-                    }
+                    // {
+                    //     WINDUP_HOME: ''
+                    // }
                 )
             });
             rhamtProcess.on('error', () => {
@@ -28,7 +28,8 @@ export class RhamtRunner {
                 onShutdown();
             });
             const outputListener = (data: string | Buffer) => {
-                const line = data.toString();
+                const line = data.toString().trim();
+                console.log(line);
                 out(line);
                 if (STARTED_REGEX.exec(line) && !started) {
                     started = true;
@@ -39,7 +40,7 @@ export class RhamtRunner {
             setTimeout(() => {
                 if (!started) {
                     rhamtProcess.kill();
-                    reject(`windup-cli startup time exceeded ${startTimeout}ms.`);
+                    reject(`cli startup time exceeded ${startTimeout}ms.`);
                 }
             }, startTimeout);
         });

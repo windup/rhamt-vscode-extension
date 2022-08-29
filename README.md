@@ -6,13 +6,7 @@
 [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/downloads-short/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension)
 ## Description
 
-Welcome to Red Hat's application migration tooling!
-
-This is the Visual Studio Code (VSCode) extension for the <b>Migration Toolkit for Applications</b> (MTA).
-
-Migration Toolkit for Applications (MTA) (the product of the downstream project [Windup](https://github.com/windup/windup)) is a command-line Application Migration and Modernization Assessment tool.
-
-> The documentation for MTA can be found [here](https://developers.redhat.com/products/rhamt/overview).
+VSCode extension for application migration and modernization using [Windup](https://github.com/windup/windup)).
 
 ## VSCode
 
@@ -59,13 +53,13 @@ Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugi
 * Java Platform, `JRE version 11` with `JAVA_HOME` environment variable 
 * A minimum of `4 GB RAM`; 8 GB recommended
 
-> Tip: The windup-cli can be installed from within VSCode once the extension has been installed.
+> Tip: The cli can be installed from within VSCode once the extension has been installed.
 
 ## Extension Settings
 
 This extension contributes the following settings:
 
-* `windup.executable.path`: The location of the windup-cli.
+* `cli.executable.path`: The location of the cli.
 
 ## Build
 

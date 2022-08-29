@@ -50,7 +50,7 @@ export class ModelService {
         } catch (e) {
             // no-op
         }
-        config.options['windup-cli'] = this.getRecentMtaCli();
+        config.options['cli'] = this.getRecentMtaCli();
         config.options['sourceMode'] = true;
         config.options['generateOutputLocation'] = path.resolve(this.outputLocation, config.id);
         config.options['target'] = ['eap7'];
@@ -215,7 +215,7 @@ export class ModelService {
         let cli = '';
         const configs = this.model.configurations;
         for (var i = configs.length - 1; i >= 0; i--) {
-            const cli = configs[i].options['windup-cli'];
+            const cli = configs[i].options['cli'];
             if (cli) {
                 return cli;
             }
@@ -431,7 +431,7 @@ export class ModelService {
             return config == undefined ? [] : config.results.model.hints;
         }
         let hints: IHint[] = [];
-        configs.filter(config => config.summary.active).forEach(config => {
+        configs.filter(config => config.summary.active && config.results).forEach(config => {
             hints = hints.concat(config.results.model.hints);
         });
         return hints;

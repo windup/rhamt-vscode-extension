@@ -54,7 +54,7 @@ export class ProgressMonitor {
 
         if (!this.started) {
             this.started = true;
-            this.report('Launching analysis...');
+            this.report('Initializing...');
         }
     }
 

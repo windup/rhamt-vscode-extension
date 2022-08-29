@@ -11,7 +11,7 @@ export const HINT = 'MTA';
 
 export class MarkerService {
 
-    private diagnostics = vscode.languages.createDiagnosticCollection("windup");
+    private diagnostics = vscode.languages.createDiagnosticCollection("cli");
     private unfixedHintDecorationType = window.createTextEditorDecorationType({
         backgroundColor: new ThemeColor('editor.stackFrameHighlightBackground')
     });

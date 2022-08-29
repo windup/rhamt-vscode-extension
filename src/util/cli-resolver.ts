@@ -6,52 +6,50 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { RhamtConfiguration } from '../model/model';
-
-const RHAMT_VERSION = '6.0.0.Final';
-const RHAMT_FOLDER = `windup-cli-${RHAMT_VERSION}`;
+import { Utils } from '../Utils';
 
 export function findRhamtCli(outDir: string, config?: RhamtConfiguration): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         if (config) {
-            const configCli = config.options['windup-cli'] as string;
+            const configCli = config.options['cli'] as string;
             if (configCli) {
                 return resolve(configCli.trim());
             }
         }
-        const rhamtPath = vscode.workspace.getConfiguration('windup.executable').get<string>('path');
+        const rhamtPath = vscode.workspace.getConfiguration('cli.executable').get<string>('path');
         if (rhamtPath) {
-            console.log(`preference windup.executable.path found - ${rhamtPath}`);
+            console.log(`preference cli.executable.path found - ${rhamtPath}`);
             return resolve(rhamtPath);
         }
-        let rhamtHome = process.env['WINDUP_HOME'];
+        let rhamtHome = process.env['CLI_HOME'];
         if (rhamtHome) {
-            const executable = getRhamtExecutable(rhamtHome);
-            console.log(`found windup-cli using WINDUP_HOME`);
+            const executable = getDownloadExecutableName(rhamtHome);
+            console.log(`found cli using CLI_HOME`);
             console.log(`WINDUP_HOME=${rhamtHome}`);
             console.log(`executable=${executable}`);
             return resolve(executable);
         }
         rhamtHome = findRhamtCliDownload(outDir);
-
         if (fs.existsSync(rhamtHome)) {
-            console.log(`windup-cli download found at - ${rhamtHome}`);
-            const executable = getRhamtExecutable(rhamtHome);
-            console.log(`windup-cli executable - ${executable}`);
+            console.log(`cli download found at - ${rhamtHome}`);
+            const executable = getDownloadExecutableName(rhamtHome);
+            console.log(`cli executable - ${executable}`);
             return resolve(executable);
         }
         else {
-            console.log('Unable to find windup-cli download');
-            reject(new Error('Unable to find windup-cli download'));
+            console.log('Unable to find cli download');
+            reject('Unable to find cli download');
         }
     });
 }
 
-export function getRhamtExecutable(home: string): string {
+export function getDownloadExecutableName(home: string): string {
     const isWindows = process.platform === 'win32';
-    const executable = 'windup-cli' + (isWindows ? '.bat' : '');
+    let scriptName = Utils.CLI_SCRIPT;
+    const executable = scriptName + (isWindows ? '.bat' : '');
     return path.join(home, 'bin', executable);
 }
 
 export function findRhamtCliDownload(outDir: string): string {
-    return path.join(outDir, 'windup-cli', RHAMT_FOLDER);
+    return path.join(outDir, Utils.CLI_FOLDER);
 }
