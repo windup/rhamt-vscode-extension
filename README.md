@@ -1,4 +1,4 @@
-# Migration Toolkit for Applications (MTA) Visual Studio Code Extension
+# Migration Toolkit for Runtimes (MTR) Visual Studio Code Extension
 
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/windup/rhamt-vscode-extension/blob/master/README.md)
 [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension)
@@ -46,7 +46,7 @@ This extension is supported in [Eclipse Che](https://www.eclipse.org/che/).
 
 To add this plugin to a Che workspace, open Che, navigate to the plugins tab, and search using the keyword `migration`.
 
-Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Migration Toolkit for Applications` plugin.
+Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Migration Toolkit for Runtimes` plugin.
 
 ## Requirements
 
