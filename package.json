@@ -1,7 +1,7 @@
 {
     "name": "mtr-vscode-extension",
-    "displayName": "Migration Toolkit for Applications",
-    "description": "Migration Toolkit for Applications (MTR)",
+    "displayName": "Migration Toolkit for Runtimes",
+    "description": "Migration Toolkit for Runtimes (MTR)",
     "version": "0.0.99",
     "license": "MIT",
     "publisher": "redhat",
@@ -51,7 +51,7 @@
     "contributes": {
         "commands": [
             {
-                "category": "Migration Toolkit for Applications (MTR)",
+                "category": "Migration Toolkit for Runtimes (MTR)",
                 "command": "rhamt.newConfiguration",
                 "title": "New Configuration",
                 "icon": {
@@ -137,7 +137,7 @@
         ],
         "configuration": [
             {
-                "title": "CLI for Windup, MTR, or MTR",
+                "title": "CLI for Windup, MTR, or MTA",
                 "properties": {
                     "cli.executable.path": {
                         "type": "string",
