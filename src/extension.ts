@@ -38,7 +38,7 @@ export async function activate(context: vscode.ExtensionContext) {
     await Utils.loadPackageInfo(context);
 
     if (vscode.env.appName === "Eclipse Che") {
-        stateLocation = path.join('/home', 'theia', 'mta', 'redhat.mta-vscode-extension');
+        stateLocation = path.join('/home', 'theia', 'mtr', 'redhat.mtr-vscode-extension');
         outputLocation = path.join(os.homedir(), 'output');
     }
     else {

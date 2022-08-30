@@ -8,11 +8,11 @@ import * as vscode from 'vscode';
 suite("RHAMT Extension Tests", () => {
 
     test('Extension should be present', () => {
-        assert.ok(vscode.extensions.getExtension('redhat.mta-vscode-extension'));
+        assert.ok(vscode.extensions.getExtension('redhat.mtr-vscode-extension'));
     });
 
     test('should activate', async () => {
-        return vscode.extensions.getExtension('redhat.mta-vscode-extension')!.activate().then(() => {
+        return vscode.extensions.getExtension('redhat.mtr-vscode-extension')!.activate().then(() => {
             assert.ok(true);
         });
     });
