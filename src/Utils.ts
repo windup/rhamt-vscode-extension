@@ -66,7 +66,7 @@ export namespace Utils {
             }
             catch (e) {
                 console.log(e);
-                promptForFAQs('Unable to determine cli version', {outDir: modelService.outDir});
+                promptForFAQs('Unable to resolve CLI', {outDir: modelService.outDir});
                 return Promise.reject(e);
             }
             config.rhamtExecutable = rhamtCli;
@@ -82,18 +82,23 @@ export namespace Utils {
             console.log(`Using CLI - ${rhamtCli}`);
         }
         catch (error) {
+            console.log('Error finding rhamtCli');
+            console.log(error);
             // promptForFAQs('Unable to find cli executable', {outDir: modelService.outDir});
             return Promise.reject({error, notified: true});
         }
         try {
-            console.log(`verifying cli --version`);
+            console.log(`attempt verify cli --version`);
             const version = await findRhamtVersion(rhamtCli, javaHome);
             console.log(`Using version - ${version}`);
         }
         catch (error) {
-            promptForFAQs('Unable to determine cli version: \n' + error.message, {outDir: modelService.outDir});
+            console.log('Failed to verify CLI using --version');
+            console.log(error);
+            // promptForFAQs('Unable to determine cli version: \n' + error.message, {outDir: modelService.outDir});
             return Promise.reject(error);
         }
+        console.log('cli resolved: ' + rhamtCli);
         return rhamtCli;
     }
 
@@ -116,6 +121,8 @@ export namespace Utils {
     }
 
     export function findRhamtVersion(rhamtCli: string, javaHome: string): Promise<string> {
+        console.log(`Verifying CLI Version: using CLI --> ${rhamtCli}`);
+        console.log(`Verifying JAVA_HOME: --> ${javaHome}`);
         return new Promise<string>((resolve, reject) => {
             const env = {JAVA_HOME : javaHome};
             const execOptions: child_process.ExecOptions = {
@@ -126,8 +133,15 @@ export namespace Utils {
                     if (error) {
                         console.log(`error while executing --version`);
                         console.log(error);
+                        console.log('stdout');
+                        console.log(_stdout);
+                        console.log('stderr');
+                        console.log(_stderr);
                         return reject(error);
                     } else {
+                        console.log('success --version:');
+                        console.log(_stdout);
+                        console.log(`parsing version`);
                         return resolve(parseVersion(_stdout));
                     }
                 });
@@ -177,8 +191,14 @@ export namespace Utils {
             window.showInformationMessage('Download Complete');
             const home = cliResolver.findRhamtCliDownload(dataOut);
             const cli = cliResolver.getDownloadExecutableName(home);
-            if (fse.existsSync(cli)) {
+            try {
                 await fse.chmod(cli, '0764');
+            }
+            catch (error) {
+                console.log('Error chmod of cli');
+                console.log('CLI exists on filesystem: ' + fse.existsSync(cli));
+                console.log(error);
+                window.showErrorMessage('Error chmod of cli: ' + cli);
             }
             workspace.getConfiguration().update('cli.executable.path', cli);
         }).catch(e => {
