@@ -51,13 +51,16 @@ export namespace Utils {
             let rhamtCli: string;
 
             try {
-                javaHome = await findJavaHome();
+                javaHome = await findJavaHome(config);
             }
             catch (error) {
                 promptForFAQs('Unable to resolve Java Home');
                 progress.report({message: 'Unable to verify JAVA_HOME'});
                 return Promise.reject(error);
             }
+
+            console.log('Using JAVA_HOME');
+            console.log(javaHome);
 
             progress.report({message: 'Verifying cli'});
 
@@ -66,7 +69,7 @@ export namespace Utils {
             }
             catch (e) {
                 console.log(e);
-                promptForFAQs('Unable to resolve CLI', {outDir: modelService.outDir});
+                promptForFAQs('Unable to determin cli version', {outDir: modelService.outDir});
                 return Promise.reject(e);
             }
             config.rhamtExecutable = rhamtCli;
@@ -102,21 +105,27 @@ export namespace Utils {
         return rhamtCli;
     }
 
-    export function findJavaHome(): Promise<string> {
+    export function findJavaHome(config: RhamtConfiguration): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            findJava((err: string, home: string) => {
-                if (err) {
-                    const javaHome = workspace.getConfiguration('java').get<string>('home');
-                    if (javaHome) {
-                        resolve(javaHome);
+            const javaHomePreference = config.options['JAVA_HOME'];
+            if (javaHomePreference) {
+                resolve(javaHomePreference);
+            }
+            else {
+                findJava((err: string, home: string) => {
+                    if (err) {
+                        const javaHome = workspace.getConfiguration('java').get<string>('home');
+                        if (javaHome) {
+                            resolve(javaHome);
+                        }
+                        else {
+                            reject(err);
+                        }
+                    } else {
+                        resolve(home);
                     }
-                    else {
-                        reject(err);
-                    }
-                } else {
-                    resolve(home);
-                }
-            });
+                });
+            }
         });
     }
 
@@ -128,6 +137,7 @@ export namespace Utils {
             const execOptions: child_process.ExecOptions = {
                 env: Object.assign({}, process.env, env)
             };
+            delete execOptions.env['JAVA_HOME'];
             child_process.exec(
                 `"${rhamtCli}" --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
                     if (error) {
