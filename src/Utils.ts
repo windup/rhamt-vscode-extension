@@ -133,7 +133,7 @@ export namespace Utils {
         console.log(`Verifying CLI Version: using CLI --> ${rhamtCli}`);
         console.log(`Verifying JAVA_HOME: --> ${javaHome}`);
         return new Promise<string>((resolve, reject) => {
-            const env = {JAVA_HOME : javaHome};
+            const env = {}; // {JAVA_HOME : javaHome};
             const execOptions: child_process.ExecOptions = {
                 env: Object.assign({}, process.env, env)
             };
