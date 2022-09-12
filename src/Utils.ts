@@ -98,6 +98,7 @@ export namespace Utils {
         catch (error) {
             console.log('Failed to verify CLI using --version');
             console.log(error);
+            window.showErrorMessage(error);
             // promptForFAQs('Unable to determine cli version: \n' + error.message, {outDir: modelService.outDir});
             return Promise.reject(error);
         }
