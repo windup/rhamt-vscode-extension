@@ -12,6 +12,8 @@ import { ModelService } from './model/modelService';
 import { promptForFAQs } from './util/faq';
 import * as cliResolver from './util/cli-resolver';
 
+import { rhamtChannel } from './util/console';
+
 const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
@@ -61,6 +63,10 @@ export namespace Utils {
 
             console.log('Using JAVA_HOME');
             console.log(javaHome);
+            rhamtChannel.clear();
+
+            rhamtChannel.print(`Using JAVA_HOME: ${javaHome}`);
+            rhamtChannel.print('\n');
 
             progress.report({message: 'Verifying cli'});
 
@@ -90,6 +96,8 @@ export namespace Utils {
             // promptForFAQs('Unable to find cli executable', {outDir: modelService.outDir});
             return Promise.reject({error, notified: true});
         }
+        rhamtChannel.print(`Using CLI: ${rhamtCli}`);
+        rhamtChannel.print('\n');
         try {
             console.log(`attempt verify cli --version`);
             const version = await findRhamtVersion(rhamtCli, javaHome);
@@ -134,15 +142,17 @@ export namespace Utils {
         console.log(`Verifying CLI Version: using CLI --> ${rhamtCli}`);
         console.log(`Verifying JAVA_HOME: --> ${javaHome}`);
         return new Promise<string>((resolve, reject) => {
-            const env = {}; // {JAVA_HOME : javaHome};
+            const env = {JAVA_HOME : javaHome};
             const execOptions: child_process.ExecOptions = {
                 env: Object.assign({}, process.env, env)
             };
-            delete execOptions.env['JAVA_HOME'];
             child_process.exec(
                 `"${rhamtCli}" --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
                     if (error) {
                         console.log(`error while executing --version`);
+                        rhamtChannel.print(`error while executing --version`);
+                        rhamtChannel.print('\n');
+                        rhamtChannel.print(_stdout);
                         console.log(error);
                         console.log('stdout');
                         console.log(_stdout);
@@ -153,6 +163,8 @@ export namespace Utils {
                         console.log('success --version:');
                         console.log(_stdout);
                         console.log(`parsing version`);
+                        rhamtChannel.print('\n');
+                        rhamtChannel.print(_stdout);
                         return resolve(parseVersion(_stdout));
                     }
                 });

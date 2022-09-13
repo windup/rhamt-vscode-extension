@@ -308,6 +308,13 @@
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false
+      },
+      {
+        "name": "JAVA_HOME",
+        "description": "Java Home - Java 11 JRE is required",
+        "type": "File",
+        "ui-type": ["file"],
+        "required": false
       }
     ]
   }
