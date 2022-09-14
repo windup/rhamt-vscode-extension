@@ -145,7 +145,8 @@ export class RhamtUtil {
                 };
                 try {
                     console.log(`Executing Windup using params: ${params}`);
-                    processController = await RhamtRunner.run(windupHome, config.rhamtExecutable, params, START_TIMEOUT, onMessage, onShutdown).then(cp => {
+                    const javaHome = await Utils.findJavaHome(config);
+                    processController = await RhamtRunner.run(windupHome, config.rhamtExecutable, javaHome, params, START_TIMEOUT, onMessage, onShutdown).then(cp => {
                         onStarted();
                         return new RhamtProcessController(config.rhamtExecutable, cp, onShutdown);
                     });

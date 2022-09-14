@@ -48,7 +48,7 @@ export namespace Utils {
             cancellable: false
         }, async (progress: any) => {
 
-            progress.report({message: 'Verifying JAVA_HOME'});
+            // progress.report({message: 'Verifying JAVA_HOME'});
             let javaHome: string;
             let rhamtCli: string;
 
@@ -65,10 +65,7 @@ export namespace Utils {
             console.log(javaHome);
             rhamtChannel.clear();
 
-            rhamtChannel.print(`Using JAVA_HOME: ${javaHome}`);
-            rhamtChannel.print('\n');
-
-            progress.report({message: 'Verifying cli'});
+            // progress.report({message: 'Verifying cli'});
 
             try {
                 rhamtCli = await resolveCli(modelService, config, javaHome);
@@ -100,8 +97,8 @@ export namespace Utils {
         rhamtChannel.print('\n');
         try {
             console.log(`attempt verify cli --version`);
-            const version = await findRhamtVersion(rhamtCli, javaHome);
-            console.log(`Using version - ${version}`);
+            // const version = await findRhamtVersion(rhamtCli, javaHome);
+            // console.log(`Using version - ${version}`);
         }
         catch (error) {
             console.log('Failed to verify CLI using --version');
@@ -146,6 +143,11 @@ export namespace Utils {
             const execOptions: child_process.ExecOptions = {
                 env: Object.assign({}, process.env, env)
             };
+            console.log(execOptions.env);
+
+            rhamtChannel.print(`Using JAVA_HOME: ${execOptions.env.JAVA_HOME}`);
+            rhamtChannel.print('\n');
+            
             child_process.exec(
                 `"${rhamtCli}" --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
                     if (error) {
@@ -167,7 +169,7 @@ export namespace Utils {
                         rhamtChannel.print(_stdout);
                         return resolve(parseVersion(_stdout));
                     }
-                });
+            });
         });
     }
 

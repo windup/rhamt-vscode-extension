@@ -6,16 +6,25 @@ import * as cp from 'child_process';
 import * as os from 'os';
 const STARTED_REGEX = /.*CLI, version (.*)/;
 
+import { rhamtChannel } from '../util/console';
+
 export class RhamtRunner {
-    static run(home: string, executable: string, data: any[], startTimeout: number,
+    static run(home: string, executable: string, javaHome: string, data: any[], startTimeout: number,
         out: (msg: string) => void, onShutdown: () => void): Promise<cp.ChildProcess> {
         return new Promise<cp.ChildProcess>((resolve, reject) => {
             let started = false;
+
+            rhamtChannel.print(`Using JAVA_HOME: ${javaHome}`);
+            rhamtChannel.print('\n');     
+
             const rhamtProcess = cp.spawn(executable, data, {
                 cwd: os.homedir(),
                 env: Object.assign(
                     {},
-                    process.env, 
+                    process.env,
+                    {
+                        JAVA_HOME: javaHome
+                    } 
                     // {
                     //     WINDUP_HOME: ''
                     // }
