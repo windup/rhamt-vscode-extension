@@ -4,7 +4,7 @@
     "description": "Migration Toolkit for Runtimes (MTR)",
     "version": "0.0.99",
     "license": "MIT",
-    "publisher": "redhat",
+    "publisher": "Red Hat",
     "productTheme": "mtr",
     "cliScript": "windup-cli",
     "cliFolder": "windup-cli-6.0.0.Final",
@@ -152,7 +152,7 @@
             "activitybar": [
                 {
                     "id": "rhamt-explorer",
-                    "title": "MTR",
+                    "title": "Migration Toolkit",
                     "icon": "resources/migration_toolkit.png"
                 }
             ]

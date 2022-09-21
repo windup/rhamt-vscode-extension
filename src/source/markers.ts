@@ -7,7 +7,7 @@ import { window, ThemeColor } from 'vscode';
 import { IHint } from '../model/model';
 import { ModelService } from '../model/modelService';
 
-export const HINT = 'MTR';
+export const HINT = 'migration';
 
 export class MarkerService {
 
