@@ -30,7 +30,7 @@ export class RhamtUtil {
         return vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
             cancellable: true
-        }, async (progress: any, token: any) => {
+        }, async (progress: any, token: vscode.CancellationToken) => {
             return new Promise<any>(async resolve => {
                 const executable = config.rhamtExecutable;
                 console.log(`Using configuration executable - ${executable}`);
