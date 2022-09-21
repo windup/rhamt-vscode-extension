@@ -152,7 +152,7 @@
             "activitybar": [
                 {
                     "id": "rhamt-explorer",
-                    "title": "Migration Toolkit",
+                    "title": "MTR",
                     "icon": "resources/migration_toolkit.png"
                 }
             ]
