@@ -12,7 +12,7 @@ VSCode extension for application migration and modernization using [Windup](http
 
 This extension is published [here](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension) in the Microsoft Visual Studio Marketplace.
 
-![VSCode Extension Marketplace View](resources/mta_vscode_installation.png)
+![VSCode Extension Marketplace View](resources/mtr_marketplace.png)
 
 ## Features
 
