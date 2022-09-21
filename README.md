@@ -1,4 +1,4 @@
-# Migration Toolkit / Windup - Visual Studio Code Extension
+# Migration Toolkit for Runtimes (MTR) - Visual Studio Code Extension
 
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/windup/rhamt-vscode-extension/blob/master/README.md)
 [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension)
