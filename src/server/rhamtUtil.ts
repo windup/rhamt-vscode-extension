@@ -158,6 +158,10 @@ export class RhamtUtil {
                 } catch (e) {
                     console.log('Error executing cli');
                     console.log(e);
+                    rhamtChannel.print(`Error executing cli`);
+                    rhamtChannel.print('\n');   
+                    rhamtChannel.print(e);
+                    rhamtChannel.print('\n');   
                     onShutdown();
                     // return Promise.reject();
                 }
