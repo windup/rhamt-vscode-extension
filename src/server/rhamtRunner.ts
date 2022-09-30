@@ -13,6 +13,7 @@ export class RhamtRunner {
         out: (msg: string) => void, onShutdown: () => void): Promise<cp.ChildProcess> {
         return new Promise<cp.ChildProcess>((resolve, reject) => {
             let started = false;
+            let killed = false;
 
             rhamtChannel.print(`Using JAVA_HOME: ${javaHome}`);
             rhamtChannel.print('\n');     
@@ -30,7 +31,16 @@ export class RhamtRunner {
                     // }
                 )
             });
-            rhamtProcess.on('error', () => {
+            rhamtProcess.on('error', e => {
+                console.log(e);
+                rhamtChannel.print("Error executing CLI");
+                if (e && e.message) {
+                    rhamtChannel.print('\n');
+                    rhamtChannel.print(e.name + ' : ' + e.message);
+                    rhamtChannel.print('\n'); 
+                    rhamtProcess.kill();
+                    killed = true;
+                }
                 onShutdown();
             });
             rhamtProcess.on('close', () => {
@@ -47,7 +57,7 @@ export class RhamtRunner {
             };
             rhamtProcess.stdout.addListener('data', outputListener);
             setTimeout(() => {
-                if (!started) {
+                if (!started && !killed) {
                     rhamtProcess.kill();
                     reject(`cli startup time exceeded ${startTimeout}ms.`);
                 }
