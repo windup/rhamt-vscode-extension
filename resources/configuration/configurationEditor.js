@@ -223,12 +223,16 @@ function createTableRow(option, item, group, config, bind) {
 
     const newFeatures = option['new-features'];
     const title = document.createElement('span');
-    if (newFeatures && newFeatures.includes(item)) {
+
+    title.textContent = item;
+
+    /*if (newFeatures && newFeatures.includes(item)) {
         title.innerHTML = item + '<span class="newFeatureTag"> new</span>';
     }
     else {
         title.textContent = item;
-    }
+    }*/
+    
     content.appendChild(title);
 
     return row;
