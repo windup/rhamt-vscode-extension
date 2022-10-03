@@ -353,6 +353,11 @@ export class RhamtUtil {
             params.push('--enableClassNotFoundAnalysis');
         }
 
+        // enableTransactionAnalysis
+        if (options['enableTransactionAnalysis']) {
+            params.push('--enableTransactionAnalysis');
+        }
+
         // enableTattletale
         if (options['enableTattletale']) {
             params.push('--enableTattletale');
