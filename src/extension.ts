@@ -114,7 +114,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }); 
     context.subscriptions.push(newRulesetDisposable);
     // const download = (!Private.isChe() && !Private.isVSCode());
-    Utils.checkCli(modelService.outDir, context, true);
+    Utils.checkCli(modelService.outDir, context, false);
 
     vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer(modelService, configEditorService));
 
