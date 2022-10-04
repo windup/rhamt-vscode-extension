@@ -50,7 +50,7 @@ export class ModelService {
         } catch (e) {
             // no-op
         }
-        config.options['cli'] = this.getRecentMtaCli();
+        config.options['cli'] = this.getRecentCli();
         config.options['sourceMode'] = true;
         config.options['generateOutputLocation'] = path.resolve(this.outputLocation, config.id);
         config.options['target'] = ['eap7'];
@@ -211,7 +211,7 @@ export class ModelService {
         return allRulesets;
     }
 
-    getRecentMtaCli(): string {
+    getRecentCli(): string {
         let cli = '';
         const configs = this.model.configurations;
         for (var i = configs.length - 1; i >= 0; i--) {
