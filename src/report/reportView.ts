@@ -22,13 +22,16 @@ export class ReportView {
     }
 
     private async openReport(item: any, external?: boolean): Promise<any> {
-        const location = item.getReport() as string;
+        let location = item.getReport() as string;
         if (!location) {
             return window.showErrorMessage(`Unable to find report on filesystem`);
         }
         console.log(`report: ${location}`);
 
         if (!Windup.isChe()) {
+            location = location.replace('vscode-remote', 'http');
+            console.log('locations is: ' + location);
+            
             this.open(location, external);
         }
 
