@@ -4,7 +4,7 @@
     "description": "Migration Toolkit for Applications (MTA)",
     "version": "0.0.99",
     "license": "MIT",
-    "publisher": "Red Hat",
+    "publisher": "redhat",
     "productTheme": "mta",
     "cliScript": "windup-cli",
     "cliFolder": "windup-cli-6.0.0.Final",
