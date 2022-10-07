@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as cp from 'child_process';
 import * as os from 'os';
-const STARTED_REGEX = /.*CLI, version (.*)/;
+const STARTED_REGEX = /.*ToolingModeRunner.*/;
 
 import { rhamtChannel } from '../util/console';
 
