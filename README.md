@@ -1,18 +1,18 @@
-# Migration Toolkit for Applications (MTA) - VSCode Extension
+# Migration Toolkit for Runtimes (MTR) - VSCode Extension
 
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/windup/rhamt-vscode-extension/blob/master/README.md)
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension)
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/installs/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension)
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/downloads-short/redhat.mta-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension)
+[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension)
+[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/installs/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension)
+[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/downloads-short/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension)
 ## Description
 
 VSCode extension for application migration and modernization using [Windup](https://github.com/windup/windup).
 
 ## VSCode
 
-This extension is published [here](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension) in the Microsoft Visual Studio Marketplace.
+This extension is published [here](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension) in the Microsoft Visual Studio Marketplace.
 
-<!-- ![VSCode Extension Marketplace View](resources/mta_marketplace.png) -->
+<!-- ![VSCode Extension Marketplace View](resources/mtr_marketplace.png) -->
 
 ## Features
 
@@ -46,7 +46,7 @@ This extension is supported in [Eclipse Che](https://www.eclipse.org/che/).
 
 To add this plugin to a Che workspace, open Che, navigate to the plugins tab, and search using the keyword `migration`.
 
-Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Migration Toolkit for Applications` plugin.
+Alternatively, to add this plugin to a worksace, open Che, navigate to the Plugins view, and search for the `Migration Toolkit for Runtimes` plugin.
 
 ## Requirements
 

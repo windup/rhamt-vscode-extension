@@ -1,11 +1,11 @@
 {
-    "name": "mta-vscode-extension",
-    "displayName": "Migration Toolkit for Applications",
-    "description": "Migration Toolkit for Applications (MTA)",
+    "name": "mtr-vscode-extension",
+    "displayName": "Migration Toolkit for Runtimes",
+    "description": "Migration Toolkit for Runtimes (MTR)",
     "version": "0.0.99",
     "license": "MIT",
     "publisher": "Red Hat",
-    "productTheme": "mta",
+    "productTheme": "mtr",
     "cliScript": "windup-cli",
     "cliFolder": "windup-cli-6.0.1-SNAPSHOT",
     "cliDownloadLocation": "https://github.com/johnsteele/rhamt-vscode-extension-fork/releases/download/mta-6.0.1-SNAPSHOT/windup-cli-6.0.1-SNAPSHOT-no-index.zip",
@@ -51,7 +51,7 @@
     "contributes": {
         "commands": [
             {
-                "category": "Migration Toolkit for Applications (MTA)",
+                "category": "Migration Toolkit for Runtimes (MTR)",
                 "command": "rhamt.newConfiguration",
                 "title": "New Configuration",
                 "icon": {
@@ -152,7 +152,7 @@
             "activitybar": [
                 {
                     "id": "rhamt-explorer",
-                    "title": "MTA",
+                    "title": "MTR",
                     "icon": "resources/migration_toolkit.png"
                 }
             ]
