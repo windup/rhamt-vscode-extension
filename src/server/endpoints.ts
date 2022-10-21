@@ -38,6 +38,7 @@ async function computeCheHostInfo(): Promise<RhamtHostInfo> {
     const runtimeMachines = workspace!.runtime!.machines || {};
     for (let machineName of Object.keys(runtimeMachines)) {
         const machineServers = runtimeMachines[machineName].servers || {};
+        console.log('runtimeMachine: ' + String(machineName));
         if (String(machineName).includes('rhamt')) {
             for (let serverName of Object.keys(machineServers)) {
                 let url = machineServers[serverName].url!;
