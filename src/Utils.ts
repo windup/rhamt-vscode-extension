@@ -13,6 +13,7 @@ import { promptForFAQs } from './util/faq';
 import * as cliResolver from './util/cli-resolver';
 
 import { rhamtChannel } from './util/console';
+import { Windup } from './extension';
 
 const RHAMT_VERSION_REGEX = /^version /;
 
@@ -187,7 +188,7 @@ export namespace Utils {
 
     export async function checkCli(dataOut: string, context: ExtensionContext, autoDownload?: boolean): Promise<any> {
         await cliResolver.findRhamtCli(dataOut).catch(() => {
-            if (autoDownload) {
+            if (autoDownload || Windup.isChe()) {
                 Utils.downloadCli(dataOut);
             }
             else if (!context.workspaceState.get(IGNORE_RHAMT_DOWNLOAD)) {
