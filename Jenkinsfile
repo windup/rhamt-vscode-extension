@@ -57,7 +57,7 @@ node('rhel8'){
 				def packageJson = readJSON file: 'package.json'
 				// sh "ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
                 // sh 'vsce publish -p ${TOKEN} --packagePath' + " ${vsix[0].path}"
-				sh 'vsce publish -p ${TOKEN} --packagePath' + " redhat.mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
+				sh 'vsce publish -p ${TOKEN} --packagePath' + " ${vsix[1].path}"
             }
             archiveArtifacts artifacts:"**.vsix,**.tgz"
 
