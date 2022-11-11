@@ -53,8 +53,10 @@ node('rhel8'){
             unstash 'vsix'
             unstash 'tgz'
             withCredentials([[$class: 'StringBinding', credentialsId: 'vscode_java_marketplace', variable: 'TOKEN']]) {
-                def vsix = findFiles(glob: '**.vsix')
-                sh 'vsce publish -p ${TOKEN} --packagePath' + " ${vsix[0].path}"
+                // def vsix = findFiles(glob: '**.vsix')
+				def packageJson = readJSON file: 'package.json'
+				sh "ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
+                // sh 'vsce publish -p ${TOKEN} --packagePath' + " ${vsix[0].path}"
             }
             archiveArtifacts artifacts:"**.vsix,**.tgz"
 
@@ -66,10 +68,10 @@ node('rhel8'){
 
 			sh "npm install -g ovsx"
 			withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
-				// def packageJson = readJSON file: 'package.json'
+				def packageJson = readJSON file: 'package.json'
 				// def vsix = findFiles(glob: '**.vsix')
-				// sh "ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
-				sh 'ovsx publish -p ${OVSX_TOKEN}' + " ${vsix[0].path}"
+				sh "ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
+				// sh 'ovsx publish -p ${OVSX_TOKEN}' + " ${vsix[0].path}"
 			}
         }
 	}
