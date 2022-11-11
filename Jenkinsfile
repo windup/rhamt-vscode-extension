@@ -7,11 +7,9 @@ node('rhel8'){
 	}
 
 	stage('Install requirements') {
-		def nodeHome = tool 'nodejs-lts'
-		env.PATH="${env.PATH}:${nodeHome}/bin"
-		sh "npm install --global yarn"
-		sh "npm install --global typescript"
-		sh "npm install --global vsce"
+        def nodeHome = tool 'nodejs-latest'
+        env.PATH="${env.PATH}:${nodeHome}/bin"
+        sh "npm install -g typescript vsce"
 	}
 
 	stage('Build') {
@@ -50,15 +48,17 @@ node('rhel8'){
 		}
 
 		stage("Publish to Marketplace") {
-            unstash 'vsix'
-            unstash 'tgz'
-            withCredentials([[$class: 'StringBinding', credentialsId: 'vscode_java_marketplace', variable: 'TOKEN']]) {
+			unstash 'vsix'
+			unstash 'tgz'
+			withCredentials([[$class: 'StringBinding', credentialsId: 'vscode_java_marketplace', variable: 'TOKEN']]) {
 				def vsix = findFiles(glob: '**.vsix')
 				sh 'vsce publish -p ${TOKEN} --packagePath' + " ${vsix[0].path}"
-            }
+			}
+
             archiveArtifacts artifacts:"**.vsix,**.tgz"
 
             stage "Promote the build to stable"
+
             def vsix = findFiles(glob: '**.vsix')
 			sh "sftp -C ${UPLOAD_LOCATION}/stable/mta-vscode-extension/ <<< \$'put -p -r ${vsix[0].path}'"
             def tgz = findFiles(glob: '**.tgz')
