@@ -67,7 +67,7 @@ node('rhel8'){
 			sh "npm install -g ovsx"
 			withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
 				// def packageJson = readJSON file: 'package.json'
-				def vsix = findFiles(glob: '**.vsix')
+				// def vsix = findFiles(glob: '**.vsix')
 				// sh "ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
 				sh 'ovsx publish -p ${OVSX_TOKEN}' + " ${vsix[0].path}"
 			}
