@@ -1,9 +1,9 @@
 # Migration Toolkit for Runtimes (MTR) - VSCode Extension
 
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/windup/rhamt-vscode-extension/blob/master/README.md)
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension)
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/installs/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension)
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/downloads-short/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension)
+<!-- [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension) -->
+<!-- [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/installs/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension) -->
+<!-- [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/downloads-short/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension) -->
 ## Description
 
 VSCode extension for application migration and modernization using [Windup](https://github.com/windup/windup).

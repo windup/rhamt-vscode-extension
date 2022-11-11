@@ -30,14 +30,10 @@ export class ReportView {
 
         if (!Windup.isChe()) {
             console.log('opening report: ' + location);
-            
             this.open(location, external);
-
-
-            location = location.replace('vscode-remote', 'http');
-            console.log('locations is: ' + location);
-            
-            this.open(location, external);
+            // location = location.replace('vscode-remote', 'http');
+            // console.log('locations is: ' + location);
+            // this.open(location, external);
         }
 
         else {
