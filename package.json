@@ -149,7 +149,7 @@
                 {
                     "id": "rhamt-explorer",
                     "title": "MTA",
-                    "icon": "resources/migrationToolkit.png"
+                    "icon": "resources/icon.png"
                 }
             ]
         },
