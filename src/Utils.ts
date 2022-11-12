@@ -33,10 +33,10 @@ export namespace Utils {
     export let EXTENSION_NAME: string;
 
     export async function loadPackageInfo(context: ExtensionContext): Promise<void> {
-        const { publisher, name, cliDownloadLocation, cliScript, cliFolder, productTheme } = await fse.readJSON(context.asAbsolutePath('./package.json'));
+        const { publisher, name, cliLocation, cliScript, cliFolder, productTheme } = await fse.readJSON(context.asAbsolutePath('./package.json'));
         EXTENSION_PUBLISHER = publisher;
         EXTENSION_NAME = name;
-        DOWNLOAD_CLI_LOCATION = cliDownloadLocation;
+        DOWNLOAD_CLI_LOCATION = cliLocation;
         CLI_SCRIPT = cliScript;
         CLI_FOLDER = cliFolder;
         PRODUCT_THEME = productTheme;

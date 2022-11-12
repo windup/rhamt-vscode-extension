@@ -8,7 +8,7 @@
     "productTheme": "mta",
     "cliScript": "windup-cli",
     "cliFolder": "windup-cli-6.1.0.Final",
-    "cliDownloadLocation": "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip",
+    "cliLocation": "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip",
     "author": "Red Hat",
     "preview": true,
     "icon": "resources/icon.png",
