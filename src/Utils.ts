@@ -33,13 +33,13 @@ export namespace Utils {
     export let EXTENSION_NAME: string;
 
     export async function loadPackageInfo(context: ExtensionContext): Promise<void> {
-        const { publisher, name, cliLocation, cliScript, cliFolder, productTheme } = await fse.readJSON(context.asAbsolutePath('./package.json'));
+        const { publisher, name } = await fse.readJSON(context.asAbsolutePath('./package.json'));
         EXTENSION_PUBLISHER = publisher;
         EXTENSION_NAME = name;
-        DOWNLOAD_CLI_LOCATION = cliLocation;
-        CLI_SCRIPT = cliScript;
-        CLI_FOLDER = cliFolder;
-        PRODUCT_THEME = productTheme;
+        DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip";
+        CLI_SCRIPT = "windup-cli";
+        CLI_FOLDER = "windup-cli-6.1.0.Final";
+        PRODUCT_THEME = "mta";
     }
 
     export async function initConfiguration(config: RhamtConfiguration, modelService: ModelService): Promise<void> {
