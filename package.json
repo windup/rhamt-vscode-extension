@@ -8,6 +8,7 @@
     "author": "Red Hat",
     "preview": true,
     "icon": "resources/icon.png",
+    "homepage": "https://github.com/windup/rhamt-vscode-extension/blob/master/README.md",
     "repository": {
         "type": "git",
         "url": "https://github.com/windup/rhamt-vscode-extension"
