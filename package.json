@@ -1,7 +1,7 @@
 {
-    "name": "mta-vscode-extension",
-    "displayName": "Migration Toolkit for Applications",
-    "description": "Migration Toolkit for Applications (MTA)",
+    "name": "mtr-vscode-extension",
+    "displayName": "Migration Toolkit for Runtimes",
+    "description": "Migration Toolkit for Runtimes (MTR)",
     "version": "0.0.993",
     "license": "MIT",
     "publisher": "redhat",
@@ -48,7 +48,7 @@
     "contributes": {
         "commands": [
             {
-                "category": "Migration Toolkit for Applications (MTA)",
+                "category": "Migration Toolkit for Runtimes (MTR)",
                 "command": "rhamt.newConfiguration",
                 "title": "New Configuration",
                 "icon": {
@@ -149,7 +149,7 @@
             "activitybar": [
                 {
                     "id": "rhamt-explorer",
-                    "title": "MTA",
+                    "title": "MTR",
                     "icon": "resources/icon.png"
                 }
             ]

@@ -39,7 +39,7 @@ export namespace Utils {
         DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip";
         CLI_SCRIPT = "windup-cli";
         CLI_FOLDER = "windup-cli-6.1.0.Final";
-        PRODUCT_THEME = "mta";
+        PRODUCT_THEME = "mtr";
     }
 
     export async function initConfiguration(config: RhamtConfiguration, modelService: ModelService): Promise<void> {
