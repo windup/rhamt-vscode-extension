@@ -5,7 +5,7 @@
 import * as fs from 'fs';
 import * as cheerio from 'cheerio';
 import { ModelService } from './modelService';
-import * as open from 'opn';
+// import * as open from 'opn';
 import * as readline from 'readline';
 // import * as mime from 'mime-types';
 import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue, ILink, IIssueType } from './model';
@@ -86,7 +86,8 @@ export class AnalysisResultsUtil {
     }
 
     static openReport(report: string): void {
-        open(report);
+        console.log('No op.');
+        // open(report);
     }
 }
 
