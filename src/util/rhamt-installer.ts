@@ -51,7 +51,7 @@ export class RhamtInstaller {
         let localTempFilePath = '';
 
         try {
-            localTempFilePath = await RhamtInstaller.downloadFile(downloadUri, `Downloading ${Utils.CLI_FOLDER}... `, handler);
+            localTempFilePath = await RhamtInstaller.downloadFile(downloadUri, `Downloading CLI... `, handler);
         } catch (err) {
             return Promise.reject(err);
         }

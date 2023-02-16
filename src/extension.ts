@@ -162,7 +162,7 @@ export namespace Windup {
     }
     export function isRemote(): boolean {
         return vscode.env.appName === "CheCode" || 
-        vscode.env.appName  === 'Gitpod Code';
+            vscode.env.appName  === 'Gitpod Code';
     }
     export function isVSCode(): boolean {
         return vscode.env.appName === "Visual Studio Code";
