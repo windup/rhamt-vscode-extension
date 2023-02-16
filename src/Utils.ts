@@ -188,7 +188,7 @@ export namespace Utils {
 
     export async function checkCli(dataOut: string, context: ExtensionContext, autoDownload?: boolean): Promise<any> {
         await cliResolver.findRhamtCli(dataOut).catch(() => {
-            if (autoDownload || Windup.isChe()) {
+            if (autoDownload || Windup.isRemote()) {
                 Utils.downloadCli(dataOut);
             }
             else if (!context.workspaceState.get(IGNORE_RHAMT_DOWNLOAD)) {

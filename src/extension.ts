@@ -7,7 +7,7 @@ import { Utils } from './Utils';
 import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
 import { ModelService } from './model/modelService';
-import { RhamtModel, IssueContainer, Endpoints } from './model/model';
+import { RhamtModel, IssueContainer } from './model/model';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
 import { ConfigurationEditorServer } from './editor/configurationEditorServer';
@@ -16,7 +16,6 @@ import { HintItem } from './tree/hintItem';
 import { HintNode } from './tree/hintNode';
 import { NewRulesetWizard } from './wizard/newRulesetWizard';
 import * as endpoints from './server/endpoints';
-import { ReportServer } from './report/reportServer';
 import { ConfigurationEditorSerializer } from './editor/configurationEditorSerializer';
 import { QuickfixContentProvider } from './quickfix/contentProvider';
 import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvider';
@@ -31,7 +30,6 @@ let modelService: ModelService;
 let stateLocation: string;
 let outputLocation: string;
 let configEditorServer: ConfigurationEditorServer;
-let reportServer: ReportServer | undefined = undefined;
 
 let extensionPath = "";
 
@@ -57,9 +55,6 @@ export async function activate(context: vscode.ExtensionContext) {
     modelService = new ModelService(new RhamtModel(), out, outputLocation, locations);
     const configEditorService = new ConfigurationEditorService(context, modelService);
     await modelService.readCliMeta();
-    if (Windup.isChe()) {
-        reportServer = await Windup.createReportServer(locations);
-    }
 
     const markerService = new MarkerService(context, modelService);
     new RhamtView(context, modelService, configEditorService, markerService);
@@ -120,11 +115,9 @@ export async function activate(context: vscode.ExtensionContext) {
     // const download = (!Private.isChe() && !Private.isVSCode());
 
     console.log('App Name:');
-    
     console.log(vscode.env.appName);
     
-
-    Utils.checkCli(modelService.outDir, context, false);
+    Utils.checkCli(modelService.outDir, context, Windup.isRemote());
 
     vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer(modelService, configEditorService));
 
@@ -160,23 +153,16 @@ export async function openFile(uri: vscode.Uri): Promise<void> {
 export function deactivate() {
     modelService.save();
     configEditorServer.dispose();
-    if (Windup.isChe()) {
-        reportServer.dispose();
-    }
 }
 
 export namespace Windup {
-    export async function createReportServer(endpoints: Endpoints): Promise<ReportServer> {
-        const reportServer = new ReportServer(endpoints);
-        try {
-            reportServer.start();    
-        } catch (e) {
-            console.log(`Error while starting report server: ${e}`);
-        }
-        return reportServer;
+    export function isLocal() {
+        return vscode.env.appName === "Visual Studio Code" ||
+            vscode.env.appName === 'VSCodium';
     }
-    export function isChe(): boolean {
-        return vscode.env.appName === "Eclipse Che";
+    export function isRemote(): boolean {
+        return vscode.env.appName === "CheCode" || 
+        vscode.env.appName  === 'Gitpod Code';
     }
     export function isVSCode(): boolean {
         return vscode.env.appName === "Visual Studio Code";
