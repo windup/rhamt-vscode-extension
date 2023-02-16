@@ -48,7 +48,7 @@ export class RhamtUtil {
                 }
                 rhamtChannel.clear();
                 const skipReport = config.options['skipReports'];
-                progress.report({message: 'Starting cli...'});
+                progress.report({message: 'Starting analysis...'});
                 let cancelled = false;
                 let resolved = false;
                 let processController: RhamtProcessController;
