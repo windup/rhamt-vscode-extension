@@ -33,20 +33,24 @@ let outputLocation: string;
 let configEditorServer: ConfigurationEditorServer;
 let reportServer: ReportServer | undefined = undefined;
 
+let extensionPath = "";
+
+export function getExtensionPath(): string {
+	return extensionPath;
+}
+
+export function getStateLocation(): string {
+    return stateLocation;
+}
+
 export async function activate(context: vscode.ExtensionContext) {
 
+    extensionPath = context.extensionPath;
+    
     await Utils.loadPackageInfo(context);
+    stateLocation = outputLocation = path.join(os.homedir(), '.windup', 'tooling', 'vscode');
 
-    if (vscode.env.appName === "Eclipse Che") {
-        stateLocation = path.join('/home', 'theia', 'mtr', 'redhat.mtr-vscode-extension');
-        outputLocation = path.join(os.homedir(), 'output');
-    }
-    else {
-        stateLocation = path.join(context.globalStoragePath, '.'+Utils.PRODUCT_THEME, 'tooling', 'vscode');
-        outputLocation = stateLocation;
-    }
-
-    console.log(`state location is: ${stateLocation}`);
+    console.log(`windup state location is: ${stateLocation}`);
     
     const out = path.join(stateLocation);
     const locations = await endpoints.getEndpoints(context, out);
@@ -59,7 +63,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const markerService = new MarkerService(context, modelService);
     new RhamtView(context, modelService, configEditorService, markerService);
-    new ReportView(context, locations);
+    new ReportView(context);
     detailsView = new IssueDetailsView(context, locations, modelService);
 
     // const statusBar = new StatusBar();

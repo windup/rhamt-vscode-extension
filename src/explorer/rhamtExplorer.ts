@@ -89,7 +89,7 @@ export class RhamtExplorer {
                 vscode.window.showErrorMessage(e);
                 return;
             }
-            this.configEditorService.openConfiguration(config).catch(e => {
+            await this.configEditorService.openConfiguration(config).catch(e => {
                 console.log(`Error opening configuration ${config} with error: ${e}`)
             });
             this.dataProvider.refresh(undefined);

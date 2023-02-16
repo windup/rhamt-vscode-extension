@@ -2,84 +2,140 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, env, Uri } from 'vscode';
-import { Endpoints } from '../model/model';
+import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, Uri, workspace} from 'vscode';
+import * as vscode from 'vscode';
 import * as path from 'path';
-import { Windup } from '../extension';
+import * as fs from 'fs';
+import * as cheerio from 'cheerio';
+import { getStateLocation } from '../extension';
 
 export class ReportView {
 
     private view: WebviewPanel | undefined = undefined;
-    private endpoints: Endpoints;
     private context: ExtensionContext;
 
-    constructor(context: ExtensionContext, endpoints: Endpoints) {
+    constructor(context: ExtensionContext) {
         this.context = context;
-        this.endpoints = endpoints;
         this.context.subscriptions.push(commands.registerCommand('rhamt.openReportExternal', async item => {
-            this.openReport(item, true);
+            this.openReport(item);
         }));
     }
 
-    private async openReport(item: any, external?: boolean): Promise<any> {
+    private async openReport(item: any): Promise<any> {
         let location = item.getReport() as string;
         if (!location) {
             return window.showErrorMessage(`Unable to find report on filesystem`);
         }
         console.log(`report: ${location}`);
 
-        if (!Windup.isChe()) {
-            console.log('opening report: ' + location);
-            this.open(location, external);
-            // location = location.replace('vscode-remote', 'http');
-            // console.log('locations is: ' + location);
-            // this.open(location, external);
-        }
-
-        else {
-            const segments = location.split(path.sep);
-            const index = segments.indexOf(item.config.id);
-            const relative = segments.splice(index, index).join(path.sep);
-    
-            console.log(`report path: ${relative}`);
-            
-            const url = await this.endpoints.reportLocation();
-            const report = `${url}${relative}`;
-    
-            console.log(`url: ${report}`);
-            
-            this.open(report, external);
-        }
+        await this.open(location);
     }
 
-    open(location: string, external?: boolean): void {
-        if (external) { 
-            env.openExternal(Uri.parse(location));
-            return;
-        }
+    async open(location: string): Promise<void> {
+        console.log(`Opening Report: ${location}`);
         if (!this.view) {
+            if (fs.existsSync(path.join(location, '..', '..', 'reports'))) {
+                try {
+                    await this.open(path.join(location, '..', '..', 'index.html'));
+                    await this.open(location);
+                }
+                catch(e) {
+                    console.log(e);
+                }
+                return;
+            }
+            const reportRoot = path.join(location, '..');
             this.view = window.createWebviewPanel('rhamtReportView', 'Report', ViewColumn.One, {
                 enableScripts: true,
                 enableCommandUris: true,
-                retainContextWhenHidden: true
+                retainContextWhenHidden: true,
+                localResourceRoots: [
+                    Uri.file(path.join(this.context.extensionPath)),
+                    Uri.file(reportRoot)
+                ]
             });
             this.view.onDidDispose(() => {
                 this.view = undefined;
             });
+        
+            const issuesUri = vscode.Uri.file(path.join(path.dirname(location), 'reports', 'resources', 'js', 'windup-migration-issues.js'));
+            const data = fs.readFileSync(issuesUri.fsPath, 'utf8');
+            const dataUri = this.view.webview.asWebviewUri(vscode.Uri.parse(path.join(reportRoot, 'reports/data/problem_summary_'))).toString();
+            const result = data.replace(
+                /script.src = "data\/problem_summary_"/g,
+                `script.src = "${dataUri}"`);
+            fs.writeFileSync(issuesUri.fsPath, result);
+            
         }
-        this.view.webview.html = this.render(location);
+        const resource = Uri.file(location);
+
+        const document = await workspace.openTextDocument(resource);      
+        const content: string = this.provideDocumentContent(document);
+       
+        const fixedContent = this.fixLinks(content, location, resource);
+        this.view.webview.html = fixedContent;
+
+        this.view.webview.onDidReceiveMessage(async message => {
+            console.log('server receieved message');
+            console.log(message); 
+            switch (message.command) {
+                case 'openLink': {
+                    try {
+                        await this.openLink(message.link);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    return;
+                }
+            }
+        });
         this.view.reveal(ViewColumn.One);
     }
 
-    private render(location: string): string {
-        return `
-            <!DOCTYPE html>
-            <html>
-                <body style="margin:0px;padding:0px;overflow:hidden">
-                    <iframe src="${location}"
-                        frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
-                </body>
-            </html>
-        `;
+    provideDocumentContent(htmlDocument: vscode.TextDocument) : string {
+        const base = getStateLocation();
+        const reportRootPath = htmlDocument.uri.fsPath.replace(base, '');
+        const reportsNavUri = this.view.webview.asWebviewUri(vscode.Uri.parse(path.join(base, path.dirname(reportRootPath), 'reports/resources/js/navbar.js'))).toString();
+        const resourcesNavUri = this.view.webview.asWebviewUri(vscode.Uri.parse(path.join(base, path.dirname(reportRootPath), 'resources/js/navbar.js'))).toString();
+        const parsedDoc = htmlDocument.getText().split(/\r?\n/).map((l,i) => {
+            if (l.includes('reports/resources/js/navbar.js')) {
+                return l.replace('reports/resources/js/navbar.js', () => reportsNavUri.toString());
+            }
+            else {
+                return l.replace('resources/js/navbar.js', () => resourcesNavUri.toString());
+            }
+        }).join("\n");
+        const $ = cheerio.load(parsedDoc);
+        const jsUri = this.view.webview.asWebviewUri(vscode.Uri.parse(path.join(this.context.extensionPath, 'resources', 'pre', 'dist', 'pre.js')));
+        $("head").append(`
+            <meta http-equiv="Content-Security-Policy" content="">
+            <script src="${jsUri}"></script>
+        `);
+        return $.html();
+    }
+
+    private async openLink(link: string) {
+        const resource = Uri.parse(link, false);
+        try {
+            const document = await workspace.openTextDocument(Uri.file(resource.fsPath));
+            const content: string = this.provideDocumentContent(document);
+            const fixedContent = this.fixLinks(content, resource.fsPath, resource);
+            this.view.webview.html = fixedContent;
+            this.view.reveal(ViewColumn.One);
+        }
+        catch (e) {
+            console.log('Error opening link');
+            console.log(e);
+        }
+    }
+
+    private fixLinks(html: string, location: string, resource: Uri) {
+        const view = this.view;
+        return html.replace(new RegExp("((?:src|href)=[\'\"])((?!http|\\/).*?)([\'\"])", "gmi"), function (subString, p1, p2, p3) {
+            if (p2.endsWith('pre.js')) {
+                return [p1, p2, p3].join("");
+            }
+            return [p1, view.webview.asWebviewUri(Uri.parse(path.join(path.dirname(resource.fsPath), p2))), p3].join("");
+        });
     }
 }

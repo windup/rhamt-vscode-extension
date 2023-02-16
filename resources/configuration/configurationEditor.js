@@ -387,10 +387,22 @@ function renderSingleOption(option, config) {
     group.appendChild(top);
     const widget = document.createElement('input');
     widget.id = `${option.name}-input`;
-    widget.classList.add('form-control', 'form-input', 'input-sm');
-    widget.classList.add('input');
+    // widget.classList.add('form-control', 'form-input', 'input-sm');
+    // widget.classList.add('input');
+    // widget.style.outlineColor = 'rgba(14, 99, 156, 0.6)';
+    // font-size: 15px;
+    // line-height: 1.3;
+
+
+// border-color: var(--vscode-input-border);
+//     border: 1px solid var(--vscode-input-border);
+
+    widget.classList.add('new-input');
+
     widget.style.bacgkgroundColor = 'inherit;'
     widget.style.width = "100%";
+
+
     // widget.style.backgroundColor = 'hsla(0, 0%, 50%, .17)';
     // widget.style.border = '1px solid rgb(77, 78, 78)';
     // widget.style.borderRadius = '0px';
@@ -415,9 +427,8 @@ function renderSingleOption(option, config) {
     top.appendChild(widget);
     if (option.type === 'File') {
         const addButton = createAddButton();
-        widget.style.maxHeight = '26px';
-        widget.style.minHeight = '26px';
-        addButton.style.margin = '5px 0px 0px 0px';
+        // widget.style.minHeight = '27px';
+        addButton.style.margin = '10px 0px 0px 0px';
         addButton.onmouseup = e => {
             promptExternal(option);
         };
