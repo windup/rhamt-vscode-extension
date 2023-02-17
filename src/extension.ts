@@ -161,8 +161,8 @@ export namespace Windup {
             vscode.env.appName === 'VSCodium';
     }
     export function isRemote(): boolean {
-        return vscode.env.appName === "CheCode" || 
-            vscode.env.appName  === 'Gitpod Code';
+        return vscode.env.appName.includes("Che") || 
+            vscode.env.appName.includes('Gitpod');
     }
     export function isVSCode(): boolean {
         return vscode.env.appName === "Visual Studio Code";
