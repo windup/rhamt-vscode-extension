@@ -11,7 +11,6 @@ const requestProgress = require('request-progress');
 import { createDeferred } from './async';
 import { ChangeType } from '../model/model';
 import * as rimraf from 'rimraf';
-import { Utils } from '../Utils';
 
 export type TemporaryFile = { filePath: string } & Disposable;
 
