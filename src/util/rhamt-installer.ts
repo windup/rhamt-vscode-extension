@@ -161,7 +161,7 @@ export class RhamtInstaller {
     private static async unpackArchive(downloadDir: string, tempFilePath: string, handler: InstallHandler): Promise<void> {
         handler.log('Unpacking archive... ');
         const deferred = createDeferred();
-        const title = `Extracting ${Utils.CLI_FOLDER}... `;
+        const title = `Extracting CLI... `;
         await window.withProgress({
             location: ProgressLocation.Notification,
             cancellable: true
