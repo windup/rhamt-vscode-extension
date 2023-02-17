@@ -58,6 +58,12 @@
                 }
             },
             {
+                "category": "Migration Toolkit for Runtimes (MTR)",
+                "command": "rhamt.modelReload",
+                "title": "Refresh Configurations",
+                "icon": "$(refresh)"
+            },
+            {
                 "command": "rhamt.showRhamtExplorer",
                 "title": "Show Explorer"
             },
@@ -173,6 +179,11 @@
             "view/title": [
                 {
                     "command": "rhamt.newConfiguration",
+                    "when": "view == rhamtExplorerView",
+                    "group": "navigation"
+                },
+                {
+                    "command": "rhamt.modelReload",
                     "when": "view == rhamtExplorerView",
                     "group": "navigation"
                 }

@@ -11,6 +11,7 @@ import { ModelService } from '../model/modelService';
 import { ResultsNode } from './resultsNode';
 import { RhamtConfiguration } from '../model/model';
 import { MarkerService } from '../source/markers';
+import { getOpenEditors } from '../editor/configurationView';
 
 export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
@@ -23,8 +24,16 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
     constructor(private grouping: Grouping, private modelService: ModelService, public context: ExtensionContext,
         private markerService: MarkerService) {
-        this._disposables.push(commands.registerCommand('rhamt.modelReload', () => {
-            this.refresh(undefined);
+        this._disposables.push(commands.registerCommand('rhamt.modelReload', async () => {
+            try {
+                await modelService.reload();
+                this.refreshRoots();
+                getOpenEditors().forEach(editor => editor.refresh());
+            }
+            catch (e) {
+                console.log(e);
+                window.showErrorMessage('Error reloading configuration data.');
+            }
         }));
         commands.executeCommand('setContext', 'rhamtReady', true);
         this._disposables.push(commands.registerCommand('rhamt.refreshResults', item => {

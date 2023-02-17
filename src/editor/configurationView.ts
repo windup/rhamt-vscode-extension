@@ -13,6 +13,12 @@ import * as nls from 'vscode-nls';
 
 const localize = nls.loadMessageBundle();
 
+const openEditors: ConfigurationView[] = [];
+
+export function getOpenEditors() {
+    return openEditors;
+}
+
 export class ConfigurationView {
 
     onEditorClosed = new rhamtEvents.TypedEvent<void>();
@@ -49,6 +55,7 @@ export class ConfigurationView {
             } catch (e) {
                 console.log(`Error at setupView: ${e}`);
             }
+            openEditors.push(this);
         }
         this.view.reveal();
     }
@@ -57,6 +64,13 @@ export class ConfigurationView {
         if (this.view) {
             this.view.title = title;
             this.view.reveal;
+        }
+    }
+
+    public refresh() {
+        if (this.view) {
+            this.updateTitle(this.configuration.name);
+            this.bindView();
         }
     }
 
@@ -71,6 +85,10 @@ export class ConfigurationView {
         this.configuration.onChanged.on(changeListener);
         this.view.onDidDispose(() => {
             this.view = undefined;
+            const viewIndex = openEditors.indexOf(this);
+            if (viewIndex > -1) {
+                openEditors.splice(viewIndex, 1);
+            }
             this.configuration.onChanged.off(changeListener);
             this.onEditorClosed.emit(undefined);
         });
