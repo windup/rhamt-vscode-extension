@@ -32,9 +32,12 @@
         "new-features": ["openliberty", "jakarta-ee"],
         "available-options": [
           "azure-appservice",
+          "azure-aks",
+          "azure-container-apps",
           "cloud-readiness",
           "jbpm",
           "quarkus",
+          "discovery",
           "drools",
           "fsw",
           "eap7",
@@ -57,6 +60,7 @@
         ],
         "editable": true
       },
+      
       {
         "name": "userRulesDirectory",
         "description": "User Rules Directory (Search pattern: *.windup.groovy, *.windup.xml).",
@@ -110,6 +114,13 @@
       {
         "name": "skipReports",
         "description": "If set, reports will not be generated.",
+        "type": "Boolean",
+        "ui-type": ["single"],
+        "required": false
+      },
+      {
+        "name": "legacyReports",
+        "description": "If set, legacy reports will be generated.",
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false

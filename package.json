@@ -1,8 +1,8 @@
 {
-    "name": "mtr-vscode-extension",
-    "displayName": "Migration Toolkit for Runtimes",
-    "description": "Migration Toolkit for Runtimes (MTR)",
-    "version": "1.0.2",
+    "name": "windup-vscode-extension",
+    "displayName": "Windup",
+    "description": "Application Migration and Modernization using Windup",
+    "version": "6.1.7",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
@@ -49,7 +49,7 @@
     "contributes": {
         "commands": [
             {
-                "category": "Migration Toolkit for Runtimes (MTR)",
+                "category": "Windup",
                 "command": "rhamt.newConfiguration",
                 "title": "New Configuration",
                 "icon": {
@@ -58,7 +58,7 @@
                 }
             },
             {
-                "category": "Migration Toolkit for Runtimes (MTR)",
+                "category": "Windup",
                 "command": "rhamt.modelReload",
                 "title": "Refresh Configurations",
                 "icon": "$(refresh)"
@@ -141,7 +141,7 @@
         ],
         "configuration": [
             {
-                "title": "CLI",
+                "title": "Windup CLI",
                 "properties": {
                     "cli.executable.path": {
                         "type": "string",
@@ -156,8 +156,8 @@
             "activitybar": [
                 {
                     "id": "rhamt-explorer",
-                    "title": "MTR",
-                    "icon": "resources/icon.png"
+                    "title": "Windup",
+                    "icon": "resources/windup_logo.png"
                 }
             ]
         },

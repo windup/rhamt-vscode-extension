@@ -33,11 +33,14 @@ export class ReportView {
 
     async open(location: string): Promise<void> {
         console.log(`Opening Report: ${location}`);
-        if (!this.view) {
+        if (this.view) {
+            this.view.dispose();
+        }
+        // if (!this.view) {
             if (fs.existsSync(path.join(location, '..', '..', 'reports'))) {
                 try {
                     await this.open(path.join(location, '..', '..', 'index.html'));
-                    await this.open(location);
+                    // await this.open(location);
                 }
                 catch(e) {
                     console.log(e);
@@ -54,9 +57,9 @@ export class ReportView {
                     Uri.file(reportRoot)
                 ]
             });
-            this.view.onDidDispose(() => {
+            /* this.view.onDidDispose(() => {
                 this.view = undefined;
-            });
+            }); */
         
             const issuesUri = vscode.Uri.file(path.join(path.dirname(location), 'reports', 'resources', 'js', 'windup-migration-issues.js'));
             const data = fs.readFileSync(issuesUri.fsPath, 'utf8');
@@ -66,7 +69,7 @@ export class ReportView {
                 `script.src = "${dataUri}"`);
             fs.writeFileSync(issuesUri.fsPath, result);
             
-        }
+        // }
         const resource = Uri.file(location);
 
         const document = await workspace.openTextDocument(resource);      

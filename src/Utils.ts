@@ -23,6 +23,8 @@ const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
 
+    export const MTR_DOWNLOAD_CLI_PRODUCT_PAGE = "https://developers.redhat.com/products/mtr/overview";
+
     export let PRODUCT_THEME: string;
     export let CLI_SCRIPT: string;
     export let CLI_VERSION: string;
@@ -36,10 +38,10 @@ export namespace Utils {
         const { publisher, name } = await fse.readJSON(context.asAbsolutePath('./package.json'));
         EXTENSION_PUBLISHER = publisher;
         EXTENSION_NAME = name;
-        DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip";
+        DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.7.Final/windup-cli-6.1.7.Final-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip"; // MTR_DOWNLOAD_CLI_PRODUCT_PAGE;
         CLI_SCRIPT = "windup-cli";
-        CLI_FOLDER = "windup-cli-6.1.0.Final";
-        PRODUCT_THEME = "mtr";
+        CLI_FOLDER = "windup-cli-6.1.7.Final";
+        PRODUCT_THEME = "windup";
     }
 
     export async function initConfiguration(config: RhamtConfiguration, modelService: ModelService): Promise<void> {
