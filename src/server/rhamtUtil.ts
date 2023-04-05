@@ -385,6 +385,11 @@ export class RhamtUtil {
             params.push(inputApplicationName);
         }
 
+        // legacyReports
+        if (options['legacyReports']) {
+            params.push('--legacyReports');
+        }
+
         console.log("Console: " + params);
 
         return Promise.resolve(params);
