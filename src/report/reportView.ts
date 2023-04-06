@@ -8,6 +8,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as cheerio from 'cheerio';
 import { getStateLocation } from '../extension';
+import * as open from 'opn';
 
 export class ReportView {
 
@@ -33,37 +34,50 @@ export class ReportView {
 
     async open(location: string): Promise<void> {
         console.log(`Opening Report: ${location}`);
+
+        open(location);
+        return;
+        
         if (this.view) {
             this.view.dispose();
         }
         // if (!this.view) {
-            if (fs.existsSync(path.join(location, '..', '..', 'reports'))) {
-                try {
-                    await this.open(path.join(location, '..', '..', 'index.html'));
-                    // await this.open(location);
+            /* if (fs.existsSync(path.join(location, '..', '..', 'reports'))) {
+                if (location.includes('index.html')) {
+                    try {
+                        await this.open(path.join(location, '..', '..', 'index.html'));
+                        // await this.open(location);
+                    }
+                    catch(e) {
+                        console.log(e);
+                    }
+                    return;
                 }
-                catch(e) {
-                    console.log(e);
-                }
-                return;
-            }
-            const reportRoot = path.join(location, '..');
+            } */
+            const resourceRoot = location.includes('index.html') ? path.join(location, '..') : path.join(location, '..', '..');
+            const reportRoot = location.includes('index.html') ? path.join(location) : path.join(location, '..');
+
+            console.log(`report root: ${reportRoot}`);
+            
+
             this.view = window.createWebviewPanel('rhamtReportView', 'Report', ViewColumn.One, {
                 enableScripts: true,
                 enableCommandUris: true,
                 retainContextWhenHidden: true,
                 localResourceRoots: [
                     Uri.file(path.join(this.context.extensionPath)),
-                    Uri.file(reportRoot)
+                    Uri.file(resourceRoot)
                 ]
             });
+            // @ts-ignore
+            this.view.reportsRoot = path.join(path.dirname(reportRoot), 'reports');
             /* this.view.onDidDispose(() => {
                 this.view = undefined;
             }); */
         
-            const issuesUri = vscode.Uri.file(path.join(path.dirname(location), 'reports', 'resources', 'js', 'windup-migration-issues.js'));
+            const issuesUri = vscode.Uri.file(path.join(path.dirname(reportRoot), 'reports', 'resources', 'js', 'windup-migration-issues.js'));
             const data = fs.readFileSync(issuesUri.fsPath, 'utf8');
-            const dataUri = this.view.webview.asWebviewUri(vscode.Uri.parse(path.join(reportRoot, 'reports/data/problem_summary_'))).toString();
+            const dataUri = this.view.webview.asWebviewUri(vscode.Uri.parse(path.join(resourceRoot, 'reports/data/problem_summary_'))).toString();
             const result = data.replace(
                 /script.src = "data\/problem_summary_"/g,
                 `script.src = "${dataUri}"`);
@@ -85,6 +99,14 @@ export class ReportView {
                 case 'openLink': {
                     try {
                         await this.openLink(message.link);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    return;
+                }
+                case 'openReport': {
+                    try {
+                        await this.openEmbeddedReport(message.link);
                     } catch (e) {
                         console.log(e);
                     }
@@ -117,7 +139,30 @@ export class ReportView {
         return $.html();
     }
 
+    private async openEmbeddedReport(link: string) {
+        console.log(`openLink: ${link}`);
+
+        // @ts-ignore
+        const resource = Uri.parse(path.join(this.view.reportsRoot, link), false);
+
+        // const resource = Uri.parse(link, false);
+        try {
+            const document = await workspace.openTextDocument(Uri.file(resource.fsPath));
+            const content: string = this.provideDocumentContent(document);
+            const fixedContent = this.fixLinks(content, resource.fsPath, resource);
+            this.view.webview.html = fixedContent;
+            this.view.reveal(ViewColumn.One);
+        }
+        catch (e) {
+            console.log('Error opening link');
+            console.log(e);
+        }
+    }
+
     private async openLink(link: string) {
+
+        console.log(`openLink: ${link}`);
+
         const resource = Uri.parse(link, false);
         try {
             const document = await workspace.openTextDocument(Uri.file(resource.fsPath));
