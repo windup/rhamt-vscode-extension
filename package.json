@@ -2,7 +2,7 @@
     "name": "windup-vscode-extension",
     "displayName": "Windup",
     "description": "Application Migration and Modernization using Windup",
-    "version": "6.1.7",
+    "version": "6.2.0.Alpha2",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
