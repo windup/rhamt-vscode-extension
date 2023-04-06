@@ -38,9 +38,9 @@ export namespace Utils {
         const { publisher, name } = await fse.readJSON(context.asAbsolutePath('./package.json'));
         EXTENSION_PUBLISHER = publisher;
         EXTENSION_NAME = name;
-        DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.7.Final/windup-cli-6.1.7.Final-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip"; // MTR_DOWNLOAD_CLI_PRODUCT_PAGE;
+        DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.2.0.Alpha2/windup-cli-6.2.0.Alpha2-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.7.Final/windup-cli-6.1.7.Final-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip"; // MTR_DOWNLOAD_CLI_PRODUCT_PAGE;
         CLI_SCRIPT = "windup-cli";
-        CLI_FOLDER = "windup-cli-6.1.7.Final";
+        CLI_FOLDER = "windup-cli-6.2.0.Alpha2";
         PRODUCT_THEME = "windup";
     }
 
