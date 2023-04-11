@@ -31,7 +31,8 @@ node('rhel8'){
 	}
 	if(params.UPLOAD_LOCATION) {
 		stage('Snapshot') {
-			sh "sftp -C ${UPLOAD_LOCATION}/stable/ <<< \$'mkdir windup-vscode-extension'"
+			// sh "sftp -C ${UPLOAD_LOCATION}/stable/ <<< \$'mkdir windup-vscode-extension'"
+			sh "sftp -C ${UPLOAD_LOCATION}/snapshots/ <<< \$'mkdir windup-vscode-extension'"
 			def filesToPush = findFiles(glob: '**.vsix')
 			sh "sftp -C ${UPLOAD_LOCATION}/stable/windup-vscode-extension/ <<< \$'put -p -r ${filesToPush[0].path}'"
 			stash name:'vsix', includes:filesToPush[0].path
