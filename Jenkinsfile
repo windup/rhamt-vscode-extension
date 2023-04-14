@@ -33,10 +33,10 @@ node('rhel8'){
 		stage('Snapshot') {
 			// sh "sftp -C ${UPLOAD_LOCATION}/stable/ <<< \$'mkdir windup-vscode-extension'"
 			def filesToPush = findFiles(glob: '**.vsix')
-			sh "sftp -C ${UPLOAD_LOCATION}/stable/${PRODUCT_NAME}-vscode-extension/ <<< \$'put -p -r ${filesToPush[0].path}'"
+			sh "sftp -C ${UPLOAD_LOCATION}/snapshots/${PRODUCT_NAME}-vscode-extension/ <<< \$'put -p -r ${filesToPush[0].path}'"
 			stash name:'vsix', includes:filesToPush[0].path
 			def tgzFilesToPush = findFiles(glob: '**.tgz')
-			sh "sftp -C ${UPLOAD_LOCATION}/stable/${PRODUCT_NAME}-vscode-extension/ <<< \$'put -p -r ${tgzFilesToPush[0].path}'"
+			sh "sftp -C ${UPLOAD_LOCATION}/snapshots/${PRODUCT_NAME}-vscode-extension/ <<< \$'put -p -r ${tgzFilesToPush[0].path}'"
 			stash name:'tgz', includes:tgzFilesToPush[0].path
 		}
 	}
