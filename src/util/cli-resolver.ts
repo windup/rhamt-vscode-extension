@@ -25,7 +25,7 @@ export function findRhamtCli(outDir: string, config?: RhamtConfiguration): Promi
         if (rhamtHome) {
             const executable = getDownloadExecutableName(rhamtHome);
             console.log(`found cli using CLI_HOME`);
-            console.log(`WINDUP_HOME=${rhamtHome}`);
+            console.log(`CLI_HOME=${rhamtHome}`);
             console.log(`executable=${executable}`);
             return resolve(executable);
         }

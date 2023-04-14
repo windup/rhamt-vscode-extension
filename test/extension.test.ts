@@ -4,15 +4,16 @@
  *--------------------------------------------------------------------------------------------*/
 import * as assert from 'assert';
 import * as vscode from 'vscode';
+import { Utils } from '../src/Utils';
 
 suite("RHAMT Extension Tests", () => {
 
     test('Extension should be present', () => {
-        assert.ok(vscode.extensions.getExtension('redhat.windup-vscode-extension'));
+        assert.ok(vscode.extensions.getExtension(`redhat.${Utils.PRODUCT_THEME}-vscode-extension`));
     });
 
     test('should activate', async () => {
-        return vscode.extensions.getExtension('redhat.windup-vscode-extension')!.activate().then(() => {
+        return vscode.extensions.getExtension(`redhat.${Utils.PRODUCT_THEME}-vscode-extension`)!.activate().then(() => {
             assert.ok(true);
         });
     });

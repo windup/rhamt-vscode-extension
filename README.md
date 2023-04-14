@@ -1,4 +1,4 @@
-# Windup - VSCode Extension
+# Migration Toolkit for Applications (MTA) - VSCode Extension
 
 <!-- [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/windup/rhamt-vscode-extension/blob/master/README.md) -->
 <!-- [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension) -->
@@ -10,7 +10,7 @@ VSCode extension for application migration and modernization using [Windup](http
 
 ## VSCode
 
-This extension is published [here](https://marketplace.visualstudio.com/items?itemName=redhat.windup-vscode-extension) in the Microsoft Visual Studio Marketplace.
+This extension is published [here](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension) in the Microsoft Visual Studio Marketplace.
 
 <!-- ![VSCode Extension Marketplace View](resources/mta_marketplace.png) -->
 

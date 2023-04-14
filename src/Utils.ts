@@ -15,6 +15,8 @@ import * as cliResolver from './util/cli-resolver';
 import { rhamtChannel } from './util/console';
 import { Windup } from './extension';
 
+import * as open from 'opn';
+
 const RHAMT_VERSION_REGEX = /^version /;
 
 const findJava = require('find-java-home');
@@ -38,10 +40,10 @@ export namespace Utils {
         const { publisher, name } = await fse.readJSON(context.asAbsolutePath('./package.json'));
         EXTENSION_PUBLISHER = publisher;
         EXTENSION_NAME = name;
-        DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.2.0.Alpha2/windup-cli-6.2.0.Alpha2-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.7.Final/windup-cli-6.1.7.Final-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip"; // MTR_DOWNLOAD_CLI_PRODUCT_PAGE;
-        CLI_SCRIPT = "windup-cli";
-        CLI_FOLDER = "windup-cli-6.2.0.Alpha2";
-        PRODUCT_THEME = "windup";
+        DOWNLOAD_CLI_LOCATION = "https://developers.redhat.com/products/mta/download"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.2.0.Alpha2/windup-cli-6.2.0.Alpha2-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.7.Final/windup-cli-6.1.7.Final-no-index.zip"; //; // MTR_DOWNLOAD_CLI_PRODUCT_PAGE;
+        CLI_SCRIPT = "mta-cli";
+        CLI_FOLDER = "mta-cli-6.1.0.Final";
+        PRODUCT_THEME = "mta";
     }
 
     export async function initConfiguration(config: RhamtConfiguration, modelService: ModelService): Promise<void> {
@@ -190,7 +192,10 @@ export namespace Utils {
 
     export async function checkCli(dataOut: string, context: ExtensionContext, autoDownload?: boolean): Promise<any> {
         await cliResolver.findRhamtCli(dataOut).catch(() => {
-            if (autoDownload || Windup.isRemote()) {
+            if (Utils.PRODUCT_THEME === 'mta' || Utils.PRODUCT_THEME === 'mtr') {
+                Utils.showDownloadCliOption(dataOut, context);
+            }
+            else if (autoDownload || Windup.isRemote()) {
                 console.log('Auto-downloading CLI...');
                 Utils.downloadCli(dataOut);
             }
@@ -206,7 +211,12 @@ export namespace Utils {
         const OPTION_DISMISS = `Don't Show Again`;
         const choice = await window.showInformationMessage(MSG, OPTION_DOWNLOAD, OPTION_DISMISS);
         if (choice === OPTION_DOWNLOAD) {
-            Utils.downloadCli(dataOut);
+            if (Utils.PRODUCT_THEME === 'mta' || Utils.PRODUCT_THEME === 'mtr') {
+                open('https://developers.redhat.com/products/mta/download');
+            }
+            else {
+                Utils.downloadCli(dataOut);
+            }
         }
         else if (choice === OPTION_DISMISS) {
             context.workspaceState.update(IGNORE_RHAMT_DOWNLOAD, true);
