@@ -119,13 +119,6 @@
         "required": false
       },
       {
-        "name": "legacyReports",
-        "description": "If set, legacy reports will be generated.",
-        "type": "Boolean",
-        "ui-type": ["single"],
-        "required": false
-      },
-      {
         "name": "sourceMode",
         "description": "Indicates whether the input is source code or compiled binaries (Default: Compiled).",
         "type": "Boolean",
