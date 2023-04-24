@@ -211,11 +211,11 @@ export namespace Utils {
         const OPTION_DISMISS = `Don't Show Again`;
         const choice = await window.showInformationMessage(MSG, OPTION_DOWNLOAD, OPTION_DISMISS);
         if (choice === OPTION_DOWNLOAD) {
-            if (Windup.isRemote()) {
-                window.showInformationMessage(`Visit https://developers.redhat.com/products/mta/download`);
-            }
-            else if (Utils.PRODUCT_THEME === 'mta' || Utils.PRODUCT_THEME === 'mtr') {
+            if (Utils.PRODUCT_THEME === 'mta') {
                 open('https://developers.redhat.com/products/mta/download');
+            }
+            else if (Utils.PRODUCT_THEME === 'mtr') {
+                open('https://developers.redhat.com/products/mtr/download');
             }
             else {
                 Utils.downloadCli(dataOut);

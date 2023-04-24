@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as cheerio from 'cheerio';
-import { getStateLocation } from '../extension';
+import { Windup, getStateLocation } from '../extension';
 import * as open from 'opn';
 
 export class ReportView {
@@ -35,8 +35,10 @@ export class ReportView {
     async open(location: string): Promise<void> {
         console.log(`Opening Report: ${location}`);
 
-        open(location);
-        return;
+        if (!Windup.isRemote()) {
+            open(location);
+            return;
+        }
         
         if (this.view) {
             this.view.dispose();

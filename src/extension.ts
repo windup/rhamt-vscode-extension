@@ -24,6 +24,7 @@ import { MarkerService } from './source/markers';
 import { initQuickfixSupport } from './source/quickfix';
 import { FileItem } from './tree/fileItem';
 import * as git from './source/git';
+import { log } from 'console';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
@@ -49,6 +50,9 @@ export async function activate(context: vscode.ExtensionContext) {
     stateLocation = outputLocation = path.join(os.homedir(), '.windup', 'tooling', 'vscode');
 
     console.log(`windup state location is: ${stateLocation}`);
+
+    log(`Windup.isRemote() - ${Windup.isRemote()}`);
+    log(`App name: ${vscode.env.appName}`);
     
     const out = path.join(stateLocation);
     const locations = await endpoints.getEndpoints(context, out);
