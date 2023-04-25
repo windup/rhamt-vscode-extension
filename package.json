@@ -1,6 +1,6 @@
 {
     "name": "mta-vscode-extension",
-    "displayName": "mta",
+    "displayName": "Migration Toolkit for Applications (MTA)",
     "description": "Migration Toolkit for Applications (MTA)",
     "version": "6.1.0",
     "license": "MIT",
