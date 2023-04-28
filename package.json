@@ -7,7 +7,7 @@
     "publisher": "redhat",
     "author": "Red Hat",
     "preview": true,
-    "icon": "resources/icon.png",
+    "icon": "resources/mta_mtr_icon.png",
     "homepage": "https://github.com/windup/rhamt-vscode-extension/blob/master/README.md",
     "repository": {
         "type": "git",
