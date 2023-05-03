@@ -25,13 +25,16 @@ const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
 
-    export const MTR_DOWNLOAD_CLI_PRODUCT_PAGE = "https://developers.redhat.com/products/mtr/overview";
+    export const THEME = 'mtr';
+    export const THEME_VERSION = '1.1.0';
+    export const PRODUCT_DOWNLOAD_PAGE = `https://developers.redhat.com/products/${THEME}/download`;
+    export const CLI_SCRIPT = `${THEME}-cli`;
+    export const CLI_FOLDER = `${THEME}-cli-${THEME_VERSION}.Final`;
 
-    export let PRODUCT_THEME: string;
-    export let CLI_SCRIPT: string;
-    export let CLI_VERSION: string;
-    export let CLI_FOLDER: string;
-    export let DOWNLOAD_CLI_LOCATION: string;
+
+    // Below is only used when the CLI actually gets downloaded (only Windup, not MTR or MTA).
+    export const DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip";
+    // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.2.0.Alpha2/windup-cli-6.2.0.Alpha2-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.7.Final/windup-cli-6.1.7.Final-no-index.zip"; //; // MTR_DOWNLOAD_CLI_PRODUCT_PAGE;
 
     export let EXTENSION_PUBLISHER: string;
     export let EXTENSION_NAME: string;
@@ -40,10 +43,6 @@ export namespace Utils {
         const { publisher, name } = await fse.readJSON(context.asAbsolutePath('./package.json'));
         EXTENSION_PUBLISHER = publisher;
         EXTENSION_NAME = name;
-        DOWNLOAD_CLI_LOCATION = "https://developers.redhat.com/products/mta/download"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.2.0.Alpha2/windup-cli-6.2.0.Alpha2-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.7.Final/windup-cli-6.1.7.Final-no-index.zip"; //; // MTR_DOWNLOAD_CLI_PRODUCT_PAGE;
-        CLI_SCRIPT = "mta-cli";
-        CLI_FOLDER = "mta-cli-6.1.0.Final";
-        PRODUCT_THEME = "mta";
     }
 
     export async function initConfiguration(config: RhamtConfiguration, modelService: ModelService): Promise<void> {
@@ -192,7 +191,8 @@ export namespace Utils {
 
     export async function checkCli(dataOut: string, context: ExtensionContext, autoDownload?: boolean): Promise<any> {
         await cliResolver.findRhamtCli(dataOut).catch(() => {
-            if (Utils.PRODUCT_THEME === 'mta' || Utils.PRODUCT_THEME === 'mtr') {
+            // @ts-ignore
+            if (Utils.THEME === 'mta' || Utils.THEME === 'mtr') {
                 Utils.showDownloadCliOption(dataOut, context);
             }
             else if (autoDownload || Windup.isRemote()) {
@@ -211,11 +211,9 @@ export namespace Utils {
         const OPTION_DISMISS = `Don't Show Again`;
         const choice = await window.showInformationMessage(MSG, OPTION_DOWNLOAD, OPTION_DISMISS);
         if (choice === OPTION_DOWNLOAD) {
-            if (Utils.PRODUCT_THEME === 'mta') {
-                open('https://developers.redhat.com/products/mta/download');
-            }
-            else if (Utils.PRODUCT_THEME === 'mtr') {
-                open('https://developers.redhat.com/products/mtr/download');
+            // @ts-ignore
+            if (Utils.THEME === 'mta' || Utils.THEME === 'mtr') {
+                open(PRODUCT_DOWNLOAD_PAGE);
             }
             else {
                 Utils.downloadCli(dataOut);

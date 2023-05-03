@@ -17,8 +17,9 @@ export async function promptForFAQs(message: string, downloadCli?: { outDir: str
     options.push(OPTION_SHOW_FAQS, OPTION_OPEN_SETTINGS);
     const choiceForDetails = await vscode.window.showErrorMessage(message, ...options);
     if (choiceForDetails === DOWNLOAD) {
-        if (Utils.PRODUCT_THEME === 'mta' || Utils.PRODUCT_THEME === 'mtr') {
-            open('https://developers.redhat.com/products/mta/download');
+        // @ts-ignore
+        if (Utils.THEME === 'mta' || Utils.PRODUCT_THEME === 'mtr') {
+            open(Utils.PRODUCT_DOWNLOAD_PAGE);
         }
         else {
             Utils.downloadCli(downloadCli.outDir);

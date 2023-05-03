@@ -60,7 +60,13 @@
         ],
         "editable": true
       },
-      
+      {
+        "name": "legacyReports",
+        "description": "This option will ensure the original format reports are generated rather than the new style PatternFly 4 reports.",
+        "type": "Boolean",
+        "ui-type": ["single"],
+        "required": false
+      },
       {
         "name": "userRulesDirectory",
         "description": "User Rules Directory (Search pattern: *.windup.groovy, *.windup.xml).",
