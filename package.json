@@ -2,7 +2,7 @@
     "name": "mtr-vscode-extension",
     "displayName": "Migration Toolkit for Runtimes (MTR)",
     "description": "Migration Toolkit for Runtimes (MTR)",
-    "version": "6.1.1",
+    "version": "1.1.0",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
