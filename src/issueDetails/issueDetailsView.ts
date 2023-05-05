@@ -86,10 +86,10 @@ export class IssueDetailsView {
         let body = '';
         body += '<h3>Title</h3>';
         body += issue.title ? issue.title : noDetails;
-        if (report) {
+        /* if (report) {
             body += '<h3>Report</h3>';
             body += report;
-        }
+        } */
         body += `<h3>${isHint ? 'Message' : 'Description'}</h3>`;
         body += (isHint && issue.hint) ? converter.makeHtml(issue.hint) : (!isHint && issue.description) ? issue.description : noDetails;
         body += '<h3>Category ID</h3>';

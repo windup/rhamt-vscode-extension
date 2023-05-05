@@ -28,7 +28,7 @@ export namespace Utils {
     export const THEME = 'mtr';
     export const THEME_VERSION = '1.1.0';
     export const PRODUCT_DOWNLOAD_PAGE = `https://developers.redhat.com/products/${THEME}/download`;
-    export const CLI_SCRIPT = `${THEME}-cli`;
+    export const CLI_SCRIPT = `windup-cli`;
     export const CLI_FOLDER = `${THEME}-cli-${THEME_VERSION}.Final`;
 
 

@@ -18,7 +18,7 @@ export async function promptForFAQs(message: string, downloadCli?: { outDir: str
     const choiceForDetails = await vscode.window.showErrorMessage(message, ...options);
     if (choiceForDetails === DOWNLOAD) {
         // @ts-ignore
-        if (Utils.THEME === 'mta' || Utils.PRODUCT_THEME === 'mtr') {
+        if (Utils.THEME === 'mta' || Utils.THEME === 'mtr') {
             open(Utils.PRODUCT_DOWNLOAD_PAGE);
         }
         else {
