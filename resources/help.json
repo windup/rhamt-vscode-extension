@@ -32,8 +32,6 @@
         "new-features": ["openliberty", "jakarta-ee"],
         "available-options": [
           "azure-appservice",
-          "azure-aks",
-          "azure-container-apps",
           "cloud-readiness",
           "jbpm",
           "quarkus",
