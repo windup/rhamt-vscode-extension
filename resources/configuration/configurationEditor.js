@@ -335,6 +335,13 @@ function renderBooleanOption(option, config) {
     note.classList.add('note');
     note.id = 'help-text-for-checkbox';
     note.textContent = option.description;
+
+    if (option.hasOwnProperty('editable') && !option.editable) {
+        input.checked = true;
+        input.setAttribute('checked', 'checked');
+        input.disabled = true;
+    }
+
     wrapper.appendChild(note);
 }
 

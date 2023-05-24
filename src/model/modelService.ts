@@ -9,6 +9,7 @@ import * as fse from 'fs-extra';
 import * as mkdirp from 'mkdirp';
 import * as vscode from 'vscode';
 import { AnalysisResults, AnalysisResultsUtil } from './analysisResults';
+import { Windup } from '../extension';
 
 export class ModelService {
 
@@ -54,6 +55,10 @@ export class ModelService {
         config.options['sourceMode'] = true;
         config.options['generateOutputLocation'] = path.resolve(this.outputLocation, config.id);
         config.options['target'] = ['eap7'];
+
+        if (Windup.isRemote()) {
+            config.options['legacyReports'] = true;
+        }
         return config;
     }
 
@@ -415,7 +420,14 @@ export class ModelService {
             else {
                 fs.readFile(path.join(this.endpoints.resourcesRoot(), 'help.json'), (err, data: any) => {
                     if (err) reject(err);
-                    else resolve(this.elementData = JSON.parse(data));
+                    else {
+                        this.elementData = JSON.parse(data);
+                        if (Windup.isRemote()) {
+                            const option = this.elementData.options.find(option => option.name === 'legacyReports');
+                            option.editable = false;
+                        }
+                        resolve(this.elementData);
+                    }
                 });
             }
         }).catch(err => {
