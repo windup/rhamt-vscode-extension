@@ -7,6 +7,37 @@ import * as vscode from 'vscode';
 import * as os from 'os';
 import { QuickfixNode } from "../tree/quickfixNode";
 import { AnalysisResults } from "../model/analysisResults";
+import * as path from 'path';
+
+import * as fs from 'fs';
+import * as readline from 'readline';
+import { EOL } from 'os'
+
+function extractPomDependency(quickfix: IQuickFix, issue: IHint): Promise<Array<string>> {
+    const file = quickfix.file;
+    const lineNumber = issue.lineNumber;
+    return new Promise<Array<string>>(resolve => {
+        const input = fs.createReadStream(file);
+        const myInterface = readline.createInterface({ input });
+        var lineno = 0;
+        let snippet = new Array<string>();
+        let running = false;
+        myInterface.on('line', function (line) {
+            if (++lineno === lineNumber && line.includes('<dependency>')) {
+                running = true;
+            }
+            if (running) {
+                snippet.push(line);
+                if (line.includes('</dependency>')) {
+                    myInterface.close();
+                    input.destroy();
+                    running = false;
+                    resolve(snippet);
+                }
+            }
+        });
+    });
+}
 
 export class Diff {
 
@@ -51,8 +82,63 @@ export class Diff {
         return textEditor;
     }
 
-    static async writeQuickfix(file: vscode.Uri, quickfix: IQuickFix, issue: IHint, document: vscode.TextDocument): Promise<boolean> {
-        if (quickfix.type === 'REPLACE' && issue.lineNumber) {
+    static async writeQuickfix(file: vscode.Uri, quickfix: IQuickFix, issue: IHint, document: vscode.TextDocument): Promise<boolean> {  
+        if (quickfix.type === 'REPLACE' && issue.lineNumber && path.basename(issue.file) === 'pom.xml') {
+            let lineNumber = issue.lineNumber;
+            const line = await AnalysisResults.readLine(quickfix.file, lineNumber);
+            const content = line.substring(issue.column, issue.column + issue.length);
+            // If quickfix is on the line of the issue.
+            // example:
+            // <when>
+            //    <filecontent filename="pom.xml" pattern="groupId&gt;javax&lt;" />
+            //    </when>
+            if (content.includes(quickfix.searchString)) {
+                let edit = new vscode.WorkspaceEdit();
+                let lineNumber = issue.lineNumber;
+                const line = await AnalysisResults.readLine(quickfix.file, lineNumber);
+                const content = line.substring(issue.column, issue.column + issue.length);
+                const start = line.substring(0, issue.column);
+                const end = line.substring(issue.column + issue.length, line.length);
+                const newLine = start + content.replace(quickfix.searchString, quickfix.replacementString) + end;
+                lineNumber = issue.lineNumber - 1;
+                const endLine = document.lineAt(lineNumber).range.end;
+                edit.delete(file, new vscode.Range(lineNumber, 0, lineNumber, endLine.character));
+                await vscode.workspace.applyEdit(edit);
+                edit = new vscode.WorkspaceEdit();
+                edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, newLine.length), newLine);
+                return vscode.workspace.applyEdit(edit);
+            }
+            // Otherwise, search the dependency tag for search string and do the replace there.
+            // example:
+            // <when>
+            //     <project>
+            //         <artifact groupId="org.jboss.spec.javax.enterprise.concurrent" artifactId="jboss-concurrency-api_1.0_spec"/>
+            //     </project>
+            // </when>
+            else {
+                const dependencyElementLines = await extractPomDependency(quickfix, issue);
+                for (let index = 0; index < dependencyElementLines.length; index++) {
+                    const line = dependencyElementLines[index];
+                    // The primary issue here is that we don't know if we should replace groupId or artifactId based off 
+                    // a quickfix.
+                    // so we replace the first occurance of search string we find in the depenency entry.
+                    // this maybe the groupId or artifactId depending on what matches first.
+                    if (line.includes(quickfix.searchString)) {
+                        dependencyElementLines[index] = line.replace(quickfix.searchString, quickfix.replacementString);
+                        break;
+                    }
+                }
+                const lineNumber = issue.lineNumber - 1;
+                const endLine = document.lineAt(lineNumber).range.end;
+                let edit = new vscode.WorkspaceEdit();
+                edit.delete(file, new vscode.Range(lineNumber, 0, lineNumber+dependencyElementLines.length-1, endLine.character));
+                await vscode.workspace.applyEdit(edit);
+                edit = new vscode.WorkspaceEdit();
+                edit.replace(file, new vscode.Range(lineNumber, 0, lineNumber, endLine.character), dependencyElementLines.join(EOL));
+                return vscode.workspace.applyEdit(edit);
+            }
+        }
+        else if (quickfix.type === 'REPLACE' && issue.lineNumber) {
             let edit = new vscode.WorkspaceEdit();
             let lineNumber = issue.lineNumber;
             const line = await AnalysisResults.readLine(quickfix.file, lineNumber);
