@@ -559,11 +559,18 @@ export namespace AnalysisResults {
             const input = fs.createReadStream(file);
             var myInterface = readline.createInterface({ input });
             var lineno = 0;
+            var resolved = false;
             myInterface.on('line', function (line) {
                 if (++lineno === lineNumber) {
+                    resolved = true;
                     myInterface.close();
                     input.destroy();
                     resolve(line)
+                }
+            });
+            myInterface.on('close', function (line) {
+                if (!resolved) {
+                    resolve('');
                 }
             });
         });

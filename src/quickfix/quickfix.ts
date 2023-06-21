@@ -11,22 +11,45 @@ export async function applyQuickfixes(quickfixes: IQuickFix[]): Promise<any> {
     // TODO: sort by file and line number. 
     // Then  apply all quickfixes to each file at one time then save the file once.
     const sortedQuickfixes = quickfixes.sort(Quickfix.compareQuickfix);
+    var count = 0;
+    console.log('Quickfixes: ' + quickfixes.length);
+    console.log('Sorted Quickfixes: ' + sortedQuickfixes.length);
+    
     for (let quickfix of sortedQuickfixes) {
-        await applyQuickfix(quickfix);
-        // update other quickfixes on this same line who's column might have been moved as a result of this quickfix change.
-        Quickfix.updateSiblinQuickfixes(quickfix);
-        Quickfix.doApplyQuickfix(quickfix);
+        if (quickfix.quickfixApplied) {
+            continue;
+        }
+        try {
+            console.log('start apply quickfix: ' + count++);
+            await applyQuickfix(quickfix);
+            // update other quickfixes on this same line who's column might have been moved as a result of this quickfix change.
+            // Quickfix.updateSiblingQuickfixes(quickfix);
+            Quickfix.doApplyQuickfix(quickfix);
+            console.log('end apply quickfix');
+        }
+        catch (e) {
+            console.log('error applying quickfix');
+            console.log(e);
+            vscode.window.showErrorMessage('Error applying quickfix. See log');
+        }
     }
+    console.log('Done applying quickfixes.');
+    
 }
 
 export async function applyQuickfix(quickfix: IQuickFix): Promise<any> {
-    const config = quickfix.issue.configuration;
-    const file = vscode.Uri.parse(`quickfixed://${config.id}/${quickfix.issue.id}?${quickfix.id}`);
-    const doc = await vscode.workspace.openTextDocument(file);
     // apply workspace edit
-    await Diff.writeQuickfix(file, quickfix, quickfix.issue as IHint, doc);
-    // save changes to disk
-    return fs.writeFileSync(quickfix.file, doc.getText());
+    try {
+        const config = quickfix.issue.configuration;
+        const file = vscode.Uri.parse(`quickfixed://${config.id}/${quickfix.issue.id}?${quickfix.id}`);
+        const doc = await vscode.workspace.openTextDocument(file);
+        await Diff.writeQuickfix(file, quickfix, quickfix.issue as IHint, doc);
+        // save changes to disk
+        return fs.writeFileSync(quickfix.file, doc.getText());
+    } catch (e) {
+        console.log(e);
+        vscode.window.showErrorMessage('Error applying quickfix. See log.');
+    }
 }
 
 export namespace Quickfix {
@@ -67,7 +90,7 @@ export namespace Quickfix {
         });
     }
 
-    export function updateSiblinQuickfixes(appliedQuickfix: IQuickFix): IQuickFix[] | undefined {        
+    export function updateSiblingQuickfixes(appliedQuickfix: IQuickFix): IQuickFix[] | undefined {        
         // Only update other quickfixes on the modified line if it's of type REPLACE
         if (appliedQuickfix.type !== 'REPLACE') return undefined;
         const allHints = appliedQuickfix.issue.configuration.results.model.hints;
