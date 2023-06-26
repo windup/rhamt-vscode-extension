@@ -25,15 +25,15 @@ const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
 
-    export const THEME = 'mtr';
-    export const THEME_VERSION = '1.1.0';
+    export const THEME = 'windup';
+    export const THEME_VERSION = '6.2.5';
     export const PRODUCT_DOWNLOAD_PAGE = `https://developers.redhat.com/products/${THEME}/download`;
     export const CLI_SCRIPT = `windup-cli`;
     export const CLI_FOLDER = `${THEME}-cli-${THEME_VERSION}.Final`;
 
 
     // Below is only used when the CLI actually gets downloaded (only Windup, not MTR or MTA).
-    export const DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip";
+    export const DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.2.5.Final/windup-cli-6.2.5.Final-no-index.zip";  // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip";
     // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.2.0.Alpha2/windup-cli-6.2.0.Alpha2-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.7.Final/windup-cli-6.1.7.Final-no-index.zip"; //; // MTR_DOWNLOAD_CLI_PRODUCT_PAGE;
 
     export let EXTENSION_PUBLISHER: string;
