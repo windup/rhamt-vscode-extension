@@ -13,7 +13,7 @@ suite('RHAMT / Issue Explorer', () => {
     let modelService: ModelService;
 
     setup(() => {
-        modelService = new ModelService(new RhamtModel(), __dirname, __dirname, getReportEndpoints(__dirname));
+        modelService = new ModelService(new RhamtModel(), __dirname, getReportEndpoints(__dirname));
     });
 
     test('model service', () => {

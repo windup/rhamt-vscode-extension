@@ -12,10 +12,9 @@ suite('RHAMT / Model', () => {
 
     let modelService: ModelService;
     const outDir = __dirname;
-    const outputLocation = __dirname;
 
     setup(() => {
-        modelService = new ModelService(new RhamtModel(), outDir, outputLocation, getReportEndpoints(__dirname));
+        modelService = new ModelService(new RhamtModel(), outDir, getReportEndpoints(__dirname));
     });
 
     test('configuration name', () => {

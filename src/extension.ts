@@ -29,7 +29,6 @@ import { log } from 'console';
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
 let stateLocation: string;
-let outputLocation: string;
 let configEditorServer: ConfigurationEditorServer;
 
 let extensionPath = "";
@@ -47,16 +46,17 @@ export async function activate(context: vscode.ExtensionContext) {
     extensionPath = context.extensionPath;
     
     await Utils.loadPackageInfo(context);
-    stateLocation = outputLocation = path.join(os.homedir(), '.windup', 'tooling', 'vscode');
+    stateLocation = path.join(os.homedir(), '.windup', 'tooling', 'vscode');
 
     console.log(`windup state location is: ${stateLocation}`);
 
     log(`Windup.isRemote() - ${Windup.isRemote()}`);
     log(`App name: ${vscode.env.appName}`);
-    
+     
     const out = path.join(stateLocation);
-    const locations = await endpoints.getEndpoints(context, out);
-    modelService = new ModelService(new RhamtModel(), out, outputLocation, locations);
+
+    const locations = await endpoints.getEndpoints(context);
+    modelService = new ModelService(new RhamtModel(), out, locations);
     const configEditorService = new ConfigurationEditorService(context, modelService);
     await modelService.readCliMeta();
 

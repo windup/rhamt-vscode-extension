@@ -62,20 +62,10 @@ export class RhamtUtil {
                     processController.shutdown();
                     RhamtUtil.updateRunEnablement(true, dataProvider, config);
                     const output: string = config.options['output'];
-                    const generated: string = config.options['generateOutputLocation'];
-                    console.log(`generated: ${generated.trim()}`);
                     console.log(`output   : ${output.trim()}`);
-                    if (generated.trim() !== output.trim()) {
-                        console.log('Gathering results...');
-                        progress.report({message: 'Gathering results...'});
-                        try {                                                        
-                            fs.moveSync(generated, output, {overwrite: true});           
-                        }
-                        catch (e) {
-                            console.log(`Error moving results: ${e}`);
-                            vscode.window.showErrorMessage(e);
-                        }
-                    }
+                    console.log('Gathering results...');
+                    progress.report({message: 'Gathering results...'});
+                   
                     if (!skipReport) {
                         vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
                             if (result === 'Open Report') {
@@ -213,7 +203,7 @@ export class RhamtUtil {
 
         // output
         params.push('--output');
-        const output = config.options['generateOutputLocation'];
+        const output = config.options['output'];
         if (!output || output === '') {
             return Promise.reject('output is missing from configuration');
         }

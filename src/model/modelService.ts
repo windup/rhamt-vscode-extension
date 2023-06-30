@@ -20,7 +20,6 @@ export class ModelService {
     constructor(
         public model: RhamtModel,
         public outDir: string,
-        public outputLocation: string,
         public endpoints: Endpoints) {
     }
 
@@ -53,7 +52,6 @@ export class ModelService {
         }
         config.options['cli'] = this.getRecentCli();
         config.options['sourceMode'] = true;
-        config.options['generateOutputLocation'] = path.resolve(this.outputLocation, config.id);
         config.options['target'] = ['eap7'];
 
         if (Windup.isRemote()) {
@@ -406,12 +404,6 @@ export class ModelService {
 
     public getModelPersistanceLocation(): string {
         return path.join(this.outDir, 'model.json');
-    }
-
-    public async getReportLocation(location: string): Promise<string> {
-        const relative = location.replace(`${this.endpoints.reportsRoot()}/`, '');
-        const url = await this.endpoints.reportLocation();
-        return `${url}${relative}`;
     }
 
     async readCliMeta(): Promise<any> {

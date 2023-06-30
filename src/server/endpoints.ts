@@ -65,7 +65,7 @@ async function computeCheHostInfo(): Promise<RhamtHostInfo> {
     return undefined;
 }
 
-export async function getEndpoints(ctx: vscode.ExtensionContext, out: string): Promise<any> {
+export async function getEndpoints(ctx: vscode.ExtensionContext): Promise<any> {
     const findConfigurationLocation = async () => {
         if (!process.env.CHE_WORKSPACE_NAMESPACE) {
             return `http://localhost:${CONFIG_PORT}/`;
@@ -88,9 +88,6 @@ export async function getEndpoints(ctx: vscode.ExtensionContext, out: string): P
         },
         configurationResourceRoot: () => {
             return vscode.Uri.file(path.join(ctx.extensionPath, 'resources', 'configuration-editor')).fsPath;
-        },
-        reportsRoot: () => {
-            return out;
         },
         configurationPort: () => CONFIG_PORT,
         configurationLocation: async (config?: RhamtConfiguration): Promise<string> => {

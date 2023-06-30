@@ -322,6 +322,14 @@
         "type": "File",
         "ui-type": ["file"],
         "required": false
+      },
+      {
+        "name": "output",
+        "description": "The location of the generated analysis results.",
+        "type": "String",
+        "ui-type": ["single"],
+        "required": true,
+        "disabled": true
       }
     ]
   }
