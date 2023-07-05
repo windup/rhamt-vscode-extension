@@ -2,7 +2,7 @@
     "name": "windup-vscode-extension",
     "displayName": "Application Migration and Modernization using Windup",
     "description": "Application Migration and Modernization using Windup",
-    "version": "6.2.5",
+    "version": "6.2.6",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
