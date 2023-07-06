@@ -121,7 +121,7 @@ export async function activate(context: vscode.ExtensionContext) {
     console.log('App Name:');
     console.log(vscode.env.appName);
     
-    Utils.checkCli(modelService.outDir, context, true);
+    Utils.checkCli(modelService.outDir, context, !Windup.isLocal());
 
     vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer(modelService, configEditorService));
 

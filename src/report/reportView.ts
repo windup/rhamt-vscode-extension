@@ -35,7 +35,7 @@ export class ReportView {
     async open(location: string): Promise<void> {
         console.log(`Opening Report: ${location}`);
 
-        if (!Windup.isRemote()) {
+        if (Windup.isLocal()) {
             open(location);
             return;
         }
