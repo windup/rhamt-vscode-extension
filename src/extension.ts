@@ -50,7 +50,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     console.log(`windup state location is: ${stateLocation}`);
 
-    log(`Windup.isRemote() - ${Windup.isRemote()}`);
+    log(`Windup.isLocal() - ${Windup.isLocal()}`);
     log(`App name: ${vscode.env.appName}`);
      
     const out = path.join(stateLocation);
@@ -164,10 +164,10 @@ export namespace Windup {
         return vscode.env.appName === "Visual Studio Code" ||
             vscode.env.appName === 'VSCodium';
     }
-    export function isRemote(): boolean {
+    /* export function isRemote(): boolean {
         return vscode.env.appName.includes("Che") || 
             vscode.env.appName.includes('Gitpod');
-    }
+    } */
     export function isVSCode(): boolean {
         return vscode.env.appName === "Visual Studio Code";
     }

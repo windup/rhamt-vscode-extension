@@ -195,7 +195,7 @@ export namespace Utils {
             if (Utils.THEME === 'mta' || Utils.THEME === 'mtr') {
                 Utils.showDownloadCliOption(dataOut, context);
             }
-            else if (autoDownload || Windup.isRemote()) {
+            else if (autoDownload || !Windup.isLocal()) {
                 console.log('Auto-downloading CLI...');
                 Utils.downloadCli(dataOut);
             }

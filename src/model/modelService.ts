@@ -54,7 +54,7 @@ export class ModelService {
         config.options['sourceMode'] = true;
         config.options['target'] = ['eap7'];
 
-        if (Windup.isRemote()) {
+        if (!Windup.isLocal()) {
             config.options['legacyReports'] = true;
         }
         return config;
@@ -414,7 +414,7 @@ export class ModelService {
                     if (err) reject(err);
                     else {
                         this.elementData = JSON.parse(data);
-                        if (Windup.isRemote()) {
+                        if (!Windup.isLocal()) {
                             const option = this.elementData.options.find(option => option.name === 'legacyReports');
                             option.editable = false;
                         }
