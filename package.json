@@ -1,14 +1,14 @@
 {
-    "name": "windup-vscode-extension",
-    "displayName": "Application Migration and Modernization using Windup",
-    "description": "Application Migration and Modernization using Windup",
-    "version": "6.2.51",
+    "name": "mta-vscode-extension",
+    "displayName": "Migration Toolkit for Applications (MTA)",
+    "description": "Migration Toolkit for Applications (MTA)",
+    "version": "6.2.0",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
-    "theme": "windup",
+    "theme": "mta",
     "preview": true,
-    "icon": "resources/windup_logo.png",
+    "icon": "resources/mta_mtr_icon.png",
     "homepage": "https://github.com/windup/rhamt-vscode-extension/blob/master/README.md",
     "repository": {
         "type": "git",
@@ -50,7 +50,7 @@
     "contributes": {
         "commands": [
             {
-                "category": "Windup",
+                "category": "MTA",
                 "command": "rhamt.newConfiguration",
                 "title": "New Configuration",
                 "icon": {
@@ -59,7 +59,7 @@
                 }
             },
             {
-                "category": "Windup",
+                "category": "MTA",
                 "command": "rhamt.modelReload",
                 "title": "Refresh Configurations",
                 "icon": "$(refresh)"
@@ -142,7 +142,7 @@
         ],
         "configuration": [
             {
-                "title": "Windup CLI",
+                "title": "MTA CLI",
                 "properties": {
                     "cli.executable.path": {
                         "type": "string",
@@ -157,8 +157,8 @@
             "activitybar": [
                 {
                     "id": "rhamt-explorer",
-                    "title": "Windup",
-                    "icon": "resources/windup_logo.png"
+                    "title": "MTA",
+                    "icon": "resources/mta_mtr_icon.png"
                 }
             ]
         },

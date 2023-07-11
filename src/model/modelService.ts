@@ -54,6 +54,8 @@ export class ModelService {
         config.options['sourceMode'] = true;
         config.options['target'] = ['eap7'];
 
+        config.options['legacyReports'] = true;
+
         if (!Windup.isLocal()) {
             config.options['legacyReports'] = true;
         }

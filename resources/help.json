@@ -63,11 +63,12 @@
         "description": "This option will ensure the original format reports are generated rather than the new style PatternFly 4 reports.",
         "type": "Boolean",
         "ui-type": ["single"],
-        "required": false
+        "required": true,
+        "editable": false
       },
       {
         "name": "userRulesDirectory",
-        "description": "User Rules Directory (Search pattern: *.windup.groovy, *.windup.xml).",
+        "description": "User Rules Directory",
         "type": "Path",
         "ui-type": ["many", "file_or_directory", "text", "recent"],
         "placeholder": "No Directories Specified",
@@ -131,7 +132,7 @@
       },
       {
         "name": "userIgnorePath",
-        "description": "A path to the list of path patterns to skip during execution. If it points to a directory, all contained files named '*windup-ignore.txt' or '*windup-ignore.txt' will be considered as such list.",
+        "description": "A path to the list of path patterns to skip during execution.",
         "type": "File",
         "ui-type": ["file_or_directory"],
         "placeholder": "No Files or Directories Specified",

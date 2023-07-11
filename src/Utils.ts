@@ -25,8 +25,8 @@ const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
 
-    export const THEME = 'windup';
-    export const THEME_VERSION = '6.2.5';
+    export const THEME = 'mta';
+    export const THEME_VERSION = '6.2.0';
     export const PRODUCT_DOWNLOAD_PAGE = `https://developers.redhat.com/products/${THEME}/download`;
     export const CLI_SCRIPT = `windup-cli`;
     export const CLI_FOLDER = `${THEME}-cli-${THEME_VERSION}.Final`;
