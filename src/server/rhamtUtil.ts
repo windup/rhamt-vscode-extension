@@ -53,11 +53,8 @@ export class RhamtUtil {
                 let resolved = false;
                 let processController: RhamtProcessController;
                 const date = new Date();
-                const time = date.toLocaleTimeString();
-                const timestamp = time.substring(0, time.lastIndexOf(':'));
-                const sun = time.substring(time.lastIndexOf(' ') + 1);
-                const year = new String(date.getFullYear()).substring(0, 2);
-                const executedTimestamp = `${date.getMonth()}/${date.getDate()}/${year} @ ${timestamp}${sun}`;
+                const year = new String(date.getFullYear()).substring(2);
+                const executedTimestamp = `${date.getMonth()+1}/${date.getDate()}/${year}`;
                 const onComplete = async () => {
                     processController.shutdown();
                     RhamtUtil.updateRunEnablement(true, dataProvider, config);
