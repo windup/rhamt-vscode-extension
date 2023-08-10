@@ -1,12 +1,12 @@
 {
-    "name": "mta-vscode-extension",
-    "displayName": "Migration Toolkit for Applications (MTA)",
-    "description": "Migration Toolkit for Applications (MTA)",
-    "version": "6.2.0",
+    "name": "mtr-vscode-extension",
+    "displayName": "Migration Toolkit for Runtimes (MTR)",
+    "description": "Migration Toolkit for Runtimes (MTR)",
+    "version": "1.2.0",
     "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
-    "theme": "mta",
+    "theme": "mtr",
     "preview": true,
     "icon": "resources/mta_mtr_icon.png",
     "homepage": "https://github.com/windup/rhamt-vscode-extension/blob/master/README.md",
@@ -50,7 +50,7 @@
     "contributes": {
         "commands": [
             {
-                "category": "MTA",
+                "category": "MTR",
                 "command": "rhamt.newConfiguration",
                 "title": "New Configuration",
                 "icon": {
@@ -59,7 +59,7 @@
                 }
             },
             {
-                "category": "MTA",
+                "category": "MTR",
                 "command": "rhamt.modelReload",
                 "title": "Refresh Configurations",
                 "icon": "$(refresh)"
@@ -142,7 +142,7 @@
         ],
         "configuration": [
             {
-                "title": "MTA CLI",
+                "title": "MTR CLI",
                 "properties": {
                     "cli.executable.path": {
                         "type": "string",
@@ -157,7 +157,7 @@
             "activitybar": [
                 {
                     "id": "rhamt-explorer",
-                    "title": "MTA",
+                    "title": "MTR",
                     "icon": "resources/mta_mtr_icon.png"
                 }
             ]
