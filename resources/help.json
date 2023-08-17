@@ -45,6 +45,7 @@
           "fuse",
           "openjdk",
           "jakarta-ee",
+          "jws6",
           "eap",
           "camel",
           "linux",
@@ -54,6 +55,7 @@
           "eapxp",
           "openjdk11",
           "openjdk17",
+          "openjdk21",
           "openliberty"
         ],
         "editable": true
