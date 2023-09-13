@@ -3,7 +3,6 @@
     "displayName": "Migration Toolkit for Runtimes (MTR)",
     "description": "Migration Toolkit for Runtimes (MTR)",
     "version": "1.2.0",
-    "license": "MIT",
     "publisher": "redhat",
     "author": "Red Hat",
     "theme": "mtr",
