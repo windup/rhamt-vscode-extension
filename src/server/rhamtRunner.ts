@@ -4,36 +4,29 @@
  *--------------------------------------------------------------------------------------------*/
 import * as cp from 'child_process';
 import * as os from 'os';
-const STARTED_REGEX = /.*ToolingModeRunner.*/;
+const STARTED_REGEX = /.*running source code analysis.*/;
 
 import { rhamtChannel } from '../util/console';
 
-export class RhamtRunner {
-    static run(home: string, executable: string, javaHome: string, data: any[], startTimeout: number,
+export class AnalyzerRunner {
+    static run(executable: string, data: any[], startTimeout: number,
         out: (msg: string) => void, onShutdown: () => void): Promise<cp.ChildProcess> {
         return new Promise<cp.ChildProcess>((resolve, reject) => {
             let started = false;
             let killed = false;
 
-            rhamtChannel.print(`Using JAVA_HOME: ${javaHome}`);
-            rhamtChannel.print('\n');     
-
+            rhamtChannel.print('\n');  
+  
             const rhamtProcess = cp.spawn(executable, data, {
                 cwd: os.homedir(),
                 env: Object.assign(
                     {},
                     process.env,
-                    {
-                        JAVA_HOME: javaHome
-                    } 
-                    // {
-                    //     WINDUP_HOME: ''
-                    // }
                 )
             });
             rhamtProcess.on('error', e => {
                 console.log(e);
-                rhamtChannel.print("Error executing CLI");
+                rhamtChannel.print("Error executing analyzer");
                 if (e && e.message) {
                     rhamtChannel.print('\n');
                     rhamtChannel.print(e.name + ' : ' + e.message);
@@ -43,7 +36,9 @@ export class RhamtRunner {
                 }
                 onShutdown();
             });
-            rhamtProcess.on('close', () => {
+            rhamtProcess.on('close', e => {
+                console.log('cli process closed');
+                console.log(e);                
                 onShutdown();
             });
             const outputListener = (data: string | Buffer) => {
@@ -59,7 +54,7 @@ export class RhamtRunner {
             setTimeout(() => {
                 if (!started && !killed) {
                     rhamtProcess.kill();
-                    reject(`cli startup time exceeded ${startTimeout}ms.`);
+                    reject(`analyzer startup time exceeded ${startTimeout}ms.`);
                 }
             }, startTimeout);
         });
