@@ -2,14 +2,14 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { RhamtModel, RhamtConfiguration, Endpoints, IHint } from './model';
+import { RhamtModel, RhamtConfiguration, Endpoints, IHint } from '../server/analyzerModel';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as mkdirp from 'mkdirp';
 import * as vscode from 'vscode';
-import { AnalysisResults, AnalysisResultsUtil } from './analysisResults';
 import { Windup } from '../extension';
+import { AnalyzerUtil } from '../server/analyzerUtil';
 
 export class ModelService {
 
@@ -241,13 +241,11 @@ export class ModelService {
                 for (const entry of configs) {
                     const config: RhamtConfiguration = new RhamtConfiguration();
                     ModelService.copy(entry, config);
-                    if (config.summary) {
-                        try {
-                            await ModelService.loadResults(config);
-                        }
-                        catch (e) {
-                            return reject(e);
-                        }
+                    try {
+                        await ModelService.loadResults(config);
+                    }
+                    catch (e) {
+                        return reject(e);
                     }
                     this.model.configurations.push(config);
                 }
@@ -258,23 +256,13 @@ export class ModelService {
     }
 
     static async loadResults(target: RhamtConfiguration): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            const location = target.getResultsLocation();
-            if (!location) {
-                return reject(`Error loading analysis results. Cannot resolve configuraiton output location.`);
+        return new Promise<void>(async (resolve, reject) => {
+            try {
+                await AnalyzerUtil.loadAnalyzerResults(target, false);
             }
-            fs.exists(location, async exists => {
-                if (exists) {
-                    try {
-                        const dom = await AnalysisResultsUtil.loadFromLocation(location);
-                        target.results = new AnalysisResults(dom, target);
-                        await target.results.init();
-                    } catch (e) {
-                        return reject(`Error loading analysis results for configuration at ${location} - ${e}`);
-                    }
-                }
-                resolve();
-            });
+            catch (e) {
+            }
+            resolve();
         });
     }
 
@@ -308,7 +296,6 @@ export class ModelService {
                     data.summary.hintCount = config.summary.hintCount;
                     data.summary.classificationCount = config.summary.classificationCount;
                     data.summary.quickfixCount = config.summary.quickfixes.length;
-                    await this.saveAnalysisResults(config);
                 }
                 catch (e) {
                     console.log(`Error while saving configuration results: ${e}`);
@@ -326,25 +313,7 @@ export class ModelService {
     }
 
     saveAnalysisResults(config: RhamtConfiguration): Promise<void> {
-        return new Promise<void> ((resolve, reject) => {
-            const out = config.getResultsLocation();
-            const dir = path.dirname(out);
-            mkdirp(dir, (e: any) => {
-                if (e) {
-                    console.log(`Error making results dir at: ${dir}`);
-                    console.log(`Error is: ${e}`);                    
-                    return reject(e);  
-                } 
-                fs.writeFile(out, config.results.dom.html(), null, e => {
-                    if (e) {
-                        console.log(`Error writing results at: ${out}`);
-                        console.log(`Error is: ${e}`);                    
-                        return reject(e);  
-                    } 
-                    resolve();
-                });
-            });
-        });
+        return Promise.resolve();
     }
 
     computeQuickfixData(config: RhamtConfiguration): any {
@@ -428,7 +397,6 @@ export class ModelService {
             console.log(`ModelService :: Error reading help.json :: ${err}`);
         });
     }
-
     public getActiveHints(): IHint[] {
         if (this.model.configurations.length == 0) return [];
         let configs = this.model.configurations.filter(config => config.summary != undefined);
@@ -441,23 +409,6 @@ export class ModelService {
             hints = hints.concat(config.results.model.hints);
         });
         return hints;
-        // const activeConfig = configs.find(config => config.summary.active);
-        // if (activeConfig) {
-        //     return activeConfig.results.model.hints;
-        // }
-        // let mostRecentConfig = activeConfigs[0];
-        // let mostRecentTimestamp = new Date(mostRecentConfig.summary.executedTimestampRaw);
-        // for (const config of configs) {
-        //     if (mostRecentConfig.id === config.id) continue;
-        //     if (config.summary.executedTimestampRaw) {
-        //         const executedTimestamp = new Date(config.summary.executedTimestampRaw);
-        //         if (mostRecentTimestamp < executedTimestamp) {
-        //             mostRecentConfig = config;
-        //             mostRecentTimestamp = executedTimestamp;
-        //         }
-        //     }
-        // }
-        // return mostRecentConfig.results.model.hints;
     }
 
     public findHint(configId: string, hintId: string): IHint | undefined {
