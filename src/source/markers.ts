@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
 import { window, ThemeColor } from 'vscode';
-import { IHint } from '../model/model';
+import { IHint } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 
 export const HINT = 'migration';
@@ -42,16 +42,6 @@ export class MarkerService {
         this.refreshOpenEditors();
     }
 
-    // public deactivate(): void {
-    //     this.unfixedHintDecorationType.dispose();
-    // }
-
-    // private refreshEditor(doc: vscode.TextDocument): void {
-    //     vscode.window.visibleTextEditors.filter(editor => editor.document.uri.fsPath === doc.uri.fsPath).forEach(editor => {
-    //         this.refreshHints(editor.document,);
-    //     }); 
-    // }
-
     public refreshOpenEditors(file?: string): void {
         const activeEditor = vscode.window.activeTextEditor;
         if (activeEditor) {
@@ -74,23 +64,40 @@ export class MarkerService {
     }
 
     private refreshHints(doc: vscode.TextDocument, editor?: vscode.TextEditor): void {
-        const diagnostics: vscode.Diagnostic[] = [];
-        const decorations = [new vscode.Range(0, 0, 0, 0)];
-        this.diagnostics.delete(doc.uri);
-        this.modelService.getActiveHints().filter(issue => doc.uri.fsPath === issue.file).forEach(issue => {
-            const diagnostic = this.createDiagnostic(doc, issue);
-            if (diagnostic) {
-                diagnostics.push(diagnostic);
-                const lineNumber = issue.lineNumber-1;
-                const range = new vscode.Range(lineNumber, issue.column, lineNumber, issue.length+issue.column);
-                decorations.push(range);
+        try {
+            const diagnostics: vscode.Diagnostic[] = [];
+            const decorations = [new vscode.Range(0, 0, 0, 0)];
+            this.diagnostics.delete(doc.uri);
+            this.modelService.getActiveHints().filter(issue => doc.uri.fsPath === issue.file).forEach(issue => {
+                try {
+                    const diagnostic = this.createDiagnostic(doc, issue);
+                    if (diagnostic) {
+                        diagnostics.push(diagnostic);
+                        const lineNumber = issue.lineNumber-1;
+                        const range = new vscode.Range(lineNumber, issue.column, lineNumber, issue.length+issue.column);
+                        decorations.push(range);
+                    }
+                } 
+                catch (e) {
+                    console.log('Error creating incident diagnostic.');
+                    console.log(e);                    
+                }
+            });
+            try {
+                if (diagnostics.length > 0) {
+                    this.diagnostics.set(doc.uri, diagnostics);
+                }
+                if (editor) {
+                    editor.setDecorations(this.unfixedHintDecorationType, decorations);
+                }
             }
-        });
-        if (diagnostics.length > 0) {
-            this.diagnostics.set(doc.uri, diagnostics);
+            catch (e) {
+                console.log('Error setting incident diagnostic.');
+                console.log(e);
+            }
         }
-        if (editor) {
-            editor.setDecorations(this.unfixedHintDecorationType, decorations);
+        catch (e) {
+            console.log(e);
         }
     }
 
@@ -101,16 +108,29 @@ export class MarkerService {
         if (lineOfText.isEmptyOrWhitespace) {
             return undefined;
         }
-        const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(lineNumber, issue.column, lineNumber, issue.length+issue.column),
-            issue.title,
-            this.convertSeverity(issue)
-        );
-        diagnostic.code = `${HINT} :: ${issue.configuration.id} :: ${issue.id}`;
-        return diagnostic;
+        try {
+            const severity = this.convertSeverity(issue);
+            const range = new vscode.Range(lineNumber, issue.column, lineNumber, issue.length+issue.column);
+            const title = issue.title ? issue.title : 'unknown-incident-title';
+            console.log(`range - ${range}`);
+            console.log(range);
+            console.log(`title - ${title}`);
+            console.log(`severity ${severity}`);
+            
+                        
+            const diagnostic = new vscode.Diagnostic(range, title, severity);
+            diagnostic.code = `${HINT} :: ${issue.configuration.id} :: ${issue.id}`;
+            return diagnostic;
+        }
+        catch (e) {
+            console.log('Errir creating diagnostic.');            
+            console.log(e);
+            return undefined;
+        }
     }
 
     private convertSeverity(hint: IHint): vscode.DiagnosticSeverity {
+        
         let severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Information;
         if (!hint.category || hint.category.includes('error') || hint.category.includes('mandatory')) {
             severity = vscode.DiagnosticSeverity.Error;

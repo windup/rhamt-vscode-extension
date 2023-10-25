@@ -86,17 +86,6 @@ export class RhamtConfiguration {
         return path.resolve(this.options['output'], 'results.xml');
     }
 
-    deleteIssue(issue: IIssue): void {
-        this._results.deleteIssue(issue);
-    }
-
-    markIssueAsComplete(issue: IIssue, complete: boolean): void {
-        this._results.markIssueAsComplete(issue, complete);
-    }
-
-    markQuickfixApplied(quickfix: IQuickFix, applied: boolean): void {
-        this._results.markQuickfixApplied(quickfix, applied);
-    }
 
     getQuickfixesForResource(resource: string): IQuickFix[] {
         let quickfixes = [];

@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
-import { IIssue, IQuickFix, IssueContainer } from '../model/model';
+import { IIssue, IQuickFix, IssueContainer } from '../server/analyzerModel';
 import * as path from 'path';
 import { Quickfix } from '../quickfix/quickfix';
 

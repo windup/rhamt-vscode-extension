@@ -5,7 +5,7 @@
 import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import { ConfigurationNode } from './configurationNode';
 import { ResultsItem } from './resultsItem';

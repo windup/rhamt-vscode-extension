@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
-import { IHint, IQuickFix } from '../model/model';
+import { IHint, IQuickFix } from '../server/analyzerModel';
 import { Quickfix } from '../quickfix/quickfix';
 
 export class QuickfixesItem extends TreeItem {

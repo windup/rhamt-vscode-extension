@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
-import { ChangeType, IHint, IQuickFix, IssueContainer } from '../model/model';
+import { ChangeType, IHint, IQuickFix, IssueContainer } from '../server/analyzerModel';
 import * as fs from 'fs-extra';
 import { Diff } from './diff';
 
@@ -80,9 +80,7 @@ export namespace Quickfix {
 
     export function doApplyQuickfix(quickfix: IQuickFix, applied: boolean = true) {
         quickfix.quickfixApplied = applied;
-        quickfix.issue.configuration.markQuickfixApplied(quickfix, applied);
         quickfix.issue.complete = applied;
-        quickfix.issue.configuration.markIssueAsComplete(quickfix.issue, applied);
         quickfix.issue.configuration.onChanged.emit({
             type: ChangeType.QUICKFIX_APPLIED,
             name: 'quickfix',

@@ -10,7 +10,7 @@ import * as fs from 'fs-extra';
 import { DataProvider } from '../tree/dataProvider';
 import { AnalyzerRunner } from './analyzerRunner';
 import { AnalyzerProcessController } from './analyzerProcessController';
-import { RhamtConfiguration } from './analyzerModel';
+import { RhamtConfiguration, WINDOW } from './analyzerModel';
 import * as path from 'path';
 import { AnalyzerResults } from './analyzerResults';
 const START_TIMEOUT = 60000;
@@ -48,6 +48,10 @@ export class AnalyzerUtil {
             return new Promise<any>(async resolve => {
                 const executable = config.rhamtExecutable;
                 console.log(`Using executable - ${executable}`);
+                const log = (data: string) => {
+                    rhamtChannel.print(data);
+                    rhamtChannel.print('\n');
+                };
                 let params = [];
                 try {
                     progress.report({message: 'Verifying configuration'});
@@ -63,7 +67,6 @@ export class AnalyzerUtil {
                 let cancelled = false;
                 let resolved = false;
                 let processController: AnalyzerProcessController;
-                const onMessage = (data: string) => {};
                 const onShutdown = () => {
                     AnalyzerUtil.updateRunEnablement(true, dataProvider, config);
                     if (!resolved) {
@@ -72,7 +75,7 @@ export class AnalyzerUtil {
                     }
                 };
                 try {
-                    processController = await AnalyzerRunner.run(config.rhamtExecutable, params, START_TIMEOUT, onMessage, onShutdown).then(cp => {
+                    processController = await AnalyzerRunner.run(config.rhamtExecutable, params, START_TIMEOUT, log, onShutdown).then(cp => {
                         onStarted();
                         return new AnalyzerProcessController(config.rhamtExecutable, cp, onShutdown);
                     });
@@ -199,7 +202,7 @@ export class AnalyzerUtil {
                                     return reject(err);
                                 }
                                 try {
-                                    const dataJson = JSON.parse(data.replace('window["apps"] = ', ''));
+                                    const dataJson = JSON.parse(data.replace(WINDOW, ''));
                                     return resolve(dataJson);                                    
                                 }
                                 catch (e) {

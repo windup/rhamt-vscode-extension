@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { Command, ThemeIcon, TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../server/analyzerModel';
 
 export class ConfigurationItem extends TreeItem {
 

@@ -5,7 +5,7 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { RhamtModel } from '../src/model/model';
+import { RhamtModel } from '../src/server/analyzerModel';
 import { ModelService } from '../src/model/modelService';
 
 suite('RHAMT / Issue Explorer', () => {

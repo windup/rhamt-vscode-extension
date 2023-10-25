@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import { DataProvider } from './dataProvider';
 import { ConfigurationNode } from './configurationNode';

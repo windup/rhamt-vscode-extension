@@ -5,7 +5,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../server/analyzerModel';
 import { Utils } from '../Utils';
 
 export function findRhamtCli(outDir: string, config?: RhamtConfiguration): Promise<string> {

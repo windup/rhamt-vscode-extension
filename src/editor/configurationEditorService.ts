@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { ConfigurationView } from './configurationView';
 import { ExtensionContext } from 'vscode';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../server/analyzerModel';
 import * as vscode from 'vscode';
 import { ModelService } from '../model/modelService';
 

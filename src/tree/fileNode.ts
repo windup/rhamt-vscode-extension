@@ -5,7 +5,7 @@
 import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration, IQuickFix } from '../model/model';
+import { RhamtConfiguration, IQuickFix } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import * as path from 'path';
 import { ConfigurationNode } from './configurationNode';
@@ -48,6 +48,9 @@ export class FileNode extends AbstractNode<FileItem> {
     }
 
     getLabel(): string {
+        console.log('File Node Label for: ' + this.file);        
+        console.log('File Node Label: ' + path.basename(this.file));
+        
         return path.basename(this.file);
     }
 

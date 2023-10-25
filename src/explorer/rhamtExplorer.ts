@@ -9,9 +9,10 @@ import { RhamtUtil } from '../server/rhamtUtil';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
 import { applyQuickfixes } from '../quickfix/quickfix';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../server/analyzerModel';
 import { MarkerService } from '../source/markers';
 import { Grouping } from '../tree/configurationNode';
+import { AnalyzerUtil } from '../server/analyzerUtil';
 
 export class RhamtExplorer {
 
@@ -164,25 +165,20 @@ export class RhamtExplorer {
             }
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
-            // TODO: Set buy indicator on configuration being ran, and update it accordingly if cancelled, errored, or finished.
             const config = item.config;
-            // TODO: refactor - move to separate service object that others can reference.
             try {
                 RhamtUtil.updateRunEnablement(false, this.dataProvider, config);
-                await RhamtUtil.analyze(
+                await AnalyzerUtil.analyze(
                     this.dataProvider,
                     config,
                     this.modelService,
                     () => {
-                        const output = config.options['output'];
-                        if (output) {
-                            this.modelService.deleteOuputLocation(output);
-                        }
                         config.results = undefined;
                         config.summary = undefined;
                         this.refreshConfigurations();
                     },
                     async () => {
+                        await AnalyzerUtil.loadAnalyzerResults(config);
                         RhamtUtil.updateRunEnablement(true, this.dataProvider, config);
                         const configNode = this.dataProvider.getConfigurationNode(config);
                         configNode.loadResults();

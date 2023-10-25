@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 // @ts-nocheck
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
-import { IHint, IIssue, IssueContainer } from '../model/model';
+import { IHint, IIssue, IssueContainer } from '../server/analyzerModel';
 import * as path from 'path';
 import { ModelService } from '../model/modelService';
 import { Quickfix } from '../quickfix/quickfix';

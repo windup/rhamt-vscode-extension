@@ -5,7 +5,7 @@
 import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import { ReportItem } from './reportItem';
 import { ConfigurationNode } from './configurationNode';

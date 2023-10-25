@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { WebviewPanel, window, ViewColumn, ExtensionContext, commands, Uri } from 'vscode';
-import { Endpoints, IIssue, IssueContainer } from '../model/model';
+import { Endpoints, IIssue, IssueContainer } from '../server/analyzerModel';
 import { rhamtEvents } from '../events';
 import * as path from 'path';
 import { ModelService } from '../model/modelService';

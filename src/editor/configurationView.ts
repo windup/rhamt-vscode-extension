@@ -5,7 +5,7 @@
 import { rhamtEvents } from '../events';
 import { WebviewPanel, window, ViewColumn, Uri, ExtensionContext, workspace } from 'vscode';
 import * as path from 'path';
-import { ChangeType, RhamtConfiguration } from '../model/model';
+import { ChangeType, RhamtConfiguration } from '../server/analyzerModel';
 import * as vscode from 'vscode';
 import { ModelService } from '../model/modelService';
 import * as os from 'os';

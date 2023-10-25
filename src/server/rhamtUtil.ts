@@ -4,12 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
 import { Utils } from '../Utils';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../server/analyzerModel';
 import { RhamtRunner } from './rhamtRunner';
 import { RhamtProcessController } from './rhamtProcessController';
 import { ProgressMonitor } from './progressMonitor';
 import * as path from 'path';
-import { AnalysisResultsUtil, AnalysisResults } from '../model/analysisResults';
 import { ModelService } from '../model/modelService';
 import { rhamtChannel } from '../util/console';
 import * as fs from 'fs-extra';
@@ -384,9 +383,6 @@ export class RhamtUtil {
 
     private static async loadResults(config: RhamtConfiguration, modelService: ModelService, startedTimestamp: string, timestampRaw: string, skippedReports: any): Promise<any> {
         try {
-            // open results.xml, set IDs, save to disk
-            const dom = await AnalysisResultsUtil.loadAndPersistIDs(config.getResultsLocation());
-            console.log(`Skipped reports: ${skippedReports}`);
             config.summary = {
                 skippedReports,
                 outputLocation: config.options['output'],
@@ -395,8 +391,6 @@ export class RhamtUtil {
                 executedTimestampRaw: timestampRaw,
                 active: true
             };
-            // open results.xml, load hints/classifications, read quickfix lines
-            config.results = new AnalysisResults(dom, config);
             await config.results.init();
             // setup quickfix data to be saved in model.json
             config.summary.quickfixes = modelService.computeQuickfixData(config);

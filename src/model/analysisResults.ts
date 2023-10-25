@@ -8,7 +8,7 @@ import { ModelService } from './modelService';
 // import * as open from 'opn';
 import * as readline from 'readline';
 // import * as mime from 'mime-types';
-import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue, ILink, IIssueType } from './model';
+import { IHint, IQuickFix, IClassification, RhamtConfiguration, IIssue, ILink, IIssueType } from '../server/analyzerModel';
 
 export interface AnalysisResultsSummary {
     skippedReports?: boolean;

@@ -7,7 +7,7 @@ import { ConfigurationClient } from './configurationClient';
 import * as os from 'os';
 import { workspace, commands, window, Uri } from 'vscode';
 import * as nls from 'vscode-nls';
-import { RhamtConfiguration, ChangeType } from '../model/model';
+import { RhamtConfiguration, ChangeType } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 
 const localize = nls.loadMessageBundle();

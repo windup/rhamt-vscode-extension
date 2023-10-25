@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Request, Response, NextFunction } from 'express';
 import { ModelService } from '../model/modelService';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../server/analyzerModel';
 
 export class ConfigurationServerController {
 

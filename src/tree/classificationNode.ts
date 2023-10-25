@@ -6,7 +6,7 @@ import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
 import { ClassificationItem } from './classificationItem';
-import { RhamtConfiguration, IClassification, ReportHolder, IssueContainer, IIssue } from '../model/model';
+import { RhamtConfiguration, IClassification, ReportHolder, IssueContainer, IIssue } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import { ConfigurationNode } from './configurationNode';
 

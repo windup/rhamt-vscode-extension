@@ -50,6 +50,11 @@ export class ProgressMonitor {
         case 'worked':
             this.worked(value);
             break;
+        case 'generating static report': {
+            this.done();
+            this.finalize();
+            break;
+        }
         }
 
         if (!this.started) {

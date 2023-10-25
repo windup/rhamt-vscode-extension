@@ -9,7 +9,7 @@ import * as sinon from 'sinon';
 import * as path from 'path';
 import { OptionsBuilder } from '../src/optionsBuilder';
 import { ModelService } from '../src/model/modelService';
-import { RhamtModel } from '../src/model/model';
+import { RhamtModel } from '../src/server/analyzerModel';
 
 const expect = chai.expect;
 chai.use(sinonChai);

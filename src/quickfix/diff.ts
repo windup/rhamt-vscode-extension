@@ -2,7 +2,7 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { IHint, IQuickFix } from "../model/model";
+import { IHint, IQuickFix } from "../server/analyzerModel";
 import * as vscode from 'vscode';
 import * as os from 'os';
 import { QuickfixNode } from "../tree/quickfixNode";

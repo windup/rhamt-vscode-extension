@@ -19,7 +19,7 @@ export class HintsItem extends TreeItem {
     }
 
     public refresh(count: number): void {
-        this.label = `Hints (${count})`;
+        this.label = `Incidents (${count})`;
         this.collapsibleState = TreeItemCollapsibleState.Collapsed;
     }
 

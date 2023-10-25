@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 // @ts-nocheck
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
-import { IClassification, IIssue, IssueContainer } from '../model/model';
+import { IClassification, IIssue, IssueContainer } from '../server/analyzerModel';
 import * as path from 'path';
 import { ModelService } from '../model/modelService';
 

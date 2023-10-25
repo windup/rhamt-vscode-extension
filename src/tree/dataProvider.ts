@@ -9,7 +9,7 @@ import { ConfigurationNode, Grouping } from './configurationNode';
 import { ITreeNode } from './abstractNode';
 import { ModelService } from '../model/modelService';
 import { ResultsNode } from './resultsNode';
-import { RhamtConfiguration } from '../model/model';
+import { RhamtConfiguration } from '../server/analyzerModel';
 import { MarkerService } from '../source/markers';
 import { getOpenEditors } from '../editor/configurationView';
 
@@ -108,6 +108,10 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
         return this.children.find(node => node.config.id === config.id);
     }
 
+    public findConfigurationNode(id: string): ConfigurationNode | undefined {
+        return this.children.find(node => node.config.id === id);
+    }
+
     public async refresh(node?: ITreeNode): Promise<void> {
         this._onDidChangeTreeDataEmitter.fire(node);
     }
@@ -149,51 +153,56 @@ export class DataProvider implements TreeDataProvider<ITreeNode>, Disposable {
 
         let nodes: any[];
 
-        if (this.modelService.loaded) {
-            for (let i = this.children.length; i--;) {
-                const config = this.modelService.model.configurations.find(item => item.id === this.children[i].config.id);
-                if (!config) {
-                    this.children.splice(i, 1);
-                }
-            }
-            nodes = this.modelService.model.configurations.map(config => {
-                let node = this.children.find(node => node.config.id === config.id);
-                if (!node) {
-                    node = new ConfigurationNode(
-                        config,
-                        this.grouping,
-                        this.modelService,
-                        this._onNodeCreateEmitter,
-                        this,
-                        this.markerService);
-                    this.children.push(node);
-                }
-                return node;
-            });
-        }
-
-        else {
-            const item = new TreeItem(localize('loadingNode', 'Loading...'));
-            const base = [__dirname, '..', '..', '..', 'resources'];
-            item.iconPath = {
-                light: path.join(...base, 'light', 'Loading.svg'),
-                dark:  path.join(...base, 'dark', 'Loading.svg')
-            };
-            nodes = [item];
-            (async () => setTimeout(async () => {
-                try {
-                    await this.modelService.load();
-                    if (this.modelService.model.configurations.length === 0) {
-                        commands.executeCommand('rhamt.newConfiguration');
+        try {
+            if (this.modelService.loaded) {
+                for (let i = this.children.length; i--;) {
+                    const config = this.modelService.model.configurations.find(item => item.id === this.children[i].config.id);
+                    if (!config) {
+                        this.children.splice(i, 1);
                     }
-                    this.refresh();
                 }
-                catch (e) {
-                    console.log('error while loading model service.');
-                    console.log(e);
-                    window.showErrorMessage(`Error reloading explorer data.`)
-                }
-            }, 500))();
+                nodes = this.modelService.model.configurations.map(config => {
+                    let node = this.children.find(node => node.config.id === config.id);
+                    if (!node) {
+                        node = new ConfigurationNode(
+                            config,
+                            this.grouping,
+                            this.modelService,
+                            this._onNodeCreateEmitter,
+                            this,
+                            this.markerService);
+                        this.children.push(node);
+                    }
+                    return node;
+                });
+            }
+            else {
+                const item = new TreeItem(localize('loadingNode', 'Loading...'));
+                const base = [__dirname, '..', '..', '..', 'resources'];
+                item.iconPath = {
+                    light: path.join(...base, 'light', 'Loading.svg'),
+                    dark:  path.join(...base, 'dark', 'Loading.svg')
+                };
+                nodes = [item];
+                (async () => setTimeout(async () => {
+                    try {
+                        await this.modelService.load();
+                        if (this.modelService.model.configurations.length === 0) {
+                            commands.executeCommand('rhamt.newConfiguration');
+                        }
+                        this.refresh();
+                    }
+                    catch (e) {
+                        console.log('error while loading model service.');
+                        console.log(e);
+                        window.showErrorMessage(`Error reloading explorer data.`)
+                    }
+                }, 500))();
+            }
+        }
+        catch (e) {
+            console.log('dataProvider.populateRootNodes :: Error reloading explorer data.');
+            console.log(e);            
         }
         return nodes;
     }

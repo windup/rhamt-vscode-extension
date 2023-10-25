@@ -9,7 +9,7 @@ import { ClassificationNode } from './classificationNode';
 import { DataProvider } from './dataProvider';
 import * as path from 'path';
 import { HintNode } from './hintNode';
-import { RhamtConfiguration, ChangeType, IClassification, IHint, ReportHolder, IIssue, IssueContainer } from '../model/model';
+import { RhamtConfiguration, ChangeType, IClassification, IHint, ReportHolder, IIssue, IssueContainer } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import { FileNode } from './fileNode';
 import { FolderNode } from './folderNode';
@@ -113,11 +113,6 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
                 this.initIssue(classification, this.createClassificationNode(classification));
             });
             this.config.results.model.hints.forEach(hint => {
-                const root = workspace.getWorkspaceFolder(Uri.file(hint.file));
-                if (!root) {
-                    console.log(`unable to find file in workspace - ${hint.file}`);
-                    return;
-                }
                 this.hints.push(hint);
                 this.initIssue(hint, this.createHintNode(hint));
             });
@@ -136,9 +131,21 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     private buildResourceNodes(file: string): void {
+        const root = workspace.workspaceFolders[0]; 
 
-        const root = workspace.getWorkspaceFolder(Uri.file(file));
-
+        if (!this.childNodes.has(root.uri.fsPath)) {
+            const folder = new FolderNode(
+                this.config,
+                root.uri.fsPath,
+                this.modelService,
+                this.onNodeCreateEmitter,
+                this.dataProvider,
+                this);
+            this.childNodes.set(root.uri.fsPath, folder);
+            this.resourceNodes.set(root.uri.fsPath, folder);
+        }
+        
+        
         if (!this.resourceNodes.has(file)) {
             this.resourceNodes.set(file, new FileNode(
                 this.config,
@@ -147,18 +154,6 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
                 this.onNodeCreateEmitter,
                 this.dataProvider,
                 this));
-
-            if (!this.childNodes.has(root.uri.fsPath)) {
-                const folder = new FolderNode(
-                    this.config,
-                    root.uri.fsPath,
-                    this.modelService,
-                    this.onNodeCreateEmitter,
-                    this.dataProvider,
-                    this);
-                this.childNodes.set(root.uri.fsPath, folder);
-                this.resourceNodes.set(root.uri.fsPath, folder);
-            }
 
             const getParent = location => path.resolve(location, '..');
             let parent = getParent(file);
@@ -196,8 +191,12 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
         }
         else if (node instanceof HintsNode) {
             const file = (node as HintsNode).file;
-            children = this.hints.filter(issue => issue.file === file)
-                .map(hint => this.issueNodes.get(hint));
+            children = this.hints.filter(issue => {
+                    return issue.file === file;
+                })
+                .map(hint => {
+                    return this.issueNodes.get(hint);
+                });
         }
         else if (node instanceof ClassificationsNode) {
             const file = (node as ClassificationsNode).file;
@@ -205,8 +204,13 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
                 .map(classification => this.issueNodes.get(classification));
         }
         else {
+            console.log('FolderNode:');
+            console.log((node as FolderNode).folder);
             const segments = this.getChildSegments((node as FolderNode).folder);
-            segments.forEach(segment => children.push(this.resourceNodes.get(segment)));
+            segments.forEach(segment => {
+                const resource = this.resourceNodes.get(segment);                
+                children.push(resource);
+            });
         }
         return children;
     }

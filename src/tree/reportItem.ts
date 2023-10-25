@@ -5,7 +5,7 @@
 // @ts-nocheck
 import { TreeItem, Uri, TreeItemCollapsibleState, Command } from 'vscode';
 import * as path from 'path';
-import { ReportHolder, RhamtConfiguration } from '../model/model';
+import { ReportHolder, RhamtConfiguration } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 
 export class ReportItem extends TreeItem implements ReportHolder {

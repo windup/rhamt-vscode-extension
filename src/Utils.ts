@@ -6,7 +6,7 @@ import { ExtensionContext, workspace, extensions, window, ProgressLocation } fro
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as child_process from 'child_process';
-import { RhamtConfiguration } from './model/model';
+import { RhamtConfiguration } from './server/analyzerModel';
 import { RhamtInstaller } from './util/rhamt-installer';
 import { ModelService } from './model/modelService';
 import { promptForFAQs } from './util/faq';

@@ -5,7 +5,7 @@
 import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration, IHint, IQuickFix } from '../model/model';
+import { RhamtConfiguration, IHint, IQuickFix } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import { ConfigurationNode } from './configurationNode';
 import { QuickfixesItem } from './quickfixesItem';

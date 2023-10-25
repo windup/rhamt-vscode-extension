@@ -6,7 +6,7 @@
 import { AbstractNode, ITreeNode } from './abstractNode';
 import * as vscode from 'vscode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration, IIssue, IQuickFix, ChangeType } from '../model/model';
+import { RhamtConfiguration, IIssue, IQuickFix, ChangeType } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import { QuickfixItem } from './quickfixItem';
 import { Quickfix } from '../quickfix/quickfix';
