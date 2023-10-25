@@ -13,11 +13,12 @@ import { AnalyzerProcessController } from './analyzerProcessController';
 import { RhamtConfiguration, WINDOW } from './analyzerModel';
 import * as path from 'path';
 import { AnalyzerResults } from './analyzerResults';
+import { AnalyzerProgressMonitor } from './analyzerProgressMonitor';
 const START_TIMEOUT = 60000;
 
 export class AnalyzerUtil {
 
-    static async analyze(dataProvider: DataProvider, config: RhamtConfiguration, modelService: ModelService, onStarted: () => void, onAnalysisComplete: () => void): Promise<RhamtProcessController> {
+    static async analyze(dataProvider: DataProvider, config: RhamtConfiguration, modelService: ModelService, onStarted: () => void, onComplete: () => void): Promise<RhamtProcessController> {
         let cli = undefined;
         try {
             const configCli = config.options['cli'] as string;
@@ -48,10 +49,6 @@ export class AnalyzerUtil {
             return new Promise<any>(async resolve => {
                 const executable = config.rhamtExecutable;
                 console.log(`Using executable - ${executable}`);
-                const log = (data: string) => {
-                    rhamtChannel.print(data);
-                    rhamtChannel.print('\n');
-                };
                 let params = [];
                 try {
                     progress.report({message: 'Verifying configuration'});
@@ -63,6 +60,12 @@ export class AnalyzerUtil {
                     return Promise.reject(e);
                 }
                 rhamtChannel.clear();
+                const monitor = new AnalyzerProgressMonitor(onComplete);
+                const log = (data: string) => {
+                    rhamtChannel.print(data);
+                    rhamtChannel.print('\n');
+                    monitor.handleMessage(data);
+                };
                 progress.report({message: 'Starting analysis...'});
                 let cancelled = false;
                 let resolved = false;
@@ -100,7 +103,7 @@ export class AnalyzerUtil {
                         resolve(undefined);
                     }
                 });
-                progress.report({ message: 'MTA Analysis in Progress' });
+                progress.report({ message: 'Analysis in Progress' });
             });
         });
     }
