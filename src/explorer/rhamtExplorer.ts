@@ -5,7 +5,6 @@
 import * as vscode from 'vscode';
 import { DataProvider } from '../tree/dataProvider';
 import { ModelService } from '../model/modelService';
-import { RhamtUtil } from '../server/rhamtUtil';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
 import { Diff } from '../quickfix/diff';
 import { applyQuickfixes } from '../quickfix/quickfix';
@@ -167,7 +166,7 @@ export class RhamtExplorer {
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
             const config = item.config;
             try {
-                RhamtUtil.updateRunEnablement(false, this.dataProvider, config);
+                AnalyzerUtil.updateRunEnablement(false, this.dataProvider, config);
                 await AnalyzerUtil.analyze(
                     this.dataProvider,
                     config,
@@ -179,7 +178,7 @@ export class RhamtExplorer {
                     },
                     async () => {
                         await AnalyzerUtil.loadAnalyzerResults(config);
-                        RhamtUtil.updateRunEnablement(true, this.dataProvider, config);
+                        AnalyzerUtil.updateRunEnablement(true, this.dataProvider, config);
                         const configNode = this.dataProvider.getConfigurationNode(config);
                         configNode.loadResults();
                         this.refreshConfigurations();
@@ -192,11 +191,11 @@ export class RhamtExplorer {
                 if (!e.notified) {
                     vscode.window.showErrorMessage(`Error running analysis - ${e}`);
                 }
-                RhamtUtil.updateRunEnablement(true, this.dataProvider, config);
+                AnalyzerUtil.updateRunEnablement(true, this.dataProvider, config);
                 this.refreshConfigurations();
             }
         }));
-        RhamtUtil.updateRunEnablement(true, this.dataProvider, null);
+        AnalyzerUtil.updateRunEnablement(true, this.dataProvider, null);
     }
 
     private async saveModel(): Promise<void> {
