@@ -10,26 +10,21 @@ import { ModelService } from './model/modelService';
 import { RhamtModel, IssueContainer } from './server/analyzerModel';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
-import { ConfigurationEditorServer } from './editor/configurationEditorServer';
 import { ConfigurationEditorService } from './editor/configurationEditorService';
 import { HintItem } from './tree/hintItem';
 import { HintNode } from './tree/hintNode';
 import { NewRulesetWizard } from './wizard/newRulesetWizard';
 import * as endpoints from './server/endpoints';
 import { ConfigurationEditorSerializer } from './editor/configurationEditorSerializer';
-import { QuickfixContentProvider } from './quickfix/contentProvider';
-import { QuickfixedResourceProvider } from './quickfix/quickfixedResourceProvider';
 import * as os from 'os';
 import { MarkerService } from './source/markers';
 import { initQuickfixSupport } from './source/quickfix';
 import { FileItem } from './tree/fileItem';
-import * as git from './source/git';
 import { log } from 'console';
 
 let detailsView: IssueDetailsView;
 let modelService: ModelService;
 let stateLocation: string;
-let configEditorServer: ConfigurationEditorServer;
 
 let extensionPath = "";
 
@@ -50,7 +45,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
     console.log(`windup state location is: ${stateLocation}`);
 
-    log(`Windup.isLocal() - ${Windup.isLocal()}`);
     log(`App name: ${vscode.env.appName}`);
      
     const out = path.join(stateLocation);
@@ -64,14 +58,6 @@ export async function activate(context: vscode.ExtensionContext) {
     new RhamtView(context, modelService, configEditorService, markerService);
     new ReportView(context);
     detailsView = new IssueDetailsView(context, locations, modelService);
-
-    // const statusBar = new StatusBar();
-    // const decorationsProvider = new DecorationsProvider(modelService, statusBar);
-    // const toggleMtaHintsCommand = vscode.commands.registerCommand(
-    //     StatusBar.toggleMtaHintsCommand,
-    //   () => decorationsProvider.toggleHints()
-    // );
-    // context.subscriptions.push(vscode.Disposable.from(toggleMtaHintsCommand));
 
     initQuickfixSupport(context, modelService);
     
@@ -122,18 +108,6 @@ export async function activate(context: vscode.ExtensionContext) {
     console.log(vscode.env.appName);
 
     vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer(modelService, configEditorService));
-
-    const quickfixContentProvider = new QuickfixContentProvider(modelService);
-    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('quickfix', quickfixContentProvider));
-
-    const quickfixedProvider = new QuickfixedResourceProvider(modelService);
-    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('quickfixed', quickfixedProvider));
-
-    // vscode.languages.registerCodeLensProvider("*", lensProvider);
-    // const hintDecorationProvider = new HintDecorationProvider(modelService);
-    // vscode.window.registerFileDecorationProvider()
-
-    git.init(context);
 }
 
 export async function openFile(uri: vscode.Uri): Promise<void> {
@@ -154,19 +128,4 @@ export async function openFile(uri: vscode.Uri): Promise<void> {
 
 export function deactivate() {
     modelService.save();
-    configEditorServer.dispose();
-}
-
-export namespace Windup {
-    export function isLocal() {
-        return vscode.env.appName === "Visual Studio Code" ||
-            vscode.env.appName === 'VSCodium';
-    }
-    /* export function isRemote(): boolean {
-        return vscode.env.appName.includes("Che") || 
-            vscode.env.appName.includes('Gitpod');
-    } */
-    export function isVSCode(): boolean {
-        return vscode.env.appName === "Visual Studio Code";
-    }
 }
