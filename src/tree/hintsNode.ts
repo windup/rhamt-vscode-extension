@@ -5,7 +5,7 @@
 import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration, IQuickFix } from '../server/analyzerModel';
+import { RhamtConfiguration } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import { ConfigurationNode } from './configurationNode';
 import { HintsItem } from './hintsItem';
@@ -17,7 +17,6 @@ export class HintsNode extends AbstractNode<HintsItem> {
     private children = [];
 
     file: string;
-    quickfixes: IQuickFix[];
     
     constructor(
         config: RhamtConfiguration,
@@ -29,11 +28,10 @@ export class HintsNode extends AbstractNode<HintsItem> {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.file = file;
         this.root = root;
-        this.quickfixes = this.config.getQuickfixesForResource(this.file);
     }
 
     createItem(): HintsItem {
-        this.treeItem = new HintsItem(this.file, this.quickfixes.length > 0);
+        this.treeItem = new HintsItem(this.file);
         this.treeItem.iconPath = undefined;
         this.loading = false;
         const unsorted = this.root.getChildNodes(this);
@@ -73,11 +71,9 @@ export class HintsNode extends AbstractNode<HintsItem> {
     static compareHint(node1: ITreeNode, node2: ITreeNode): number {
         const a = (node1 as HintNode).hint.lineNumber || 0;
         const b = (node2 as HintNode).hint.lineNumber || 0;
-        // sort by line number
         if (a !== b) {
             return a < b ? -1 : 1;
         }
-        // if same line, sort by column
         else {
             let col1 = (node1 as HintNode).hint.column || 0;
             let col2 = (node2 as HintNode).hint.column || 0;

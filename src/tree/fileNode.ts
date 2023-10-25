@@ -5,7 +5,7 @@
 import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration, IQuickFix } from '../server/analyzerModel';
+import { RhamtConfiguration } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import * as path from 'path';
 import { ConfigurationNode } from './configurationNode';
@@ -21,7 +21,6 @@ export class FileNode extends AbstractNode<FileItem> {
     private children = [];
     private issues = [];
     file: string;
-    quickfixes: IQuickFix[];
 
     constructor(
         config: RhamtConfiguration,
@@ -33,11 +32,10 @@ export class FileNode extends AbstractNode<FileItem> {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.file = file;
         this.root = root;
-        this.quickfixes = this.config.getQuickfixesForResource(this.file);
     }
 
     createItem(): FileItem {
-        this.treeItem = new FileItem(this.file, this.quickfixes.length > 0);
+        this.treeItem = new FileItem(this.file);
         this.loading = false;
         this.refresh();
         return this.treeItem;

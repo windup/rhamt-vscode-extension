@@ -8,7 +8,6 @@ import { DataProvider } from './dataProvider';
 import { HintItem } from './hintItem';
 import { IHint, RhamtConfiguration, ReportHolder, IssueContainer, IIssue, IQuickFix, ChangeType } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
-import { QuickfixesNode } from './quickfixesNode';
 import { ConfigurationNode } from './configurationNode';
 
 export class HintNode extends AbstractNode<HintItem> implements ReportHolder, IssueContainer {
@@ -56,19 +55,6 @@ export class HintNode extends AbstractNode<HintItem> implements ReportHolder, Is
     createItem(): HintItem {
         this.treeItem = new HintItem(this.hint);
         this.loading = false;
-        if (this.hint.quickfixes.length > 0) {
-            const quickfix = new QuickfixesNode(
-                this.config,
-                this.hint,
-                this.modelService,
-                this.onNodeCreateEmitter,
-                this.dataProvider,
-                this.root
-            );
-            (quickfix as any).parentNode = this;
-            this.children.push(quickfix);
-            this.treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
-        }
         this.treeItem.refresh();
         return this.treeItem;
     }

@@ -5,7 +5,7 @@
 import { EventEmitter } from 'vscode';
 import { AbstractNode, ITreeNode } from './abstractNode';
 import { DataProvider } from './dataProvider';
-import { RhamtConfiguration, IQuickFix, IIssueType } from '../server/analyzerModel';
+import { RhamtConfiguration, IQuickFix } from '../server/analyzerModel';
 import { ModelService } from '../model/modelService';
 import { ConfigurationNode } from './configurationNode';
 import { ClassificationsItem } from './classificationsItem';
@@ -28,17 +28,10 @@ export class ClassificationsNode extends AbstractNode<ClassificationsItem> {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.file = file;
         this.root = root;
-        this.quickfixes = this.computeQuickfixes();
-    }
-
-    computeQuickfixes(): IQuickFix[] {
-        return this.config.getQuickfixesForResource(this.file).filter(quickfix => {
-            return quickfix.issue.type === IIssueType.Classification 
-        });
     }
 
     createItem(): ClassificationsItem {
-        this.treeItem = new ClassificationsItem(this.file, this.quickfixes.length > 0);
+        this.treeItem = new ClassificationsItem(this.file);
         this.treeItem.iconPath = undefined;
         this.loading = false;
         this.refresh();

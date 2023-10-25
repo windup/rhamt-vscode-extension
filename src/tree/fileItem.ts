@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import { Command, TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
 import * as path from 'path';
-import { Quickfix } from '../quickfix/quickfix';
 
 export class FileItem extends TreeItem {
 
@@ -12,12 +11,10 @@ export class FileItem extends TreeItem {
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
     file: string;
-    private hasQuickfixes: boolean;
     
-    constructor(file: string, hasQuickfixes: boolean) {
+    constructor(file: string) {
         super(file);
         this.file = file;
-        this.hasQuickfixes = hasQuickfixes;
         this.refresh();
     }
 
@@ -27,7 +24,7 @@ export class FileItem extends TreeItem {
     }
 
     public get contextValue(): string {
-        return this.hasQuickfixes ? Quickfix.CONTAINER : undefined;
+        return undefined;
     }
 
     public get command(): Command {

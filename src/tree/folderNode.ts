@@ -30,11 +30,10 @@ export class FolderNode extends AbstractNode<FolderItem> {
         super(config, modelService, onNodeCreateEmitter, dataProvider);
         this.folder = folder;
         this.root = root;
-        this.quickfixes = this.config.getQuickfixesForResource(this.folder);
     }
 
     createItem(): FolderItem {
-        this.treeItem = new FolderItem(this.folder, this.quickfixes.length > 0);
+        this.treeItem = new FolderItem(this.folder);
         this.loading = false;
         this.updateIcon('default_folder.svg');
         const unsorted = this.root.getChildNodes(this);

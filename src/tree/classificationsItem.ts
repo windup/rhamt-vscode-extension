@@ -3,18 +3,15 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { TreeItem, TreeItemCollapsibleState, Uri } from 'vscode';
-import { Quickfix } from '../quickfix/quickfix';
 
 export class ClassificationsItem extends TreeItem {
 
     collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None;
     iconPath: string | Uri | { light: string | Uri; dark: string | Uri } | undefined;
 
-    private hasQuickfixes: boolean;
 
-    constructor(file: string, hasQuickfixes: boolean) {
+    constructor(file: string) {
         super(file);
-        this.hasQuickfixes = hasQuickfixes;
     }
 
     public refresh(count: number): void {
@@ -23,6 +20,6 @@ export class ClassificationsItem extends TreeItem {
     } 
 
     public get contextValue(): string {
-        return this.hasQuickfixes ? Quickfix.CONTAINER : undefined;
+        return undefined;
     }
 }
