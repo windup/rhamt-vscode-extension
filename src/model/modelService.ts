@@ -8,7 +8,6 @@ import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as mkdirp from 'mkdirp';
 import * as vscode from 'vscode';
-import { Windup } from '../extension';
 import { AnalyzerUtil } from '../server/analyzerUtil';
 
 export class ModelService {
@@ -53,12 +52,8 @@ export class ModelService {
         config.options['cli'] = this.getRecentCli();
         config.options['sourceMode'] = true;
         config.options['target'] = ['eap7'];
-
         config.options['legacyReports'] = true;
 
-        if (!Windup.isLocal()) {
-            config.options['legacyReports'] = true;
-        }
         return config;
     }
 
@@ -385,10 +380,6 @@ export class ModelService {
                     if (err) reject(err);
                     else {
                         this.elementData = JSON.parse(data);
-                        if (!Windup.isLocal()) {
-                            const option = this.elementData.options.find(option => option.name === 'legacyReports');
-                            option.editable = false;
-                        }
                         resolve(this.elementData);
                     }
                 });

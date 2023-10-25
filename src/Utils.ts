@@ -2,39 +2,16 @@
  *  Copyright (c) Red Hat. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { ExtensionContext, workspace, extensions, window, ProgressLocation } from 'vscode';
+import { ExtensionContext, extensions, window, ProgressLocation } from 'vscode';
 import * as path from 'path';
 import * as fse from 'fs-extra';
-import * as child_process from 'child_process';
 import { RhamtConfiguration } from './server/analyzerModel';
-import { RhamtInstaller } from './util/rhamt-installer';
 import { ModelService } from './model/modelService';
-import { promptForFAQs } from './util/faq';
 import * as cliResolver from './util/cli-resolver';
 
 import { rhamtChannel } from './util/console';
-import { Windup } from './extension';
-
-import * as open from 'opn';
-
-const RHAMT_VERSION_REGEX = /^version /;
-
-const findJava = require('find-java-home');
-
-const IGNORE_RHAMT_DOWNLOAD = 'ignoreRhamtDownload';
 
 export namespace Utils {
-
-    export const THEME = 'mtr';
-    export const THEME_VERSION = '1.2.0';
-    export const PRODUCT_DOWNLOAD_PAGE = `https://developers.redhat.com/products/${THEME}/download`;
-    export const CLI_SCRIPT = `windup-cli`;
-    export const CLI_FOLDER = `${THEME}-cli-${THEME_VERSION}.Final`;
-
-
-    // Below is only used when the CLI actually gets downloaded (only Windup, not MTR or MTA).
-    export const DOWNLOAD_CLI_LOCATION = "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.2.5.Final/windup-cli-6.2.5.Final-no-index.zip";  // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.0.Final/windup-cli-6.1.0.Final-no-index.zip";
-    // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.2.0.Alpha2/windup-cli-6.2.0.Alpha2-no-index.zip"; // "https://repo1.maven.org/maven2/org/jboss/windup/windup-cli/6.1.7.Final/windup-cli-6.1.7.Final-no-index.zip"; //; // MTR_DOWNLOAD_CLI_PRODUCT_PAGE;
 
     export let EXTENSION_PUBLISHER: string;
     export let EXTENSION_NAME: string;
@@ -51,134 +28,30 @@ export namespace Utils {
             location: ProgressLocation.Notification,
             cancellable: false
         }, async (progress: any) => {
-
-            // progress.report({message: 'Verifying JAVA_HOME'});
-            let javaHome: string;
-            let rhamtCli: string;
-
+            let rhamtCli = '';
             try {
-                javaHome = await findJavaHome(config);
-            }
-            catch (error) {
-                promptForFAQs('Unable to resolve Java Home');
-                progress.report({message: 'Unable to verify JAVA_HOME'});
-                return Promise.reject(error);
-            }
-
-            console.log('Using JAVA_HOME');
-            console.log(javaHome);
-            rhamtChannel.clear();
-
-            // progress.report({message: 'Verifying cli'});
-
-            try {
-                rhamtCli = await resolveCli(modelService, config, javaHome);
+                rhamtCli = await resolveCli(modelService, config);
             }
             catch (e) {
-                console.log(e);
-                promptForFAQs('Unable to determin cli version', {outDir: modelService.outDir});
                 return Promise.reject(e);
             }
             config.rhamtExecutable = rhamtCli;
-            config.options['jvm'] = javaHome;
             return config;
         });
     }
 
-    export async function resolveCli(modelService: ModelService, config: RhamtConfiguration, javaHome: string): Promise<string> {
+    export async function resolveCli(modelService: ModelService, config: RhamtConfiguration): Promise<string> {
         let rhamtCli = '';
         try {
             rhamtCli = await cliResolver.findRhamtCli(modelService.outDir, config);
             console.log(`Using CLI - ${rhamtCli}`);
         }
         catch (error) {
-            console.log('Error finding rhamtCli');
-            console.log(error);
-            // promptForFAQs('Unable to find cli executable', {outDir: modelService.outDir});
             return Promise.reject({error, notified: true});
         }
         rhamtChannel.print(`Using CLI: ${rhamtCli}`);
         rhamtChannel.print('\n');
-        try {
-            console.log(`attempt verify cli --version`);
-            // const version = await findRhamtVersion(rhamtCli, javaHome);
-            // console.log(`Using version - ${version}`);
-        }
-        catch (error) {
-            console.log('Failed to verify CLI using --version');
-            console.log(error);
-            window.showErrorMessage(error);
-            // promptForFAQs('Unable to determine cli version: \n' + error.message, {outDir: modelService.outDir});
-            return Promise.reject(error);
-        }
-        console.log('cli resolved: ' + rhamtCli);
         return rhamtCli;
-    }
-
-    export function findJavaHome(config: RhamtConfiguration): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            const javaHomePreference = config.options['JAVA_HOME'];
-            if (javaHomePreference) {
-                resolve(javaHomePreference);
-            }
-            else {
-                findJava((err: string, home: string) => {
-                    if (err) {
-                        const javaHome = workspace.getConfiguration('java').get<string>('home');
-                        if (javaHome) {
-                            resolve(javaHome);
-                        }
-                        else {
-                            reject(err);
-                        }
-                    } else {
-                        resolve(home);
-                    }
-                });
-            }
-        });
-    }
-
-    export function findRhamtVersion(rhamtCli: string, javaHome: string): Promise<string> {
-        console.log(`Verifying CLI Version: using CLI --> ${rhamtCli}`);
-        console.log(`Verifying JAVA_HOME: --> ${javaHome}`);
-        return new Promise<string>((resolve, reject) => {
-            const env = {JAVA_HOME : javaHome};
-            const execOptions: child_process.ExecOptions = {
-                env: Object.assign({}, process.env, env)
-            };
-            console.log(execOptions.env);
-
-            rhamtChannel.print(`Using JAVA_HOME: ${execOptions.env.JAVA_HOME}`);
-            rhamtChannel.print('\n');
-            
-            child_process.exec(
-                `"${rhamtCli}" --version`, execOptions, (error: Error, _stdout: string, _stderr: string): void => {
-                    if (error) {
-                        console.log(`error while executing --version`);
-                        rhamtChannel.print(`error while executing --version`);
-                        rhamtChannel.print('\n');
-                        rhamtChannel.print(_stdout);
-                        console.log(error);
-                        console.log('stdout');
-                        console.log(_stdout);
-                        console.log('stderr');
-                        console.log(_stderr);
-                        return reject(error);
-                    } else {
-                        console.log('success --version:');
-                        console.log(_stdout);
-                        console.log(`parsing version`);
-                        rhamtChannel.print('\n');
-                        rhamtChannel.print(_stdout);
-                        return resolve(parseVersion(_stdout));
-                    }
-            });
-        });
-    }
-
-    function parseVersion(raw: string): string {
-        return raw.replace(RHAMT_VERSION_REGEX, '');
     }
 
     export function getExtensionId(): string {
@@ -187,69 +60,5 @@ export namespace Utils {
 
     export function getPathToExtensionRoot(...args: string[]): string {
         return path.join(extensions.getExtension(getExtensionId())!.extensionPath, ...args);
-    }
-
-    export async function checkCli(dataOut: string, context: ExtensionContext, autoDownload?: boolean): Promise<any> {
-        await cliResolver.findRhamtCli(dataOut).catch(() => {
-            // @ts-ignore
-            if (Utils.THEME === 'mta' || Utils.THEME === 'mtr') {
-                Utils.showDownloadCliOption(dataOut, context);
-            }
-            else if (autoDownload || !Windup.isLocal()) {
-                console.log('Auto-downloading CLI...');
-                Utils.downloadCli(dataOut);
-            }
-            else if (!context.workspaceState.get(IGNORE_RHAMT_DOWNLOAD)) {
-                Utils.showDownloadCliOption(dataOut, context);
-            }
-        });
-    }
-
-    export async function showDownloadCliOption(dataOut: string, context: ExtensionContext): Promise<any> {
-        const MSG = 'Unable to find CLI';
-        const OPTION_DOWNLOAD = 'Download';
-        const OPTION_DISMISS = `Don't Show Again`;
-        const choice = await window.showInformationMessage(MSG, OPTION_DOWNLOAD, OPTION_DISMISS);
-        if (choice === OPTION_DOWNLOAD) {
-            // @ts-ignore
-            if (Utils.THEME === 'mta' || Utils.THEME === 'mtr') {
-                open(PRODUCT_DOWNLOAD_PAGE);
-            }
-            else {
-                Utils.downloadCli(dataOut);
-            }
-        }
-        else if (choice === OPTION_DISMISS) {
-            context.workspaceState.update(IGNORE_RHAMT_DOWNLOAD, true);
-        }
-    }
-
-    export async function downloadCli(dataOut: string): Promise<any> {
-        const handler = { log: msg => console.log(`cli download message: ${msg}`) };
-        const out = dataOut; // path.resolve(dataOut, 'cli');
-        RhamtInstaller.installCli(Utils.DOWNLOAD_CLI_LOCATION, out, handler).then(async () => {
-            window.showInformationMessage('Download Complete');
-            const home = cliResolver.findRhamtCliDownload(dataOut);
-            const cli = cliResolver.getDownloadExecutableName(home);
-            try {
-                await fse.chmod(cli, '0764');
-            }
-            catch (error) {
-                console.log('Error chmod of cli');
-                console.log('CLI exists on filesystem: ' + fse.existsSync(cli));
-                console.log(error);
-                window.showErrorMessage('Error chmod of cli: ' + cli);
-            }
-            workspace.getConfiguration().update('cli.executable.path', cli);
-        }).catch(e => {
-            console.log(e);
-            const error = e.value.e;
-            if (error && error.cancelled) {
-                window.showInformationMessage(`cli download cancelled.`);
-            }
-            else {
-                window.showErrorMessage(`Error downloading cli: ${e}`);
-            }
-        });
     }
 }

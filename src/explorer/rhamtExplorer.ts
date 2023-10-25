@@ -6,8 +6,6 @@ import * as vscode from 'vscode';
 import { DataProvider } from '../tree/dataProvider';
 import { ModelService } from '../model/modelService';
 import { ConfigurationEditorService } from '../editor/configurationEditorService';
-import { Diff } from '../quickfix/diff';
-import { applyQuickfixes } from '../quickfix/quickfix';
 import { RhamtConfiguration } from '../server/analyzerModel';
 import { MarkerService } from '../source/markers';
 import { Grouping } from '../tree/configurationNode';
@@ -98,42 +96,6 @@ export class RhamtExplorer {
             this.configEditorService.openConfiguration(item.config).catch(e => {
                 console.log(`Error opening configuration ${item.config} with error: ${e}`)
             });
-        }));
-        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.previewQuickfix', item => {
-            Diff.openQuickfixPreview(item);
-        }));
-        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfix', async (item) => {
-            try {
-                await applyQuickfixes([item.quickfix]);
-                this.markerService.refreshOpenEditors(item.quickfix.issue.file);
-                this.dataProvider.refreshLabel(item.config);
-                await Diff.updateQuickfixDiffEditor(item);
-                this.modelService.saveAnalysisResults(item.config).catch(e => {
-                    console.log(`Error saving analysis results after quickfix: ${e}`);
-                    vscode.window.showErrorMessage(e);
-                });
-            }
-            catch (e) {
-                console.log(`Error applying quickfix - ${e}`);
-                vscode.window.showErrorMessage(`Error applying quickfix ${e}`);
-            }
-        }));
-        this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.applyQuickfixes', async (item) => {
-            try {
-                await applyQuickfixes(item.quickfixes);
-                for (let quickfix of item.quickfixes) {
-                    this.markerService.refreshOpenEditors(quickfix.issue.file);
-                }
-                this.dataProvider.refreshLabel(item.config);
-                this.modelService.saveAnalysisResults(item.config).catch(e => {
-                    console.log(`Error saving analysis results after applying quickfixes: ${e}`);
-                    vscode.window.showErrorMessage(e);
-                });
-            }
-            catch (e) {
-                console.log(`Error applying quickfixes - ${e}`);
-                vscode.window.showErrorMessage(`Error applying quickfixes ${e}`);
-            }
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.activate', async (item) => {
             try {
