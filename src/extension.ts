@@ -7,7 +7,7 @@ import { Utils } from './Utils';
 import * as path from 'path';
 import { RhamtView } from './explorer/rhamtView';
 import { ModelService } from './model/modelService';
-import { RhamtModel, IssueContainer } from './model/model';
+import { RhamtModel, IssueContainer } from './server/analyzerModel';
 import { IssueDetailsView } from './issueDetails/issueDetailsView';
 import { ReportView } from './report/reportView';
 import { ConfigurationEditorServer } from './editor/configurationEditorServer';
@@ -120,8 +120,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
     console.log('App Name:');
     console.log(vscode.env.appName);
-    
-    Utils.checkCli(modelService.outDir, context, !Windup.isLocal());
 
     vscode.window.registerWebviewPanelSerializer('rhamtConfigurationEditor', new ConfigurationEditorSerializer(modelService, configEditorService));
 
