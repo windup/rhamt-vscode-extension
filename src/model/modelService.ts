@@ -237,7 +237,9 @@ export class ModelService {
                     const config: RhamtConfiguration = new RhamtConfiguration();
                     ModelService.copy(entry, config);
                     try {
-                        await ModelService.loadResults(config);
+                        if (config.summary) {
+                            await ModelService.loadResults(config);
+                        }
                     }
                     catch (e) {
                         return reject(e);

@@ -60,7 +60,7 @@ export class AnalyzerUtil {
                     return Promise.reject(e);
                 }
                 rhamtChannel.clear();
-                const monitor = new AnalyzerProgressMonitor(onComplete);
+                const monitor = new AnalyzerProgressMonitor(onComplete, config.delay);
                 const log = (data: string) => {
                     rhamtChannel.print(data);
                     rhamtChannel.print('\n');

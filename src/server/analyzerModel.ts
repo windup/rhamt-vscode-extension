@@ -66,6 +66,7 @@ export class RhamtConfiguration {
     id: string;
     name: string;
     summary: AnalysisResultsSummary | undefined;
+    delay: 3000;
     rhamtExecutable: string;
     options: { [index: string]: any } = {};
 
