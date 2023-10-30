@@ -167,7 +167,7 @@ export class AnalyzerUtil {
                     const done = () => {
                         const exists = fs.existsSync(location);
                         if (exists) {
-                            console.log('output Exist! ' + location);
+                            console.log('output exist: ' + location);
                             return true;
                         }
                         else if (++tries > 8) {
@@ -184,9 +184,6 @@ export class AnalyzerUtil {
                       }
                     
                     await new Promise(poll);
-                    console.log('done wating for outoput');
-                    console.log('output exists for - ' + location);
-                    console.log('exists: ' + fs.existsSync(location));
                     
                 }
                 results = await AnalyzerUtil.readAnalyzerResults(config);
