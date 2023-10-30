@@ -66,9 +66,10 @@ export class RhamtConfiguration {
     id: string;
     name: string;
     summary: AnalysisResultsSummary | undefined;
-    delay: 3000;
+    delay: 1000;
     rhamtExecutable: string;
     options: { [index: string]: any } = {};
+    cancelled: boolean;
 
     public _results: AnalyzerResults | null;
 
@@ -81,8 +82,8 @@ export class RhamtConfiguration {
     }
 
     getReport(): string {
-        if (!this.options['output']) return undefined;
-        return path.resolve(this.options['output'], 'index.html');
+        if (!this.summary) return undefined;
+        return path.resolve(this.summary.outputLocation, 'static-report', 'index.html');
     }
 
     sourceBase() : string {

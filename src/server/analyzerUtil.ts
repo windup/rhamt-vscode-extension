@@ -60,7 +60,8 @@ export class AnalyzerUtil {
                     return Promise.reject(e);
                 }
                 rhamtChannel.clear();
-                const monitor = new AnalyzerProgressMonitor(onComplete, config.delay);
+                config.cancelled = false;
+                const monitor = new AnalyzerProgressMonitor(onComplete);
                 const log = (data: string) => {
                     rhamtChannel.print(data);
                     rhamtChannel.print('\n');
@@ -94,6 +95,7 @@ export class AnalyzerUtil {
                 }
                 token.onCancellationRequested(() => {
                     cancelled = true;
+                    config.cancelled = true;
                     AnalyzerUtil.updateRunEnablement(true, dataProvider, config);
                     if (processController) {
                         processController.shutdown();
@@ -157,10 +159,41 @@ export class AnalyzerUtil {
         return new Promise<void>(async (resolve, reject) => {
             let results = null;
             try {
+                if (clearSummary) {
+                    let tries = 0;
+                    const output = config.options['output'];
+                    const location = path.resolve(output, ...config.static());
+
+                    const done = () => {
+                        const exists = fs.existsSync(location);
+                        if (exists) {
+                            console.log('output Exist! ' + location);
+                            return true;
+                        }
+                        else if (++tries > 8) {
+                            console.log('output was not found after long delay!');
+                            return true;
+                        }
+                        console.log('output does not exist - ' + location);
+                        return false;
+                    };
+
+                    const poll = resolve => {
+                        if(done()) resolve();
+                        else setTimeout(_ => poll(resolve), config.delay);
+                      }
+                    
+                    await new Promise(poll);
+                    console.log('done wating for outoput');
+                    console.log('output exists for - ' + location);
+                    console.log('exists: ' + fs.existsSync(location));
+                    
+                }
                 results = await AnalyzerUtil.readAnalyzerResults(config);
             }
             catch(e) {
-                console.log(`Error reading analyzer results.`);               
+                console.log(`Error reading analyzer results.`);
+                console.log(e);                               
                 return reject(`Error reading analyzer results.`);
             }
             try {

@@ -142,7 +142,7 @@
         ],
         "configuration": [
             {
-                "title": "MTR CLI",
+                "title": "CLI",
                 "properties": {
                     "cli.executable.path": {
                         "type": "string",
@@ -236,41 +236,6 @@
                     "group": "rhamt@2"
                 },
                 {
-                    "command": "rhamt.deleteIssue",
-                    "when": "view == rhamtExplorerView && viewItem =~ /issue/i",
-                    "group": "rhamt@4"
-                },
-                {
-                    "command": "rhamt.markIssueAsComplete",
-                    "when": "view == rhamtExplorerView && viewItem =~ /isIncomplete/i",
-                    "group": "rhamt@3"
-                },
-                {
-                    "command": "rhamt.markIssueAsIncomplete",
-                    "when": "view == rhamtExplorerView && viewItem =~ /isComplete/i",
-                    "group": "rhamt@3"
-                },
-                {
-                    "command": "rhamt.deleteResults",
-                    "when": "view == rhamtExplorerView && viewItem == results",
-                    "group": "rhamt"
-                },
-                {
-                    "command": "rhamt.applyQuickfix",
-                    "when": "view == rhamtExplorerView && viewItem =~ /hasQuickfix/i",
-                    "group": "rhamt"
-                },
-                {
-                    "command": "rhamt.previewQuickfix",
-                    "when": "view == rhamtExplorerView && viewItem =~ /hasQuickfix/i",
-                    "group": "rhamt"
-                },
-                {
-                    "command": "rhamt.applyQuickfixes",
-                    "when": "view == rhamtExplorerView && viewItem =~ /quickfix-container/i",
-                    "group": "rhamt@5"
-                },
-                {
                     "command": "rhamt.activate",
                     "when": "view == rhamtExplorerView && viewItem =~ /hasResults-notActive/i",
                     "group": "inline"
@@ -309,6 +274,7 @@
         "find-java-home": "^1.2.2",
         "fs-extra": "^8.0.1",
         "jade": "^1.11.0",
+        "js-yaml": "^4.1.0",
         "jsonc-parser": "^2.1.0",
         "mime-types": "^2.1.26",
         "mkdirp": "^0.5.1",

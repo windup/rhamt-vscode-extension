@@ -126,7 +126,7 @@ export class RhamtExplorer {
             }
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
-            const config = item.config;
+            const config = item.config as RhamtConfiguration;
             try {
                 AnalyzerUtil.updateRunEnablement(false, this.dataProvider, config);
                 await AnalyzerUtil.analyze(
@@ -138,8 +138,9 @@ export class RhamtExplorer {
                         config.summary = undefined;
                         this.refreshConfigurations();
                     },
-                    async () => {
-                        await AnalyzerUtil.loadAnalyzerResults(config);
+                    () => {});
+                    if (config.cancelled) return;
+                    await AnalyzerUtil.loadAnalyzerResults(config);
                         AnalyzerUtil.updateRunEnablement(true, this.dataProvider, config);
                         const configNode = this.dataProvider.getConfigurationNode(config);
                         configNode.loadResults();
@@ -147,7 +148,15 @@ export class RhamtExplorer {
                         this.dataProvider.reveal(configNode, true);
                         this.markerService.refreshOpenEditors();
                         this.saveModel();
-                    });
+                        vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
+                            if (result === 'Open Report') {
+                                vscode.commands.executeCommand('rhamt.openReportExternal', {
+                                    config,
+                                    getReport: () => config.getReport()
+                                });
+                            }
+                        });
+
             } catch (e) {
                 console.log(e);
                 if (!e.notified) {

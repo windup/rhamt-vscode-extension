@@ -9,7 +9,6 @@ node('rhel8'){
 	stage('Install requirements') {
         def nodeHome = tool 'nodejs-lts'
         env.PATH="${env.PATH}:${nodeHome}/bin"
-        // sh "npm install -g typescript vsce"
 	}
 
 	stage('Build') {
@@ -31,7 +30,6 @@ node('rhel8'){
 	}
 	if(params.UPLOAD_LOCATION) {
 		stage('Snapshot') {
-			// sh "sftp -C ${UPLOAD_LOCATION}/stable/ <<< \$'mkdir windup-vscode-extension'"
 			def filesToPush = findFiles(glob: '**.vsix')
 			sh "sftp -C ${UPLOAD_LOCATION}/snapshots/${PRODUCT_NAME}-vscode-extension/ <<< \$'put -p -r ${filesToPush[0].path}'"
 			stash name:'vsix', includes:filesToPush[0].path
@@ -68,9 +66,7 @@ node('rhel8'){
 			sh "npm install -g ovsx"
 			withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
 				def packageJson = readJSON file: 'package.json'
-				// def vsix = findFiles(glob: '**.vsix')
 				sh "ovsx publish -p ${OVSX_TOKEN} ${PRODUCT_NAME}-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
-				// sh 'ovsx publish -p ${OVSX_TOKEN}' + " ${vsix[0].path}"
 			}
         }
 	}

@@ -6,7 +6,7 @@
 export class AnalyzerProgressMonitor {
     private _done: boolean = false;
 
-    constructor(private onComplete: any, private delay: number) {
+    constructor(private onComplete: any) {
     }
 
     public handleMessage(msg: any): void {
@@ -15,15 +15,7 @@ export class AnalyzerProgressMonitor {
 
     private delegateMessage(msg: any) {
         if (msg && msg.includes('generating static report')) {
-            (async () => setTimeout(async () => {
-                try {
-                    this.onComplete();
-                }
-                catch (e) {
-                    console.log(e);
-                    console.log('error while completing.');
-                }
-            }, this.delay))();
+            this.onComplete();
         }
     }
 
