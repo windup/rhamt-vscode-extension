@@ -18,7 +18,6 @@ import * as endpoints from './server/endpoints';
 import { ConfigurationEditorSerializer } from './editor/configurationEditorSerializer';
 import * as os from 'os';
 import { MarkerService } from './source/markers';
-import { initQuickfixSupport } from './source/quickfix';
 import { FileItem } from './tree/fileItem';
 import { log } from 'console';
 
@@ -58,8 +57,6 @@ export async function activate(context: vscode.ExtensionContext) {
     new RhamtView(context, modelService, configEditorService, markerService);
     new ReportView(context);
     detailsView = new IssueDetailsView(context, locations, modelService);
-
-    initQuickfixSupport(context, modelService);
     
     context.subscriptions.push(vscode.commands.registerCommand('rhamt.openDoc', async (data) => {
         if (data instanceof FileItem) {
