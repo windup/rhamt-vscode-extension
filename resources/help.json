@@ -45,6 +45,8 @@
           "fuse",
           "openjdk",
           "jakarta-ee",
+          "jakarta-ee8+",
+          "jakarta-ee9+",
           "jws6",
           "eap",
           "camel",

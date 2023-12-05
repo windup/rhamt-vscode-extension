@@ -28,8 +28,8 @@ export namespace AnalysisState {
 
 export namespace ChangeType {
     export const MODIFIED = 0;
-    export const ADDED    = 1;
-    export const DELETED  = 2;
+    export const ADDED = 1;
+    export const DELETED = 2;
     export const PROGRESS = 3;
     export const CANCELLED = 4;
     export const ERROR = 5;
@@ -62,7 +62,7 @@ export interface Clone extends Input {
 }
 
 export class RhamtConfiguration {
-    onChanged = new rhamtEvents.TypedEvent<{type: number, name: string, value: any}>();
+    onChanged = new rhamtEvents.TypedEvent<{ type: number, name: string, value: any }>();
     id: string;
     name: string;
     summary: AnalysisResultsSummary | undefined;
@@ -86,8 +86,8 @@ export class RhamtConfiguration {
         return path.resolve(this.summary.outputLocation, 'static-report', 'index.html');
     }
 
-    sourceBase() : string {
-        return 'file:///opt/input/source/';
+    sourceBase(): string {
+        return 'file:///tmp/source-code/';
     }
 
     getResultsLocation(): string {
@@ -95,7 +95,7 @@ export class RhamtConfiguration {
         return path.resolve(this.options['output'], 'results.xml');
     }
 
-   deleteIssue(issue: IIssue): void {
+    deleteIssue(issue: IIssue): void {
         this._results.deleteIssue(issue);
     }
 

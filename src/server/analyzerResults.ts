@@ -52,8 +52,6 @@ export class AnalyzerResults {
                     const incidents = violation.incidents;                    
                     if (incidents) {
                         incidents.forEach(incident => {
-                            const uriParts = (incident.uri as string).split('/');
-                            console.log(uriParts);
                             const file = (incident.uri as string).replace(this.config.sourceBase(), '');
                             const root = vscode.workspace.workspaceFolders[0];
                             const fileUri = vscode.Uri.joinPath(root.uri, file);
@@ -69,7 +67,7 @@ export class AnalyzerResults {
                                     title: '',
                                     links: [],
                                     report: '',
-                                    lineNumber: incident.lineNumber,
+                                    lineNumber: incident.lineNumber || 1,
                                     column: 0,
                                     length: 0,
                                     sourceSnippet: '',

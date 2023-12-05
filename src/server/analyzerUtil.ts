@@ -51,7 +51,7 @@ export class AnalyzerUtil {
                 console.log(`Using executable - ${executable}`);
                 let params = [];
                 try {
-                    progress.report({message: 'Verifying configuration'});
+                    progress.report({ message: 'Verifying configuration' });
                     params = await AnalyzerUtil.buildParams(config);
                 }
                 catch (e) {
@@ -67,7 +67,7 @@ export class AnalyzerUtil {
                     rhamtChannel.print('\n');
                     monitor.handleMessage(data);
                 };
-                progress.report({message: 'Starting analysis...'});
+                progress.report({ message: 'Starting analysis...' });
                 let cancelled = false;
                 let resolved = false;
                 let processController: AnalyzerProcessController;
@@ -141,6 +141,11 @@ export class AnalyzerUtil {
             return Promise.reject('output is missing from configuration');
         }
         params.push(`${output}`);
+
+        if (options['overwrite']) {
+            params.push('--overwrite');
+        }
+
         let target = options['target'];
         if (!target) {
             target = [];
@@ -148,14 +153,21 @@ export class AnalyzerUtil {
         if (target.length === 0) {
             target.push('eap7');
         }
-        params.push('--target');
         target.forEach((i: any) => {
+            params.push('--target');
             params.push(i);
         });
+        console.log("Options: ")
+        for (const key in config.options) {
+            if (config.options.hasOwnProperty(key)) {
+                console.log(`${key}: ${config.options[key]}`);
+            }
+        }
+        console.log("Params: " + params)
         return Promise.resolve(params);
     }
 
-    public static async loadAnalyzerResults(config: RhamtConfiguration, clearSummary: boolean = true) : Promise<any> {
+    public static async loadAnalyzerResults(config: RhamtConfiguration, clearSummary: boolean = true): Promise<any> {
         return new Promise<void>(async (resolve, reject) => {
             let results = null;
             try {
@@ -179,18 +191,18 @@ export class AnalyzerUtil {
                     };
 
                     const poll = resolve => {
-                        if(done()) resolve();
+                        if (done()) resolve();
                         else setTimeout(_ => poll(resolve), config.delay);
-                      }
-                    
+                    }
+
                     await new Promise(poll);
-                    
+
                 }
                 results = await AnalyzerUtil.readAnalyzerResults(config);
             }
-            catch(e) {
+            catch (e) {
                 console.log(`Error reading analyzer results.`);
-                console.log(e);                               
+                console.log(e);
                 return reject(`Error reading analyzer results.`);
             }
             try {
@@ -236,7 +248,7 @@ export class AnalyzerUtil {
                                 }
                                 try {
                                     const dataJson = JSON.parse(data.replace(WINDOW, ''));
-                                    return resolve(dataJson);                                    
+                                    return resolve(dataJson);
                                 }
                                 catch (e) {
                                     console.log('Error parsing JSON');

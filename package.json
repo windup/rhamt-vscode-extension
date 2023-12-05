@@ -65,77 +65,95 @@
                 "icon": "$(refresh)"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.showRhamtExplorer",
                 "title": "Show Explorer"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.runConfiguration",
                 "title": "Run",
                 "enablement": "cli-enabled",
                 "icon": "$(run)"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.deleteConfiguration",
                 "title": "Delete",
                 "icon": "$(trash)"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.openConfiguration",
                 "title": "Open"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.openReportExternal",
                 "title": "Open Report"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.openDoc",
                 "title": "Open Code"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.openIssueDetails",
                 "title": "View Details"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.refreshResults",
                 "title": "Refresh"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.deleteIssue",
                 "title": "Delete"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.markIssueAsComplete",
                 "title": "Mark as Complete"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.markIssueAsIncomplete",
                 "title": "Mark as Incomplete"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.deleteResults",
                 "title": "Delete Analysis Results"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.newRuleset",
                 "title": "New Ruleset"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.applyQuickfix",
                 "title": "Apply Quickfix"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.applyQuickfixes",
                 "title": "Apply All Quickfixes"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.previewQuickfix",
                 "title": "Preview Quickfix"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.activate",
                 "title": "Activate Analysis"
             },
             {
+                "category": "MTA",
                 "command": "rhamt.deactivate",
                 "title": "Deactivate Analysis"
             }
