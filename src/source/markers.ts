@@ -103,7 +103,7 @@ export class MarkerService {
 
     private createDiagnostic(doc: vscode.TextDocument, issue: IHint): vscode.Diagnostic | undefined {
         if (issue.complete) return undefined;
-        const lineNumber = issue.lineNumber-1;
+        const lineNumber = issue.lineNumber - 1;
         const lineOfText = doc.lineAt(lineNumber);
         if (lineOfText.isEmptyOrWhitespace) {
             return undefined;
