@@ -121,7 +121,9 @@
         "description": "Indicates whether the input is source code or compiled binaries (Default: Compiled).",
         "type": "Boolean",
         "ui-type": ["single"],
-        "required": false
+        "required": false,
+        "editable": false
+
       },
       {
         "name": "userIgnorePath",
