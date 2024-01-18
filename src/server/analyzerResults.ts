@@ -70,7 +70,7 @@ export class AnalyzerResults {
                                     lineNumber: incident.lineNumber || 1,
                                     column: 0,
                                     length: 0,
-                                    sourceSnippet: '',
+                                    sourceSnippet: incident.codeSnip ? incident.codeSnip : '',
                                     category: violation.category,
                                     hint: incident.message,
                                     configuration: this.config,
