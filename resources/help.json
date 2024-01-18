@@ -123,13 +123,6 @@
         "required": false
       },
       {
-        "name": "overwrite",
-        "description": "Force overwrite of the output directory, without prompting.",
-        "type": "Boolean",
-        "ui-type": ["single"],
-        "required": false
-      },
-      {
         "name": "output",
         "description": "The location of the generated analysis results.",
         "type": "String",
