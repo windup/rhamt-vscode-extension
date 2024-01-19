@@ -18,6 +18,8 @@ const START_TIMEOUT = 60000;
 
 export class AnalyzerUtil {
 
+    static activeProcessController: AnalyzerProcessController;
+
     static async analyze(dataProvider: DataProvider, config: RhamtConfiguration, modelService: ModelService, onStarted: () => void, onComplete: () => void): Promise<RhamtProcessController> {
         let cli = undefined;
         try {
@@ -79,7 +81,7 @@ export class AnalyzerUtil {
                     }
                 };
                 try {
-                    processController = await AnalyzerRunner.run(config.rhamtExecutable, params, START_TIMEOUT, log, onShutdown).then(cp => {
+                    processController = AnalyzerUtil.activeProcessController = await AnalyzerRunner.run(config.rhamtExecutable, params, START_TIMEOUT, log, onShutdown).then(cp => {
                         onStarted();
                         return new AnalyzerProcessController(config.rhamtExecutable, cp, onShutdown);
                     });

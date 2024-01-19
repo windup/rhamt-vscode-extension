@@ -38,6 +38,9 @@ export class RhamtExplorer {
                     this.configEditorService.closeEditor(config);
                 }
                 this.dataProvider.remove(config);
+                if (AnalyzerUtil.activeProcessController) {
+                    AnalyzerUtil.activeProcessController.shutdown();
+                }
             }
             catch (e) {
                 console.log(`Error deleting configuration: ${e}`);

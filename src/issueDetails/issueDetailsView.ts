@@ -84,8 +84,10 @@ export class IssueDetailsView {
         const noDetails = '—';
         const isHint = 'hint' in issue;
         let body = '';
-        body += '<h3>Title</h3>';
-        body += issue.title ? issue.title : noDetails;
+        
+        /* body += '<h3>Title</h3>';
+        body += issue.title ? issue.title : noDetails; */
+
         /* if (report) {
             body += '<h3>Report</h3>';
             body += report;

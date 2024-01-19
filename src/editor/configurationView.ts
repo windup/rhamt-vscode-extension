@@ -212,7 +212,7 @@ export class ConfigurationView {
                 <div class="part editor" style="position: relative; height: 100%;">
                   <div class="content" style="height:100%;">                  
                       <div class="overlay-container" style="position: absolute; width: 100%; z-index: 10000; height: 100%; display: none;">
-                        <div class="defineKeybindingWidget" style="width: 400px; height: 110px; background-color: var(--vscode-editor-background); box-shadow: rgb(0, 0, 0) 0px 2px 8px; position: unset; margin: auto; margin-top: 150px;">
+                        <div class="defineKeybindingWidget" style="width: 400px; height: 110px; background-color: var(--vscode-editor-background); border: 1px solid rgb(168 168 189); position: unset; margin: auto; margin-top: 150px;">
                           <div style="text-align: center;">Enter desired value and then press ENTER.</div>
                           <div class="settings-header-widget">
                             <div class="settings-search-container">
@@ -232,7 +232,7 @@ export class ConfigurationView {
                         </div>
                       </div>
                       <div class="recent-container" style="position: absolute; width: 100%; z-index: 10000; height: 100%; display: none;">
-                        <div class="defineKeybindingWidget" style="width: 550px; background-color: var(--vscode-editor-background); box-shadow: rgb(0, 0, 0) 0px 2px 8px; position: unset; margin: auto; margin-top: 150px;">
+                        <div class="defineKeybindingWidget" style="width: 550px; background-color: var(--vscode-editor-background); border: 1px solid rgb(168 168 189); position: unset; margin: auto; margin-top: 150px;">
                           <div id="select-recent-label" style="text-align: center;">Select rulesets and then press ENTER.</div>
                           <div class="settings-header-widget" style="  height: 110px; overflow: auto;">
                             <div class="settings-search-container">
