@@ -116,6 +116,15 @@
           "websphere"]
       },
       {
+        "name": "sourceMode",
+        "description": "Indicates whether the input is source code or compiled binaries.",
+        "type": "Boolean",
+        "ui-type": ["single"],
+        "required": true,
+        "editable": false
+
+      },
+      {
         "name": "skipReports",
         "description": "If set, reports will not be generated.",
         "type": "Boolean",
