@@ -16,10 +16,10 @@
       },
       {
         "name": "input",
-        "description": "Input files or directories (directories are required for source mode).",
+        "description": "The source code directory path.",
         "type": "Path",
         "ui-type": ["many", "file_or_directory", "text"],
-        "placeholder": "No Files or Directories Specified",
+        "placeholder": "No Input Specified",
         "required": true,
         "editable": true
       },
@@ -109,7 +109,6 @@
           "rpc",
           "seam",
           "soa",
-          "spring",
           "spring",
           "thorntail",
           "weblogic",

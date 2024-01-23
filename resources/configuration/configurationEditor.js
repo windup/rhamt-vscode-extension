@@ -406,7 +406,7 @@ function renderSingleOption(option, config) {
 
     widget.classList.add('new-input');
 
-    widget.style.bacgkgroundColor = 'inherit;'
+    widget.style.backgroundColor = 'inherit;'
     widget.style.width = "100%";
 
 
@@ -507,11 +507,17 @@ function bindDynamicTable(option, config) {
     const table = $(`#${option.name}-table`);
     const placeholder = $(`#${option.name}-placeholder`);
     if (!input || input.length === 0) {
+        $(`#${option.name}-table`).siblings().last().css('display', 'initial');
         placeholder.show();
     }
     else {
         placeholder.hide();
-        input.forEach((item) => {
+
+        if (input.length === 1) {
+            $(`#${option.name}-table`).siblings().last().css('display', 'none');
+        }
+
+        input.every((item) => {
             const row = document.createElement('tr');
             const data = document.createElement('td');
             data.style.padding = '0px';
@@ -564,6 +570,11 @@ function bindDynamicTable(option, config) {
             data.append(wrapper);
             row.append(data);
             table.append(row);
+
+            if (option.name === 'input') {
+                return false;
+            }
+            return true;
         });
     }
 }
