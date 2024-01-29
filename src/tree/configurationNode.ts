@@ -204,8 +204,8 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
                 .map(classification => this.issueNodes.get(classification));
         }
         else {
-            console.log('FolderNode:');
-            console.log((node as FolderNode).folder);
+            // console.log('FolderNode:');
+            // console.log((node as FolderNode).folder);
             const segments = this.getChildSegments((node as FolderNode).folder);
             segments.forEach(segment => {
                 const resource = this.resourceNodes.get(segment);                
