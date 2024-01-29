@@ -62,6 +62,7 @@ export class AnalyzerUtil {
                     return Promise.reject(e);
                 }
                 rhamtChannel.clear();
+                rhamtChannel.print(`${executable} ${params.join(' ')}`);
                 config.cancelled = false;
                 const monitor = new AnalyzerProgressMonitor(onComplete);
                 const log = (data: string) => {
@@ -144,8 +145,27 @@ export class AnalyzerUtil {
         }
         params.push(`${output}`);
 
+        params.push('--mode');
+        const mode = config.options['mode'];
+        if (!mode || mode === '') {
+            return Promise.reject('mode is missing from configuration');
+        }
+        params.push(`${mode}`);
+
+        if (options['skip-static-report']) {
+            params.push('--skip-static-report');
+        }
+
         if (options['overwrite']) {
             params.push('--overwrite');
+        }
+
+        if (options['json-output']) {
+            params.push('--json-output');
+        }
+
+        if (options['analyze-known-libraries']) {
+            params.push('--analyze-known-libraries');
         }
 
         let target = options['target'];
@@ -159,6 +179,17 @@ export class AnalyzerUtil {
             params.push('--target');
             params.push(i);
         });
+
+        // source
+        let source = options['source'];
+        if (!source) {
+            source = [];
+        }
+        source.forEach((i: any) => {
+            params.push('--source');
+            params.push(i);
+        });
+
         console.log("Options: ")
         for (const key in config.options) {
             if (config.options.hasOwnProperty(key)) {

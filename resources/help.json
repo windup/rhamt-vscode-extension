@@ -16,7 +16,7 @@
       },
       {
         "name": "input",
-        "description": "The source code directory path.",
+        "description": "Path to application source code.",
         "type": "Path",
         "ui-type": ["many", "file_or_directory", "text"],
         "placeholder": "No Input Specified",
@@ -25,7 +25,7 @@
       },
       {
         "name": "target",
-        "description": "The target server/technology/framework to migrate to. This could include multiple items (eg, \"eap7\" and \"cloud-readiness\"). Note: The analysis will fail if a custom target is added and cannot be found within custom rules.",
+        "description": "The target technology to consider for analysis.",
         "type": "String",
         "ui-type": ["select-many", "text"],
         "required": true,
@@ -55,7 +55,7 @@
       },
       {
         "name": "source",
-        "description": "The source server/technology/framework to migrate from. This could include multiple items (eg, \"eap\" and \"spring\").",
+        "description": "The source technology to consider for analysis.",
         "type": "String",
         "ui-type": ["select-many", "text"],
         "required": false,
@@ -115,7 +115,7 @@
           "websphere"]
       },
       {
-        "name": "sourceMode",
+        "name": "source-only",
         "description": "Indicates whether the input is source code or compiled binaries.",
         "type": "Boolean",
         "ui-type": ["single"],
@@ -124,8 +124,22 @@
 
       },
       {
-        "name": "skipReports",
+        "name": "skip-static-report",
         "description": "If set, reports will not be generated.",
+        "type": "Boolean",
+        "ui-type": ["single"],
+        "required": false
+      },
+      {
+        "name": "overwrite",
+        "description": "If set, overwrite the output directory.",
+        "type": "Boolean",
+        "ui-type": ["single"],
+        "required": false
+      },
+      {
+        "name": "json-output",
+        "description": "Create analysis and dependency output as json.",
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false
@@ -137,6 +151,13 @@
         "ui-type": ["single"],
         "required": true,
         "disabled": true
+      },
+      {
+        "name": "analyze-known-libraries",
+        "description": "Analyze known open-source libraries.",
+        "type": "Boolean",
+        "ui-type": ["single"],
+        "required": false
       }
     ]
   }
