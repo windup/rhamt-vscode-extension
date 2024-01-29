@@ -54,6 +54,7 @@ export class ModelService {
         config.options['target'] = ['eap7'];
         config.options['legacyReports'] = true;
         config.options['mode'] = 'source-only';
+        config.options['overwrite'] = 'true';
 
         return config;
     }
