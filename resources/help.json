@@ -127,7 +127,8 @@
         "description": "If set, reports will not be generated.",
         "type": "Boolean",
         "ui-type": ["single"],
-        "required": false
+        "required": true,
+        "editable": false
       },
       {
         "name": "overwrite",
