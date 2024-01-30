@@ -123,23 +123,8 @@
 
       },
       {
-        "name": "skip-static-report",
-        "description": "If set, reports will not be generated.",
-        "type": "Boolean",
-        "ui-type": ["single"],
-        "required": true,
-        "editable": false
-      },
-      {
         "name": "overwrite",
         "description": "If set, overwrite the output directory.",
-        "type": "Boolean",
-        "ui-type": ["single"],
-        "required": false
-      },
-      {
-        "name": "json-output",
-        "description": "Create analysis and dependency output as json.",
         "type": "Boolean",
         "ui-type": ["single"],
         "required": false
