@@ -111,7 +111,7 @@ export class MarkerService {
         try {
             const severity = this.convertSeverity(issue);
             const range = new vscode.Range(lineNumber, issue.column, lineNumber, issue.length+issue.column);
-            const title = issue.title ? issue.title : 'unknown-incident-title';
+            const title = issue.hint ? issue.hint : 'unknown-incident-title';
             console.log(`range - ${range}`);
             console.log(range);
             console.log(`title - ${title}`);
