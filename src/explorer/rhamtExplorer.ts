@@ -162,6 +162,7 @@ export class RhamtExplorer {
                         this.dataProvider.reveal(configNode, true);
                         this.markerService.refreshOpenEditors();
                         this.saveModel();
+                        console.log('\nAnalysis completed successfully');
                         vscode.window.showInformationMessage('Analysis complete', 'Open Report').then(result => {
                             if (result === 'Open Report') {
                                 vscode.commands.executeCommand('rhamt.openReportExternal', {
@@ -173,6 +174,7 @@ export class RhamtExplorer {
 
             } catch (e) {
                 console.log(e);
+                console.log('\nAnalysis failed');
                 if (!e.notified) {
                     vscode.window.showErrorMessage(`Error running analysis - ${e}`);
                 }
