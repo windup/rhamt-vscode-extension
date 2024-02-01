@@ -129,6 +129,17 @@ export class RhamtExplorer {
             }
         }));
         this.dataProvider.context.subscriptions.push(vscode.commands.registerCommand('rhamt.runConfiguration', async (item) => {
+            if (!item) {
+                const configs = this.modelService.model.configurations.map(config => config.name);
+                const choice = await vscode.window.showQuickPick(configs);
+                if (choice) {
+                    const config = this.modelService.getConfigurationWithName(choice);
+                    item = {config};
+                }
+                else {
+                    return;
+                }                
+            }
             const config = item.config as RhamtConfiguration;
             try {
                 AnalyzerUtil.updateRunEnablement(false, this.dataProvider, config);
