@@ -167,7 +167,7 @@ export class RhamtExplorer {
                     () => {});
                     if (config.cancelled) {
                         rhamtChannel.print('\nAnalysis canceled');
-                        return
+                        return;
                     };
                     await AnalyzerUtil.loadAnalyzerResults(config);
                         AnalyzerUtil.updateRunEnablement(true, this.dataProvider, config);
