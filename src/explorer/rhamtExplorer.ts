@@ -165,7 +165,10 @@ export class RhamtExplorer {
                         this.refreshConfigurations();
                     },
                     () => {});
-                    if (config.cancelled) return;
+                    if (config.cancelled) {
+                        rhamtChannel.print('\nAnalysis canceled');
+                        return;
+                    };
                     await AnalyzerUtil.loadAnalyzerResults(config);
                         AnalyzerUtil.updateRunEnablement(true, this.dataProvider, config);
                         const configNode = this.dataProvider.getConfigurationNode(config);
