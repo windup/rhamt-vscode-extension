@@ -40,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
     extensionPath = context.extensionPath;
     
     await Utils.loadPackageInfo(context);
-    stateLocation = path.join(os.homedir(), '.windup', 'tooling', 'vscode');
+    stateLocation = path.join(os.homedir(), '.mta', 'tooling', 'vscode');
 
     console.log(`windup state location is: ${stateLocation}`);
 
