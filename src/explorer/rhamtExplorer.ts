@@ -50,6 +50,7 @@ export class RhamtExplorer {
                     this.configEditorService.closeEditor(config);
                 }
                 this.dataProvider.remove(config);
+                AnalyzerUtil.updateRunEnablement(true, this.dataProvider, config);
                 if (AnalyzerUtil.activeProcessController) {
                     AnalyzerUtil.activeProcessController.shutdown();
                 }
