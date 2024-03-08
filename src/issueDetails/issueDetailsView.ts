@@ -96,8 +96,8 @@ export class IssueDetailsView {
         body += (isHint && issue.hint) ? converter.makeHtml(issue.hint) : (!isHint && issue.description) ? issue.description : noDetails;
         body += '<h3>Category ID</h3>';
         body += issue.category ? issue.category : noDetails;
-        body += '<h3>Level of Effort</h3>';
-        body += issue.effort ? issue.effort : noDetails;
+        // body += '<h3>Level of Effort</h3>';
+        // body += issue.effort ? issue.effort : noDetails;
         body += '<h3>Rule ID</h3>';
         let ruleInfo = issue.ruleId;
         // if (issue.origin && issue.ruleId) {
