@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as cp from 'child_process';
 import * as os from 'os';
-const STARTED_REGEX = /.*running source code analysis.*/;
+// const STARTED_REGEX = /.*running source code analysis.*/;
 
 import { rhamtChannel } from '../util/console';
 
@@ -45,10 +45,14 @@ export class AnalyzerRunner {
                 const line = data.toString().trim();
                 console.log(line);
                 out(line);
-                if (STARTED_REGEX.exec(line) && !started) {
+                if (!started) {
                     started = true;
                     resolve(rhamtProcess);
                 }
+                // if (STARTED_REGEX.exec(line) && !started) {
+                //     started = true;
+                //     resolve(rhamtProcess);
+                // }
             };
             rhamtProcess.stdout.addListener('data', outputListener);
             setTimeout(() => {

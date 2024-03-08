@@ -100,8 +100,8 @@ export class AnalyzerUtil {
                     cancelled = true;
                     config.cancelled = true;
                     AnalyzerUtil.updateRunEnablement(true, dataProvider, config);
-                    if (processController) {
-                        processController.shutdown();
+                    if (AnalyzerUtil.activeProcessController) {
+                        AnalyzerUtil.activeProcessController.shutdown();
                     }
                     if (!resolved) {
                         resolved = true;
@@ -116,9 +116,12 @@ export class AnalyzerUtil {
     static updateRunEnablement(enabled: boolean, dataProvider: DataProvider, config: RhamtConfiguration | null): void {
         if (config != null) {
             const node = dataProvider.findConfigurationNode(config.id);
-            node.setBusyAnalyzing(!enabled);
+            if (node) {
+                node.setBusyAnalyzing(!enabled);
+            }
         }
         vscode.commands.executeCommand('setContext', 'cli-enabled', enabled);
+        vscode.commands.executeCommand('setContext', 'delete-enabled', enabled);
     }
 
     private static buildParams(config: RhamtConfiguration): Promise<any[]> {
