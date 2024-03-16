@@ -124,10 +124,12 @@ function renderManyOption(option, config) {
     toolbar.style.justifyContent = 'flex-start';
     toolbar.style.marginTop = '10px';
     top.appendChild(toolbar);
-    const addButton = createAddButton();
-    toolbar.appendChild(addButton);
-    bindAddButton(option, addButton);
-    
+
+    if(!(option['ui-type'].includes('many') && option.name === 'input')){
+        const addButton = createAddButton();
+        toolbar.appendChild(addButton);
+        bindAddButton(option, addButton);
+    }
     if (option['ui-type'].includes('recent')) {
         const recentButton = createRecentButton();
         recentButton.style.marginLeft = '5px';
@@ -156,7 +158,7 @@ function showRecentDialog(data, option) {
 }
 
 function updateRulesetsOption() {
-    const option = 'userRulesDirectory';
+    const option = 'rules';
     let values = config.options[option] || [];
     $(`#recent-table .option-input:checkbox:checked`).each((index, value) => {
         values.push($(value).data('option-item'));
@@ -506,14 +508,35 @@ function bindDynamicTable(option, config) {
     const input = config.options[option.name];
     const table = $(`#${option.name}-table`);
     const placeholder = $(`#${option.name}-placeholder`);
-    if (!input || input.length === 0) {
-        $(`#${option.name}-table`).siblings().last().css('display', 'initial');
+
+    if (option.name === 'input'){
+        const addButton = this.createAddButton();
+
+// Clear the placeholder content and set it up as a flex container
+        placeholder.empty().css({
+            'display': 'flex',
+            'flex-direction': 'column', // Stack children vertically
+            'align-items': 'center' // Center children horizontally
+        });
+
+// Append the text
+        placeholder.append($('<div>').text('No Files or Directories Specified'));
+
+// Append the 'Add' button
+        placeholder.append(addButton);
+        this.bindAddButton(option, addButton);
+    }
+
+    if (!input || input.length === 0) { 
+        if (option.name === 'input' ) {
+            $(`#${option.name}-table`).siblings().last().css('display', 'none');
+        }
         placeholder.show();
     }
     else {
         placeholder.hide();
-
-        if (input.length === 1) {
+        
+        if (input.length === 1 && option.name === 'input' ) {
             $(`#${option.name}-table`).siblings().last().css('display', 'none');
         }
 
