@@ -201,7 +201,7 @@ export class ModelService {
     getRulesets(): string[] {
         let allRulesets = this.rulesets.slice();
         for (const config of this.model.configurations) {
-            const rulesets = config.options['userRulesDirectory'];
+            const rulesets = config.options['rules'];
             if (rulesets && rulesets.length > 0) {
                 rulesets.forEach(ruleset => {
                     if (!allRulesets.includes(ruleset)) {

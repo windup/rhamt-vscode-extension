@@ -193,6 +193,15 @@ export class AnalyzerUtil {
             params.push(i);
         });
 
+        // rules
+        let rules = options['rules'];
+        if (rules && rules.length > 0) {
+            rules.forEach(entry => {
+                params.push('--rules');
+                params.push(`${entry}`);
+            });
+        }
+
         console.log("Options: ")
         for (const key in config.options) {
             if (config.options.hasOwnProperty(key)) {

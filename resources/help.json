@@ -16,7 +16,7 @@
       },
       {
         "name": "input",
-        "description": "Path to application source code.",
+        "description": "Path to application source code. Note: Please select only one path at a time. To change the input entry, use the cancel button.",
         "type": "Path",
         "ui-type": ["many", "file_or_directory", "text"],
         "placeholder": "No Input Specified",
@@ -252,6 +252,15 @@
           "weblogic",
           "websphere"
           ]
+      },
+      {
+        "name": "rules",
+        "description": "User Rules Directory/File",
+        "type": "Path",
+        "ui-type": ["many", "file_or_directory", "text"],
+        "placeholder": "No Directories Specified",
+        "required": false,
+        "editable": true
       },
       {
         "name": "source-only",
