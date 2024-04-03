@@ -2,7 +2,7 @@
     "name": "mta-vscode-extension",
     "displayName": "Migration Toolkit for Applications (MTA)",
     "description": "Migration Toolkit for Applications (MTA)",
-    "version": "7.0.2",
+    "version": "7.0.3",
     "license": "epl-2.0",
     "publisher": "redhat",
     "author": "Red Hat",
