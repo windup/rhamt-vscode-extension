@@ -159,9 +159,9 @@ export class AnalyzerUtil {
             params.push('--skip-static-report');
         }
 
-        if (options['overwrite']) {
+        // if (options['overwrite']) {
             params.push('--overwrite');
-        }
+        // }
 
         if (options['json-output']) {
             params.push('--json-output');

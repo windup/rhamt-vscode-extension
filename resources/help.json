@@ -194,7 +194,8 @@
         "description": "If set, overwrite the output directory.",
         "type": "Boolean",
         "ui-type": ["single"],
-        "required": false
+        "required": true,
+        "editable": false
       },
       {
         "name": "output",
