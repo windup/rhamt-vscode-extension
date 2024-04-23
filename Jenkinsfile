@@ -63,12 +63,19 @@ node('rhel8'){
             def tgz = findFiles(glob: '**.tgz')
 			sh "sftp -C ${UPLOAD_LOCATION}/stable/mta-vscode-extension/ <<< \$'put -p -r ${tgz[0].path}'"
 
-			sh "npm install -g ovsx"
-			withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
-				def packageJson = readJSON file: 'package.json'
-				sh "ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
-			}
+			// sh "npm install -g ovsx"
+			// withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
+			// 	def packageJson = readJSON file: 'package.json'
+			// 	sh "ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
+			// }
         }
+	}
+	if (publishToOVSX.equals('true')) {
+		sh "npm install -g ovsx"
+		withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
+			def packageJson = readJSON file: 'package.json'
+			sh "ovsx publish -p ${OVSX_TOKEN} mta-vscode-extension-${packageJson.version}-${env.BUILD_NUMBER}.vsix"
+		}
 	}
 }
 
