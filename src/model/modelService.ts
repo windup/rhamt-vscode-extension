@@ -51,7 +51,7 @@ export class ModelService {
         }
         config.options['cli'] = this.getRecentCli();
         config.options['sourceMode'] = true;
-        config.options['target'] = ['eap7'];
+        config.options['target'] = [];
         config.options['legacyReports'] = true;
         config.options['mode'] = 'source-only';
         config.options['overwrite'] = true;

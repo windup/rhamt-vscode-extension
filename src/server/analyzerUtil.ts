@@ -47,13 +47,12 @@ export class AnalyzerUtil {
         return vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
             cancellable: true
-        }, async (progress: any, token: vscode.CancellationToken) => {
+        }, async (progress: vscode.Progress<any>, token: vscode.CancellationToken) => {
             return new Promise<any>(async resolve => {
                 const executable = config.rhamtExecutable;
                 console.log(`Using executable - ${executable}`);
                 let params = [];
                 try {
-                    progress.report({ message: 'Verifying configuration' });
                     params = await AnalyzerUtil.buildParams(config);
                 }
                 catch (e) {
@@ -61,6 +60,7 @@ export class AnalyzerUtil {
                     AnalyzerUtil.updateRunEnablement(true, dataProvider, config);
                     return Promise.reject(e);
                 }
+                progress.report({ message: 'Verifying configuration' });
                 rhamtChannel.clear();
                 rhamtChannel.print(`${executable} ${params.join(' ')}`);
                 config.cancelled = false;
@@ -159,9 +159,15 @@ export class AnalyzerUtil {
             params.push('--skip-static-report');
         }
 
-        // if (options['overwrite']) {
+        if (options['overwrite']) {
             params.push('--overwrite');
-        // }
+        }
+        else {
+            const outputExists = fs.existsSync(output);
+            if (outputExists) {
+                return Promise.reject('Output location already exists. `--overwrite` option required');
+            }
+        }
 
         if (options['json-output']) {
             params.push('--json-output');
@@ -176,7 +182,7 @@ export class AnalyzerUtil {
             target = [];
         }
         if (target.length === 0) {
-            target.push('eap7');
+            // target.push('eap7');
         }
         target.forEach((i: any) => {
             params.push('--target');

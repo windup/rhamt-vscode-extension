@@ -453,6 +453,13 @@ function bindOptions(data, config) {
 }
 
 function bindOption(option, config) {
+    if (option.required && option.name === 'overwrite') {
+        const value = config.options[option.name];
+        const checked = (typeof value === 'boolean' && value) ||
+        (typeof value === 'string' && value !== '');
+        $(`#${option.name}`).prop('checked', checked);
+        return;
+    }
     if (!option.required) {
         const value = config.options[option.name];
         const checked = (typeof value !== 'undefined') && ((Array.isArray(value) && value.length > 0) ||
