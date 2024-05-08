@@ -34,7 +34,7 @@
           "azure",
           "camel3",
           "camel4",
-          "cloud",
+          "cloud-readiness",
           "drools",
           "eap",
           "eap6",
@@ -44,13 +44,12 @@
           "fsw",
           "fuse",
           "hibernate",
-          "hibernate",
+          "hibernate-search",
           "jakarta",
           "java",
           "jbpm",
           "jws6",
           "linux",
-          "openjdk",
           "openjdk",
           "openjdk11",
           "openjdk17",
@@ -149,7 +148,7 @@
         "type": "Boolean",
         "ui-type": ["single"],
         "required": true,
-        "editable": true
+        "editable": false
       },
       {
         "name": "output",
