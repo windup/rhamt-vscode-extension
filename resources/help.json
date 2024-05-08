@@ -148,7 +148,7 @@
         "type": "Boolean",
         "ui-type": ["single"],
         "required": true,
-        "editable": true
+        "editable": false
       },
       {
         "name": "output",
