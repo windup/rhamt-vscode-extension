@@ -14,6 +14,7 @@ This extension is published [here](https://marketplace.visualstudio.com/items?it
 
 <!-- ![VSCode Extension Marketplace View](resources/mta_marketplace.png) -->
 
+
 ## Features
 
 This extension provides the ability to analyze, assess, and migrate source code from within VSCode and Eclipse Che.
