@@ -70,7 +70,7 @@ export class AnalyzerUtil {
                     rhamtChannel.print('\n');
                     monitor.handleMessage(data);
                 };
-                progress.report({ message: 'Starting analysis...' });
+                progress.report({ message: 'Starting Analysis' });
                 let cancelled = false;
                 let resolved = false;
                 let processController: AnalyzerProcessController;
