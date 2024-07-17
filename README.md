@@ -4,7 +4,12 @@
 <!-- [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension) -->
 <!-- [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/installs/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension) -->
 <!-- [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/downloads-short/redhat.mtr-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=redhat.mtr-vscode-extension) -->
-## Description
+
+
+* Notice - The MTR extension has been deprecated. Support will end on 30th September 2024. The [Migration Toolkit for Applications (MTA)](https://marketplace.visualstudio.com/items?itemName=redhat.mta-vscode-extension) equivalent provides the same functionality. Please use the MTA extension instead.
+
+
+## Description 
 
 VSCode extension for application migration and modernization using [MTR](https://developers.redhat.com/products/mtr/download).
 
