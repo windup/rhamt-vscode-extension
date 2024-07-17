@@ -3,7 +3,9 @@
 node('rhel8'){
 	stage('Checkout repo') {
 		deleteDir()
-		git url: 'https://github.com/windup/rhamt-vscode-extension.git'
+		// git url: 'https://github.com/windup/rhamt-vscode-extension.git'
+		git url: 'https://github.com/windup/rhamt-vscode-extension.git',
+			branch: "${BRANCH}"
 	}
 
 	stage('Install requirements') {
