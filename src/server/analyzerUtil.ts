@@ -198,6 +198,10 @@ export class AnalyzerUtil {
             params.push('--source');
             params.push(i);
         });
+	
+	// Default to Java provider for now
+	params.push('--provider');
+	params.push('java');
 
         // rules
         let rules = options['rules'];
