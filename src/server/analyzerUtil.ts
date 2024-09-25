@@ -201,8 +201,13 @@ export class AnalyzerUtil {
 	
 	// Default to Java provider for now
 	params.push('--provider');
-	params.push('java');
-
+    const provider = config.options['provider'];
+    if (!provider || provider === ''|| provider == undefined) {
+        params.push('java');
+    } else {
+        params.push(`${provider}`);
+    }
+  
         // rules
         let rules = options['rules'];
         if (rules && rules.length > 0) {
