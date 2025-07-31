@@ -207,14 +207,26 @@ export class AnalyzerUtil {
     } else {
         params.push(`${provider}`);
     }
-  
-        // rules
+    
+    //list-languages
+   // params.push('--list-languages');
+     
+    // rules
         let rules = options['rules'];
         if (rules && rules.length > 0) {
             rules.forEach(entry => {
                 params.push('--rules');
                 params.push(`${entry}`);
             });
+        }
+
+        if (options['enable-default-rulesets']) {
+            console.log('enable so setting to true');
+            params.push('--enable-default-rulesets=true');
+        }
+        else {
+            console.log('disable so setting to false');
+            params.push('--enable-default-rulesets=false');
         }
 
         console.log("Options: ")

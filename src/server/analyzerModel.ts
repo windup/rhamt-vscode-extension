@@ -87,9 +87,12 @@ export class RhamtConfiguration {
     }
 
     sourceBase(): string {
-        return 'file:///tmp/source-code/';
+        return 'file:///opt/input/source';
     }
-
+    getinput(): string {
+        if (!this.options['input']) return undefined;
+        return this.options['input'];
+    }
     getResultsLocation(): string {
         if (!this.options['output']) return undefined;
         return path.resolve(this.options['output'], 'results.xml');

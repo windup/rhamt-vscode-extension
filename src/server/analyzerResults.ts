@@ -52,9 +52,7 @@ export class AnalyzerResults {
                     const incidents = violation.incidents;                    
                     if (incidents) {
                         incidents.forEach(incident => {
-                            const file = (incident.uri as string).replace(this.config.sourceBase(), '');
-                            const root = vscode.workspace.workspaceFolders[0];
-                            const fileUri = vscode.Uri.joinPath(root.uri, file);
+                            let fileUri =  vscode.Uri.parse(incident.uri);
                             try {
                                 const hint = {
                                     type: IIssueType.Hint,

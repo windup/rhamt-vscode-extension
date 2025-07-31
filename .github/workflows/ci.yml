@@ -1,0 +1,110 @@
+name: CI (compile, build and publish)
+
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+    branches:
+      - "master"
+  release:
+    types:
+      - created
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Compile the project
+        run: npm run compile
+
+  publish:
+    name: Package & Upload VSIX (Fake Publish in Fork, Real in Main)
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'release'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "21"
+
+      - name: Install vsce (VS Code Extension Manager)
+        run: npm install -g @vscode/vsce
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Extension
+        run: npm run compile
+
+      - name: Ensure dist directory exists
+        run: mkdir -p dist
+
+      - name: Package the VSIX file
+        run: vsce package -o dist/extension.vsix
+
+      - name: Upload VSIX Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-extension
+          path: dist/*.vsix
+
+      - name: Publish to marketplace
+        run: |
+          if [ "${{ github.repository_owner }}" = "migtools" ]; then
+            echo "Publishing to VS Code Marketplace..."
+            vsce publish --pat ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+          fi
+
+  pre-publish:
+      name: Upload VSIX 
+      runs-on: ubuntu-latest
+      needs: test
+
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+
+        - name: Install Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: "21"
+
+        - name: Install vsce (VS Code Extension Manager)
+          run: npm install -g @vscode/vsce
+
+        - name: Install Dependencies
+          run: npm install
+
+        - name: Build Extension
+          run: npm run compile
+
+        - name: Ensure dist directory exists
+          run: mkdir -p dist
+
+        - name: Package the VSIX file
+          run: vsce package -o dist/extension.vsix
+
+        - name: Upload VSIX Artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: vscode-extension
+            path: dist/*.vsix

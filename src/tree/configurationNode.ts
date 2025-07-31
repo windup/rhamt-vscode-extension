@@ -131,18 +131,20 @@ export class ConfigurationNode extends AbstractNode<ConfigurationItem> implement
     }
 
     private buildResourceNodes(file: string): void {
-        const root = workspace.workspaceFolders[0]; 
+        const inputPaths = this.config.getinput(); 
+        const root = Uri.file(inputPaths[0]);
+       // const root = workspace.workspaceFolders[0]; 
 
-        if (!this.childNodes.has(root.uri.fsPath)) {
+        if (!this.childNodes.has(root.fsPath)) {
             const folder = new FolderNode(
                 this.config,
-                root.uri.fsPath,
+                root.fsPath,
                 this.modelService,
                 this.onNodeCreateEmitter,
                 this.dataProvider,
                 this);
-            this.childNodes.set(root.uri.fsPath, folder);
-            this.resourceNodes.set(root.uri.fsPath, folder);
+            this.childNodes.set(root.fsPath, folder);
+            this.resourceNodes.set(root.fsPath, folder);
         }
         
         

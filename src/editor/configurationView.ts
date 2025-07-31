@@ -347,8 +347,9 @@ export class ConfigurationView {
 
         // cloning...
         if (cloning) {
-            if (vscode.workspace.workspaceFolders) {
-                const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+            if (this.configuration.getinput()) {
+                const inputPaths = this.configuration.getinput();
+                const workspaceFolder = vscode.Uri.joinPath(vscode.Uri.file(inputPaths[0])).fsPath;
                 const folderName = data.value.substring(data.value.lastIndexOf('/') + 1);
                 const cloneCommand = {repo: data.value, folderName, config: this.configuration, workspaceFolder};
                 vscode.commands.executeCommand('rhamt.downloadGitRepo', cloneCommand).then((result:any) => {
